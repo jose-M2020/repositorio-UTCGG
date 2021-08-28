@@ -1,0 +1,21 @@
+@if (count($alumnos) >= 1)
+  @foreach ($alumnos as $alumno)
+    <tr>                
+      <td>{{ $alumno->id }}</td>
+      <td>{{ $alumno->nombre }}</td>
+      <td>{{ $alumno->email }}</td>
+      <td>{{ $alumno->carrera }}</td>
+      <td>{{ $alumno->cuatrimestre }}</td>
+      <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
+    </tr>
+  @endforeach
+  <tr>
+    <td colspan="3" align="center">
+      {{ $alumnos->links('pagination::bootstrap-4') }}
+    </td>
+  </tr>
+@else
+  <tr>
+    <td>No hay registros para está búsqueda</td>
+  </tr>
+@endif
