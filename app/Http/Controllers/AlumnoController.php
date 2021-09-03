@@ -137,13 +137,14 @@ class AlumnoController extends Controller
     }
 
     public function search(Request $request){
-        if($request->ajax()){
+        // if($request->ajax()){
             $query = $request->get('query');
             $query = str_replace(" ", "%", $query);
             if($query != ''){
-                $alumnos = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre']);
-                return compact('alumnos');
+                $students = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre']);
+                // return compact('students');
+                return response()->json($students);
             }
-         }
+         // }
     }
 }

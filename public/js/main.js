@@ -33,6 +33,7 @@ functions.searchEvent(document.getElementById('student_name'));
 
 const resultsBox = document.querySelector('.search_results');
 
+functions.dataLoadEvent(resultsBox)
 
 form.addEventListener('click', e => {
 	if(e.target.tagName == 'LI' ){
@@ -42,80 +43,16 @@ form.addEventListener('click', e => {
 	}
 })
 
-let html = functions.createHTML([
-	{
-		type: 'div',
-		attributes:{
-			class: ['main']
-		}
-	},
-	{
-		type: 'button',
-		data: 'Enviar'
-	},
-	{
-		type: 'i',
-		attributes: {
-			class: ['fas', 'fas-upload']
-		}
-	},
-])
 
-form.appendChild(html);
 
-// function load_data(page, query = ''){
-// 	$.ajax({
-// 	    url:"/alumnos/search?page="+page+"&query="+query,
-// 	    success:function(data){
-// 	    	resultsBox.innerHTML = '';
-// 	    	let ul = document.createElement('ul');
-// 	    	if(!data.alumnos.total){
-// 	    		ul.innerHTML = 'No hay resultados.';
-// 	    	}
-
-// 	    	let fragment = document.createDocumentFragment();
-// 	    	data.alumnos.data.forEach(res => {
-// 	    		let li = document.createElement('li');
-//     			li.textContent = res.nombre;
-//     			fragment.appendChild(li);
-// 	    	})
-// 	    	ul.appendChild(fragment)
-// 	    	resultsBox.appendChild(ul);
-
-// 	      // console.log(data.alumnos.data);
-// 	    }
-// 	});
-// }
-
-// Buscar usuario
-// const doneTypingInterval = 1000;
-// let typing = false;
-// let typingTimer;    //timer identifier 
-// let query = '';
-
-// form.addEventListener('keyup', e => {
-// 	let node = e.target;
-// 	if(node.tagName == 'INPUT' && node.id == 'student_name'){
-// 		let resultsBox = node.nextElementSibling;
-// 		query = node.value;
-// 		if(query != ''){
-//      	clearTimeout(typingTimer);
-// 	    if(typing == false){
-// 	      typing = true;
-// 	      console.log("En espera de búsqueda...");
-// 	    }
-// 	    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-// 	  }
-// 	}
+// $('.historial').scroll(e => {
+//   const { scrollTop, scrollHeight, offsetHeight } = e.target;
+  
+//   if(scrollTop < 50 && scrollHeight > offsetHeight && !isLoading){
+//     isLoading = true;
+//     loadData()
+//   }
 // })
-
-
-    // Cargar datos para la busqueda cuando el usuario ha finalizado de escribir
-    // function doneTyping() { 
-    //   typing = false;
-    //   if(query !== ''){load_data(1, query);}
-    // }
-
 
 
 

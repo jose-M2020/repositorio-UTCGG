@@ -70,16 +70,44 @@ const removeElementListener = id => {
 	},50)
 }
 
+let page = 1;
+export const dataLoadEvent = container => {
+	let isLoading = false;
+	container.addEventListener('scroll', function(e) {
+		
+
+		const { scrollTop, scrollHeight, offsetHeight, previousElementSibling } = e.target;
+    	// console.log(scrollTop, ' - ', scrollHeight, ' - ', offsetHeight)
+    
+		if(scrollTop + offsetHeight >= scrollHeight){
+    	page++;
+    	isLoading = true;
+    	loadData(container.firstElementChild, page, previousElementSibling.value);
+    	isLoading = false;
+    	console.log(page);
+  	}
+
+
+
+
+  	
+	})
+}
+
 const doneTypingInterval = 1000;
 let typing = false;
 let typingTimer;    //timer identifier 
 let query = '';
 
 export const searchEvent = input => {
+	let resultsBox;
 	input.addEventListener('keyup', function(e) {
-		let resultsBox = this.nextElementSibling;
+		resultsBox = this.nextElementSibling;
 		query = this.value;
-		if(query != ''){
+		if(query !== ''){
+				// Reseteamos los valores de lastPage y page para cargar nuevos resultados de la nueva búsqueda
+				lastPage = 1;
+				page = 1;
 	     	clearTimeout(typingTimer);
 		    if(typing == false){
 		      typing = true;
@@ -87,10 +115,12 @@ export const searchEvent = input => {
 			}
 		    typingTimer = setTimeout(e => {
 		    	typing = false;
-      			if(query !== ''){load_data(resultsBox, 1, query);}
+      			if(query !== ''){loadData(resultsBox, 1, query);}
 		    }, doneTypingInterval);
 		}
 	})
+	// dataLoadEvent(resultsBox);
+	// console.log(resultsBox)
 }
 
 function createElement(type, attributes) {
@@ -102,32 +132,56 @@ function createElement(type, attributes) {
       element[key] = attributes[key];
     }
   }
-  console.log(element);
   //someElement.appendChild(element);
 }
 
-function load_data(container, page, query = ''){
-	$.ajax({
-	    url:"/alumnos/search?page="+page+"&query="+query,
-	    success:function(data){
-	    	container.innerHTML = '';
+let lastPage = 1;
+export let loadData = async (container, page = 1, query = '') => {
+	let spinner = createHTML([ {type: 'i', attributes: { class: ['fas', 'fa-spinner', 'fa-spin']} } ]);
+	spinner.style.cssText = `
+		font-size: 20px; 
+		color: #419F6D; 
+		margin: 10px auto;
+		display: block;
+	`;
 
-	    	let ul = '';
-	    	if(!data.alumnos.total){
-	    		ul = createHTML([ {type: 'ul', data: 'No hay resultados.'} ])
-	    	}else{
-	    		// Obtenemos solo los nombres y los almacenamos en una array
-	    		let names = data.alumnos.data.reduce((acc, alumno) => {
-	    			return [...acc, alumno.nombre]
-	    		}, []);
-	    		ul = createHTML([ 
-	    			{type: 'ul'}, 
-	    			{type: 'li', data: names} 
-	    		]);
-	    	}
-	    	container.appendChild(ul);
-	    }
-	});
+	if(page <= lastPage){
+		container.appendChild(spinner);
+		try {
+	    let response = await fetch("/alumnos/search?page="+page+"&query="+query);
+	    let students = await response.json();
+	    lastPage = students.last_page;
+	    
+	    console.log(lastPage)
+			let html = '';
+			let names = students.data.reduce((acc, alumno) => {
+										return [...acc, alumno.nombre]
+									}, []);
+			if(page === 1){
+				// Si es la primera pagina (primero resultados) creamos la lista
+				container.innerHTML = '';
+				
+				if(!students.total){
+					html = createHTML([ {type: 'ul', data: 'No hay resultados.'} ])
+				}else{
+					// Obtenemos solo los nombres y los almacenamos en una array
+					html = createHTML([ 
+						{type: 'ul'}, 
+						{type: 'li', data: names} 
+					]);
+				}
+			}else{
+				// Si no, agregamos los otros resultados a la lista
+				html = createHTML([ {type: 'li', data: names} ])
+				container.removeChild(container.querySelector('.fa-spinner'));
+			}
+			container.appendChild(html);
+	  } catch(err) {
+	    console.log(err);
+	    let errorMsg = createHTML([ {type: 'ul', data: 'Hubo un error al obtener los datos. Intentalo de nuevo.'} ])
+	    container.appendChild(errorMsg);
+	  }
+	}
 }
 
 let i = 1;
@@ -140,8 +194,11 @@ export const addNewElement = e => {
 
 	if(input.type !== 'file') {
 		input.style.border = '2px solid #ddd';
+		// Evento para Checar errores
 		inputListener(input);
+		// Evento de keyup para buscar usuario
 		searchEvent(input)
+		dataLoadEvent(newElement.querySelector('.search_results'));
 	}else {
 		// Para inputs de tipo file usamos el label para hacer referencia al input
 		i++;
@@ -149,9 +206,8 @@ export const addNewElement = e => {
 		input.setAttribute('id','file' + i);
 		label.setAttribute('for','file' + i);
 		label.innerHTML = `
-			<span >
-				<svg style="width: 15px;" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-upload" class="svg-inline--fa fa-file-upload fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm65.18 216.01H224v80c0 8.84-7.16 16-16 16h-32c-8.84 0-16-7.16-16-16v-80H94.82c-14.28 0-21.41-17.29-11.27-27.36l96.42-95.7c6.65-6.61 17.39-6.61 24.04 0l96.42 95.7c10.15 10.07 3.03 27.36-11.25 27.36zM377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9z"></path></svg>
-			</span>Cargar Archivo`;
+		 	<i class="fas fa-file-upload"></i>
+			Cargar Archivo`;
 		label.style.cssText = `
 			color: #32b197;
 			backgroundColor: #f8fffa;
