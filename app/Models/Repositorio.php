@@ -20,4 +20,8 @@ class Repositorio extends Model
         'nivel_proyecto'
     ];
 
+    public function getFile()
+    {
+        return $this->hasMany(File::class, 'repositorio_id');
+    }
 }

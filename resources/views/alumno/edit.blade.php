@@ -15,26 +15,13 @@
 		<div class="form__field">
 			<label>Carrera</label>
 			<select class="form__input" name="carrera" id="carrera">
-				<?php 
-					$carreras = array(
-							'TIC' => 'Tecnologias de la información',
-							'G' => 'Gastronomía',
-							'MM' => 'Metal mecánica',
-							'ER' => 'Energías renovables',
-							'PA' => 'Procesos alimentarios',
-							'LI' => 'Logística internacional',
-							'MI' => 'Mantenimiento industrial',
-							'GCH' => 'Gestión del capital humano',
-							'GDT' => 'Gestión y desarrollo turístico'
-					);
-					foreach ($carreras as $key => $value) {
-						if($alumno->carrera == $key){
-							echo '<option value="'.$key.'" selected="selected">'.$value.'</option>';
-							continue;
-						}
-						echo '<option value="'.$key.'">'.$value.'</option>';
-					}
-				?>
+				@foreach(get_careers() as $key=>$career)
+					@if($alumno->carrera == $key)
+						<option value="{{$key}}" selected="selected">{{ $career }}</option>
+					@else
+						<option value="{{$key}}">{{ $career }}</option>
+					@endif
+				@endforeach
 			</select>
 		</div>
 		<div class="form__field">

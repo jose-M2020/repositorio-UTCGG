@@ -10,10 +10,10 @@
 		<h1>Iniciar sesión </h1>
 
 		<!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    <!-- Validation Errors -->
+    <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
 		<form action="{{ route('login') }}" method="POST">
 			@csrf
@@ -31,15 +31,15 @@
 			</div>
 			<br>
 			 <div class="mt-4">
-                <x-label for="rol" :value="__('Modo de acceso')" />
-                <select id="rol" class="block mt-1 w-full" name="rol">
-                  <option selected disabled>Seleccionar</option>
-                  <option value="alumno">Alumno</option>
-                  <option value="docente">Docente</option>
-                  <option value="admin">Administrador</option>
-                </select>                
-            </div>	
-            <br>		
+          <label for="rol">Modo de acceso</label>
+          <select id="rol" class="block mt-1 w-full" name="rol">
+            <option selected disabled>Seleccionar</option>
+            <option value="alumno">Alumno</option>
+            <option value="docente">Docente</option>
+            <option value="admin">Administrador</option>
+          </select>                
+        </div>	
+        <br>		
 			<input type="submit" value="INICIAR" name="loginButton"> <span class="boton3"></span>
 			
 		</form>

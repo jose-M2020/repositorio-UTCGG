@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Alumno;
 use App\Models\Docente;
 use App\Models\Admin;
+use App\Models\Repositorio;
+use App\Models\File;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -42,7 +44,19 @@ class DatabaseSeeder extends Seeder
             'email' => 'docente3@gmail.com',
             'password' => Hash::make('password'),
         ]);
-        
+        Alumno::insert([
+            'docente_id' => 1,
+            'nombre' => 'José Manuel',
+            'email' => 'jose@gmail.com',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'carrera' => 'TIC',
+            'cuatrimestre' => 10
+        ]);
+
         Alumno::factory(30)->create();
+
+        Repositorio::factory(30)->create();
+
+        File::factory(30)->create();
     }
 }

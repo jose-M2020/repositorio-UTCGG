@@ -8,22 +8,12 @@
 		<div class="form__title">
 			<h1>Registro de alumno</h1>
 		</div>
-		@if ($message = Session::get('success'))
-        	<div class="alert alert-success">
-            	<p>{{ $message }}</p>
-        	</div>
-      	@endif
+		
+		<!-- Mensaje de éxito -->
+      	<x-alert.success-message :message="session('status')" />
 
-      	<!-- Validation Errors -->
-      	@if ($errors->any())
-        	<div class="alert alert-danger">
-              	<ul>
-                  	@foreach ($errors->all() as $error)
-                      	<li>{{ $error }}</li>
-                  	@endforeach
-              	</ul>
-          	</div>
-      	@endif
+      	<!-- Errores de validación -->      	
+      	<x-alert.error-message message="Error al registrar el repositorio" :errors="$errors"/>
       	
 		<form id="" method="POST" action="/alumnos/registrar">
 			@csrf
@@ -47,15 +37,9 @@
 				<label for="carrera" class="form__label">Carrera</label>
 				<select class="form__input" name="carrera" id="carrera">
 					<option disabled selected>Seleccionar carrera</option>
-					<option value="TIC">Tecnologias de la información</option>
-					<option value="G">Gastronomía</option>
-					<option value="MM">Metal mecánica</option>
-					<option value="ER">Energías renovables</option>     
-					<option value="PA">Procesos alimentarios</option>
-					<option value="LI">Logística internacional</option>
-					<option value="MI">Mantenimiento industrial</option>
-					<option value="GCH">Gestión del capital humano</option>
-					<option value="GDT">Gestión y desarrollo turístico</option>
+					@foreach(get_careers() as $key=>$career)
+						<option value="{{ $key }}">{{ $career }}</option>
+					@endforeach
 				</select>
 			</div>
 			<div class="form__field">

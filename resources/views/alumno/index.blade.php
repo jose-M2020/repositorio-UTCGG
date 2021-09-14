@@ -8,22 +8,11 @@
       <h3 align="center">Alumnos registrados</h3>
       <br />
 
-      @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-      @endif
+      <!-- Mensaje de éxito -->
+      <x-alert.success-message :message="session('status')" />
 
-      <!-- Validation Errors -->
-      @if ($errors->any())
-          <div class="alert alert-danger">
-              <ul>
-                  @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                  @endforeach
-              </ul>
-          </div>
-      @endif
+      <!-- Errores de validación -->        
+      <x-alert.error-message message="Error al actualizar los datos" :errors="$errors"/>
 
       <div class="card">
         <div class="card-body">
@@ -52,7 +41,7 @@
                       <td>{{ $alumno->id }}</td>
                       <td>{{ $alumno->nombre }}</td>
                       <td>{{ $alumno->email }}</td>
-                      <td>{{ $alumno->carrera }}</td>
+                      <td>{{ get_careers()[$alumno->carrera] }}</td>
                       <td>{{ $alumno->cuatrimestre }}</td>
                       <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
                     </tr>
@@ -127,7 +116,6 @@
         url:"/alumnos/fetch_data?page="+page+"&query="+query,
         success:function(data)
         {
-          console.log(data);
           $('#student-table tbody').html(data);
         }
       });

@@ -21,10 +21,13 @@ class AlumnoFactory extends Factory
      */
     public function definition()
     {
+        $firstName = $this->faker->unique()->firstname();
+        $lastname = $this->faker->lastname();
+        
         return [
             'docente_id' => $this->faker->randomElement([1,2,3]),
-            'nombre' => $this->faker->name(),
-            'email' => $this->faker->unique()->email(),
+            'nombre' => $firstName . ' ' . $lastname,
+            'email' => $firstName.'@gmail.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'carrera' => $this->faker->randomElement(['TIC', 'G', 'MM', 'ER', 'PA', 'LI', 'MI', 'GCH', 'GDT']),
             'cuatrimestre' => $this->faker->randomElement([3, 5, 6, 11])

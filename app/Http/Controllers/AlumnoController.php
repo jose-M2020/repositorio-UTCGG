@@ -67,7 +67,7 @@ class AlumnoController extends Controller
         ]);
 
         return redirect('/alumnos/registrar')
-                ->with('success', 'Alumno registrado exitosamente!');
+                ->with('status', 'Alumno registrado exitosamente!');
     }
 
     /**
@@ -119,7 +119,7 @@ class AlumnoController extends Controller
         // $id->update($request->all());
 
         return redirect()->route('alumnos')
-            ->with('success','Alumno actualizado exitosamente!');
+            ->with('status','Alumno actualizado exitosamente!');
     }
 
     /**
@@ -133,7 +133,7 @@ class AlumnoController extends Controller
         Alumno::where('id', $id)->delete();
 
         return redirect()->route('alumnos')
-            ->with('success','Alumno eliminado exitosamente!');
+            ->with('status','Alumno eliminado exitosamente!');
     }
 
     public function search(Request $request){

@@ -59,7 +59,7 @@ h1{
 }
 
 .upload-files .project__file{
-	/*margin: 10px 0;*/
+	margin: 15px 0;
 	position: relative;
 }
 
@@ -97,10 +97,10 @@ h1{
 /******************* Navbar **********************/
 header{
 	width: 100%;
-	/* background: #05aa84;
-	background: linear-gradient(90deg, #6ef38f) 21%, #4ce6c2 100%); */
-	background: rgb(34,204,28);
-	background: linear-gradient(90deg, rgba(34,204,28,1) 21%, rgba(0,0,0,1) 100%);
+	 background: #0b8552;
+	/*background: linear-gradient(90deg, #6ef38f) 21%, #4ce6c2 100%); */
+	/*background: rgb(34,204,28);*/
+	/*background: linear-gradient(90deg, rgba(34,204,28,1) 21%, rgba(0,0,0,1) 100%);*/
 	display: flex;
 	height: 70px;
 	/*para centrarlo en su caja (dentro de ella*)*/
@@ -128,7 +128,7 @@ header{
 
 }
 
-nav{
+header nav{
 	display: flex;	/* este de abajo es para sacarlo de la caja donde estaba(osea para moverlo donde quieras)*/
 	position: absolute;
 	top: 80px;
@@ -140,13 +140,13 @@ nav{
 	transition: all 0.2s;
 }
 
-#btn-menu:checked ~ nav{
+#btn-menu:checked ~ header nav{
 	transform: translateX(0%);
 }
 
 #btn-menu{display: none;}
 
-nav a{
+header nav a{
 	text-decoration: none;
 	color: #000000;
 	background:#1d9427;
@@ -156,7 +156,7 @@ nav a{
 
 }
 
-nav a:hover{
+header nav a:hover{
 	background: #000000d9;
 	transition: all 0.5s;
 	border-radius: 5px;
@@ -194,15 +194,11 @@ nav a:hover{
 	width: 80px;
 }
 
-h1{
-	margin: 10px auto 20px;
-	 text-align: center; 
-}
 
 @media (min-width: 575px){
 	.icon{display: none;}	
 
-	nav{
+	header nav{
 		transform: translateX(0%);
 		width: auto;
 		height: auto;
@@ -212,13 +208,13 @@ h1{
 		background:none;
 		margin-right: 15px;
 	}
-	nav a{
+	header nav a{
 		border: 0px;
 		color:white;
 		background:#ffffff00;
 	}
 
-	nav a:hover{
+	header nav a:hover{
 		background: #d8d8d88a;
 		transition: all 0.5s;
 		border-radius: 5px;

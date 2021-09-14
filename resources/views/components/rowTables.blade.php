@@ -1,5 +1,5 @@
-@if (count($alumnos) >= 1)
-  @foreach ($alumnos as $alumno)
+
+  @forelse($alumnos as $alumno)
     <tr>                
       <td>{{ $alumno->id }}</td>
       <td>{{ $alumno->nombre }}</td>
@@ -8,14 +8,14 @@
       <td>{{ $alumno->cuatrimestre }}</td>
       <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
     </tr>
-  @endforeach
+  @empty
+    <tr>
+      <td>No hay registros para está búsqueda</td>
+    </tr>
+  @endforelse
   <tr>
     <td colspan="3" align="center">
       {{ $alumnos->links('pagination::bootstrap-4') }}
     </td>
   </tr>
-@else
-  <tr>
-    <td>No hay registros para está búsqueda</td>
-  </tr>
-@endif
+  

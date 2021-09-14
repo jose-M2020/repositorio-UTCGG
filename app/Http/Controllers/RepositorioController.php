@@ -16,9 +16,46 @@ class RepositorioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        $linkData = $request->all();
+
+        $career = $request->query('carrera');
+        $type = $request->query('tipo');
+        $level = $request->query('nivel');
+        $year = $request->input('year');
+
+        $search_input = $request->input('query');
+        $field = $request->input('search_field') ?? 'all';
+
+        $repositorios = Repositorio::orderByDesc('created_at')
+                ->when($search_input, function ($query, $search_input) use ($field) {
+                    if($field == 'all'){
+                        return $query->where('nombre_alumno', 'like', '%'.$search_input.'%')
+                                     ->orWhere('nombre_rep', 'like', '%'.$search_input.'%')
+                                     ->orWhere('descripcion', 'like', '%'.$search_input.'%'); 
+                    }
+                    return $query->where($field, 'like', '%'.$search_input.'%');
+                })
+                ->when($career, function ($query, $career){
+                    return $query->whereIn('carrera', $career);
+                })
+                ->when($type, function ($query, $type){
+                    $query->whereIn('tipo_proyecto', $type);
+                })
+                ->when($level, function ($query, $level){
+                    return $query->whereIn('nivel_proyecto', $level);
+                })
+                ->when($year, function ($query, $year){
+                    return $query->whereBetween('created_at', [$year[0], $year[1]]);
+                })
+                ->paginate(10);
+
+        return view('repositorio.index', ['repositorios' => $repositorios, 
+                                          'query' => $search_input,
+                                          'search_field' => $field,
+                                          'linkData' => $linkData
+                                         ]);
     }
 
     /**
@@ -26,8 +63,12 @@ class RepositorioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        // if(auth('alumno')){
+        //     $id = auth('alumno')->user()->id;
+        //     return view('repositorio.create');
+        // }
         return view('repositorio.create');
     }
 
@@ -40,27 +81,27 @@ class RepositorioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'student_name' => 'required|array|max:8',
-            'student_name.*' => 'required|string|max:255|distinct',
-            'repository_name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'project_type' => 'required|string|max:80',
-            'project_level' => 'required|string|max:80',
-            'filenames' => 'required|array|max:5',
-            'filenames.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
+            'nombre_alumno' => 'required|array|max:8',
+            'nombre_alumno.*' => 'required|string|max:255|distinct',
+            'nombre_repositorio' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255',
+            'tipo_proyecto' => 'required|string|max:80',
+            'nivel_proyecto' => 'required|string|max:80',
+            'archivo' => 'required|array|max:5',
+            'archivo.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
         ]);
 
-        $data = Alumno::where('nombre', $request->student_name[0]);
+        $data = Alumno::where('nombre', $request->nombre_alumno[0]);
 
-        $student_name = '';
-        if(is_array($request->student_name)){
-            $student_name = '';
-            foreach($request->student_name as $name){
-                $student_name .= $name.',';
+        $nombre_alumno = '';
+        if(is_array($request->nombre_alumno)){
+            $nombre_alumno = '';
+            foreach($request->nombre_alumno as $name){
+                $nombre_alumno .= $name.',';
             }
-            $student_name = trim($student_name, ',');
+            $nombre_alumno = trim($nombre_alumno, ',');
         }else{
-            $student_name = $request->student_name[0];
+            $nombre_alumno = $request->nombre_alumno[0];
         }
         
 
@@ -69,24 +110,24 @@ class RepositorioController extends Controller
             
             $repository_created = Repositorio::create([
                 'alumno_id' => $data->id,
-                'nombre_alumno' => $student_name,
-                'nombre_rep' => $request->repository_name,
-                'descripcion' => $request->description,
-                'tipo_proyecto' => $request->project_type,
-                'nivel_proyecto' => $request->project_level
+                'nombre_alumno' => $nombre_alumno,
+                'nombre_rep' => $request->nombre_repositorio,
+                'descripcion' => $request->descripcion,
+                'tipo_proyecto' => $request->tipo_proyecto,
+                'nivel_proyecto' => $request->nivel_proyecto
             ]);
 
-            $filenames = '';
-            if($request->hasfile('filenames')) {
+            $archivo = '';
+            if($request->hasfile('archivo')) {
                 $currentYear = date("Y");
                 $path = 'files/'.
                         $data->carrera .'/'.
                         $currentYear .'/'.
                         $data->cuatrimestre. '/'.
-                        $request->student_name[0];
+                        $request->nombre_alumno[0];
 
-                foreach($request->file('filenames') as $file) {   
-                    $file_stored = $file->store($path);
+                foreach($request->file('archivo') as $file) {   
+                    $file_stored = $file->storePublicly($path, 'public');
 
                     File::create([
                         'repositorio_id' => $repository_created->id,
@@ -96,7 +137,7 @@ class RepositorioController extends Controller
                         'file_path' => $file_stored,
                         'is_public' => 0
                     ]);
-                    // $filenames .= $file->getClientOriginalName().'|';
+                    // $archivo .= $file->getClientOriginalName().'|';
                     // $name = time().rand(1,100).'.'.$file->extension();
                     // $file->move(public_path('files'), $name);  
                     // $files[] = $name;  
@@ -107,8 +148,8 @@ class RepositorioController extends Controller
             throw ValidationException::withMessages(['El nombre de alumno ingresado no fue encontrado']);
         }
 
-        return redirect('/repositorio/registrar')
-                ->with('success', 'Repositorio agregado exitosamente!');
+        return redirect('/repositorios/registrar')
+                ->with('status', 'Repositorio agregado exitosamente!');
     }
 
     /**
@@ -119,7 +160,11 @@ class RepositorioController extends Controller
      */
     public function show($id)
     {
-        //
+        $repositorio = Repositorio::findOrFail($id);
+        $files = Repositorio::findOrFail($id)->getFile;
+        // dd($repositorio);
+        
+        return view('repositorio.show', compact('repositorio', 'files'));
     }
 
     /**
@@ -154,5 +199,17 @@ class RepositorioController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function downloadFile($id)
+    {
+        $files = Repositorio::find($id)->getFile;
+        foreach($files as $file){
+            // $filepath = storage_path('app/public/'.$file->file_path;
+            // return response()->download($filepath);
+            $filepath = 'public/'.$file->file_path;
+
+            return Storage::download($filepath, $file->original_name);
+        }
     }
 }
