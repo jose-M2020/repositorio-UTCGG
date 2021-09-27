@@ -61,14 +61,14 @@ export const inputListener = input => {
 }
 
 // Agregamos un EventListener al dar click en eliminar
-const removeElementListener = id => {
-	setTimeout(function(){
-		document.getElementById(id).addEventListener('click', function(e) {
-			// ascendemos al padre que contiene el div (conformado por iconos, input) y eliminanos el div
-			this.parentElement.parentElement.removeChild(this.parentElement);
-		})
-	},50)
-}
+// const removeElementListener = id => {
+// 	setTimeout(function(){
+// 		document.getElementById(id).addEventListener('click', function(e) {
+// 			// ascendemos al padre que contiene el div (conformado por iconos, input) y eliminanos el div
+// 			this.parentElement.parentElement.removeChild(this.parentElement);
+// 		})
+// 	},50)
+// }
 
 let page = 1;
 export const dataLoadEvent = container => {
@@ -219,30 +219,31 @@ export const addNewElement = e => {
 	i++;
 	// Creamos el icono de eliminar
 	let node = document.createElement("I");
-	node.classList.add('fas', 'fa-minus-circle', 'remove_element');
+	node.classList.add('fas', 'fa-times-circle', 'remove');
 	node.id = 'icon'+i;
 
 	// Agregamos el icono de eliminar al nuevo elemento creado
 	newElement.appendChild(node);
 	parent.insertBefore(newElement, parent.lastElementChild);
 
-	removeElementListener(node.id);
+	// removeElementListener(node.id);
 }
 
-/*
-	El elemento sera agregado como hijo del elemento anterior (al menos que se declare child como false).
-	Para agregar varios elementos repetidos que tendra diferentes textos y/0 id, solo se declara el elemento
-	una vez, y se pasa un array de strings en data y id (opcional).
-
-	Para el uso de esta función, se pasa como parametro un array de objetos, donde cada elemento consta de:
-		type 				-> El tipo de elemento que se va a crear.
-		attributes	-> Un objeto con los atributos (id, class, etc).
-					class 		-> debe ser un array con la clase o clases.
-					id 				-> un string con el id, en el caso de que sea para un elemento que se repetira varias
-											 veces, se puede pasar un array con el id correspondiente.
-		child 			-> True o false, si el elemento a agregar es hijo o no del elemento anteror. Por default es true.
-		ascend 			-> Para ascender a un elemento especifico.
-		data 				-> El texto que tendra el elemento, puede ser un string o array de string.
+/**
+	* El elemento sera agregado como hijo del elemento anterior (al menos que se declare child como false).
+	* Para agregar varios elementos repetidos que tendra diferentes textos y/0 id, solo se declara el elemento
+	* una vez, y se pasa un array de strings en data y id (opcional).
+  *
+	* Para el uso de esta función, se pasa como parametro un array de objetos.
+	*
+	*	@param type 			- El tipo de elemento que se va a crear.
+	*	@param attributes	- Un objeto con los atributos (id, class, name, etc).
+	*				   class 		  - debe ser un array con la clase o clases.
+	*				   id 				- un string con el id, en el caso de que sea para un elemento que se repetira varias
+	*										    veces, se puede pasar un array con el id correspondiente.
+	*	@param child 			- True o false, si el elemento a agregar es hijo o no del elemento anteror. Por default es true.
+	*	@param ascend 			- Para ascender a un elemento especifico.
+	*	@param data 				- El texto que tendra el elemento, puede ser un string o array de string.
 */
 
 export const createHTML = elements => {

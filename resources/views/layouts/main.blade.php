@@ -34,8 +34,13 @@
 			  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background: rgba(71, 139, 117, .8);">
 				@auth('alumno')
 			    <li>
-			    	<a  href="#" style="font-size: 16px;">
-			    		<i class="far fa-file-archive"></i> Archivos subidos
+			    	<a  href="/" style="font-size: 16px;">
+			    		<i class="far fa-file-archive"></i> Mis archivos
+			    	</a>
+				</li>
+				<li>
+			    	<a  href="/" style="font-size: 16px;">
+			    		<i class="far fa-file-archive"></i> Mi Cuenta
 			    	</a>
 				</li>
 			    @endauth

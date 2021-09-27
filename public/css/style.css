@@ -10,6 +10,10 @@ h1{
 	background: inherit;
 }
 
+svg > *{
+	pointer-events: none;
+}
+
 /****************** Table  ******************/
 .alumnos #editUser{
 	font-size: 25px;
@@ -305,7 +309,7 @@ input#search_box:focus ~ #search_icon{
 }
 
 /* icono para eliminar inputs */
-input ~ .remove_element{
+input ~ .remove{
 	font-size: 32px;
 	color: #F45E5E;
 	position: absolute;
@@ -316,7 +320,7 @@ input ~ .remove_element{
 }
 
 /* icono para eliminar inputs tipo archivo */
-label ~ .remove_element{
+label ~ .remove{
 	top: 15px;
 	right: 15px;
 	font-size: 20px;

@@ -22,16 +22,6 @@ class AlumnoController extends Controller
         return view('alumno.index', compact('alumnos'));
     }
 
-    public function fetch_data(Request $request){
-        if($request->ajax()){
-            $query = $request->get('query');
-            $query = str_replace(" ", "%", $query);
-
-            $alumnos = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre']);
-            return view('components.rowTables', compact('alumnos'))->render();
-         }
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -136,6 +126,16 @@ class AlumnoController extends Controller
             ->with('status','Alumno eliminado exitosamente!');
     }
 
+    public function fetch_data(Request $request){
+        if($request->ajax()){
+            $query = $request->get('query');
+            $query = str_replace(" ", "%", $query);
+
+            $alumnos = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre']);
+            return view('components.rowTables', compact('alumnos'))->render();
+         }
+    }
+
     public function search(Request $request){
         // if($request->ajax()){
             $query = $request->get('query');
@@ -147,4 +147,5 @@ class AlumnoController extends Controller
             }
          // }
     }
+
 }

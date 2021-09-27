@@ -81,57 +81,89 @@ class RepositorioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_alumno' => 'required|array|max:8',
-            'nombre_alumno.*' => 'required|string|max:255|distinct',
+            'alumno' => 'required|array|max:8',
+            'alumno.*' => 'required|string|max:255|distinct',
+
+            // Nuevos campos
+            'carrera' => 'required|string|max:80',
+            'asesor_academico' => 'required|string|max:255',
+            'asesor_externo' => 'required|string|max:255',
+            'empresa' => 'required|string|max:255',
+            // ---------------
+
             'nombre_repositorio' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
             'tipo_proyecto' => 'required|string|max:80',
             'nivel_proyecto' => 'required|string|max:80',
-            'archivo' => 'required|array|max:5',
-            'archivo.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
+
+            // Nuevos campos
+            'palabras_clave' => 'required|string|max:255',
+            'generacion' => 'required|string|max:255',
+            'imagenes' => 'required|array|max:5',
+            'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
+            // -----------------
+
+            'archivos' => 'required|array|max:5',
+            'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
         ]);
 
-        $data = Alumno::where('nombre', $request->nombre_alumno[0]);
-
-        $nombre_alumno = '';
-        if(is_array($request->nombre_alumno)){
-            $nombre_alumno = '';
-            foreach($request->nombre_alumno as $name){
-                $nombre_alumno .= $name.',';
-            }
-            $nombre_alumno = trim($nombre_alumno, ',');
-        }else{
-            $nombre_alumno = $request->nombre_alumno[0];
-        }
+        $logged_user = auth()->user();
+        // $data = Alumno::where('nombre', $request->alumno[0]);
         
+        // Convertimos el o los nombres en una array codificado
+        foreach($request->alumno as $name){
+            $nombre_alumno[] = $name;
+        }
+        $authors = json_encode($nombre_alumno);
+        
+        if($logged_user){
+            // Creamos la ruta donde se almacenaran los archivos e imagenes
+            $currentYear = date("Y");
+            $path = 'files/'.
+                    $logged_user->carrera .'/'.
+                    $currentYear .'/'.
+                    $logged_user->cuatrimestre. '/'.
+                    $logged_user->nombre;
 
-        if($data->exists()){
-            $data = $data->first(['id', 'carrera', 'cuatrimestre']);
-            
+            // Guardamos las imagenes y convertimos las rutas en una array codificado
+            if($request->hasfile('imagenes')) { 
+                foreach($request->file('imagenes') as $image)
+                {
+                    $image_path = $path.'/images';
+                    $image_stored = $image->storePublicly($image_path, 'public');
+                    $img[] = $image_stored;
+                }
+            }
+            $images = json_encode($img);
+
+            // Guardamos los datos en la base de datos
             $repository_created = Repositorio::create([
-                'alumno_id' => $data->id,
-                'nombre_alumno' => $nombre_alumno,
+                'alumno_id' => $logged_user->id,
+                'alumno' => $authors,
+
+                'carrera' => $logged_user->carrera,
+                'asesor_academico' => $request->asesor_academico,
+                'asesor_externo' => $request->asesor_externo,
+                'empresa' => $request->empresa,
+
                 'nombre_rep' => $request->nombre_repositorio,
                 'descripcion' => $request->descripcion,
                 'tipo_proyecto' => $request->tipo_proyecto,
-                'nivel_proyecto' => $request->nivel_proyecto
+                'nivel_proyecto' => $request->nivel_proyecto,
+
+                'palabras_clave' => $request->palabras_clave,
+                'generacion' => $request->generacion,
+                'imagenes' => $images
             ]);
 
             $archivo = '';
-            if($request->hasfile('archivo')) {
-                $currentYear = date("Y");
-                $path = 'files/'.
-                        $data->carrera .'/'.
-                        $currentYear .'/'.
-                        $data->cuatrimestre. '/'.
-                        $request->nombre_alumno[0];
-
-                foreach($request->file('archivo') as $file) {   
+            if($request->hasfile('archivos')) {
+                foreach($request->file('archivos') as $file) {   
                     $file_stored = $file->storePublicly($path, 'public');
 
                     File::create([
                         'repositorio_id' => $repository_created->id,
-                        'alumno_id' => $data->id,
+                        'alumno_id' => $logged_user->id,
                         'original_name' => $file->getClientOriginalName(),
                         'file_type' => $file->extension(),
                         'file_path' => $file_stored,
@@ -150,6 +182,13 @@ class RepositorioController extends Controller
 
         return redirect('/repositorios/registrar')
                 ->with('status', 'Repositorio agregado exitosamente!');
+
+
+
+        
+
+        // dd(json_decode($file));
+        // $file->save();               
     }
 
     /**
@@ -211,5 +250,9 @@ class RepositorioController extends Controller
 
             return Storage::download($filepath, $file->original_name);
         }
+    }
+
+    public function files($user){
+        
     }
 }

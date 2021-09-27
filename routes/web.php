@@ -93,6 +93,9 @@ Route::get('/repositorios/{id}', [RepositorioController::class, 'show'])
 Route::get('/repositorios/descargar/{id}', [RepositorioController::class, 'downloadFile'])
     ->name('repositorios.store');
 
+// Archivos
 
+Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
+    ->name('repositorios.store');
 
 require __DIR__.'/auth.php';

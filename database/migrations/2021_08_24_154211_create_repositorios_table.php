@@ -19,12 +19,27 @@ class CreateRepositoriosTable extends Migration
                   ->constrained()
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
-            $table->string('nombre_alumno');
+            $table->string('alumno');
+
+            // Datos añadidos-------
+            $table->string('carrera');
+            $table->string('asesor_academico');
+            $table->string('asesor_externo');
+            $table->string('empresa');
+            // ----------------------
+
             $table->string('nombre_rep');
             $table->text('descripcion');
             $table->string('tipo_proyecto');
             $table->string('nivel_proyecto');
             // $table->string('nombre_proyecto');
+
+            // Datos añadidos-------
+            $table->string('palabras_clave');
+            $table->string('generacion');
+            $table->string('imagenes');
+            // -------------------------------
+
             $table->timestamps();
         });
     }

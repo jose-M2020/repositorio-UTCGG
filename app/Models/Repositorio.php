@@ -13,11 +13,21 @@ class Repositorio extends Model
 
     protected $fillable = [
         'alumno_id',
-        'nombre_alumno',
+        'alumno',
+
+        'carrera',
+        'asesor_academico',
+        'asesor_externo',
+        'empresa',
+
         'nombre_rep',
         'descripcion',
         'tipo_proyecto',
-        'nivel_proyecto'
+        'nivel_proyecto',
+
+        'palabras_clave',
+        'generacion',
+        'imagenes'
     ];
 
     public function getFile()

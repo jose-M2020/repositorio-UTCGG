@@ -10,6 +10,7 @@
     background-position: center top;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    background-size: cover;
     width: 100%; 
     height: 70vh; 
     position: relative;

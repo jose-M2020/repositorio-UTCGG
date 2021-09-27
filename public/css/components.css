@@ -63,10 +63,10 @@
 	border-radius: 10px;
 	margin: 10px auto;
 	justify-content: center;
-	max-width: 500px;
+	max-width: 550px;
 
 	padding: 20px;
-	border: 1px solid rgb(117, 207, 117);
+	/*border: 1px solid rgb(117, 207, 117);*/
 	background-color: #fff;
 	box-shadow: 2px 4px 4px #aaa;
 	overflow-y: auto;

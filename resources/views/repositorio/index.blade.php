@@ -49,6 +49,7 @@
             background-image: url('img/utcgg.png');
             background-repeat: no-repeat;
             background-position: center;
+            background-size: cover;
             width: 100%; 
             height: 25vh; 
             position: relative;
@@ -79,7 +80,7 @@
               <span class="input-group-text" style="background-color: #fff; border: none;">
                 <select name="search_field" id="search_field" class="form-select form-select-sm" aria-label=".form-select-sm" style="border: none;">
                   <option value="all" {{ $search_field == 'all' ? 'selected="selected"' : '' }}>Todos</option>
-                  <option value="nombre_alumno" {{ $search_field == 'nombre_alumno' ? 'selected="selected"' : '' }}>Autor</option>
+                  <option value="alumno" {{ $search_field == 'alumno' ? 'selected="selected"' : '' }}>Autor</option>
                   <option value="nombre_rep" {{ $search_field == 'nombre_rep' ? 'selected="selected"' : '' }}>Titulo</option>
                   <option value="descripcion" {{ $search_field == 'descripcion' ? 'selected="selected"' : '' }}>Descripción</option>
                 </select>
@@ -130,9 +131,11 @@
             <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span>
             <h6 class="border-bottom pb-2 mb-0 mt-3">{{ $repositorios->total() }} resultados</h6>
             @forelse ($repositorios as $repositorio)
-              <div class="d-flex text-muted pt-3 border-bottom border-secondary project">
+              <div class="d-flex text-muted pt-3 border-bottom border-secondary project position-relative">
+                <i class="far fa-star position-absolute end-0"></i>
                 <div class="me-2" style="max-width: 200px; color: #2E6A99;">
-                  <i class="fas fa-file-pdf" style="font-size: 100px"></i>
+                  <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
+                  <img src="{{$repositorio->imagenes}}" style="object-fit: cover; width: 100%;">
                 </div>
                 <div class="d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                   <small class="mb-2">
@@ -140,7 +143,7 @@
                   </small>
                   <a class="mb-2" href="/repositorios/{{ $repositorio->id }}"><strong class="text-gray-dark d-block nombre_rep">{{ $repositorio->nombre_rep }}</strong></a>
                   <p class="descripcion">{{ $repositorio->descripcion }}</p>
-                  <p class="nombre_alumno">{{$repositorio->nombre_alumno}} | {{$repositorio->created_at}}</p>
+                  <p class="nombre_alumno">{{$repositorio->alumno}} | {{$repositorio->created_at}}</p>
                   <div>
                     <a href="/repositorios/descargar/{{$repositorio->id}}"><i class="fas fa-download"></i></a>
                   </div>
