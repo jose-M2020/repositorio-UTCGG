@@ -21,8 +21,6 @@ class RepositorioFactory extends Factory
      */
     public function definition()
     {   
-        static $number = 1;
-
         $careers = [
             'TIC' => ['software', 'arduino', 'iot', 'webpage', 'app', 'electronic', 'raspberrypi', 'robotic', 'bot', 'system'],
             'G' => ['food', 'restaurant', 'drinks', 'desserts', 'cakes'],
@@ -39,8 +37,7 @@ class RepositorioFactory extends Factory
         $keyword = $this->faker->randomElement($careers[$career]);
         
         return [
-            'alumno_id' => $number++,
-            'alumno' => $this->faker->name(),
+            'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
             'carrera' => $career,
@@ -55,10 +52,9 @@ class RepositorioFactory extends Factory
             'nivel_proyecto' => $this->faker->randomElement(['TSU', 'Ingeniería']),
 
             // ----Campos añadidos----------------
-            'palabras_clave' => $keyword,
-            // 'palabras_clave' = $this->faker->randomElement(['arduino', 'electronica', 'informatica', 'web', 'IOT', 'comida', 'hotel', 'auto', 'mecanica', 'automotriz', 'solar', 'administracion', 'banco', 'energias', 'reciclar', 'Gastronomía', 'mobliario', 'robotica', 'restaurante']),
+            'palabras_clave' => json_encode([$keyword]),
             'generacion' => $this->faker->randomElement(['2018-2021', '2015-2018', '2013-2015', '2010-2013']),
-            'imagenes' => 'https://source.unsplash.com/1600x900/?'.$keyword
+            'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword])
             // ------------------------------------
         ];
     }

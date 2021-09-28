@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilesTables extends Migration
+class CreateAlumnosRepositoriosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,16 @@ class CreateFilesTables extends Migration
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('alumnos_repositorios', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('alumno_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->foreignId('repositorio_id')
                   ->constrained()
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
-            // $table->foreignId('alumno_id')
-            //       ->constrained()
-            //       ->onUpdate('cascade')
-            //       ->onDelete('cascade');
-            $table->string('original_name');
-            $table->string('file_type');
-            $table->string('file_path');
-            $table->boolean('is_public')->default(false);
             $table->timestamps();
         });
     }
@@ -38,6 +34,6 @@ class CreateFilesTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files_tables');
+        Schema::dropIfExists('alumnos_repositorios');
     }
 }

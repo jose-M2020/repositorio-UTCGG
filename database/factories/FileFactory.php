@@ -25,8 +25,8 @@ class FileFactory extends Factory
         
         return [
             // 'repositorio_id' => $this->faker->unique()->numberBetween(1, 30),
-            'repositorio_id' => $number,
-            'alumno_id' => $number++,
+            'repositorio_id' => $number++,
+            // 'alumno_id' => $number++,
             'original_name' => 'Documentación',
             'file_type' => 'pdf',
             'file_path' => 'files/test/Proyecto Repositorio-UT.pdf',

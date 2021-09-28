@@ -7,6 +7,8 @@ use App\Models\Docente;
 use App\Models\Admin;
 use App\Models\Repositorio;
 use App\Models\File;
+use App\Models\Alumno_docente;
+use App\Models\Alumno_repositorio;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -45,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         Alumno::insert([
-            'docente_id' => 1,
+            // 'docente_id' => 1,
             'nombre' => 'José Manuel',
             'email' => 'jose@gmail.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
@@ -58,5 +60,9 @@ class DatabaseSeeder extends Seeder
         Repositorio::factory(30)->create();
 
         File::factory(30)->create();
+
+        Alumno_docente::factory(30)->create();
+
+        Alumno_repositorio::factory(30)->create();
     }
 }

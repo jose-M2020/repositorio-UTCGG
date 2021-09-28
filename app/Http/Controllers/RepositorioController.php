@@ -138,7 +138,7 @@ class RepositorioController extends Controller
 
             // Guardamos los datos en la base de datos
             $repository_created = Repositorio::create([
-                'alumno_id' => $logged_user->id,
+                // 'alumno_id' => $logged_user->id,
                 'alumno' => $authors,
 
                 'carrera' => $logged_user->carrera,
@@ -163,7 +163,7 @@ class RepositorioController extends Controller
 
                     File::create([
                         'repositorio_id' => $repository_created->id,
-                        'alumno_id' => $logged_user->id,
+                        // 'alumno_id' => $logged_user->id,
                         'original_name' => $file->getClientOriginalName(),
                         'file_type' => $file->extension(),
                         'file_path' => $file_stored,

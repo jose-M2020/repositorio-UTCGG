@@ -15,11 +15,6 @@ class CreateAlumnosTable extends Migration
     {
         Schema::create('alumnos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
             $table->string('nombre');
             $table->string('email')->unique();
             $table->string('password');
