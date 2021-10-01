@@ -26,6 +26,7 @@ class Alumno_repositorioFactory extends Factory
         return [
             'alumno_id' => $number,
             'repositorio_id' => $number++,
+            'docente_id' => $this->faker->randomElement([1,2,3]),
         ];
     }
 }

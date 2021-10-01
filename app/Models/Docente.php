@@ -45,8 +45,8 @@ class Docente extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
 
-    public function alumnoAsesorado()
+    public function asesorados()
     {
-        return $this->hasMany(Alumno::class, 'docente_id');
+        return $this->belongsToMany(Alumno::class, 'alumnos_repositorios');
     }
 }

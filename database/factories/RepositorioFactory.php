@@ -37,11 +37,11 @@ class RepositorioFactory extends Factory
         $keyword = $this->faker->randomElement($careers[$career]);
         
         return [
-            'alumno' => json_encode([$this->faker->name()]),
+            // 'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
-            'carrera' => $career,
-            'asesor_academico' => $this->faker->name(),
+            // 'carrera' => $career,
+            // 'asesor_academico' => $this->faker->name(),
             'asesor_externo' => $this->faker->name(),
             'empresa' => $this->faker->company(),
             // ------------------------------------
@@ -54,8 +54,10 @@ class RepositorioFactory extends Factory
             // ----Campos añadidos----------------
             'palabras_clave' => json_encode([$keyword]),
             'generacion' => $this->faker->randomElement(['2018-2021', '2015-2018', '2013-2015', '2010-2013']),
-            'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword])
+            'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword]),
             // ------------------------------------
+
+            'created_by' => $this->faker->name()
         ];
     }
 }

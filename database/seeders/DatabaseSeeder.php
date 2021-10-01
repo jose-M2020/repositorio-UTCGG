@@ -7,7 +7,6 @@ use App\Models\Docente;
 use App\Models\Admin;
 use App\Models\Repositorio;
 use App\Models\File;
-use App\Models\Alumno_docente;
 use App\Models\Alumno_repositorio;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -60,8 +59,6 @@ class DatabaseSeeder extends Seeder
         Repositorio::factory(30)->create();
 
         File::factory(30)->create();
-
-        Alumno_docente::factory(30)->create();
 
         Alumno_repositorio::factory(30)->create();
     }

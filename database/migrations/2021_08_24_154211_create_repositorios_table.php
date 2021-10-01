@@ -15,11 +15,11 @@ class CreateRepositoriosTable extends Migration
     {
         Schema::create('repositorios', function (Blueprint $table) {
             $table->id();
-            $table->string('alumno');
+            // $table->string('alumno');
 
             // Datos añadidos-------
-            $table->string('carrera');
-            $table->string('asesor_academico');
+            // $table->string('carrera');
+            // $table->string('asesor_academico');
             $table->string('asesor_externo');
             $table->string('empresa');
             // ----------------------
@@ -36,6 +36,7 @@ class CreateRepositoriosTable extends Migration
             $table->string('imagenes');
             // -------------------------------
 
+            $table->string('created_by');
             $table->timestamps();
         });
     }

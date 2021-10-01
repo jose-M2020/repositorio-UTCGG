@@ -14,7 +14,7 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $asesorados = Docente::find(1)->alumnoAsesorado;
+        $asesorados = Docente::find(1)->asesorados;
         foreach($asesorados as $alumno){
             echo($alumno->nombre.'<br>');
         }

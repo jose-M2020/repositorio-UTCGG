@@ -256,7 +256,7 @@ form.addEventListener('submit', e => {
 			handleFile().handleFileSelect(e);
 		})
 	}else{
-		alert('El navegador actual no es compatible con la API de archivos. Utiliza otro navegador.');
+		alert('El navegador actual no es compatible con la API de archivos. Intentalo con otro navegador.');
 	}
 
 const dt = new DataTransfer();

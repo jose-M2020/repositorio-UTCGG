@@ -41,8 +41,13 @@ class Alumno extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
 
-    public function asesor()
+    public function asesores()
     {
-        return $this->belongsTo(Docente::class, 'docente_id');
+        return $this->belongsToMany(Docente::class, 'alumnos_repositorios');
+    }
+
+    public function repositorios()
+    {
+        return $this->belongsToMany(Repositorio::class, 'alumnos_repositorios');
     }
 }

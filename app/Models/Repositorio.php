@@ -34,4 +34,10 @@ class Repositorio extends Model
     {
         return $this->hasMany(File::class, 'repositorio_id');
     }
+
+    public function find_by_career($career)
+    {
+        return $this->belongsToMany(Alumno::class, 'alumnos_repositorios')
+                    ->wherePivot('carrera', $career);
+    }
 }

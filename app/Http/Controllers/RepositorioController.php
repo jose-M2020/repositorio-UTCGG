@@ -56,6 +56,15 @@ class RepositorioController extends Controller
                                           'search_field' => $field,
                                           'linkData' => $linkData
                                          ]);
+
+        // $reps = Alumno::find(auth()->user()->id)->repositorios;
+        // $asesor = Repositorio::find($reps[0]->id)->asesor;
+        // $autores = Repositorio::find($reps[0]->id)->autores;
+        // dd($reps);
+
+        // foreach($reps as $r){
+        //     echo($r->nombre.'<br>');
+        // }
     }
 
     /**
