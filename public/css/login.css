@@ -1,61 +1,158 @@
 :root{
   --form-color: #edf3ee;
+  --light-green: #DFFAEB;
+  --medium-green: #157759;
+
+  --xs: 0;
+  --sm: 576px;
+  --md: 768px;
 }
 
-body {
+body{
   margin: 0;
   padding: 0;
-  background-image: url(../img/fondo-login.jpg);
-  background-size: cover;
   font-family: sans-serif;
   height: 100vh;
-
-  overflow: hidden;  
+  overflow: hidden;
 }
 
-body::before{
-  content: '';
+.left-section {
+  /*background-image: url(../img/fondo-login.jpg);*/
+  /*background-repeat: no-repeat;*/
+  /*background-size: cover;*/
+  /*background-position: center;*/
+  position: relative;
+  background: var(--light-green);
+}
+
+.left-section .left-section__title {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.left-section .left-section__title svg{
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, .6);
+  width: 52px;
+  top: -35px;
+  right: -38px;
 }
 
-.logo img{
-  width: 50px;
-  padding: 10px;
-  border-radius: 5px;
+.left-section .left-section__image{
+  width: 30%;
 }
+
+.left-section .divider{
+  position: absolute; 
+  right: -3px; 
+  z-index: 10;
+}
+
+.left-section .divider svg{
+  height: 100vh;
+}
+
+.left-section .divider svg path{
+  fill: var(--medium-green);
+}
+
+.left-section h1{
+  text-align: center;
+  color: #157759;
+  z-index: 10;
+}
+
+
+
+/*.shapedividers_com-7324{
+  overflow:hidden;
+  position:relative;
+}
+.shapedividers_com-7324::before{
+  content:'';
+  font-family:'shape divider from ShapeDividers.com';
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  z-index: 3;
+  pointer-events: none;
+  background-repeat: no-repeat; 
+  transform:scaleY(4);
+  transform-origin: 100% 100%;
+  animation: 9s infinite alternate shape-ver-anim-7324-mobile linear;
+  background-size: 103px 100%;
+  background-position: 100% 50%;    
+  background-image: url('data:image/svg+xml;charset=utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2.17 35.28" preserveAspectRatio="none"><path d="M1.67 0c-.55 3.07.41 9.27 0 16.14-.4 6.88-.58 13.75.1 19.14h.4V0z" fill="%23157759"/><path d="M1.16 0c-.8 3.17.4 7.29.56 10.04C1.89 12.8.25 19.3.42 22.71c.16 3.43.84 4.65.86 7.05.03 2.4-.88 5.52-.88 5.52h1.77V0z" opacity=".5" fill="%23157759"/><path d="M.31 0c.84 2.56.3 7.68.43 11.79.12 4.1.61 6.86.28 9.58-.33 2.73-1.18 5.61-1 8.61.19 3 .82 4.73.84 5.3h1.2V0z" opacity=".5" fill="%23157759"/></svg>'); 
+}
+
+@keyframes shape-ver-anim-7324-mobile {
+  100% {
+    transform: scaleY(4) translateY(calc(100% - (100% / 4)));
+  }
+} 
+@media (min-width:768px){
+  .shapedividers_com-7324::before{
+  transform:scaleY(4);
+  transform-origin: 100% 100%;
+  animation: 9s infinite alternate shape-ver-anim-7324-mobile linear;
+  background-size: 103px 100%;
+  background-position: 100% 50%;   
+  }  
+}
+
+@media (min-width:1025px){
+  .shapedividers_com-7324::before{ 
+  bottom: -0.1vw;
+  left: -0.1vw;
+  right: -0.1vw;
+  top: -0.1vw; 
+  transform:scaleY(4.1);
+  transform-origin: 100% 100%;
+  animation: 9s infinite alternate shape-ver-anim-7324  linear;
+  background-size: 103px 100%;
+  background-position: 100% 50%;  
+  background-image: url('data:image/svg+xml;charset=utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0.529 2.646" preserveAspectRatio="none"><path d="M.53 2.646Q-.53 1.323.53 0z" fill="%23157759"/></svg>'); 
+  }
+}
+
+@keyframes shape-ver-anim-7324 {
+  100% {
+    transform: scaleY(4.1) translateY(calc(100% - (100% / 4.1)));
+  }
+}   */
+
+
+
+
+
+.right-section{
+  background: var(--medium-green);
+}
+
+
 .login-box {
-  width: 320px;
-  height: auto;
+  width: 300px;
+  margin-top: 50px;
   background-color: var(--form-color);
   color: #000;
-  top: 50%;
-  left: 50%;
   position: relative;
-  transform: translate(-50%, -50%);
   box-sizing: border-box;
-  padding: 70px 30px 20px;
+  padding: 40px 20px 20px;
   /*outline: 4px ridge rgb(35 133 73);*/
   border: 4px solid rgb(20, 207, 107);
   border-radius: 12px;
-  animation-duration: 3s;
-  animation-name: slidein;
+  animation: slidein 1s;
 
 }
 
 @keyframes slidein {
   from {
-    margin-left: 50%;
-    width: 50%
+    transform: translateX(430px);
   }
 
   to {
-    margin-left: 0;
-    width: 320px;
+    transform: translateX(0);
   }
 }
 
@@ -72,7 +169,7 @@ body::before{
   border-right-color: var(--form-color);
   
   position: absolute;
-  top: -54px;
+  top: -50px;
   left: calc(50% - 50px);
   overflow: hidden;
 
@@ -106,7 +203,6 @@ body::before{
 
 .login-box input {
   width: 100%;
-  margin-bottom: 20px;
 }
 
 .login-box input:not([type='submit']) {
@@ -165,7 +261,31 @@ body::before{
 
 .login-box #eyeIcon{ font-size: 18px; }
 
-/**************** Mensaje ****************/
+
+@media (max-width: 768px){
+  .left-section .left-section__image{
+    display: none;
+  }
+
+  .left-section .left-section__title{
+    margin: 15px 0 0;
+    
+  }
+
+  .left-section .divider{
+    /*transform: rotate(90deg);*/
+    display: none;
+  }
+
+  .left-section .divider svg{
+    /*width: 100%;
+    height: 100%;*/
+
+  }
+}
+
+
+/* Mensaje */
 
 .message{ 
   overflow: hidden;
