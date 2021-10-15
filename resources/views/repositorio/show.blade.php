@@ -11,7 +11,7 @@
 			<div class="col-md-10">
 				<div class="row">
 					<div class="col-md-4">
-						<img src="{{ asset('storage/images/doc.png') }}" style="width: 100%;">
+						<img src="{{ set_url('storage/images/doc.png') }}" style="width: 100%;">
 					</div>
 					<div class="col-md-8">
 						<h4 class="text-center mb-3">Rep {{ $repositorio->nombre_rep }}</h4>
@@ -25,7 +25,7 @@
 						@foreach($files as $file)
 							@if($file->file_type == 'pdf')
 								<div>
-									<iframe style="width: 100%; height: 600px;" allowfullscreen title="Documentación" src="{{ asset('storage/'.$file->file_path) }}"></iframe>
+									<iframe style="width: 100%; height: 600px;" allowfullscreen title="Documentación" src="{{ set_url('storage/'.$file->file_path) }}"></iframe>
 									<span class="text-center d-block">{{ $file->original_name }}</span>
 								</div>
 								<!-- <embed src="{{ url($file->file_path) }}" type="application/pdf" width="50%" height="400px" /> -->

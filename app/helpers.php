@@ -117,3 +117,16 @@ if(!function_exists('get_type_projects')){
 		return ['Integradora', 'Estadía', 'Proyecto Especial'];
 	}
 }
+
+if(!function_exists('set_url')){
+	function set_url($path)
+	{	
+		if((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on'))) || $_SERVER['SERVER_PORT'] == 443){
+			return secure_asset($path);
+		}else{
+			return asset($path);
+		}
+
+	}
+}
+

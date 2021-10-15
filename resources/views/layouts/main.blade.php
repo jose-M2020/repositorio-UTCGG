@@ -5,20 +5,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>@yield('title')</title>
 
-	<link rel="shortcut icon" href="{{ asset('img/logo1.png') }}">
+	<link rel="shortcut icon" href="{{ set_url('img/logo1.png') }}">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 	<!-- Icons -->
-	<script type="text/javascript" src="{{ asset('js/all.js') }}"></script>
+	<script type="text/javascript" src="{{ set_url('js/all.js') }}"></script>
 	<!--  -->
 	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap" rel="stylesheet"> 
 	<!-- Estilos CSS personalizado -->
-	<link rel="stylesheet" href="{{ asset('css/main.css') }}">
+	<link rel="stylesheet" href="{{ set_url('css/main.css') }}">
 </head>
 <body>
 	<header>
-	    <a href="/alumnos"><div class="logo_real"><img src="{{ asset('img/logo1.png') }}"></div></a>
+	    <a href="/alumnos"><div class="logo_real"><img src="{{ set_url('img/logo1.png') }}"></div></a>
 	    <input type="checkbox" name=""  id="btn-menu">
-	    <label for="btn-menu" class="icon" ><img src="{{ asset('img/menu.png') }}"> </label>
+	    <label for="btn-menu" class="icon" ><img src="{{ set_url('img/menu.png') }}"> </label>
 	    <nav>
 	        <a href="/dashboard">Inicio</a>
 	        <a href="/about">Acerca de</a>
@@ -62,6 +62,6 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<!-- <script src="{{ asset('js/navbar.js') }}"></script> -->
+<!-- <script src="{{ set_url('js/navbar.js') }}"></script> -->
 </body>
 </html>

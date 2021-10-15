@@ -71,7 +71,7 @@
       <div class="col-md-4">
         <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-upload"></i> Subir archivos</h5>
         <div class="card mb-3">
-          <!-- <img src="{{ asset('img/add-file.png') }}" class="card-img-top" alt="..."> -->
+          <!-- <img src="{{ set_url('img/add-file.png') }}" class="card-img-top" alt="..."> -->
           <div class="card-body">
             <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
             <a href="/repositorios/registrar">Registrar repositorio</a>
@@ -121,7 +121,7 @@
       <div class="col-md-4">
         <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-upload"></i> Subir archivos</h5>
         <div class="card mb-3">
-          <!-- <img src="{{ asset('img/add-file.png') }}" class="card-img-top" alt="..."> -->
+          <!-- <img src="{{ set_url('img/add-file.png') }}" class="card-img-top" alt="..."> -->
           <div class="card-body">
             <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
             <a href="/repositorios/registrar">Registrar repositorio</a>

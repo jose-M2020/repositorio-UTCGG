@@ -135,7 +135,7 @@
                 <i class="far fa-star position-absolute end-0"></i>
                 <div class="me-2" style="max-width: 200px; color: #2E6A99;">
                   <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
-                  <img src="{{ asset(json_decode($repositorio->imagenes)[0]) }}" style="object-fit: cover; width: 100%;">
+                  <img src="{{ json_decode($repositorio->imagenes)[0] }}" style="object-fit: cover; width: 100%;">
                 </div>
                 <div class="d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                   <small class="mb-2">

@@ -408,6 +408,6 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="{{ asset('js/main.js') }}" type="module"></script>
+<script src="{{ set_url('js/main.js') }}" type="module"></script>
 
 @endsection
