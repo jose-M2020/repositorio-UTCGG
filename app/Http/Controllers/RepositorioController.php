@@ -89,36 +89,38 @@ class RepositorioController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'alumno' => 'required|array|max:8',
-            'alumno.*' => 'required|string|max:255|distinct',
+        // $request->validate([
+        //     'alumno' => 'required|array|max:8',
+        //     'alumno.*' => 'required|string|max:255|distinct',
 
-            // Nuevos campos
-            'carrera' => 'required|string|max:80',
-            'asesor_academico' => 'required|string|max:255',
-            'asesor_externo' => 'required|string|max:255',
-            'empresa' => 'required|string|max:255',
-            // ---------------
+        //     // Nuevos campos
+        //     'carrera' => 'required|string|max:80',
+        //     'asesor_academico' => 'required|string|max:255',
+        //     'asesor_externo' => 'required|string|max:255',
+        //     'empresa' => 'required|string|max:255',
+        //     // ---------------
 
-            'nombre_repositorio' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
-            'tipo_proyecto' => 'required|string|max:80',
-            'nivel_proyecto' => 'required|string|max:80',
+        //     'nombre_repositorio' => 'required|string|max:255',
+        //     'descripcion' => 'required|string|max:255',
+        //     'tipo_proyecto' => 'required|string|max:80',
+        //     'nivel_proyecto' => 'required|string|max:80',
 
-            // Nuevos campos
-            'palabras_clave' => 'required|string|max:255',
-            'generacion' => 'required|string|max:255',
-            'imagenes' => 'required|array|max:5',
-            'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
-            // -----------------
+        //     // Nuevos campos
+        //     'palabras_clave' => 'required|string|max:255',
+        //     'generacion' => 'required|string|max:255',
+        //     'imagenes' => 'required|array|max:5',
+        //     'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
+        //     // -----------------
 
-            'archivos' => 'required|array|max:5',
-            'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
-        ]);
+        //     'archivos' => 'required|array|max:5',
+        //     'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
+        // ]);
 
         $logged_user = auth()->user();
         // $data = Alumno::where('nombre', $request->alumno[0]);
         
+        
+        /*
         // Convertimos el o los nombres en una array codificado
         foreach($request->alumno as $name){
             $nombre_alumno[] = $name;
@@ -188,16 +190,38 @@ class RepositorioController extends Controller
         }else{
             throw ValidationException::withMessages(['El nombre de alumno ingresado no fue encontrado']);
         }
+        */
+        
+
+
+
+
+        // Test - Almacenar archivos en Amazon S3
+
+        $currentYear = date("Y");
+        $path = 'files/'.
+                    $logged_user->carrera .'/'.
+                    $currentYear .'/'.
+                    $logged_user->cuatrimestre. '/'.
+                    $logged_user->nombre;
+
+        if($request->hasfile('imagenes')) { 
+            foreach($request->file('imagenes') as $image)
+            {
+                $new_path = $path.'/images';
+                $image_path = $image->store($new_path, 's3');
+            }
+        }            
+        if($request->hasfile('archivos')) {
+            foreach($request->file('archivos') as $file) 
+            { 
+                    $file_path = $file->store($path, 's3');                    
+            }
+        }
+
 
         return redirect('/repositorios/registrar')
                 ->with('status', 'Repositorio agregado exitosamente!');
-
-
-
-        
-
-        // dd(json_decode($file));
-        // $file->save();               
     }
 
     /**
