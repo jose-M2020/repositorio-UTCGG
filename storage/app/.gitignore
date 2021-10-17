@@ -1,5 +1,9 @@
 *
-!public/images/doc.png
-!public/files/test/Documentación.pdf
-!public/files/test/Proyecto.pdf
+!public/
+!public/images/
+!public/images/*
+!public/files/
+!public/files/test/
+!public/files/test/*
 !.gitignore
+
