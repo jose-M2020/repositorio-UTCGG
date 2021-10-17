@@ -36,7 +36,7 @@ class FileFactory extends Factory
             // 'alumno_id' => $number++,
             'original_name' => 'Documentación',
             'file_type' => 'pdf',
-            'file_path' => 'files/test/Proyecto Repositorio-UT.pdf',
+            'file_path' => 'files/test/Documentación.pdf',
             'is_public' => '1'
         ];
     }
