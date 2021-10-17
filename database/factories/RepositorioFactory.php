@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Repositorio;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Alumno;
 
 class RepositorioFactory extends Factory
 {
@@ -21,6 +22,13 @@ class RepositorioFactory extends Factory
      */
     public function definition()
     {   
+        static $students_id = [];
+        $student = Alumno::whereNotIn('id',$students_id)
+                         ->inRandomOrder()
+                         ->get(['id', 'nombre'])
+                         ->first(); 
+        array_push($students_id, $student->id);
+
         $careers = [
             'TIC' => ['software', 'arduino', 'iot', 'webpage', 'app', 'electronic', 'raspberrypi', 'robotic', 'bot', 'system'],
             'G' => ['food', 'restaurant', 'drinks', 'desserts', 'cakes'],
@@ -35,7 +43,7 @@ class RepositorioFactory extends Factory
 
         $career = $this->faker->randomElement(array_keys($careers));
         $keyword = $this->faker->randomElement($careers[$career]);
-        
+
         return [
             // 'alumno' => json_encode([$this->faker->name()]),
 
@@ -57,9 +65,7 @@ class RepositorioFactory extends Factory
             'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword]),
             // ------------------------------------
 
-            'created_by' => $this->faker->name()
+            'created_by' => $student->nombre
         ];
     }
 }
-
-

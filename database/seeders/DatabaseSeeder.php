@@ -54,11 +54,11 @@ class DatabaseSeeder extends Seeder
             'cuatrimestre' => 10
         ]);
 
-        Alumno::factory(30)->create();
+        Alumno::factory()->count(30)->create();
 
-        Repositorio::factory(30)->create();
+        Repositorio::factory()->count(30)->create();
 
-        File::factory(30)->create();
+        File::factory()->count(30)->create();
 
         Alumno_repositorio::factory(30)->create();
     }

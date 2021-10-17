@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Repositorio;
 
 class FileFactory extends Factory
 {
@@ -20,12 +21,18 @@ class FileFactory extends Factory
      * @return array
      */
     public function definition()
-    {       
-        static $number = 1;
-        
+    {   
+        static $repositories_id = [];
+        $repository_id = Repositorio::whereNotIn('id',$repositories_id)
+                                    ->inRandomOrder()
+                                    ->get('id')
+                                    ->first()
+                                    ->id;
+        array_push($repositories_id, $repository_id);
+
         return [
             // 'repositorio_id' => $this->faker->unique()->numberBetween(1, 30),
-            'repositorio_id' => $number++,
+            'repositorio_id' => $repository_id,
             // 'alumno_id' => $number++,
             'original_name' => 'Documentación',
             'file_type' => 'pdf',
