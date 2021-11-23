@@ -1,0 +1,318 @@
+:root {
+	--delay-circle: .28s;
+	--delay-progressbar: 0s;
+	--animation-duration: .5s;
+}
+
+/****** Index *********/
+.search {
+	background-image: url('../img/utcgg.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%; 
+    height: 25vh; 
+    position: relative;
+}
+
+.search::after{
+	content: '';
+	position: absolute;
+    background: #003a3a;
+    opacity: .8; 
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.repositorio main{
+  overflow: auto;
+}
+
+/* Barra lateral de filtros  */
+
+#filters_sidebar li{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /*width: 90%;*/
+}
+  
+#filters_sidebar .submenu{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+ }
+
+ #filters_sidebar .fa-check{
+	position: absolute; 
+	left: 12px; 
+	color: #328E3D
+}
+
+#filters_sidebar #submenu-1{
+	max-height: 400px;
+}
+
+/* Filtros realizados */
+
+.repositorio  .filters ul{
+    display: flex; 
+    list-style: none; 
+    padding: 0;
+}
+.repositorio .filters ul li{
+    background-color: rgba(112, 140, 230, 0.6); 
+    padding: 6px; 
+    border-radius: 12px; 
+    margin-right: 9px;
+}
+
+.repositorio  .highlight{
+    background-color: #C695E5;
+}
+
+/****** Formulario - crear *********/
+
+#register-repository fieldset{
+	opacity: 0;
+	max-height: 0;
+	transition: .6s;
+	overflow: hidden;
+	/*display: none;*/
+}
+	
+#register-repository fieldset.active{
+	opacity: 1;
+	max-height: 4000px;
+	/*visibility: visible;*/
+	/*display: block;*/
+}
+
+/* Barra de progreso */
+
+#progress{
+	position: relative;
+	max-width: 600px;
+	margin: 20px auto 50px auto;
+}
+#progress .progressbar .bar{
+	position: absolute;
+	width: 100%;
+	height: 10px;
+	background-color: #CAD3D7;
+	top: 50%;
+	transform: translateY(-50%);
+}
+#progress .progressbar .filled{
+	width: 0;
+	background-color: #3CB38A;
+	transition: width var(--animation-duration) var(--delay-progressbar);
+}
+#progress ul{
+	display: flex;
+	justify-content: space-between;
+	list-style: none;
+	padding: 0;
+}
+#progress ul li{ position: relative; }
+#progress ul li .step{
+	position: relative;
+	background-color: #CAD3D7;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	color: #676D7B;
+	cursor: pointer;
+	z-index: 20;
+}
+#progress ul li::after{
+	content: '';
+	position: absolute;
+	width: 110%;
+	height: 110%;
+	border-radius: 50%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: linear-gradient(to right, #3CB38A 50%, #CAD3D7 50%);
+  	background-size: 200% 100%;
+  	background-position: right;
+  	transition: background var(--animation-duration) ease-out var(--delay-circle);
+}
+	
+#progress ul li.active::after{
+	background-position: left;
+}
+#progress ul li.finished::after{
+	background: #3CB38A;
+}
+#progress ul li.finished .step{
+	background-color: #3CB38A;
+	color: #fff;
+	transition: background-color .5s;
+}
+#progress ul li .step span{
+	position: absolute;
+	font-size: 25px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+#progress ul li .title{
+	position: absolute;
+}
+
+/* Contenedor de imagenes seleccionadas  */
+
+#register-repository .preview_images{
+	display: grid;
+  	grid-gap: 10px;
+  	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+#register-repository .preview_images .image{
+	position: relative;
+}
+#register-repository .preview_images img{
+	width: 100%;
+	object-fit: contain;
+}
+
+#register-repository .preview_images .remove{
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	color: #D00202 !important;
+	font-size: 25px;
+	cursor: pointer;
+	transition-property: opacity, color;
+	transition-duration: .4s;
+}
+
+/* tooltip */
+
+.file__tooltip{
+	position: relative;
+}
+
+.file__tooltip p{
+	position: absolute;
+	right: 0;
+	background-color: #8DE5A2;
+	padding: 6px;
+	display: none;
+}
+
+.file__tooltip > span:hover ~p{
+	display: block;
+}
+
+.file__tooltip > span {
+	position: absolute;
+  	z-index: 1;
+  	top: -25px;
+  	left: 70%;
+}
+
+/* Archivos */
+
+.upload-files input[type="file"]{
+    display: none;
+}
+
+.upload-files{
+	text-align: center;
+}
+
+.upload-files .project__file{
+	margin: 15px 0;
+	position: relative;
+}
+
+.upload-files label{
+	border: 1px solid #04886d;
+	padding: 10px;
+	border-radius: 20px;
+	box-shadow: 1px 3px 6px #aaa;
+	display: inline-block;
+	width:97%;
+	box-sizing: border-box;
+	text-align: center;
+	cursor: pointer;
+	color: #32b197;
+	transition: 0.3s width;
+	background-color: #f8fffa;
+	font-size: 16px;
+}
+
+.upload-files label:hover{
+	width: 100%;
+}
+
+.upload-files label:hover ~ .remove_element{
+	right: 8px;
+}
+
+.file__label--notSelected{
+	color: #32b197;
+	background-color: #f8fffa;
+	border: 1px solid #04886d;
+}
+
+/* icono para eliminar inputs */
+
+input ~ .remove{
+	font-size: 32px;
+	color: #F45E5E;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 5px;
+	cursor: pointer;
+}
+
+/* icono para eliminar inputs tipo file */
+label ~ .remove{
+	top: 15px;
+	right: 15px;
+	font-size: 20px;
+	transition: 0.3s right;
+}
+
+input#student_name:focus + .search_results{
+	visibility: visible;
+	opacity: 1;
+}
+
+/* Resultados de búsqueda */
+
+.search_results{
+	position: absolute;
+	background-color: #D2EDE0;
+	width: 100%;
+	top: 100%;
+	z-index: 30;
+	visibility: hidden;
+	opacity: 0;
+	transition: .3s;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.search_results ul{
+	list-style: none;
+	padding: 0;
+}
+
+.search_results ul li{
+	padding: 3px 6px;
+	cursor: pointer;
+	transition: color .3s;
+}
+.search_results ul li:hover{
+	background-color: #ddd;
+	
+}
+

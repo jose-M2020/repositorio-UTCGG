@@ -4,66 +4,67 @@
 
 @section('content')
 
-    <div class="container">
-      <h3 align="center">Alumnos registrados</h3>
-      <br />
+  <div class="alumnos container-fluid">
+    
+    <!-- Mensaje de éxito -->
+    <x-alert.success-message :message="session('status')" />
 
-      <!-- Mensaje de éxito -->
-      <x-alert.success-message :message="session('status')" />
+    <!-- Errores de validación -->        
+    <x-alert.error-message message="Error al actualizar los datos" :errors="$errors"/>
 
-      <!-- Errores de validación -->        
-      <x-alert.error-message message="Error al actualizar los datos" :errors="$errors"/>
-
-      <div class="card">
-        <div class="card-body">
-          <div class="form-group search_content">
-            <i class="fas fa-spinner fa-spin" id="search_spinner"></i>
-            <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Buscar nombre..." />
-            <i class="fas fa-search" id="search_icon"></i>
-            <!-- <div class="searching">Buscando resultados para la búsqueda...</div> -->
-          </div>
-          <div class="table-responsive" id="student-table">
-    		  	<div class="container-table">
-      				<table class="table alumnos">
-      					<thead>
-      						<tr>
-      							<th>ID</th>
-      							<th>Nombre</th>
-      							<th>Usuario</th>
-      							<th>Carrera</th>
-      							<th>Cuatrimestre</th>
-      							<th>Acciones</th>
-      						</tr>
-      					</thead>
-      					<tbody>                  
-      						@foreach ($alumnos as $alumno)
-                    <tr>                
-                      <td>{{ $alumno->id }}</td>
-                      <td>{{ $alumno->nombre }}</td>
-                      <td>{{ $alumno->email }}</td>
-                      <td>{{ get_careers()[$alumno->carrera] }}</td>
-                      <td>{{ $alumno->cuatrimestre }}</td>
-                      <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
-                    </tr>
-                  @endforeach
-                  <tr>
-                    <td colspan="3" align="center">
-                      {{ $alumnos->links('pagination::bootstrap-4') }}
-                    </td>
-                  </tr>
-      					</tbody>
-      				</table>
-    			  </div>
-          </div>
-          <div class="total-records">
-            <p>Alumnos totales: <b>{{ $alumnos->total() }}</b></p>
-          </div>
-        </div>
+    <div class="header d-flex justify-content-between p-4">
+      <div class="">
+        <h5 align="center">Alumnos</h5>
+      </div>
+      <div class="form-group search_content">
+        <i class="fas fa-spinner fa-spin" id="search_spinner"></i>
+        <input type="text" name="search_box" id="search_box" class="form-control" placeholder="Buscar nombre..." />
+        <i class="fas fa-search" id="search_icon"></i>
+        <!-- <div class="searching">Buscando resultados para la búsqueda...</div> -->
       </div>
     </div>
-    
-    <!-- Modal -->
-    <div id="tvesModal" class="modal">
+
+    <div class="table-responsive" id="student-table">
+      <div class="container-table">
+        <table class="table">
+          <thead>
+            <tr class="p-4">
+              <th>Nombre</th>
+              <th>Usuario</th>
+              <th>Carrera</th>
+              <th>Cuatrimestre</th>
+              <th>Fecha de registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="p-4">
+            @foreach ($alumnos as $alumno)
+              <tr>
+                <td>{{ $alumno->nombre }}</td>
+                <td>{{ $alumno->email }}</td>
+                <td>{{ get_careers()[$alumno->carrera] }}</td>
+                <td>{{ $alumno->cuatrimestre }}</td>
+                <td>{{ date('Y-m-d', strtotime($alumno->created_at)) }}</td>
+                <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
+              </tr>
+            @endforeach
+            <tr>
+              <td colspan="3" align="center">
+                {{ $alumnos->links('pagination::bootstrap-4') }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+          
+    <div class="total-records">
+      <p>Alumnos totales: <b>{{ $alumnos->total() }}</b></p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="tvesModal" class="modal">
       <div class="modal__content">
         <span class="modal__icon-close">×</span> 
         <div>
@@ -98,7 +99,7 @@
           </div>  
         </div>
       </div>
-    </div> 
+  </div> 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script>

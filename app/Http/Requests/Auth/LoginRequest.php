@@ -31,7 +31,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'rol' => 'required|string',
+            // 'rol' => 'required|string',
         ];
     }
 
@@ -45,17 +45,15 @@ class LoginRequest extends FormRequest
     public function authenticate($guard)
     {
         $this->ensureIsNotRateLimited();
-
-        if($guard == 'alumno' || $guard == 'docente' || $guard == 'admin'){
-            if (! Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-                RateLimiter::hit($this->throttleKey());
-
-                throw ValidationException::withMessages([
-                    'email' => __('auth.failed'),
-                ]);
-            }else{
-                RateLimiter::clear($this->throttleKey());
-            }
+        
+        if (Auth::guard('alumno')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
+        }
+        else if (Auth::guard('docente')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
+        }
+        else if (Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
         }else{
             RateLimiter::hit($this->throttleKey());
 
@@ -63,6 +61,30 @@ class LoginRequest extends FormRequest
                 'email' => __('auth.failed'),
             ]);
         }
+
+        // if($guard == 'alumno' || $guard == 'docente' || $guard == 'admin'){
+        //     if (Auth::guard('alumno')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        //         RateLimiter::clear($this->throttleKey());
+        //     }
+        //     else if (Auth::guard('docente')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        //         RateLimiter::clear($this->throttleKey());
+        //     }
+        //     else if (Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        //         RateLimiter::clear($this->throttleKey());
+        //     }else{
+        //         RateLimiter::hit($this->throttleKey());
+
+        //         throw ValidationException::withMessages([
+        //             'email' => __('auth.failed'),
+        //         ]);
+        //     }
+        // }else{
+        //     RateLimiter::hit($this->throttleKey());
+
+        //     throw ValidationException::withMessages([
+        //         'email' => __('auth.failed'),
+        //     ]);
+        // }
     }
 
     /**

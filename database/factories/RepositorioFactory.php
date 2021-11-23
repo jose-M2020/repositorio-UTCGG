@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Repositorio;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Alumno;
+use App\Models\Docente;
 
 class RepositorioFactory extends Factory
 {
@@ -29,6 +30,8 @@ class RepositorioFactory extends Factory
                          ->first(); 
         array_push($students_id, $student->id);
 
+        $docentes_id = Docente::pluck('id')->all();
+
         $careers = [
             'TIC' => ['software', 'arduino', 'iot', 'webpage', 'app', 'electronic', 'raspberrypi', 'robotic', 'bot', 'system'],
             'G' => ['food', 'restaurant', 'drinks', 'desserts', 'cakes'],
@@ -48,8 +51,8 @@ class RepositorioFactory extends Factory
             // 'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
-            // 'carrera' => $career,
-            // 'asesor_academico' => $this->faker->name(),
+            'docente_id' => $this->faker->randomElement($docentes_id),
+            'carrera' => $career,
             'asesor_externo' => $this->faker->name(),
             'empresa' => $this->faker->company(),
             // ------------------------------------

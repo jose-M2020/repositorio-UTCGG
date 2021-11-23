@@ -408,15 +408,15 @@
 					</button>
 				</div>
 				<br>
-				 <div class="mt-4">
-	          <label for="rol">Modo de acceso</label>
-	          <select id="rol" class="block mt-1 w-full" name="rol">
-	            <option selected disabled>Seleccionar</option>
-	            <option value="alumno">Alumno</option>
-	            <option value="docente">Docente</option>
-	            <option value="admin">Administrador</option>
-	          </select>                
-	        </div>	
+				{{-- <div class="mt-4">
+		          	<label for="rol">Modo de acceso</label>
+		          	<select id="rol" class="block mt-1 w-full" name="rol">
+			            <option selected disabled>Seleccionar</option>
+			            <option value="alumno">Alumno</option>
+			            <option value="docente">Docente</option>
+			            <option value="admin">Administrador</option>
+		          	</select>                
+		        </div>	 --}}
 	        <br>		
 				<input type="submit" value="INICIAR" name="loginButton"> <span class="boton3"></span>				
 			</form>

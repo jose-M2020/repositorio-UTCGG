@@ -15,10 +15,11 @@ class AlumnoController extends Controller
      */
     public function index()
     {
-        $alumnos = Alumno::paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre']);
+        $alumnos = Alumno::paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
 
-        // $docente = Alumno::findOrFail(1)->asesor;
-        // print_r($docente->nombre);
+        // $docente = Alumno::findOrFail(1)->asesores;
+        // dd($docente);
+
         return view('alumno.index', compact('alumnos'));
     }
 
@@ -131,7 +132,7 @@ class AlumnoController extends Controller
             $query = $request->get('query');
             $query = str_replace(" ", "%", $query);
 
-            $alumnos = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre']);
+            $alumnos = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
             return view('components.rowTables', compact('alumnos'))->render();
          }
     }

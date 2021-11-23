@@ -1,11 +1,11 @@
 
   @forelse($alumnos as $alumno)
     <tr>                
-      <td>{{ $alumno->id }}</td>
       <td>{{ $alumno->nombre }}</td>
       <td>{{ $alumno->email }}</td>
       <td>{{ $alumno->carrera }}</td>
       <td>{{ $alumno->cuatrimestre }}</td>
+      <td>{{ $alumno->created_at }}</td>
       <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
     </tr>
   @empty

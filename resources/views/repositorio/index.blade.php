@@ -1,71 +1,18 @@
 @extends('layouts.main')
 
-@section('title', 'Repositorios')
+@section('title', 'Explorar')
 
 @section('content')
 <style>
-  main{
-    overflow: auto;
-  }
-
-  nav{
-    /*min-width: 200px;*/
-  }
-  #filters_sidebar li{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    /*width: 90%;*/
-  }
-  .submenu{
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.2s ease-out;
-  }
   
-  .filters ul{
-    display: flex; 
-    list-style: none; 
-    padding: 0;
-  }
-  .filters ul li{
-    background-color: rgba(112, 140, 230, 0.6); 
-    padding: 6px; 
-    border-radius: 12px; 
-    margin-right: 9px;
-  }
-
-  .highlight{
-    background-color: #C695E5;
-  }
 </style>
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
 
-  <div class="container-fluid position-relative">
+  <div class="repositorio container-fluid position-relative">
     <div class="row">
       <div class="container-fluid w-100 p-0 m-0">
-        <div class="p-4" 
-          style="
-            background-image: url('img/utcgg.png');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            width: 100%; 
-            height: 25vh; 
-            position: relative;
-          ">
-          <div style="
-            position: absolute;
-            background: #003a3a;
-            opacity: .8; 
-            z-index: 1;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-          ">
-        </div>
-          <form method="GET" action="{{ Request::fullUrl() }}">
+        <div class="search p-4">
+          <form method="GET" action="/repositorios">
             <div class="input-group" style="position: absolute; top: 40%; width: 60%; z-index: 10;">
               <div class="search-filters">
                 @foreach(app('request')->request->all() as $key=>$value)

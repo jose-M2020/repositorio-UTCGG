@@ -1,0 +1,84 @@
+/********* Tabla ********/
+.alumnos .header{
+	background-color: #7b53f4; 
+	color: #fff;
+}
+
+.alumnos #editUser{
+	font-size: 25px;
+	color: #413C3C;
+	transition: color .3s;
+}
+
+.alumnos #editUser:hover{
+	cursor: pointer;
+	color: #12B531;
+}
+
+/*Mensaje de busqueda*/
+.searching{
+	background-image: 
+		linear-gradient(90deg, red, blue);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	margin: 12px 0;
+	text-align: center;
+}
+
+/* Input de búsqueda */
+.search_content{
+	position: relative;
+	height: 30px;
+}
+
+input#search_box{
+	 box-shadow: inset 0.3rem 0.3rem 0.5rem rgba(195, 193, 198, 0.9),
+  	   			 inset -0.2rem -0.2rem 0.4rem #f0f2f5;
+  	 border-radius: 10px;
+  	 padding-right: 30px;
+  	 width: 35%;
+  	 position: absolute;
+  	 right: 0;
+  	 top: 50%;
+  	 transform: translateY(-50%);
+  	 transition: width .3s;
+  	 padding-right: 1.8rem;
+  	 /*padding-left: 1.6rem;*/
+  	 /*height: px;*/
+}
+
+input#search_box:focus{
+	width: 50%;
+}
+
+input#search_box:focus ~ #search_icon{
+	color: #2F9B2A;
+}
+
+#search_icon{
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	transition: color .3s;
+}
+
+#search_spinner{
+	color: #24876A;
+	font-size: 20px;
+	position: absolute;
+	right: 50%;
+	/*top: 50%;*/
+	/*z-index: 10;*/
+}
+
+@media (max-width: 992px){
+	input#search_box{
+		width: 60%;
+	}
+
+	input#search_box:focus{
+		width: 100%;
+	}
+}

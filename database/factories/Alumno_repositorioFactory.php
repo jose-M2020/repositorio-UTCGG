@@ -30,6 +30,7 @@ class Alumno_repositorioFactory extends Factory
                                     ->get(['id', 'created_by'])
                                     ->first();
         array_push($students_name, $repositorio->created_by);
+        
         $alumno_id = Alumno::where('nombre', $repositorio->created_by)
                             ->value('id');
 
@@ -40,7 +41,7 @@ class Alumno_repositorioFactory extends Factory
         return [
             'alumno_id' => $alumno_id,
             'repositorio_id' => $repositorio->id,
-            'docente_id' => Docente::all()->random()->id,
+            // 'docente_id' => Docente::all()->random()->id,
         ];
     }
 

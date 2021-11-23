@@ -4,11 +4,11 @@
                         <a class="menu-title" href="#" data-toggle="collapse" data-target="#submenu-1">
                           <i class="fas fa-university"></i> Carrera <i class="fa fa-fw fa-angle-down pull-right"></i>
                         </a>
-                        <ul id="submenu-1" class="submenu position-relative" style="max-height: 400px;">
+                        <ul id="submenu-1" class="submenu position-relative">
                             @foreach(get_careers() as $key => $career)
                               @if(find_param_url('carrera', $key))
                                 <li>
-                                  <i class="fas fa-check" style="position: absolute; left: 12px; color: #328E3D"></i> <span title="{{ $career }}">{{ $career }}</span>
+                                  <i class="fas fa-check"></i> <span title="{{ $career }}">{{ $career }}</span>
                                 </li>
                               @else
                                 <li>
@@ -26,7 +26,7 @@
                           @foreach(get_type_projects() as $type)
                             @if(find_param_url('tipo', $type))
                               <li>
-                                <i class="fas fa-check" style="position: absolute; left: 12px; color: #328E3D"></i> <span title="{{ $type }}">{{ $type }}</span>
+                                <i class="fas fa-check"></i> <span title="{{ $type }}">{{ $type }}</span>
                               </li>
                             @else
                               <li>
@@ -44,7 +44,7 @@
                             @foreach(get_academic_degrees() as $key=>$level)
                               @if(find_param_url('nivel', $key))
                                 <li>
-                                  <i class="fas fa-check" style="position: absolute; left: 12px; color: #328E3D"></i> <span title="{{ $key }}">{{ $key }}</span>
+                                  <i class="fas fa-check"></i> <span title="{{ $key }}">{{ $key }}</span>
                                 </li>
                               @else
                                 <li>

@@ -19,7 +19,8 @@ class Alumno extends Authenticatable
         'email',
         'password',
         'carrera',
-        'cuatrimestre'
+        'cuatrimestre',
+        'created_at'
     ];
 
     /**
@@ -43,7 +44,8 @@ class Alumno extends Authenticatable
 
     public function asesores()
     {
-        return $this->belongsToMany(Docente::class, 'alumnos_repositorios');
+        return $this->hasManyThrough(Docente::class, Repositorio::class);
+        // return $this->belongsToMany(Docente::class, 'alumnos_repositorios');
     }
 
     public function repositorios()
