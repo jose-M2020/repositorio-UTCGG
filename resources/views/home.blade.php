@@ -62,65 +62,49 @@
           </div>
       </div>
     </div> --}}
-    
-    <div class="row p-4">
-      <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-upload"></i> Subir archivos</h5>
-        <div class="card mb-3">
-          <!-- <img src="{{ set_url('img/add-file.png') }}" class="card-img-top" alt="..."> -->
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-            <a href="/repositorios/registrar">Registrar repositorio</a>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-search"></i> Explorar repositorio</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <a href="/repositorios">Explorar</a>
-          </div>
-        </div>
-      </div>
-
-      @auth('admin')
-      <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-search"></i> Registrar alumno</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <a href="/alumnos/registrar">Registrar</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-search"></i> Registrar docente</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <a href="/docentes/registrar">Registrar</a>
-          </div>
-        </div>
-      </div>
-      @endauth
-
-        @auth('docente')
-          <a href="/alumnos">Alumnos</a>
-            <a href="/alumnos/registrar">Registrar alumnos</a>
-        @endauth
-    </div>
 
     <div class="row p-4 mt-4">
       <h4 class="mb-4">Recursos destacados</h4>
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;"><i class="fas fa-upload"></i> Subir archivos</h5>
+        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
         <div class="card mb-3">
           <!-- <img src="{{ set_url('img/add-file.png') }}" class="card-img-top" alt="..."> -->
           <div class="card-body">
             <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-            <a href="/repositorios/registrar">Registrar repositorio</a>
+            {{-- <a href="/repositorios/registrar">Registrar repositorio</a> --}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
           </div>
         </div>
       </div>

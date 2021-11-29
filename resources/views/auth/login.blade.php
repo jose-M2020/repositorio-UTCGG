@@ -2,7 +2,13 @@
 
 @section('content')
 	
-<div class="row h-100">
+<div class="row h-100 position-relative">
+	<!-- Session Status -->
+	<x-auth-session-status class="mb-4" :status="session('status')" />
+
+	<!-- Validation Errors -->
+	<x-auth-validation-errors class="mb-4" :errors="$errors" />
+	
 	<div class="left-section col-md-7 m-0 p-0 d-flex justify-content-center align-items-center flex-column">
 		<div class="left-section__title">
 			<h1>Repositorio UTCGG</h1>
@@ -379,19 +385,13 @@
 			</svg>
 		</div>
 	</div>
-	<div class="right-section col-sm-12 col-md-5 p-0 m-0 d-flex justify-content-center align-items-center">
+	<div class="right-section col-sm-12 col-md-5 p-0 m-0 d-flex justify-content-center align-items-center">		
 		<div class="login-box">
 			<div class="avatar">
 				<img src="{{ asset('img/logo1.png') }}" alt="Avatar Image">
 			</div>
 			
 			<h1>Iniciar sesión </h1>
-
-			<!-- Session Status -->
-	     <x-auth-session-status class="mb-4" :status="session('status')" />
-
-	    <!-- Validation Errors -->
-	    <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
 			<form action="{{ route('login') }}" method="POST">
 				@csrf
@@ -401,7 +401,7 @@
 				</div>
 				<br>
 				<div style="position: relative;">
-					<label for="clave">Password</label>
+					<label for="password">Password</label>
 					<input type="password" name="password" id="clave" placeholder="********" required="">
 					<button class="eyeBtn" type="button" onclick="mostrarContrasena()">
 						<i id="eyeIcon" class="icono11 fas fa-eye"></i>

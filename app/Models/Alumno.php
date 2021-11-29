@@ -14,13 +14,13 @@ class Alumno extends Authenticatable
      *
      * @var array
      */
+
     protected $fillable = [
         'nombre',
         'email',
         'password',
         'carrera',
         'cuatrimestre',
-        'created_at'
     ];
 
     /**

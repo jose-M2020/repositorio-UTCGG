@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Repositorio;
 use App\Models\Alumno;
+use App\Models\Docente;
 use App\Models\File;
 
 class RepositorioController extends Controller
@@ -89,38 +91,38 @@ class RepositorioController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'alumno' => 'required|array|max:8',
-        //     'alumno.*' => 'required|string|max:255|distinct',
+        $request->validate([
+            'alumno' => 'required|array|max:8',
+            'alumno.*' => 'required|string|max:255|distinct',
 
-        //     // Nuevos campos
-        //     'carrera' => 'required|string|max:80',
-        //     'asesor_academico' => 'required|string|max:255',
-        //     'asesor_externo' => 'required|string|max:255',
-        //     'empresa' => 'required|string|max:255',
-        //     // ---------------
+            // Nuevos campos
+            'carrera' => 'required|string|max:80',
+            // 'asesor_academico' => 'required|string|max:255',
+            // 'asesor_externo' => 'required|string|max:255',
+            'empresa' => 'required|string|max:255',
+            // ---------------
 
-        //     'nombre_repositorio' => 'required|string|max:255',
-        //     'descripcion' => 'required|string|max:255',
-        //     'tipo_proyecto' => 'required|string|max:80',
-        //     'nivel_proyecto' => 'required|string|max:80',
+            'nombre_repositorio' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255',
+            'tipo_proyecto' => 'required|string|max:80',
+            'nivel_proyecto' => 'required|string|max:80',
 
-        //     // Nuevos campos
-        //     'palabras_clave' => 'required|string|max:255',
-        //     'generacion' => 'required|string|max:255',
-        //     'imagenes' => 'required|array|max:5',
-        //     'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
-        //     // -----------------
+            // Nuevos campos
+            'palabras_clave' => 'required|string|max:255',
+            'generacion' => 'required|string|max:255',
+            'imagenes' => 'required|array|max:5',
+            'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
+            // -----------------
 
-        //     'archivos' => 'required|array|max:5',
-        //     'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
-        // ]);
+            'archivos' => 'required|array|max:5',
+            'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
+        ]);
 
         $logged_user = auth()->user();
+        $docente_id = Docente::where('nombre', $request->asesor_academico)->get('id');
+        
         // $data = Alumno::where('nombre', $request->alumno[0]);
         
-        
-        /*
         // Convertimos el o los nombres en una array codificado
         foreach($request->alumno as $name){
             $nombre_alumno[] = $name;
@@ -131,10 +133,10 @@ class RepositorioController extends Controller
             // Creamos la ruta donde se almacenaran los archivos e imagenes
             $currentYear = date("Y");
             $path = 'files/'.
-                    $logged_user->carrera .'/'.
+                    $request->carrera .'/'.
                     $currentYear .'/'.
-                    $logged_user->cuatrimestre. '/'.
-                    $logged_user->nombre;
+                    // $logged_user->cuatrimestre. '/'.
+                    $request->nombre;
 
             // Guardamos las imagenes y convertimos las rutas en una array codificado
             if($request->hasfile('imagenes')) { 
@@ -152,21 +154,25 @@ class RepositorioController extends Controller
                 // 'alumno_id' => $logged_user->id,
                 'alumno' => $authors,
 
-                'carrera' => $logged_user->carrera,
-                'asesor_academico' => $request->asesor_academico,
+                'docente_id' => $docente_id[0]->id,
+                'carrera' => $request->carrera,
+                // 'asesor_academico' => $request->asesor_academico,
                 'asesor_externo' => $request->asesor_externo,
                 'empresa' => $request->empresa,
 
                 'nombre_rep' => $request->nombre_repositorio,
+                'slug' => Str::slug($request->nombre_repositorio, '-'),
                 'descripcion' => $request->descripcion,
                 'tipo_proyecto' => $request->tipo_proyecto,
                 'nivel_proyecto' => $request->nivel_proyecto,
 
                 'palabras_clave' => $request->palabras_clave,
                 'generacion' => $request->generacion,
-                'imagenes' => $images
+                'imagenes' => $images,
+                'created_by' => $logged_user->nombre
             ]);
 
+            // Guardamos los archivos y los datos en la BD
             $archivo = '';
             if($request->hasfile('archivos')) {
                 foreach($request->file('archivos') as $file) {   
@@ -190,7 +196,7 @@ class RepositorioController extends Controller
         }else{
             throw ValidationException::withMessages(['El nombre de alumno ingresado no fue encontrado']);
         }
-        */
+        
         
 
 
@@ -198,6 +204,7 @@ class RepositorioController extends Controller
 
         // Test - Almacenar archivos en Amazon S3
 
+        /*
         $currentYear = date("Y");
         $path = 'files/'.
                     $logged_user->carrera .'/'.
@@ -218,6 +225,7 @@ class RepositorioController extends Controller
                     $file_path = $file->store($path, 's3');                    
             }
         }
+        */
 
 
         return redirect('/repositorios/registrar')
@@ -230,12 +238,11 @@ class RepositorioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $repositorio = Repositorio::findOrFail($id);
-        $files = Repositorio::findOrFail($id)->getFile;
+    public function show(Repositorio $repositorio)
+    {   
         // dd($repositorio);
-        
+        // $repositorio = Repositorio::findOrFail($id);
+        $files = Repositorio::findOrFail($repositorio->id)->getFile;
         return view('repositorio.show', compact('repositorio', 'files'));
     }
 
@@ -268,9 +275,12 @@ class RepositorioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Repositorio $repositorio)
     {
-        //
+        // dd($repositorio);
+        $repositorio->delete();
+        return redirect()->route('repositorios.index')
+            ->with('status','Repositorio eliminado exitosamente!');
     }
 
     public function downloadFile($id)

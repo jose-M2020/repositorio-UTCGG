@@ -12,7 +12,6 @@ class Docente extends Authenticatable
     // protected $table = 'docentes';
 
     use HasFactory;
-
     // protected $guard = 'docente';
 
     /**
@@ -24,6 +23,7 @@ class Docente extends Authenticatable
         'nombre',
         'email',
         'password',
+        'created_at'
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Docente;
+use Illuminate\Support\Facades\Hash;
 
 class DocenteController extends Controller
 {
@@ -14,10 +15,12 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $asesorados = Docente::find(1)->asesorados;
-        foreach($asesorados as $alumno){
-            echo($alumno->nombre.'<br>');
-        }
+        $docentes = Docente::orderBy('id', 'desc')->paginate(10, ['id', 'nombre', 'email', 'created_at']);
+        // foreach($asesorados as $alumno){
+        //     echo($alumno->nombre.'<br>');
+        // }
+
+        return view('docente.index', compact('docentes'));
     }
 
     /**
@@ -27,7 +30,7 @@ class DocenteController extends Controller
      */
     public function create()
     {
-        //
+        return view('docente.create');
     }
 
     /**
@@ -38,7 +41,20 @@ class DocenteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:docentes',
+            'contraseña' => ['required', 'confirmed'],
+        ]);
+        
+        $user = Docente::create([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'password' => Hash::make($request->contraseña)
+        ]);
+
+        return redirect('/docentes/create')
+                ->with('status', 'Docente registrado exitosamente!');
     }
 
     /**
@@ -70,9 +86,24 @@ class DocenteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Docente $docente)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255'
+        ]);
+
+        $docente->nombre = $request->nombre;
+        $docente->email = $request->email;
+
+        if($docente->isDirty('email')){
+            // El email ha sido cambiado
+            $request->validate(['email' => 'unique:docentes']);
+        }
+        $docente->save();
+
+        return redirect()->route('docentes.index')
+            ->with('status','Docente actualizado exitosamente!');
     }
 
     /**
@@ -81,8 +112,10 @@ class DocenteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Docente $docente)
     {
-        //
+        $docente->delete();
+        return redirect()->route('docentes.index')
+            ->with('status','Docente eliminado exitosamente!');
     }
 }

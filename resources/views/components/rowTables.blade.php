@@ -6,7 +6,9 @@
       <td>{{ $alumno->carrera }}</td>
       <td>{{ $alumno->cuatrimestre }}</td>
       <td>{{ $alumno->created_at }}</td>
-      <td id="{{ $alumno->id }}"><i id="editUser" class="fas fa-user-edit"></i></td>
+      <td id="{{ $item->id }}">
+        <button id="editUser" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="fas fa-user-edit"></i></button>
+      </td>
     </tr>
   @empty
     <tr>

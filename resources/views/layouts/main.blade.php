@@ -21,54 +21,21 @@
 	<link rel="stylesheet" href="{{ set_url('css/main.css') }}">
 </head>
 <body>
-	<header>
-		<nav class="navbar fixed navbar-expand-sm">
-		  	<div class="container-fluid">
-		    	<a class="navbar-logo" href="/">
-		    		<img src="{{ set_url('img/logo1.png') }}">
-		    		Repositorio UTCGG
-		    	</a>
-		  	</div>
-		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		      <span class="navbar-toggler-icon"></span>
-		    </button>
-		    <div class="collapse navbar-collapse" id="navbarNav">
-		      <ul class="navbar-nav">
-		        <li class="nav-item">
-		          <a class="nav-link active" aria-current="page" href="/">Inicio</a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link active" aria-current="page" href="/repositorios">Repositorios</a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link" href="/about">Acerca</a>
-		        </li>
-		        <li class="nav-item dropdown">
-		          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-		            {{ auth()->user()->nombre }}
-		          </a>
-		          <ul class="dropdown-menu">
-		            <li><a class="dropdown-item" href="/dashboard">Panel de control</a></li>
-		            <li>
-		            	{{-- <a class="dropdown-item" href="#">Another action</a> --}}
-		            	<form id="logout" method="POST" action="{{ route('logout') }}">
-		                 	@csrf
-		                 	<button type="submit">Cerrar sesión <i class="fas fa-sign-out-alt"></i></button>
-		             	</form>
-		            <li>
-		          </ul>
-		        </li>
-		      </ul>
-		    </div>
-		  </div>
-		</nav>
+	@include('layouts.navigation')
 
-	</header>
+	{{-- Mensaje de éxito --}}
+  	<x-alert.success-message :message="session('status')" />
 
-	@yield('content')
+  	{{-- Errores de validación         --}}
+  	<x-alert.error-message message="Error al actualizar los datos" :errors="$errors"/>
 
+	<main class="mt-5 pt-2">
+		@yield('content')
+	</main>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<!-- <script src="{{ set_url('js/navbar.js') }}"></script> -->
+{{-- <script src="{{ set_url('js/navbar.js') }}"></script> --}}
 </body>
 </html>

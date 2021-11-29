@@ -27,11 +27,15 @@
     left: 0;
 }
 
-.repositorio main{
+.repository main{
   overflow: auto;
 }
 
 /* Barra lateral de filtros  */
+
+#filters_sidebar{
+	background-color: #CFDAD3;
+}
 
 #filters_sidebar li{
   overflow: hidden;
@@ -39,16 +43,38 @@
   white-space: nowrap;
   /*width: 90%;*/
 }
-  
+
+#filters_sidebar .list-filters svg{
+	font-size: 22px;
+}
+
+#filters_sidebar .list-filters > li{
+	padding: 7px;
+}
+
+#filters_sidebar .list-filters > li > a {
+	font-weight: bold;
+}
+
+#filters_sidebar li a {
+	text-decoration: none;
+  	font-size: 16px;
+  	color: #212529;
+}  
+
 #filters_sidebar .submenu{
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
  }
 
+ #filters_sidebar .submenu li{
+	padding: 2px 0;
+}
+
  #filters_sidebar .fa-check{
 	position: absolute; 
-	left: 12px; 
+	left: 10px; 
 	color: #328E3D
 }
 
@@ -58,20 +84,36 @@
 
 /* Filtros realizados */
 
-.repositorio  .filters ul{
+.repository  .filters ul{
     display: flex; 
     list-style: none; 
     padding: 0;
 }
-.repositorio .filters ul li{
+.repository .filters ul li{
     background-color: rgba(112, 140, 230, 0.6); 
     padding: 6px; 
     border-radius: 12px; 
     margin-right: 9px;
 }
 
-.repositorio  .highlight{
-    background-color: #C695E5;
+.repository  .highlight{
+    background-color: #333B53;
+    color: #fff;
+}
+
+/* Seccion principal */
+
+.repository__actions button, button.repository__star{
+	background-color: transparent;
+	border: none;
+	font-size: 16px;
+	color: #3C3F43;
+}
+
+.repository a.nombre_rep{
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 14px;
 }
 
 /****** Formulario - crear *********/

@@ -10,7 +10,6 @@ class Repositorio extends Model
     use HasFactory;
 
     // protected $table = 'repositorios';
-
     protected $fillable = [
         'alumno_id',
         'alumno',
@@ -21,13 +20,15 @@ class Repositorio extends Model
         'empresa',
 
         'nombre_rep',
+        'slug',
         'descripcion',
         'tipo_proyecto',
         'nivel_proyecto',
 
         'palabras_clave',
         'generacion',
-        'imagenes'
+        'imagenes',
+        'created_by'
     ];
 
     public function getFile()
@@ -39,5 +40,10 @@ class Repositorio extends Model
     {
         return $this->belongsToMany(Alumno::class, 'alumnos_repositorios')
                     ->wherePivot('carrera', $career);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

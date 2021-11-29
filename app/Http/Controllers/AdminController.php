@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -14,7 +15,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        $admins = Admin::orderBy('id', 'desc')->paginate(10, ['id', 'nombre', 'email', 'created_at']);
+
+        return view('admin.index', compact('admins'));
     }
 
     /**
@@ -24,7 +27,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.create');
     }
 
     /**
@@ -35,7 +38,20 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:admin',
+            'contraseña' => ['required', 'confirmed'],
+        ]);
+        
+        $user = Admin::create([
+            'nombre' => $request->nombre,
+            'email' => $request->email,
+            'password' => Hash::make($request->contraseña)
+        ]);
+
+        return redirect('/admin')
+                ->with('status', 'Administrador registrado exitosamente!');
     }
 
     /**
@@ -67,9 +83,24 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Admin $admin)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $admin->nombre = $request->nombre;
+        $admin->email = $request->email;
+
+        if($admin->isDirty('email')){
+            // El email ha sido cambiado
+            $request->validate(['email' => 'unique:admin']);
+        }
+        $admin->save();
+
+        return redirect()->route('admin.index')
+            ->with('status','Administrador actualizado exitosamente!');
     }
 
     /**
@@ -78,8 +109,10 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Admin $admin)
     {
-        //
+        $admin->delete();
+        return redirect()->route('docentes.index')
+            ->with('status','Docente eliminado exitosamente!');
     }
 }

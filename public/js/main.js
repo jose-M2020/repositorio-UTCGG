@@ -87,6 +87,24 @@ form.addEventListener('submit', e => {
 })
 
 
+// ------- Activar / desactivar campos 
+
+const projectType = document.querySelector('#register-repository select#project_type');
+const removableFields = document.querySelectorAll('#register-repository .removable');
+
+const hideElement = function() {
+	if(this.value != 'Estadía'){
+		removableFields.forEach(element => {
+			element.style.display = 'none'
+		})
+	}else{
+		removableFields.forEach(element => {
+			element.style.display = 'block'
+		})
+	}
+}
+
+projectType.addEventListener('change', hideElement)
 
 
 
@@ -131,9 +149,7 @@ form.addEventListener('submit', e => {
 		})
 	})
 
-	const getPosition = element => {
-		return Array.from(element.parentNode.children).indexOf(element)
-	}
+	const getPosition = element => Array.from(element.parentNode.children).indexOf(element);
 
 	const stepsProgress = document.querySelectorAll('ul.steps li');
 	const duration = getComputedStyle(document.documentElement).getPropertyValue('--animation-duration');

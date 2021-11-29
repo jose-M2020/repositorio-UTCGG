@@ -26,6 +26,13 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth:alumno,docente,admin'])->name('dashboard');
 
+
+// Administradores
+
+Route::group(['middleware' => 'auth:admin'], function () {
+    Route::resources(['admin' => AdminController::class]);
+});
+
 // Docentes
 
 Route::group(['middleware' => 'auth:admin'], function () {
@@ -40,7 +47,7 @@ Route::middleware(['auth:docente,admin'])->prefix('alumnos')->group(function () 
 
     Route::get('/editar/{id}', [AlumnoController::class, 'edit'])
         ->name('alumnos.edit');
-    Route::post('/editar/{id}', [AlumnoController::class, 'update'])
+    Route::put('/editar/{alumno}', [AlumnoController::class, 'update'])
         ->name('alumnos.update');
 
     Route::get('/registrar', [AlumnoController::class, 'create'])
@@ -48,7 +55,7 @@ Route::middleware(['auth:docente,admin'])->prefix('alumnos')->group(function () 
     Route::post('/registrar', [AlumnoController::class, 'store'])
         ->name('alumnos.store');
 
-    Route::post('/eliminar/{id}', [AlumnoController::class, 'destroy'])
+    Route::delete('/{alumno}', [AlumnoController::class, 'destroy'])
         ->name('alumnos.destroy');
 });
 
@@ -66,14 +73,14 @@ Route::middleware(['auth:alumno,docente,admin'])->prefix('alumnos')->group(funct
 
 Route::middleware(['auth:alumno,docente,admin'])->prefix('repositorios')->group(function () {
     Route::get('/', [RepositorioController::class, 'index'])
-        ->name('repositorios');
+        ->name('repositorios.index');
 
     Route::get('/registrar', [RepositorioController::class, 'create'])
         ->name('repositorios.create');
     Route::post('/registrar', [RepositorioController::class, 'store'])
         ->name('repositorios.store');
 
-    Route::get('/{id}', [RepositorioController::class, 'show'])
+    Route::get('/{repositorio}', [RepositorioController::class, 'show'])
         ->name('repositorios.show');
 
     Route::get('/descargar/{id}', [RepositorioController::class, 'downloadFile'])
@@ -87,7 +94,7 @@ Route::middleware(['auth:docente,admin'])->prefix('repositorios')->group(functio
         ->name('repositorios.update');
 });
 
-Route::post('/repositorios/eliminar/{id}', [AlumnoController::class, 'destroy'])
+Route::delete('/repositorios/{repositorio}', [RepositorioController::class, 'destroy'])
     ->middleware('auth:admin')
     ->name('repositorios.destroy');
 
@@ -95,5 +102,10 @@ Route::post('/repositorios/eliminar/{id}', [AlumnoController::class, 'destroy'])
 
 Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
     ->name('files.download');
+
+
+Route::get('acerca', function(){
+    return view('about');
+})->name('about');
 
 require __DIR__.'/auth.php';

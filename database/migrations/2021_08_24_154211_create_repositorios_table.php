@@ -20,7 +20,7 @@ class CreateRepositoriosTable extends Migration
                   ->constrained()
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
-            // $table->string('alumno');
+            $table->string('alumno');
 
             // Datos añadidos-------
             $table->string('carrera');
@@ -30,6 +30,7 @@ class CreateRepositoriosTable extends Migration
             // ----------------------
 
             $table->string('nombre_rep');
+            $table->string('slug');
             $table->text('descripcion');
             $table->string('tipo_proyecto');
             $table->string('nivel_proyecto');

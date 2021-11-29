@@ -1,7 +1,7 @@
-@props(['errors', 'message'])
+@props(['errors'])
 
 @if ($errors->any())
-    <div {{ $attributes }}>
+    {{-- <div {{ $attributes }}>
         <div class="font-medium text-red-600">
             {{ __('Error al iniciar sesión.') }}
         </div>
@@ -11,5 +11,15 @@
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
-    </div>
+    </div> --}}
+    {{-- <div class="" > --}}
+        <div class="alert alert-danger alert-dismissible fade show w-auto position-fixed start-50 translate-middle-x text-white rounded" role="alert" style="z-index: 100; top: 20px; background-color: rgb(149, 70, 70, .9); border: none;">
+            <p><i class="fas fa-exclamation-circle"></i>  Error al iniciar sesión.</p>
+            <ul style="margin: 0; padding: 0; list-style: none;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 @endif

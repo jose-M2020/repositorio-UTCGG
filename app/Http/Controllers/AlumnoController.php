@@ -15,7 +15,7 @@ class AlumnoController extends Controller
      */
     public function index()
     {
-        $alumnos = Alumno::paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
+        $alumnos = Alumno::orderBy('id', 'desc')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
 
         // $docente = Alumno::findOrFail(1)->asesores;
         // dd($docente);
@@ -42,17 +42,17 @@ class AlumnoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:alumnos',
-            'password' => ['required', 'confirmed'],
+            'contraseña' => ['required', 'confirmed'],
             'carrera' => 'required|string|max:20',
             'cuatrimestre' => 'required|integer|max:11'
         ]);
 
         $user = Alumno::create([
-            'nombre' => $request->name,
+            'nombre' => $request->nombre,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->contraseña),
             'carrera' => $request->carrera,
             'cuatrimestre' => $request->cuatrimestre
         ]);
@@ -80,9 +80,9 @@ class AlumnoController extends Controller
      */
     public function edit($id)
     {
-        return view('alumno.edit', [
-            'alumno' => Alumno::findOrFail($id)
-        ]);
+        // return view('alumno.edit', [
+        //     'alumno' => Alumno::findOrFail($id)
+        // ]);
     }
 
     /**
@@ -92,22 +92,33 @@ class AlumnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Alumno $alumno)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'nombre' => 'required|string|max:255',
             'carrera' => 'required|string|max:20',
-            'cuatrimestre' => 'required|integer|max:11'
+            'cuatrimestre' => 'required|integer|max:11',
+            'email' => 'required|string|email|max:255',
         ]);
 
-        Alumno::where('id', $id)->update([
-            'nombre' => $request->name,
-            'email' => $request->email,
-            'carrera' => $request->carrera,
-            'cuatrimestre' => $request->cuatrimestre
-        ]);
-        // $id->update($request->all());
+        $alumno->nombre = $request->nombre;
+        $alumno->email = $request->email;
+        $alumno->carrera = $request->carrera;
+        $alumno->cuatrimestre = $request->cuatrimestre;
+
+        if($alumno->isDirty('email')){
+            // El email ha sido cambiado
+            $request->validate(['email' => 'unique:alumnos']);
+        }
+
+        $alumno->save();
+
+        // Alumno::where('id', $id)->update([
+        //     'nombre' => $request->nombre,
+        //     'email' => $request->email,
+        //     'carrera' => $request->carrera,
+        //     'cuatrimestre' => $request->cuatrimestre
+        // ]);
 
         return redirect()->route('alumnos')
             ->with('status','Alumno actualizado exitosamente!');
@@ -119,9 +130,11 @@ class AlumnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Alumno $alumno)
     {
-        Alumno::where('id', $id)->delete();
+        // Alumno::whereIn('id', [2, 4])->delete();
+        // Alumno::where('id', $id)->delete();
+        $alumno->delete();
 
         return redirect()->route('alumnos')
             ->with('status','Alumno eliminado exitosamente!');

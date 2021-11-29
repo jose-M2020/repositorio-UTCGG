@@ -5,7 +5,7 @@
 	--color-2: #389483;
 	--color-3: #5cdb95;
 	--color-4: #8ee4af;
-	--color-5: #edf5e1;	
+	--color-5: #e8f1ed;	
 
 	/* Segunda paleta de colores */
 
@@ -50,8 +50,9 @@ svg > *{
 }
 
 /******************* Navbar **********************/
-header{
+.navbar{
 	 background: rgb(25, 118, 79);
+	 z-index: 100;
 }
 
 .navbar a{
@@ -77,26 +78,39 @@ header{
 	width: 50px;
 }
 
+.navbar .navbar-toggler{
+	color: #fff;
+	font-size: 22px;
+}
+
+.navbar a.active{
+	font-weight: bold;
+	border-bottom: 1px solid #fff;
+} 
+
 .navbar .nav-item a, .navbar .nav-item button{
 	color: #fff;
 	font-size: 16px;
 }
 
 .navbar .dropdown-menu{
-	display: block;
+	display: none;
 	background-color: rgb(25, 118, 79);
 	border: none;
 	right: 0;
 	text-align: center;
-	height: 0;
-	padding: 0;
+	height: auto;
+	padding: 8px 0;
 	overflow: hidden;
-	transition: height .3s;
+	transition: opacity .5s;
+	/*opacity: 0;*/
+	/*visibility: hidden;*/
 }
 
 .navbar .dropdown:hover .dropdown-menu{
-	padding: 8px 0;
-	height: 78px;
+	/*opacity: 1;*/
+	/*visibility: visible;*/
+	display: block;
 }
 
 .navbar .dropdown-menu li a, 
@@ -148,4 +162,85 @@ html.no-scroll {
 	width: 50px;
 	padding: 10px;
 	border-radius: 5px;
+}
+
+/* Paginación */
+.pagination{
+	/*justify-content: end;*/
+	margin-top: 20px;
+}
+
+.pagination .active .page-link{
+	background-color: rgb(25, 118, 79);
+	border: none;
+}
+
+/* Tabla Usuarios */
+#addUser{
+	font-size: 50px;
+	color: #19764f;
+}
+
+.users__navigation{
+	background-color: #2D3142; 
+	color: #fff;
+}
+
+.users__navigation .users__filters button{
+	background-color: transparent;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+}
+
+.users__navigation .users__filters .dropdown-menu{
+	background-color: #2D3142;
+	color: #fff;
+	/*min-width: auto;*/
+}
+
+/*.users_table thead {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  line-height: 3em;
+  background: #eee;
+  table-layout: fixed;
+  display: table;
+}*/
+
+.users_table tbody tr{
+	cursor: pointer;
+}
+
+.users_table input[type=checkbox]{
+	display: none;
+}
+
+.users_table button > * {
+	pointer-events: none;
+}
+
+.users #editUser{
+	border: none;
+}
+
+.users button#editUser,
+.users button#deleteUser{
+	font-size: 25px;
+	color: #413C3C;
+	transition: color .3s;
+	background-color: inherit;
+	border: none;
+}
+
+.users button#editUser:hover{
+	color: #2BB45F;
+}
+
+.users button#deleteUser:hover{
+	color: #CC4545;
 }

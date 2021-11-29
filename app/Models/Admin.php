@@ -10,7 +10,7 @@ class Admin extends Authenticatable
     use HasFactory;
 
     protected $table = 'admin';
-
+    // const CREATED_AT = 'creado_el';
    /**
      * The attributes that are mass assignable.
      *

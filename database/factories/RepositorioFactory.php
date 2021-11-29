@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Repositorio;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use App\Models\Alumno;
 use App\Models\Docente;
 
@@ -47,8 +48,10 @@ class RepositorioFactory extends Factory
         $career = $this->faker->randomElement(array_keys($careers));
         $keyword = $this->faker->randomElement($careers[$career]);
 
+        $title = $this->faker->sentence(5);
+
         return [
-            // 'alumno' => json_encode([$this->faker->name()]),
+            'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
             'docente_id' => $this->faker->randomElement($docentes_id),
@@ -57,7 +60,8 @@ class RepositorioFactory extends Factory
             'empresa' => $this->faker->company(),
             // ------------------------------------
 
-            'nombre_rep' => $this->faker->sentence(5),
+            'nombre_rep' => $title,
+            'slug' => Str::slug($title, '-'),
             'descripcion' => $this->faker->paragraph(),
             'tipo_proyecto' => $this->faker->randomElement(['Integradora', 'Estadía', 'Proyecto Especial']),
             'nivel_proyecto' => $this->faker->randomElement(['TSU', 'Ingeniería']),

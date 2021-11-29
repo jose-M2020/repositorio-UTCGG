@@ -1,7 +1,7 @@
               <p class="mt-2">Filtra tus resultados</p>
-                <ul class="navbar-nav side-nav">
+                <ul class="navbar-nav list-filters">
                     <li>
-                        <a class="menu-title" href="#" data-toggle="collapse" data-target="#submenu-1">
+                        <a class="menu-title" href="javascript:void(0)" data-toggle="collapse" data-target="#submenu-1">
                           <i class="fas fa-university"></i> Carrera <i class="fa fa-fw fa-angle-down pull-right"></i>
                         </a>
                         <ul id="submenu-1" class="submenu position-relative">
@@ -19,7 +19,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a class="menu-title" href="#" data-toggle="collapse" data-target="#submenu-2">
+                        <a class="menu-title" href="javascript:void(0)" data-toggle="collapse" data-target="#submenu-2">
                           <i class="fas fa-file-alt"></i>  Tipo de proyecto <i class="fa fa-fw fa-angle-down pull-right"></i>
                         </a>
                         <ul id="submenu-2" class="submenu position-relative">
@@ -37,7 +37,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a class="menu-title" href="#" data-toggle="collapse" data-target="#submenu-2">
+                        <a class="menu-title" href="javascript:void(0)" data-toggle="collapse" data-target="#submenu-2">
                           <i class="fas fa-graduation-cap"></i>  Nivel de proyecto <i class="fa fa-fw fa-angle-down pull-right"></i>
                         </a>
                         <ul id="submenu-3" class="submenu position-relative">
@@ -55,7 +55,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a class="menu-title" href="#" data-toggle="collapse" data-target="#submenu-2">
+                        <a class="menu-title" href="javascript:void(0)" data-toggle="collapse" data-target="#submenu-2">
                           <i class="far fa-calendar-alt"></i>  Generación <i class="fa fa-fw fa-angle-down pull-right"></i>
                         </a>
                         <ul id="submenu-4" class="submenu position-relative">

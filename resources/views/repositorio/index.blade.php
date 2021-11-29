@@ -3,12 +3,9 @@
 @section('title', 'Explorar')
 
 @section('content')
-<style>
-  
-</style>
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
-
-  <div class="repositorio container-fluid position-relative">
+  
+  <div class="repository container-fluid position-relative">
     <div class="row">
       <div class="container-fluid w-100 p-0 m-0">
         <div class="search p-4">
@@ -41,7 +38,7 @@
       </div>
     </div>
     <div class="row">
-      <nav id="filters_sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <nav id="filters_sidebar" class="col-md-3 col-lg-2 d-block sidebar collapse">
           <div class="position-sticky pt-3" style="height: 100vh; overflow: auto; top: 70px;">
             <div class="collapse navbar-collapse navbar-ex1-collapse d-block">
               <x-dropdowns.filter-list/>
@@ -78,24 +75,55 @@
             <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span>
             <h6 class="border-bottom pb-2 mb-0 mt-3">{{ $repositorios->total() }} resultados</h6>
             @forelse ($repositorios as $repositorio)
-              <div class="d-flex text-muted pt-3 border-bottom border-secondary project position-relative">
-                <i class="far fa-star position-absolute end-0"></i>
-                <div class="me-2" style="max-width: 200px; color: #2E6A99;">
+              <div class="row d-flex text-muted pt-3 border-bottom border-secondary project position-relative">
+                <div class="position-absolute w-auto top-0 end-0">
+                  {{-- Marcar como favorito --}}
+                  <button class="repository__star"><i class="far fa-star"></i></button>
+                  {{-- Acciones --}}
+                  @auth('admin')
+                    <div class="repository__actions btn-group dropstart">
+                      <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <button class="dropdown-item" id="editRepository" data-user="{{ json_encode($repositorio) }}" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="far fa-edit"></i> Editar</button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" id="deleteRepository" data-slug="{{ $repositorio->slug }}"  data-bs-toggle="modal" data-bs-target="#modalDelete"><i class="far fa-trash-alt"></i> Eliminar</button>
+                        </li>
+                      </ul>
+                    </div>
+                  @endauth
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 align-self-center" style="color: #2E6A99;">
                   <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
                   <img src="{{ json_decode($repositorio->imagenes)[0] }}" style="object-fit: cover; width: 100%;">
                 </div>
-                <div class="d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
+                <div class="col align-self-center d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                   <small class="mb-2">
                     {{$repositorio->tipo_proyecto}}
                   </small>
-                  <a class="mb-2" href="/repositorios/{{ $repositorio->id }}"><strong class="text-gray-dark d-block nombre_rep">{{ $repositorio->nombre_rep }}</strong></a>
-                  <p class="descripcion">{{ $repositorio->descripcion }}</p>
-                  <p class="nombre_alumno">{{$repositorio->alumno}} | {{$repositorio->created_at}}</p>
+                  <a class="mb-2 nombre_rep" href="{{ route('repositorios.show', $repositorio) }}">{{ $repositorio->nombre_rep }}</a>
+                  <div class="repository__datails">
+                    <p class="descripcion">{{ $repositorio->descripcion }}</p>
+                    <div class="d-flex justify-content-between">
+                      <p class="nombre_alumno">
+                        @foreach(json_decode($repositorio->alumno) as $author)
+                          @if ($loop->last)
+                              {{ $author }}.
+                              @break
+                          @endif
+                          {{ $author }},
+                        @endforeach
+                      </p>
+                      <p>{{$repositorio->created_at}}</p>
+                    </div>
+                  </div>
                   <div>
                     <a href="/repositorios/descargar/{{$repositorio->id}}"><i class="fas fa-download"></i></a>
                   </div>
                 </div>
-
               </div>
             @empty
               <p class="text-center fs-3 text-danger my-5">Repositorio no encontrado</p>
@@ -103,12 +131,40 @@
             <!-- {{ $repositorios->appends($linkData)->links() }} -->
           </div>
         </div> 
+        <div>
+          {{ $repositorios->links('pagination::bootstrap-4') }}
+        </div>
       </main>
     </div>
   </div>
 
+  <!-- Modal Delete -->
+  <x-modal id="modalDelete" title="¿Desea eliminar el repositorio?">
+    <x-slot name="footer">
+      <form id="delete-repository" method="POST" action="">
+        @method('delete')
+        @csrf
+        <button type="submit" class="btn btn-success">Aceptar</button>      
+       </form>
+    </x-slot>
+  </x-modal>
+
 <script type="text/javascript">
+
   const sidebar = document.getElementById('filters_sidebar');
+
+  // ------------------------ Ventana modal de eliminar repositorio -----------------------
+    const deleteButtons = document.querySelectorAll('button#deleteRepository');
+    const deleteForm = document.querySelector('#modalDelete form');
+
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        let {dataset: {slug} } = this;
+        let url = '{{ route('repositorios.destroy', ':repositorio') }}';
+        url = url.replace(':repositorio', slug);
+        deleteForm.action = url;
+      })
+    })
 
   // Abrir y cerrar el menu de los filtros
   sidebar.addEventListener('click', e => {

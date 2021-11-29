@@ -11,6 +11,8 @@
 </head>
 <body>
     @yield('content')
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script src="{{ set_url('js/all.js') }}"></script>
 <script>
     function mostrarContrasena(){
@@ -23,6 +25,14 @@
             eyeIcon.style.color = '#605D5D';
             tipo.type = "password";
         }
+    }
+
+    const alert  = document.querySelector('.alert');
+
+    if(alert){
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 8000)
     }
 </script>
 </body>
