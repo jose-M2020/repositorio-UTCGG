@@ -7,11 +7,13 @@
   <div class="users container-fluid mt-4 px-sm-0 px-md-5">
     <div class="row justify-content-end py-4">
       <div class="col-1">
-        <a href="{{ route('alumnos.store') }}" id="addUser"><i class="fas fa-plus-circle"></i></a>
+        <a href="{{ route('alumnos.store') }}" class="btn btn-success">Nuevo</a>
       </div>
     </div>
 
+    {{-- Navegación y accíones de la tabla --}}
     <div class="users__navigation row d-flex py-3 justify-content-md-between align-items-center">
+      {{-- Navegción entre usuarios --}}
       <div class="col-md-6 col-xs-12 btn-group d-flex justify-content-center justify-content-md-start " role="group" aria-label="Basic example">
         <a href="/alumnos" class="border-bottom border-3">
           <button type="button" class="btn btn-transparent text-white fw-bold">Alumnos</button>
@@ -25,6 +27,8 @@
           </a>
         @endauth
       </div>
+
+      {{-- Sección Búsqueda --}}
       <div class="col-md-5 col-lg-4 col-xl-3 mt-3 mt-md-0">
         <div class="form-group position-relative search_content">
           <i class="fas fa-spinner fa-spin" id="search_spinner"></i>
@@ -34,111 +38,93 @@
         </div>
       </div>
 
-      <div class="users__filters mt-5 mb-1">
-        <div class="btn-group">
-          <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Por carrera
-          </button>
-          <ul class="dropdown-menu p-3">
-            @foreach(get_careers() as $key => $value)
-              <li>
-                <input name="carrera[]" class="form-check-input" type="checkbox" value="{{ $key }}" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                  {{ $key }}
-                </label>
-              </li>
-            @endforeach
-          </ul>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Por cuatrimestre
-          </button>
-          <ul class="dropdown-menu p-3">
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="3" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                3°
-              </label>
-            </li>
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="5" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                5°
-              </label>
-            </li>
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="5" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                6°
-              </label>
-            </li>
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="5" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                7°
-              </label>
-            </li>
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="5" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                10°
-              </label>
-            </li>
-            <li>
-              <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="5" id="flexCheckDefault">
-              <label class="form-check-label" for="flexCheckDefault">
-                11°
-              </label>
-            </li>
-          </ul>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            Por fecha
-          </button>
-          <ul class="dropdown-menu p-3">
-            <li>
-              <div class="form-check">
-                <input value="today" class="form-check-input" type="radio" name="date" id="date2" checked>
-                <label class="form-check-label" for="date2">
-                  Hoy
-                </label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input value="week" class="form-check-input" type="radio" name="date" id="date2">
-                <label class="form-check-label" for="date2">
-                  Esta semana
-                </label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input value="month" class="form-check-input" type="radio" name="date" id="date2">
-                <label class="form-check-label" for="date2">
-                  Este mes
-                </label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input value="year" class="form-check-input" type="radio" name="date" id="date2">
-                <label class="form-check-label" for="date2">
-                  Este año
-                </label>
-              </div>
-            </li>
-            <li>
-              <div class="input-group mb-3">
-                <input name="year[]" type="date" class="form-control" placeholder="año" aria-label="Username">
-                <span class="input-group-text">-</span>
-                <input name="year[]" type="date" class="form-control" placeholder="año" aria-label="Server">
-              </div>
-            </li>
-          </ul>
-        </div>
+      {{-- Menú de filtros --}}
+      <div class="users__filters alumnos mt-5 mb-1">
+        <form action="{{ route('alumnos') }}" class="row justify-content-md-between
+        justify-content-center align-items-center">
+          <div class="alumnos__filters-group col-auto mb-4 mb-sm-0">            
+            <div class="btn-group alumnos__filters-carrera">
+              <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Por carrera
+              </button>
+              <ul class="dropdown-menu p-3">
+                @foreach(get_careers() as $key => $value)
+                  <li data-toggle="tooltip" data-bs-placement="right" title="{{ $value }}">
+                    <input name="carrera[]" class="form-check-input" type="checkbox" value="{{ $key }}" id="flexCheckDefault" 
+                      @if(array_key_exists('carrera', $filters))
+                        {{ in_array($key, $filters['carrera']) ? 'checked' : '' }} 
+                      @endif
+                    >
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{ $key }}
+                    </label>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+            <div class="btn-group alumnos__filters-cuatrimestre">
+              <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Por cuatrimestre
+              </button>
+              <ul class="dropdown-menu p-3">
+                @foreach([3, 5, 6, 7, 10, 11] as $cuatri)
+                  <li>
+                    <input name="cuatrimestre[]" class="form-check-input" type="checkbox" value="{{ $cuatri }}" id="flexCheckDefault" 
+                      @if(array_key_exists('cuatrimestre', $filters))
+                        {{ in_array($cuatri, $filters['cuatrimestre']) ? 'checked' : '' }} 
+                      @endif
+                    >
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{ $cuatri }}°
+                    </label>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+            <div class="btn-group alumnos__filters-date">
+              <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Por fecha
+              </button>
+              <ul class="dropdown-menu p-3">
+                @foreach(['hoy' => 'Hoy', 'semana' => 'Esta Semana', 'mes' => 'Este mes', 'año' => 'Este año'] as $key => $value)
+                  <li>
+                    <div class="form-check">
+                      <input value="{{ $key }}" class="form-check-input" type="radio" name="fecha" id="date2"
+                        @if(array_key_exists('fecha', $filters))
+                          {{ $filters['fecha'] == $key ? 'checked' : '' }} 
+                        @endif
+                      >
+                      <label class="form-check-label" for="date2">
+                        {{ $value }}
+                      </label>
+                    </div>
+                  </li>
+                @endforeach
+
+                <li class="text-center mt-3">
+                  <p>Establecer rango</p>
+                  <div class="input-group mb-3">
+                    <input name="rango_fecha[]" type="date" class="form-control date-range" placeholder="año" aria-label="Username"
+                      @if(array_key_exists('rango_fecha', $filters))
+                        value="{{ $filters['rango_fecha'][0] }}"
+                      @endif
+                    >
+                    <span class="input-group-text">-</span>
+                    <input name="rango_fecha[]" type="date" class="form-control date-range" placeholder="año" aria-label="Server"
+                      @if(array_key_exists('rango_fecha', $filters))
+                        value="{{ $filters['rango_fecha'][1] }}"
+                      @endif
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="btn-group col-auto">
+            <button type="submit" class="btn btn-success me-2"><i class="fas fa-filter"></i> Filtrar</button>
+            <a class="btn btn-outline-info" href="{{ route('alumnos') }}">Resetear</a>
+          </div>
+        </form>
       </div>
     </div>
 

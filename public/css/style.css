@@ -130,6 +130,14 @@ svg > *{
 	background: transparent;
 }
 
+.navbar .notifications{
+	font-size: 14px;
+}
+
+.navbar .notifications span{
+	font-size: 12px;
+}
+
 /* Navbar - JS */
 
 .scroll-down header {
@@ -186,7 +194,7 @@ html.no-scroll {
 	color: #fff;
 }
 
-.users__navigation .users__filters button{
+.users__navigation .users__filters button:not([type=submit]){
 	background-color: transparent;
 	border: none;
 	color: #fff;
@@ -196,7 +204,35 @@ html.no-scroll {
 .users__navigation .users__filters .dropdown-menu{
 	background-color: #2D3142;
 	color: #fff;
+	border: none;
 	/*min-width: auto;*/
+}
+
+.users__navigation .users__filters input.date-range{
+	background-color: transparent;
+	color: #fff;
+}
+
+.users__navigation .users__filters input.date-range:placeholder{
+	color: #fff;
+}
+
+.users__navigation .users__filters span{
+	background-color: transparent;
+	border: none;
+	color: #fff;
+}
+
+.users__navigation .users__filters input.date-range[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 2px;
+  opacity: 0.6;
+  filter: invert(0.8);
+}
+
+.users__navigation .users__filters input.date-range[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1
 }
 
 /*.users_table thead {
@@ -243,4 +279,20 @@ html.no-scroll {
 
 .users button#deleteUser:hover{
 	color: #CC4545;
+}
+
+/* Formulario - Boostrap */
+
+.form-floating input,
+.form-floating select,
+.form-floating textarea{
+	background-color: transparent;
+	border: 3px solid #9BA0A6;
+	border-radius: 8px;
+}
+
+.form-floating .form-control:focus{
+	background-color: transparent;
+	border: 3px solid #2BB45F;
+	box-shadow: 3px 3px 3px #CDF9DE;
 }

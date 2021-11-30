@@ -9,7 +9,9 @@
       <div class="col-1"><a href="{{ route('admin.create') }}" class="btn btn-success">Nuevo</a></div>
     </div>
 
+    {{-- Navegación y accíones de la tabla --}}
     <div class="users__navigation row d-flex py-3 justify-content-md-between align-items-center">
+      {{-- Navegción entre usuarios --}}
       <div class="col-md-6 col-xs-12 btn-group d-flex justify-content-center justify-content-md-start " role="group" aria-label="Basic example">
         <a href="/alumnos" class="text-light">
           <button type="button" class="btn btn-transparent text-light">Alumnos</button>
@@ -23,6 +25,8 @@
           </a>
         @endauth
       </div>
+      
+      {{-- Sección Búsqueda --}}
       <div class="col-md-5 col-lg-4 col-xl-3 mt-3 mt-md-0">
         <div class="form-group position-relative search_content">
           <i class="fas fa-spinner fa-spin" id="search_spinner"></i>
@@ -30,6 +34,57 @@
           <i class="fas fa-search" id="search_icon"></i>
           <!-- <div class="searching">Buscando resultados para la búsqueda...</div> -->
         </div>
+      </div>
+
+      {{-- Menú de filtros --}}
+      <div class="users__filters alumnos mt-5 mb-1">
+        <form action="{{ route('admin.index') }}" class="row justify-content-md-between
+        justify-content-center align-items-center">
+          <div class="alumnos__filters-group col-auto mb-4 mb-sm-0">
+            <div class="btn-group alumnos__filters-date">
+              <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Por fecha
+              </button>
+              <ul class="dropdown-menu p-3">
+                @foreach(['hoy' => 'Hoy', 'semana' => 'Esta Semana', 'mes' => 'Este mes', 'año' => 'Este año'] as $key => $value)
+                  <li>
+                    <div class="form-check">
+                      <input value="{{ $key }}" class="form-check-input" type="radio" name="fecha" id="date2"
+                        @if(array_key_exists('fecha', $filters))
+                          {{ $filters['fecha'] == $key ? 'checked' : '' }} 
+                        @endif
+                      >
+                      <label class="form-check-label" for="date2">
+                        {{ $value }}
+                      </label>
+                    </div>
+                  </li>
+                @endforeach
+
+                <li class="text-center mt-3">
+                  <p>Establecer rango</p>
+                  <div class="input-group mb-3">
+                    <input name="rango_fecha[]" type="date" class="form-control date-range" placeholder="año" aria-label="Username"
+                      @if(array_key_exists('rango_fecha', $filters))
+                        value="{{ $filters['rango_fecha'][0] }}"
+                      @endif
+                    >
+                    <span class="input-group-text">-</span>
+                    <input name="rango_fecha[]" type="date" class="form-control date-range" placeholder="año" aria-label="Server"
+                      @if(array_key_exists('rango_fecha', $filters))
+                        value="{{ $filters['rango_fecha'][1] }}"
+                      @endif
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="btn-group col-auto">
+            <button type="submit" class="btn btn-success me-2"><i class="fas fa-filter"></i> Filtrar</button>
+            <a class="btn btn-outline-info" href="{{ route('admin.index') }}">Resetear</a>
+          </div>
+        </form>
       </div>
     </div>
 

@@ -95,7 +95,30 @@
                           <span class="badge rounded-pill badge-notification bg-danger position-absolute top-0 start-100 translate-middle">1</span>
                       </div>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink"
+                    <ul class="notifications list-group dropdown-menu dropdown-menu-end">
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Daniel Vargas H.</div>
+                          Modificación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Hoy</span>
+                      </li>
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Ana Lopéz M.</div>
+                          Modificación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Ayer</span>
+                      </li>
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Gerardo Luis Marcos F.</div>
+                          Eliminación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Ayer</span>
+                      </li>
+                    </ul>
+                    {{-- <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink"
                     >
                       <li>
                         <a class="dropdown-item" href="#">Some news</a>
@@ -106,7 +129,7 @@
                       <li>
                         <a class="dropdown-item" href="#">Something else here</a>
                       </li>
-                    </ul>
+                    </ul> --}}
                   </li>
                 @endauth
               </ul>

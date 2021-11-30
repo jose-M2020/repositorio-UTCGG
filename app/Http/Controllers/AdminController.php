@@ -13,11 +13,53 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $admins = Admin::orderBy('id', 'desc')->paginate(10, ['id', 'nombre', 'email', 'created_at']);
+        $filters = $request->all();
+        $date_range = $request->rango_fecha;
 
-        return view('admin.index', compact('admins'));
+        $admins = Admin::orderBy('id', 'desc')
+            ->when($request->fecha, function ($query, $date) use($date_range, $filters){
+                if(!$date_range[0] && !$date_range[1]){
+                    if($date == 'hoy'){
+                        return $query->whereDay('created_at', date('d'));
+                    }
+                    if($date == 'semana'){
+                        return $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                    }
+                    if($date == 'mes'){
+                        return $query->whereMonth('created_at', date('m'));
+                    }
+                    if($date == 'año'){
+                        return $query->whereYear('created_at', date('Y'));
+                    }
+                }
+            })
+            ->when($date_range, function ($query, $date){
+                if($date[0] && $date[1]){
+                    return $query->whereBetween('created_at', [$date[0], $date[1]]);
+                }
+            })
+            ->paginate(10, ['id', 'nombre', 'email', 'created_at']);
+
+        if($request->fecha){
+            if(!$date_range[0] && !$date_range[1]){
+                unset($filters['rango_fecha']);
+            }
+            if($date_range[0] && $date_range[1]){
+                unset($filters['fecha']);
+            }
+            if(!$date_range[0] && $date_range[1] || $date_range[0] && !$date_range[1]){
+                unset($filters['fecha']);
+                unset($filters['rango_fecha']);
+                $message = 'Ingrese un rango de fecha válido';
+            }
+        }
+        else if($date_range){
+            if(!$date_range[0] || !$date_range[1]) unset($filters['rango_fecha']);
+        }
+
+        return view('admin.index', compact('admins','filters'));
     }
 
     /**
@@ -50,7 +92,7 @@ class AdminController extends Controller
             'password' => Hash::make($request->contraseña)
         ]);
 
-        return redirect('/admin')
+        return redirect()->route('admin.index')
                 ->with('status', 'Administrador registrado exitosamente!');
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepositorioController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,11 +102,11 @@ Route::delete('/repositorios/{repositorio}', [RepositorioController::class, 'des
 // Archivos
 
 Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
+    ->middleware('auth:alumno,docente,admin')
     ->name('files.download');
-
 
 Route::get('acerca', function(){
     return view('about');
-})->name('about');
+})->middleware('auth:alumno,docente,admin')->name('about');
 
 require __DIR__.'/auth.php';

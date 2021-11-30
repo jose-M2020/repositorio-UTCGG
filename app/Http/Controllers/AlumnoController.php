@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Alumno;
 use Illuminate\Support\Facades\Hash;
+use \Carbon\Carbon;
 
 class AlumnoController extends Controller
 {
@@ -13,14 +14,60 @@ class AlumnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $alumnos = Alumno::orderBy('id', 'desc')->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
-
+        $filters = $request->all();
+        $date_range = $request->rango_fecha;
+        // unset($filters['date']);
+        $alumnos = Alumno::orderBy('id', 'desc')
+            ->when($request->carrera, function ($query, $carrera){
+                return $query->whereIn('carrera', $carrera);
+            })
+            ->when($request->cuatrimestre, function ($query, $cuatrimestre){
+                return $query->whereIn('cuatrimestre', $cuatrimestre);
+            })
+            ->when($request->fecha, function ($query, $date) use($date_range, $filters){
+                if(!$date_range[0] && !$date_range[1]){
+                    if($date == 'hoy'){
+                        return $query->whereDay('created_at', date('d'));
+                    }
+                    if($date == 'semana'){
+                        return $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                    }
+                    if($date == 'mes'){
+                        return $query->whereMonth('created_at', date('m'));
+                    }
+                    if($date == 'año'){
+                        return $query->whereYear('created_at', date('Y'));
+                    }
+                }
+            })
+            ->when($date_range, function ($query, $date){
+                if($date[0] && $date[1]){
+                    return $query->whereBetween('created_at', [$date[0], $date[1]]);
+                }
+            })
+            ->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
         // $docente = Alumno::findOrFail(1)->asesores;
-        // dd($docente);
 
-        return view('alumno.index', compact('alumnos'));
+        if($request->fecha){
+            if(!$date_range[0] && !$date_range[1]){
+                unset($filters['rango_fecha']);
+            }
+            if($date_range[0] && $date_range[1]){
+                unset($filters['fecha']);
+            }
+            if(!$date_range[0] && $date_range[1] || $date_range[0] && !$date_range[1]){
+                unset($filters['fecha']);
+                unset($filters['rango_fecha']);
+                $message = 'Ingrese un rango de fecha válido';
+            }
+        }
+        else if($date_range){
+            if(!$date_range[0] || !$date_range[1]) unset($filters['rango_fecha']);
+        }
+
+        return view('alumno.index', compact('alumnos','filters'));
     }
 
     /**
@@ -57,7 +104,7 @@ class AlumnoController extends Controller
             'cuatrimestre' => $request->cuatrimestre
         ]);
 
-        return redirect('/alumnos/registrar')
+        return redirect()->route('alumnos')
                 ->with('status', 'Alumno registrado exitosamente!');
     }
 

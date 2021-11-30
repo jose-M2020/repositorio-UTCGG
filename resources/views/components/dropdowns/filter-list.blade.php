@@ -7,12 +7,12 @@
                         <ul id="submenu-1" class="submenu position-relative">
                             @foreach(get_careers() as $key => $career)
                               @if(find_param_url('carrera', $key))
-                                <li>
-                                  <i class="fas fa-check"></i> <span title="{{ $career }}">{{ $career }}</span>
+                                <li data-toggle="tooltip" data-bs-placement="top" title="{{ $career }}">
+                                  <i class="fas fa-check"></i> <span>{{ $career }}</span>
                                 </li>
                               @else
-                                <li>
-                                  <a href="{{ add_param_url(['carrera[]' => $key]) }}" title="{{ $career }}">{{ $career }}</a>
+                                <li data-toggle="tooltip" data-bs-placement="top" title="{{ $career }}">
+                                  <a href="{{ add_param_url(['carrera[]' => $key]) }}">{{ $career }}</a>
                                 </li>
                               @endif
                             @endforeach
@@ -25,12 +25,12 @@
                         <ul id="submenu-2" class="submenu position-relative">
                           @foreach(get_type_projects() as $type)
                             @if(find_param_url('tipo', $type))
-                              <li>
-                                <i class="fas fa-check"></i> <span title="{{ $type }}">{{ $type }}</span>
+                              <li data-toggle="tooltip" data-bs-placement="top" title="{{ $type }}">
+                                <i class="fas fa-check"></i> <span>{{ $type }}</span>
                               </li>
                             @else
-                              <li>
-                                <a href="{{ add_param_url(['tipo[]' => $type]) }}" title="{{ $type }}">{{ $type }}</a>
+                              <li data-toggle="tooltip" data-bs-placement="top" title="{{ $type }}">
+                                <a href="{{ add_param_url(['tipo[]' => $type]) }}">{{ $type }}</a>
                               </li>
                             @endif
                           @endforeach
@@ -43,12 +43,12 @@
                         <ul id="submenu-3" class="submenu position-relative">
                             @foreach(get_academic_degrees() as $key=>$level)
                               @if(find_param_url('nivel', $key))
-                                <li>
-                                  <i class="fas fa-check"></i> <span title="{{ $key }}">{{ $key }}</span>
+                                <li data-toggle="tooltip" data-bs-placement="top" title="{{ $level }}">
+                                  <i class="fas fa-check"></i> <span>{{ $key }}</span>
                                 </li>
                               @else
-                                <li>
-                                  <a href="{{ add_param_url(['nivel[]' => $key]) }}" title="{{ $key }}">{{ $key }}</a>
+                                <li data-toggle="tooltip" data-bs-placement="top" title="{{ $level }}">
+                                  <a href="{{ add_param_url(['nivel[]' => $key]) }}">{{ $key }}</a>
                                 </li>
                               @endif
                             @endforeach

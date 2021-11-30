@@ -22,11 +22,7 @@ class RepositorioController extends Controller
     {
         $linkData = $request->all();
 
-        $career = $request->query('carrera');
-        $type = $request->query('tipo');
-        $level = $request->query('nivel');
         $year = $request->input('year');
-
         $search_input = $request->input('query');
         $field = $request->input('search_field') ?? 'all';
 
@@ -39,13 +35,13 @@ class RepositorioController extends Controller
                     }
                     return $query->where($field, 'like', '%'.$search_input.'%');
                 })
-                ->when($career, function ($query, $career){
+                ->when($request->carrera, function ($query, $career){
                     return $query->whereIn('carrera', $career);
                 })
-                ->when($type, function ($query, $type){
+                ->when($request->tipo, function ($query, $type){
                     $query->whereIn('tipo_proyecto', $type);
                 })
-                ->when($level, function ($query, $level){
+                ->when($request->nivel, function ($query, $level){
                     return $query->whereIn('nivel_proyecto', $level);
                 })
                 ->when($year, function ($query, $year){
