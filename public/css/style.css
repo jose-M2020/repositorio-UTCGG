@@ -172,17 +172,6 @@ html.no-scroll {
 	border-radius: 5px;
 }
 
-/* Paginación */
-.pagination{
-	/*justify-content: end;*/
-	margin-top: 20px;
-}
-
-.pagination .active .page-link{
-	background-color: rgb(25, 118, 79);
-	border: none;
-}
-
 /* Tabla Usuarios */
 #addUser{
 	font-size: 50px;
@@ -281,6 +270,10 @@ html.no-scroll {
 	color: #CC4545;
 }
 
+.users #user-notFound{
+	max-width: 300px;
+}
+
 /* Formulario - Boostrap */
 
 .form-floating input,
@@ -295,4 +288,36 @@ html.no-scroll {
 	background-color: transparent;
 	border: 3px solid #2BB45F;
 	box-shadow: 3px 3px 3px #CDF9DE;
+}
+
+/* Paginación */
+.pagination{
+	justify-content: center;
+	align-items: center;
+	margin: 40px 0;
+}
+
+.pagination .page-link{
+	padding: 12px;
+	font-size: 16px;
+}
+
+.pagination li:first-child .page-link,
+.pagination li:last-child .page-link{
+	font-size: 34px;
+	font-weight: bold;
+	background-color: transparent;
+	border: none;
+	color: #19764f;
+}
+
+.pagination li:not(:first-child) span,
+.pagination li:not(:last-child) span{
+	/*background-color: transparent;*/
+	/*border: none ;*/
+}
+
+.pagination .active .page-link{
+	background-color: rgb(25, 118, 79);
+	border: none;
 }

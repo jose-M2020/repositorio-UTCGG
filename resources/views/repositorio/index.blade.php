@@ -6,11 +6,14 @@
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
   
   <div class="repository container-fluid position-relative">
+    {{-- Sección de buscar --}}
     <div class="row">
       <div class="container-fluid w-100 p-0 m-0">
         <div class="search p-4">
-          <form method="GET" action="/repositorios">
+          <form method="GET" action="{{ route('repositorios.index') }}">
             <div class="input-group" style="position: absolute; top: 40%; width: 60%; z-index: 10;">
+              
+              {{-- Filtros realizados previamente --}}
               <div class="search-filters">
                 @foreach(app('request')->request->all() as $key=>$value)
                   @if($key != 'page' && $key != 'query' && $key != 'search_field')
@@ -20,13 +23,15 @@
                   @endif
                 @endforeach
               </div>
+
+              {{-- Buscar - Input --}}
               <input type="text" name="query" value="{{ $query }}" class="form-control" placeholder="Buscar..." style="height: 50px;" id="query">
               <span class="input-group-text" style="background-color: #fff; border: none;">
                 <select name="search_field" id="search_field" class="form-select form-select-sm" aria-label=".form-select-sm" style="border: none;">
-                  <option value="all" {{ $search_field == 'all' ? 'selected="selected"' : '' }}>Todos</option>
-                  <option value="alumno" {{ $search_field == 'alumno' ? 'selected="selected"' : '' }}>Autor</option>
-                  <option value="nombre_rep" {{ $search_field == 'nombre_rep' ? 'selected="selected"' : '' }}>Titulo</option>
-                  <option value="descripcion" {{ $search_field == 'descripcion' ? 'selected="selected"' : '' }}>Descripción</option>
+                  {{-- <option value="all" {{ $search_field == 'all' ? 'selected="selected"' : '' }}>Todos</option> --}}
+                  <option value="title" {{ $search_field == 'title' ? 'selected="selected"' : '' }}>Titulo</option>
+                  <option value="description" {{ $search_field == 'description' ? 'selected="selected"' : '' }}>Descripción</option>
+                  <option value="author" {{ $search_field == 'author' ? 'selected="selected"' : '' }}>Autor</option>
                 </select>
               </span>
               <span class="input-group-text" style="background-color: #fff; border: none;">
@@ -37,7 +42,9 @@
         </div>
       </div>
     </div>
+
     <div class="row">
+      {{-- Menú de filtro --}}
       <nav id="filters_sidebar" class="col-md-3 col-lg-2 d-block sidebar collapse">
           <div class="position-sticky pt-3" style="height: 100vh; overflow: auto; top: 70px;">
             <div class="collapse navbar-collapse navbar-ex1-collapse d-block">
@@ -45,9 +52,13 @@
             </div>
           </div>
       </nav>
+
+      {{-- Sección principal --}}
       <main class="col-md-9 ms-sm-auto col-lg-10">
         <div class="container">
           <h5 class="p-3 mt-2">Filtros</h5>
+          
+          {{-- Filtros realizados --}}
           <div class="filters px-3">
             <ul>
               @forelse(app('request')->request->all() as $key=>$value)
@@ -71,6 +82,8 @@
               <a href="{{ request()->path() }}"><button type="button" class="btn btn-outline-warning btn-sm">Resetear filtros</button></a>
             </div>
           </div>
+
+          {{-- Repositorios --}}
           <div class="px-3 py-4 rounded shadow-sm" style="position: relative;">
             <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span>
             <h6 class="border-bottom pb-2 mb-0 mt-3">{{ $repositorios->total() }} resultados</h6>
@@ -104,11 +117,11 @@
                   <small class="mb-2">
                     {{$repositorio->tipo_proyecto}}
                   </small>
-                  <a class="mb-2 nombre_rep" href="{{ route('repositorios.show', $repositorio) }}">{{ $repositorio->nombre_rep }}</a>
+                  <a class="mb-2 title" href="{{ route('repositorios.show', $repositorio) }}">{{ $repositorio->nombre_rep }}</a>
                   <div class="repository__datails">
-                    <p class="descripcion">{{ $repositorio->descripcion }}</p>
+                    <p class="description">{{ $repositorio->descripcion }}</p>
                     <div class="d-flex justify-content-between">
-                      <p class="nombre_alumno">
+                      <p class="author">
                         @foreach(json_decode($repositorio->alumno) as $author)
                           @if ($loop->last)
                               {{ $author }}.
@@ -126,13 +139,18 @@
                 </div>
               </div>
             @empty
-              <p class="text-center fs-3 text-danger my-5">Repositorio no encontrado</p>
+              <div class="d-flex justify-content-center align-items-center flex-column">
+                <object id="folder_notFound" data="{{ asset('img/folder_notFound_animated.svg') }}"></object>
+                <p class="text-center fs-3 text-Dark my-5">Repositorio no encontrado</p>
+              </div>
             @endforelse
             <!-- {{ $repositorios->appends($linkData)->links() }} -->
           </div>
         </div> 
+
+        {{-- Paginación --}}
         <div>
-          {{ $repositorios->links('pagination::bootstrap-4') }}
+          {{ $repositorios->links() }}
         </div>
       </main>
     </div>
@@ -183,7 +201,8 @@
 
   const $inputValue = document.getElementById('query').value;
   const $field = document.getElementById('search_field').value;
-    search($inputValue, $field);
+  
+  search($inputValue, $field);
 
   // Buscar palabras en un texto
   function search (searchText, container){
@@ -191,7 +210,6 @@
     if (searchText !== "") {
       const regex = new RegExp(searchText, 'gi');
       let elements = document.querySelectorAll('.'+container);
-      console.log(elements);
       elements.forEach(element => {
         let text = element.innerHTML;
         text = text.replace(/(<mark class="highlight">|<\/mark>)/gim, '');

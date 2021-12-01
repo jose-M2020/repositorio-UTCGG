@@ -5,9 +5,12 @@
 @section('content')
 
   <div class="users container-fluid mt-4 px-sm-0 px-md-5">
-    <div class="row justify-content-end py-4">
-      <div class="col-1">
-        <a href="{{ route('alumnos.store') }}" class="btn btn-success">Nuevo</a>
+    <div class="d-flex justify-content-between align-items-center py-3">
+      <div class="total-records">
+          <p>Alumnos totales: <b>{{ $alumnos->total() }}</b></p>
+      </div>
+      <div>
+        <a href="{{ route('alumnos.create') }}" class="btn btn-success">Nuevo</a>
       </div>
     </div>
 
@@ -30,18 +33,43 @@
 
       {{-- Sección Búsqueda --}}
       <div class="col-md-5 col-lg-4 col-xl-3 mt-3 mt-md-0">
-        <div class="form-group position-relative search_content">
-          <i class="fas fa-spinner fa-spin" id="search_spinner"></i>
-          <input type="text" name="search_box" id="search_box" class="form-control ms-auto" placeholder="Buscar usuario..." />
-          <i class="fas fa-search" id="search_icon"></i>
-          <!-- <div class="searching">Buscando resultados para la búsqueda...</div> -->
-        </div>
+        <form action="{{ route('alumnos') }}">
+          
+          {{-- Filtros realizados previamente --}}
+          <div class="search-filters">
+            @foreach($filters as $key=>$value)
+              @if(is_array($value))
+                @foreach($value as $val)
+                  <input type="hidden" name="{{ $key }}[]" value="{{ $val }}">
+                @endforeach
+              @else
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+              @endif
+            @endforeach
+          </div>
+
+          {{-- Buscar - input --}}
+          <div class="form-group position-relative search_content">
+            {{-- <i class="fas fa-spinner fa-spin" id="search_spinner"></i> --}}
+            <input type="text" name="search_box" id="search_box" class="form-control ms-auto" placeholder="Buscar usuario..." 
+              @if(array_key_exists('search_box', $filters))
+                value=" {{ $filters['search_box'] }} "
+              @endif
+            />
+            <button id="search_icon"><i class="fas fa-search"></i></button>
+            <!-- <div class="searching">Buscando resultados para la búsqueda...</div> -->
+          </div>
+        </form>
       </div>
 
       {{-- Menú de filtros --}}
       <div class="users__filters alumnos mt-5 mb-1">
         <form action="{{ route('alumnos') }}" class="row justify-content-md-between
         justify-content-center align-items-center">
+          @if(array_key_exists('search_box', $filters))
+            <input type="hidden" name="search_box" value="{{ $filters['search_box'] }}"
+            />
+          @endif
           <div class="alumnos__filters-group col-auto mb-4 mb-sm-0">            
             <div class="btn-group alumnos__filters-carrera">
               <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -129,10 +157,6 @@
     </div>
 
     <x-table :data="$alumnos" />
-
-    <div class="total-records">
-      <p>Alumnos totales: <b>{{ $alumnos->total() }}</b></p>
-    </div>
   </div>
 
   <!-- Modal Edit -->

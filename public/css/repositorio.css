@@ -101,7 +101,7 @@
 }
 
 .repository  .highlight{
-    background-color: #333B53;
+    background-color: rgba(39, 55, 77 ,.7);
     color: #fff;
 }
 
@@ -114,10 +114,11 @@
 	color: #3C3F43;
 }
 
-.repository a.nombre_rep{
+.repository a.title{
 	text-decoration: none;
 	font-weight: bold;
 	font-size: 14px;
+	color: #20B735;
 }
 
 /****** Formulario - crear *********/
@@ -362,3 +363,7 @@ input#student_name:focus + .search_results{
 	
 }
 
+.repository #folder_notFound{
+	max-width: 400px;
+
+}

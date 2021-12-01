@@ -28,12 +28,20 @@ class RepositorioController extends Controller
 
         $repositorios = Repositorio::orderByDesc('created_at')
                 ->when($search_input, function ($query, $search_input) use ($field) {
-                    if($field == 'all'){
-                        return $query->where('nombre_alumno', 'like', '%'.$search_input.'%')
-                                     ->orWhere('nombre_rep', 'like', '%'.$search_input.'%')
-                                     ->orWhere('descripcion', 'like', '%'.$search_input.'%'); 
+                    // if($field == 'all'){
+                    //     return $query->where('nombre_alumno', 'like', '%'.$search_input.'%')
+                    //                  ->orWhere('nombre_rep', 'like', '%'.$search_input.'%')
+                    //                  ->orWhere('descripcion', 'like', '%'.$search_input.'%'); 
+                    // }
+                    if($field === 'title'){
+                        return $query->where('nombre_rep', 'like', '%'.$search_input.'%');
                     }
-                    return $query->where($field, 'like', '%'.$search_input.'%');
+                    if($field === 'description'){
+                        return $query->where('descripcion', 'like', '%'.$search_input.'%');
+                    }
+                    if($field === 'author'){
+                        return $query->where('alumno', 'like', '%'.$search_input.'%');
+                    }
                 })
                 ->when($request->carrera, function ($query, $career){
                     return $query->whereIn('carrera', $career);

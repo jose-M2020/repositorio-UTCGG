@@ -37,10 +37,10 @@
           <span class="input-group-text" style="background-color: #fff; border: none;">
             
             <select name="search_field" id="search_field" class="form-select form-select-sm" aria-label=".form-select-sm" style="border: none;">
-              <option value="all">Todos</option>
-              <option value="nombre_alumno">Autor</option>
-              <option value="nombre_rep">Titulo</option>
-              <option value="descripcion">Descripción</option>
+              {{-- <option value="all">Todos</option> --}}
+              <option value="title">Titulo</option>
+              <option value="description">Descripción</option>
+              <option value="author">Autor</option>
             </select>
           </span>
           <span class="input-group-text" style="background-color: #fff; border: none;">

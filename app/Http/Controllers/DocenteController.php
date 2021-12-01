@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Docente;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class DocenteController extends Controller
 {
@@ -16,9 +17,12 @@ class DocenteController extends Controller
     public function index(Request $request)
     {   
         $filters = $request->all();
-        $date_range = $request->rango_fecha;
+        $date_range = $request->rango_fecha ?? ['',''];
 
         $docentes = Docente::orderBy('id', 'desc')
+            ->when($request->search_box, function ($query, $search_input) {
+                return $query->where('nombre', 'like', '%'.$search_input.'%');
+            })
             ->when($request->fecha, function ($query, $date) use($date_range, $filters){
                 if(!$date_range[0] && !$date_range[1]){
                     if($date == 'hoy'){

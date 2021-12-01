@@ -17,9 +17,12 @@ class AlumnoController extends Controller
     public function index(Request $request)
     {
         $filters = $request->all();
-        $date_range = $request->rango_fecha;
+        $date_range = $request->rango_fecha ?? ['', ''];
         // unset($filters['date']);
         $alumnos = Alumno::orderBy('id', 'desc')
+            ->when($request->search_box, function ($query, $search_input) {
+                return $query->where('nombre', 'like', '%'.$search_input.'%');
+            })
             ->when($request->carrera, function ($query, $carrera){
                 return $query->whereIn('carrera', $carrera);
             })
