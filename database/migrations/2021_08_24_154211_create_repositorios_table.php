@@ -25,7 +25,8 @@ class CreateRepositoriosTable extends Migration
             // Datos añadidos-------
             $table->string('carrera');
             // $table->string('asesor_academico');
-            $table->string('asesor_externo');
+            $table->string('asesor_externo')
+                  ->nullable();
             $table->string('empresa');
             // ----------------------
 

@@ -1,5 +1,7 @@
 import * as functions from './functions.js';
 
+window.onload = (event) => {
+
 const form = document.getElementById('register-repository');
 const inputFile = document.querySelector('#register-repository input#archivo');
 const inputStudentName = document.querySelector('#register-repository input#student_name');
@@ -89,8 +91,10 @@ form.addEventListener('submit', e => {
 
 // ------- Activar / desactivar campos 
 
-const projectType = document.querySelector('#register-repository select#project_type');
-const removableFields = document.querySelectorAll('#register-repository .removable');
+
+
+	const projectType = document.querySelector('#register-repository select#project_type'),
+				removableFields = document.querySelectorAll('#register-repository .removable');
 
 const hideElement = function() {
 	if(this.value != 'Estadía'){
@@ -104,6 +108,12 @@ const hideElement = function() {
 	}
 }
 
+
+if(projectType.value != 'Estadía'){
+	removableFields.forEach(element => {
+		element.style.display = 'none'
+	})
+}
 projectType.addEventListener('change', hideElement)
 
 
@@ -343,4 +353,6 @@ const handleFile = function() {
 		// console.log(index,dt.files);
 	},
   }
+}
+
 }

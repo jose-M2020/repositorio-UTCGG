@@ -61,8 +61,7 @@ class AlumnoController extends Controller
                 unset($filters['fecha']);
             }
             if(!$date_range[0] && $date_range[1] || $date_range[0] && !$date_range[1]){
-                unset($filters['fecha']);
-                unset($filters['rango_fecha']);
+                unset($filters['fecha'],$filters['rango_fecha']);
                 $message = 'Ingrese un rango de fecha válido';
             }
         }
@@ -93,7 +92,7 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:alumnos',
+            'email' => 'required|string|email|max:255|unique:alumnos|unique:docentes|unique:admin',
             'contraseña' => ['required', 'confirmed'],
             'carrera' => 'required|string|max:20',
             'cuatrimestre' => 'required|integer|max:11'
@@ -158,7 +157,7 @@ class AlumnoController extends Controller
 
         if($alumno->isDirty('email')){
             // El email ha sido cambiado
-            $request->validate(['email' => 'unique:alumnos']);
+            $request->validate(['email' => 'unique:alumnos|unique:docentes|unique:admin']);
         }
 
         $alumno->save();
@@ -201,15 +200,18 @@ class AlumnoController extends Controller
     }
 
     public function search(Request $request){
-        // if($request->ajax()){
-            $query = $request->get('query');
-            $query = str_replace(" ", "%", $query);
-            if($query != ''){
-                $students = Alumno::where('nombre', 'like', '%'.$query.'%')->paginate(10, ['id', 'nombre']);
-                // return compact('students');
-                return response()->json($students);
-            }
-         // }
+        $query = $request->get('query');
+        $query = str_replace(" ", "%", $query);
+        if($query != ''){
+            $students = Alumno::where('nombre', 'like', '%'.$query.'%')
+                                // ->where('carrera', '=', Auth::guard('alumno')->user()->carrera)
+                                ->paginate(10, ['id', 'nombre']);
+
+            // if(Auth::guard('alumno')->check()){}
+            
+            // return compact('students');
+            return response()->json($students);
+        }
     }
 
 }

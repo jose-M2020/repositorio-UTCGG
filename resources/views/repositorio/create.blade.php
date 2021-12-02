@@ -89,7 +89,7 @@
 						<label for="" class="form__label">Generación</label>
 						<input type="text" name="generacion" class="form__input" value="{{old('generacion')}}">
 					</div>
-					<div>
+					<div class="text-end mt-5">
 						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
 					</div>
 				</fieldset>
@@ -98,7 +98,7 @@
 						<label for="alumno" class="form__label">Nombre del alumno:</label>
 						<div style="position: relative;">
 							@auth('alumno')
-								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth('alumno')->user()->nombre }}">	
+								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth('alumno')->user()->nombre }}" readonly>	
 							@endauth
 							@guest('alumno')
 							    <input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{old('alumno.0')}}">
@@ -119,19 +119,24 @@
 			            @endif
 						<span class="form__span add_element"><i class="fas fa-plus"></i> Agregar integrante</span>
 					</div>
-								
+					
 					<!-- Campos nuevos añadidos -->
 					<div class="form__field">
 						<label for="carrera" class="form__label">Carrera</label>
 						<select class="form__input" name="carrera" id="carrera">
-							<option disabled selected>Seleccionar carrera</option>
-							@foreach(get_careers() as $key=>$career)
-								@if(old('carrera') == $key)
-									<option value="{{ $key }}" selected="">{{ $career }}</option>
-									@continue
-								@endif
-								<option value="{{ $key }}">{{ $career }}</option>
-							@endforeach
+							@auth('alumno')
+								<option value="{{ auth('alumno')->user()->carrera }}" selected="">{{ get_careers()[auth('alumno')->user()->carrera] }}</option>
+							@endauth
+							@guest('alumno')
+								<option disabled selected>Seleccionar carrera</option>
+								@foreach(get_careers() as $key=>$career)
+									@if(old('carrera') == $key)
+										<option value="{{ $key }}" selected="">{{ $career }}</option>
+										@continue
+									@endif
+									<option value="{{ $key }}">{{ $career }}</option>
+								@endforeach
+							@endguest
 						</select>
 					</div>
 					<div class="form__field removable">
@@ -146,7 +151,7 @@
 						<label for="empresa" class="form__label">Nombre de la Empresa/Negocio/Establecimiento</label>
 						<input type="text" name="empresa" class="form__input" value="{{old('empresa')}}">
 					</div>
-					<div class="btn-group d-block" role="group">
+					<div class="text-end d-block mt-5">
 					 	<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
 						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
 					</div>
@@ -177,7 +182,7 @@
 							<span class="form__span add_element"><i class="fas fa-plus"></i> Nuevo archivo</span>
 						</div>
 					</div>
-					<div class="btn-group d-block" role="group">
+					<div class="text-end d-block mt-5">
 					 	<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
 						<x-button name="BotonSubir" type="submit">Registrar <i class="far fa-paper-plane"></i></x-button>
 					</div>

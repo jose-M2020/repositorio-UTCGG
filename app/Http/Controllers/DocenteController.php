@@ -86,7 +86,7 @@ class DocenteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:docentes',
+            'email' => 'required|string|email|max:255|unique:alumnos|unique:docentes|unique:admin',
             'contraseña' => ['required', 'confirmed'],
         ]);
         
@@ -141,7 +141,7 @@ class DocenteController extends Controller
 
         if($docente->isDirty('email')){
             // El email ha sido cambiado
-            $request->validate(['email' => 'unique:docentes']);
+            $request->validate(['email' => 'unique:alumnos|unique:docentes|unique:admin']);
         }
         $docente->save();
 
@@ -160,5 +160,15 @@ class DocenteController extends Controller
         $docente->delete();
         return redirect()->route('docentes.index')
             ->with('status','Docente eliminado exitosamente!');
+    }
+
+    public function search(Request $request){
+        $query = $request->get('query');
+        $query = str_replace(" ", "%", $query);
+        if($query != ''){
+            $students = Docente::where('nombre', 'like', '%'.$query.'%')
+                                ->paginate(10, ['id', 'nombre']);
+            return response()->json($students);
+        }
     }
 }

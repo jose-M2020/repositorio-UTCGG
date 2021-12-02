@@ -197,6 +197,7 @@ export const addNewElement = e => {
 
 	if(input.type !== 'file') {
 		input.style.border = '2px solid #ddd';
+		input.removeAttribute('readonly')
 		// Evento para Checar errores
 		inputListener(input);
 		// Evento de keyup para buscar usuario

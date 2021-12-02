@@ -4,6 +4,13 @@
 	--animation-duration: .5s;
 }
 
+/*  Cabecera */
+#open_filter{
+	background-color: transparent;
+	border: none;
+	color: #ddd;
+}
+
 /****** Index *********/
 .search {
 	background-image: url('../img/utcgg.png');
@@ -32,9 +39,14 @@
 }
 
 /* Barra lateral de filtros  */
-
 #filters_sidebar{
 	background-color: #CFDAD3;
+}
+
+#filters_sidebar .close{
+	background-color: transparent;
+	border: none;
+	color: #173d64;
 }
 
 #filters_sidebar li{
@@ -76,7 +88,7 @@
 	padding: 2px 0;
 }
 
- #filters_sidebar .fa-check{
+#filters_sidebar .fa-check{
 	position: absolute; 
 	left: 10px; 
 	color: #328E3D
@@ -85,6 +97,29 @@
 #filters_sidebar #submenu-1{
 	max-height: 400px;
 }
+
+@media (max-width: 767.98px) { 
+	#filters_sidebar{
+		position: fixed;
+		top: 0;
+		right: -54%;
+		width: 50vw;
+		z-index: 100;
+		transition: right .4s;
+	}
+}
+
+@media (max-width: 500px){
+	#filters_sidebar{
+		position: fixed;
+		top: 0;
+		right: -74%;
+		width: 70vw;
+		z-index: 100;
+		transition: right .4s;
+	}
+}
+
 
 /* Filtros realizados */
 

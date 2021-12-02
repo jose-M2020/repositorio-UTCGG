@@ -300,6 +300,16 @@ html.no-scroll {
 .pagination .page-link{
 	padding: 12px;
 	font-size: 16px;
+	border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination .page-link{
+	margin-right: 5px;
 }
 
 .pagination li:first-child .page-link,

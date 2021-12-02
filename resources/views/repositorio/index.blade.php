@@ -25,7 +25,7 @@
               </div>
 
               {{-- Buscar - Input --}}
-              <input type="text" name="query" value="{{ $query }}" class="form-control" placeholder="Buscar..." style="height: 50px;" id="query">
+              <input type="text" name="query" value="{{ $search }}" class="form-control" placeholder="Buscar..." style="height: 50px;" id="query">
               <span class="input-group-text" style="background-color: #fff; border: none;">
                 <select name="search_field" id="search_field" class="form-select form-select-sm" aria-label=".form-select-sm" style="border: none;">
                   {{-- <option value="all" {{ $search_field == 'all' ? 'selected="selected"' : '' }}>Todos</option> --}}
@@ -44,54 +44,58 @@
     </div>
 
     <div class="row">
+
       {{-- Menú de filtro --}}
-      <nav id="filters_sidebar" class="col-md-3 col-lg-2 d-block sidebar collapse">
-          <div class="position-sticky pt-3" style="height: 100vh; overflow: auto; top: 70px;">
-            <div class="collapse navbar-collapse navbar-ex1-collapse d-block">
-              <x-dropdowns.filter-list/>
-            </div>
+      <nav id="filters_sidebar" class="col-md-3 col-lg-2 d-block sidebar collapse relative">
+        <button class="close d-block d-md-none mt-2 fs-5 ms-auto"><i class="fas fa-times"></i></button>
+        <div class="position-sticky pt-3" style="height: 100vh; overflow: auto; top: 70px;">
+          <div class="collapse navbar-collapse navbar-ex1-collapse d-block">
+            <x-dropdowns.filter-list/>
           </div>
+        </div>
       </nav>
 
       {{-- Sección principal --}}
       <main class="col-md-9 ms-sm-auto col-lg-10">
         <div class="container">
-          <h5 class="p-3 mt-2">Filtros</h5>
-          
-          {{-- Filtros realizados --}}
-          <div class="filters px-3">
-            <ul>
-              @forelse(app('request')->request->all() as $key=>$value)
-                @if($key != 'page' && $key != 'query' && $key != 'search_field')
-                  @if($key == 'year')
-                    <li>{{ ucfirst($key) }} > {{ $value[0] }} - {{ $value[1] }} <a href="{{ remove_param_url([$key]) }}"><i class="fas fa-times-circle"></i></a>
-                    </li>
-                  @else
-                    <li>{{ ucfirst($key) }} > 
-                      @foreach($value as $position=>$p)
-                        {{ $p }} <a href="{{ remove_param_url([$key=>$position]) }}"><i class="fas fa-times-circle"></i></a>
-                      @endforeach
-                    </li>
+          @if($filters)
+            <p class="p-3 mt-2 fs-5">Filtros realizados</p>
+            
+            {{-- Filtros realizados --}}
+            <div class="filters px-3">
+              <ul>
+                @forelse(app('request')->request->all() as $key=>$value)
+                  @if($key != 'page' && $key != 'query' && $key != 'search_field')
+                    @if($key == 'year')
+                      <li>{{ ucfirst($key) }} > {{ $value[0] }} - {{ $value[1] }} <a href="{{ remove_param_url([$key]) }}"><i class="fas fa-times-circle"></i></a>
+                      </li>
+                    @else
+                      <li>{{ ucfirst($key) }} > 
+                        @foreach($value as $position=>$p)
+                          {{ $p }} <a href="{{ remove_param_url([$key=>$position]) }}"><i class="fas fa-times-circle"></i></a>
+                        @endforeach
+                      </li>
+                    @endif
                   @endif
-                @endif
-              @empty
-                <p>No se ha realizado ningun filtro</p>
-              @endforelse
-            </ul>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
-              <a href="{{ request()->path() }}"><button type="button" class="btn btn-outline-warning btn-sm">Resetear filtros</button></a>
+                @empty
+                  <p>No se ha realizado ningun filtro</p>
+                @endforelse
+              </ul>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end my-4">
+                <a href="{{ request()->path() }}"><button type="button" class="btn btn-outline-warning btn-sm">Resetear filtros</button></a>
+              </div>
             </div>
-          </div>
+          @endif
 
           {{-- Repositorios --}}
-          <div class="px-3 py-4 rounded shadow-sm" style="position: relative;">
+          <div class="px-3 py-4 mt-4 rounded shadow-sm" style="position: relative;">
             <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span>
             <h6 class="border-bottom pb-2 mb-0 mt-3">{{ $repositorios->total() }} resultados</h6>
             @forelse ($repositorios as $repositorio)
               <div class="row d-flex text-muted pt-3 border-bottom border-secondary project position-relative">
                 <div class="position-absolute w-auto top-0 end-0">
                   {{-- Marcar como favorito --}}
-                  <button class="repository__star"><i class="far fa-star"></i></button>
+                  {{-- <button class="repository__star"><i class="far fa-star"></i></button> --}}
                   {{-- Acciones --}}
                   @auth('admin')
                     <div class="repository__actions btn-group dropstart">
@@ -99,9 +103,9 @@
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
                       <ul class="dropdown-menu">
-                        <li>
+                        {{-- <li>
                           <button class="dropdown-item" id="editRepository" data-user="{{ json_encode($repositorio) }}" data-bs-toggle="modal" data-bs-target="#modalEdit"><i class="far fa-edit"></i> Editar</button>
-                        </li>
+                        </li> --}}
                         <li>
                           <button class="dropdown-item" id="deleteRepository" data-slug="{{ $repositorio->slug }}"  data-bs-toggle="modal" data-bs-target="#modalDelete"><i class="far fa-trash-alt"></i> Eliminar</button>
                         </li>
@@ -144,13 +148,13 @@
                 <p class="text-center fs-3 text-Dark my-5">Repositorio no encontrado</p>
               </div>
             @endforelse
-            <!-- {{ $repositorios->appends($linkData)->links() }} -->
+            <!-- {{ $repositorios->appends($filters)->links() }} -->
           </div>
         </div> 
 
         {{-- Paginación --}}
         <div>
-          {{ $repositorios->links() }}
+          {{ $repositorios->appends(['query' => $search, 'search_field' => $search_field])->links() }}
         </div>
       </main>
     </div>
@@ -169,7 +173,9 @@
 
 <script type="text/javascript">
 
-  const sidebar = document.getElementById('filters_sidebar');
+  let sidebar = document.getElementById('filters_sidebar'),
+        closeFilter = document.querySelector('#filters_sidebar .close');
+  let openFilter = document.getElementById('open_filter');
 
   // ------------------------ Ventana modal de eliminar repositorio -----------------------
     const deleteButtons = document.querySelectorAll('button#deleteRepository');
@@ -184,7 +190,7 @@
       })
     })
 
-  // Abrir y cerrar el menu de los filtros
+  // Expandir y cerrar el menu de filtros (acordion)
   sidebar.addEventListener('click', e => {
     let { target } = e;
     if(target.classList.contains('menu-title')){
@@ -198,11 +204,20 @@
     }
   })
 
+  // Mostrar y cerrar el menu de filtros
+  openFilter.addEventListener('click', e => {
+    sidebar.style.right = 0;
+  })
 
-  const $inputValue = document.getElementById('query').value;
-  const $field = document.getElementById('search_field').value;
+  closeFilter.addEventListener('click', e => {
+    sidebar.style.right = '';
+  })
+
+
+  const $search = document.getElementById('query').value;
+  const $search_field = document.getElementById('search_field').value;
   
-  search($inputValue, $field);
+  search($search, $search_field);
 
   // Buscar palabras en un texto
   function search (searchText, container){

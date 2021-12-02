@@ -27,7 +27,7 @@
   	<x-alert.success-message :message="session('status')" />
 
   	{{-- Errores de validación         --}}
-  	<x-alert.error-message message="Error al actualizar los datos" :errors="$errors"/>
+  	<x-alert.error-message message="Ha ocurrido un error!" :errors="$errors"/>
 
 	<main class="mt-5 pt-2">
 		@yield('content')

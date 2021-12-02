@@ -5,10 +5,14 @@
                 <img src="{{ set_url('img/logo1.png') }}">
                 Repositorio UTCGG
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
+            
+            <div class="d-flex align-items-center justify-content-center">
+                @if(request()->routeIs('repositorios.index'))
+                    <button id="open_filter" class="d-block d-md-none fs-5"><i class="fas fa-filter"></i></button>
+                @endif
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
               {{-- <span class="navbar-toggler-icon"></span> --}}
-            </button>
+            </div>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
                 <li class="nav-item text-center p-2 p-md-0">
@@ -79,7 +83,7 @@
                         
                   </ul>
                 </li>
-                @auth('admin')
+                {{-- @auth('admin')
                   <li class="nav-item text-center p-2 p-md-0 dropdown">
                     <a
                       class="nav-link dropdown-toggle hidden-arrow"
@@ -118,20 +122,8 @@
                         <span class="bg-ligth rounded-rounded">Ayer</span>
                       </li>
                     </ul>
-                    {{-- <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <li>
-                        <a class="dropdown-item" href="#">Some news</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">Another news</a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </li>
-                    </ul> --}}
                   </li>
-                @endauth
+                @endauth --}}
               </ul>
             </div>
           </div>

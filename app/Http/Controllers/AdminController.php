@@ -86,7 +86,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admin',
+            'email' => 'required|string|email|max:255|unique:alumnos|unique:docentes|unique:admin',
             'contraseña' => ['required', 'confirmed'],
         ]);
         
@@ -141,7 +141,7 @@ class AdminController extends Controller
 
         if($admin->isDirty('email')){
             // El email ha sido cambiado
-            $request->validate(['email' => 'unique:admin']);
+            $request->validate(['email' => 'unique:alumnos|unique:docentes|unique:admin']);
         }
         $admin->save();
 
@@ -158,7 +158,7 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         $admin->delete();
-        return redirect()->route('docentes.index')
+        return redirect()->route('admin.index')
             ->with('status','Docente eliminado exitosamente!');
     }
 }
