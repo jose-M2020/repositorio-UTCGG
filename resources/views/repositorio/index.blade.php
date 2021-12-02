@@ -138,7 +138,7 @@
                     </div>
                   </div>
                   <div>
-                    <a href="/repositorios/descargar/{{$repositorio->id}}"><i class="fas fa-download"></i></a>
+                    <a href="{{ route('repositorios.download', $repositorio->id) }}"><i class="fas fa-download"></i></a>
                   </div>
                 </div>
               </div>

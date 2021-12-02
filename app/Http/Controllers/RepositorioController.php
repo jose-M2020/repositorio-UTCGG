@@ -307,14 +307,26 @@ class RepositorioController extends Controller
 
     public function downloadFile($id)
     {
-        $files = Repositorio::find($id)->getFile;
-        foreach($files as $file){
-            // $filepath = storage_path('app/public/'.$file->file_path;
-            // return response()->download($filepath);
-            $filepath = 'public/'.$file->file_path;
+        // Primera opción
+        $file = Repositorio::find($id)->getFile;
+        return Storage::disk('s3')->download($file[0]->file_path, $file[0]->original_name);
 
-            return Storage::download($filepath, $file->original_name);
-        }
+        // foreach($files as $file){
+        //     $filepath = 'public/'.$file->file_path;
+
+        //     return Storage::download($filepath, $file->original_name);
+        // }
+
+        // $url = Storage::disk('s3')->temporaryUrl(
+        //     $file[0]->file_path, now()->addMinutes(10)
+        // );
+        
+        // Segunda opción
+        $headers = [
+            'Content-Type'        => 'application/'.$file[0]->file_type,
+            'Content-Disposition' => 'attachment; filename="'. $file[0]->original_name .'"',
+        ];
+        return \Response::make(Storage::disk('s3')->get($file[0]->file_path), 200, $headers);
     }
 
     public function files($user){

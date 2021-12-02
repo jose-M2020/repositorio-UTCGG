@@ -84,7 +84,7 @@ Route::middleware(['auth:alumno,docente,admin'])->prefix('repositorios')->group(
     Route::get('/{repositorio}', [RepositorioController::class, 'show'])
         ->name('repositorios.show');
 
-    Route::get('/descargar/{id}', [RepositorioController::class, 'downloadFile'])
+    Route::get('/descargar/{repositorio}', [RepositorioController::class, 'downloadFile'])
         ->name('repositorios.download');
 });
 
