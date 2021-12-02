@@ -32,11 +32,11 @@
                     {{-- <li><a class="dropdown-item" href="/dashboard">Panel de control</a><li> --}}
 
                     @auth('alumno')
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="/files" class="nav-link px-0">
                                 <i class="far fa-folder-open fs-5"></i> <span class="ms-1 d-none d-sm-inline">Archivos</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a href="{{ route('repositorios.create') }}" class="nav-link px-0">
                                 <i class="far fa-file fs-5"></i> <span class="ms-1 d-none d-sm-inline">Registrar repositorio</span>

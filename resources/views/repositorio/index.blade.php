@@ -89,7 +89,7 @@
 
           {{-- Repositorios --}}
           <div class="px-3 py-4 mt-4 rounded shadow-sm" style="position: relative;">
-            <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span>
+            {{-- <span style="position: absolute; right: 0; top: 0; font-size: 20px; cursor: pointer;"><i class="fas fa-cog"></i></span> --}}
             <h6 class="border-bottom pb-2 mb-0 mt-3">{{ $repositorios->total() }} resultados</h6>
             @forelse ($repositorios as $repositorio)
               <div class="row d-flex text-muted pt-3 border-bottom border-secondary project position-relative">
