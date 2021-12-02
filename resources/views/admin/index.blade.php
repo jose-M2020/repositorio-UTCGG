@@ -7,7 +7,7 @@
 	<div class="users container-fluid mt-4 px-sm-0 px-md-5">
     <div class="d-flex justify-content-between align-items-center py-3">
       <div class="total-records">
-          <p>Adminsitradores totales: <b>{{ $admins->total() }}</b></p>
+          <p>Administradores totales: <b>{{ $admins->total() }}</b></p>
       </div>
       <div>
         <a href="{{ route('admin.create') }}" class="btn btn-success">Nuevo</a>
@@ -26,7 +26,7 @@
             <button type="button" class="btn btn-transparent text-light">Docentes</button>
           </a>
           <a href="/admin">
-            <button type="button" class="btn btn-transparent border-bottom border-3 text-white fw-bold">Adminsitradores</button>
+            <button type="button" class="btn btn-transparent border-bottom border-3 text-white fw-bold">Administradores</button>
           </a>
         @endauth
       </div>

@@ -30,9 +30,9 @@
   <main>
   <div class="home container-fluid w-100 p-0 m-0">
     <div class="p-4 portal">
-      <form method="GET" action="/repositorios">
-        <div class="input-group" style="position: absolute; top: 40%; width: 60%; z-index: 10;">
-          <h2 style="color: #fff;">Explora las investigaciones y proyectos realizados en la UTCGG</h2>
+      <form method="GET" action="{{ route('repositorios.index') }}">
+        <div class="home__search input-group mx-3 start-0" style="position: absolute; top: 40%; z-index: 10;">
+          <h2 style="color: #fff;">Proyectos académicos digitales de los alumnos de la Universidad Tecnológica de la Costa Grande de Guerrero</h2>
           <input type="text" name="query" class="form-control" placeholder="Buscar..." style="height: 50px;">
           <span class="input-group-text" style="background-color: #fff; border: none;">
             
@@ -63,49 +63,60 @@
       </div>
     </div> --}}
 
-
-    <div class="row p-4 mt-4">
-      <h4 class="mb-4">Recursos destacados</h4>
+    <div class="row p-4 mt-4 carreras">
+      {{-- <h4 class="mb-4">Recursos destacados</h4> --}}
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
-        <div class="card mb-3">
-          <!-- <img src="{{ set_url('img/add-file.png') }}" class="card-img-top" alt="..."> -->
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-            {{-- <a href="/repositorios/registrar">Registrar repositorio</a> --}}
-          </div>
+        <h5 class="card-title text-center p-4">Desarrollo e Inovación Empresarial</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=GCH"><img src="{{ set_url('img/carreras/die.jpeg') }}" class="card-img-top" alt="Desarrollo e Inovación Empresarial"></a>
         </div>
       </div>
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-          </div>
+        <h5 class="card-title text-center p-4">Energías Renovables</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=ER"><img src="{{ set_url('img/carreras/er.jpeg') }}" class="card-img-top" alt="Energías Renovables"></a>
         </div>
       </div>
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-          </div>
+        <h5 class="card-title text-center p-4">Gastronomía</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=G"><img src="{{ set_url('img/carreras/g.jpeg') }}" class="card-img-top" alt="Gastronomía"></a>
         </div>
       </div>
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-          </div>
+        <h5 class="card-title text-center p-4">Gestión y Desarrollo Turistico</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=GDT"><img src="{{ set_url('img/carreras/gdt.jpeg') }}" class="card-img-top" alt="Gestión y Desarrollo Turistico"></a>
         </div>
       </div>
       <div class="col-md-4">
-        <h5 class="card-title text-center p-4 text-white" style="background: #003a3a;">Sistema Control de ventas</h5>
-        <div class="card mb-3">
-          <div class="card-body">
-            <p class="card-text">Los estudiantes de la Universidad Técnologica de la Costa Grande de Guerrero subirán los archivos correspondientes al trabajo realizado.</p>
-          </div>
+        <h5 class="card-title text-center p-4">Logística Internacional</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=LI"><img src="{{ set_url('img/carreras/li.jpeg') }}" class="card-img-top" alt="Logística Internacional"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4">Mantenimiento Industrial</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=MI"><img src="{{ set_url('img/carreras/mi.jpeg') }}" class="card-img-top" alt="Mantenimiento Industrial"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4">Metal Mecánica</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=MM"><img src="{{ set_url('img/carreras/mm.jpeg') }}" class="card-img-top" alt="Metal Mecánica"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4">Procesos Alimentarios</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=PA"><img src="{{ set_url('img/carreras/pa.jpeg') }}" class="card-img-top" alt="Procesos Alimentarios"></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="card-title text-center p-4">Tecnologías de la Información</h5>
+        <div class="card mb-4">
+          <a href="{{ route('repositorios.index') }}?carrera[]=TIC"><img src="{{ set_url('img/carreras/ti.jpeg') }}" class="card-img-top" alt="Tecnologías de la Información"></a>
         </div>
       </div>
     </div>

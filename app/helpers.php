@@ -9,9 +9,12 @@ if(!function_exists('add_param_url')){
 	 //    );
 
 		foreach($params as $key => $param){
+			// dd(url('path'));
 			$r = app('request')->fullUrlWithQuery([$key => $param]);
 		}
-		return $r;
+
+		return set_url($r);
+		// return $r;
 	    // return request()->getRequestUri() . '?' . http_build_query($query); 
 	}
 }

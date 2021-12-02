@@ -26,7 +26,7 @@
             <button type="button" class="btn btn-transparent border-bottom border-3 text-white fw-bold">Docentes</button>
           </a>
           <a href="/admin">
-            <button type="button" class="btn btn-transparent text-light">Adminsitradores</button>
+            <button type="button" class="btn btn-transparent text-light">Administradores</button>
           </a>
         @endauth
       </div>

@@ -331,3 +331,15 @@ html.no-scroll {
 	background-color: rgb(25, 118, 79);
 	border: none;
 }
+
+
+/* Vista Home */
+
+.home__search{
+	max-width: 800px;
+}
+
+
+/*.carreras img{
+	object-fit: contain;
+}*/

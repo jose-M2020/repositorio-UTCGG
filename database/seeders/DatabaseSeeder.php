@@ -25,35 +25,44 @@ class DatabaseSeeder extends Seeder
 
         Admin::insert([
             'nombre' => 'Administrador',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
         ]);
 
         Docente::insert([
             'nombre' => 'Docente',
-            'email' => 'docente@gmail.com',
+            'email' => 'docente@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
         ]);
 
         Docente::insert([
             'nombre' => 'Docente 2',
-            'email' => 'docente2@gmail.com',
+            'email' => 'docente2@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
         ]);
 
         Docente::insert([
             'nombre' => 'Docente 3',
-            'email' => 'docente3@gmail.com',
+            'email' => 'docente3@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
         ]);
         Alumno::insert([
             // 'docente_id' => 1,
+            'nombre' => 'Alumno',
+            'email' => 'alumno@utcgg.edu.mx',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'carrera' => 'TIC',
+            'cuatrimestre' => 10,
+            'created_at' => Carbon::now(),
+        ]);
+        Alumno::insert([
+            // 'docente_id' => 1,
             'nombre' => 'José Manuel',
-            'email' => 'jose@gmail.com',
+            'email' => 'jose@utcgg.edu.mx',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'carrera' => 'TIC',
             'cuatrimestre' => 10,

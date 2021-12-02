@@ -11,10 +11,10 @@
 				Repositorio Digital
 			</h1>
 		</div>
-		<div class="col-6 py-4 px-5">
+		<div class="col-md-6 py-4 px-5">
 			<img class="" style="object-fit: contain; width: 100%" src="{{ asset('img/about.svg') }}">
 		</div>
-		<div class="col-6 py-4 px-5">
+		<div class="col-md-6 py-4 px-5" style="text-align: justify;">
 			<p>
 			Los Repositorios academicos de la UTCGG son una plataforma digital que proporciona acceso abierto 
 			en texto completo a diversos recursos de información académica, como son los proyectos de estadía, 

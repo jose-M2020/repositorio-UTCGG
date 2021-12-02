@@ -7,23 +7,23 @@
   
   <div class="repository container-fluid position-relative">
     {{-- Sección de buscar --}}
-    <div class="row">
-      <div class="container-fluid w-100 p-0 m-0">
-        <div class="search p-4">
+    <div class="row position-relative">
+      <div class="p-0 m-0">
+        <div class="search p-4 col-md-6">
           <form method="GET" action="{{ route('repositorios.index') }}">
-            <div class="input-group" style="position: absolute; top: 40%; width: 60%; z-index: 10;">
-              
-              {{-- Filtros realizados previamente --}}
-              <div class="search-filters">
-                @foreach(app('request')->request->all() as $key=>$value)
-                  @if($key != 'page' && $key != 'query' && $key != 'search_field')
-                    @foreach($value as $p)
-                      <input type="hidden" name="{{$key}}[]" value="{{$p}}">
-                    @endforeach
-                  @endif
-                @endforeach
-              </div>
+            
+            {{-- Filtros realizados previamente --}}
+            <div class="search-filters">
+              @foreach(app('request')->request->all() as $key=>$value)
+                @if($key != 'page' && $key != 'query' && $key != 'search_field')
+                  @foreach($value as $p)
+                    <input type="hidden" name="{{$key}}[]" value="{{$p}}">
+                  @endforeach
+                @endif
+              @endforeach
+            </div>
 
+            <div class="input-group position-absolute top-50 start-0 translate-middle-y ms-2 me-4" style="z-index: 10;">
               {{-- Buscar - Input --}}
               <input type="text" name="query" value="{{ $search }}" class="form-control" placeholder="Buscar..." style="height: 50px;" id="query">
               <span class="input-group-text" style="background-color: #fff; border: none;">
@@ -115,7 +115,7 @@
                 </div>
                 <div class="col-12 col-md-4 col-lg-3 align-self-center" style="color: #2E6A99;">
                   <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
-                  <img src="{{ json_decode($repositorio->imagenes)[0] }}" style="object-fit: cover; width: 100%;">
+                  <img src="{{ json_decode($repositorio->imagenes)[0] }}" style="object-fit: cover; width: 100%;" alt="Imagen del repositorio">
                 </div>
                 <div class="col align-self-center d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                   <small class="mb-2">

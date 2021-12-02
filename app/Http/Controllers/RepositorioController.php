@@ -183,7 +183,7 @@ class RepositorioController extends Controller
                 {
                     $image_path = $path.'/images';
                     $image_stored = $image->store($image_path, 's3');
-                    $img[] = $image_stored;
+                    $img[] = Storage::disk('s3')->url($image_stored);
                 }
             }    
             $data['imagenes'] = json_encode($img);
