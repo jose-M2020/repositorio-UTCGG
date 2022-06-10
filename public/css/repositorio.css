@@ -56,7 +56,7 @@
 
 /* Barra lateral de filtros  */
 #filters_sidebar{
-	background-color: #CFDAD3;
+	box-shadow: 3px 0 6px #dadada;
 }
 
 #filters_sidebar .close{

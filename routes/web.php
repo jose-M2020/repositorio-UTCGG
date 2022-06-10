@@ -6,6 +6,7 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepositorioController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -19,9 +20,9 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->middleware(['auth:alumno,docente,admin'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->middleware(['optionalAuthentication:alumno,docente,admin'])
+    ->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -69,23 +70,14 @@ Route::middleware(['auth:alumno,docente,admin'])->prefix('alumnos')->group(funct
         ->name('alumnos.search');
 });
 
-
 // Repositorios
 
 Route::middleware(['auth:alumno,docente,admin'])->prefix('repositorios')->group(function () {
-    Route::get('/', [RepositorioController::class, 'index'])
-        ->name('repositorios.index');
-
+    
     Route::get('/registrar', [RepositorioController::class, 'create'])
         ->name('repositorios.create');
     Route::post('/registrar', [RepositorioController::class, 'store'])
         ->name('repositorios.store');
-
-    Route::get('/{repositorio}', [RepositorioController::class, 'show'])
-        ->name('repositorios.show');
-
-    Route::get('/descargar/{repositorio}', [RepositorioController::class, 'downloadFile'])
-        ->name('repositorios.download');
 });
 
 Route::middleware(['auth:docente,admin'])->prefix('repositorios')->group(function () {
@@ -95,6 +87,18 @@ Route::middleware(['auth:docente,admin'])->prefix('repositorios')->group(functio
         ->name('repositorios.update');
 });
 
+Route::middleware(['optionalAuthentication:alumno,docente,admin'])->prefix('repositorios')->group(function () {
+    Route::get('/', [RepositorioController::class, 'index'])
+        ->name('repositorios.index');
+
+    Route::get('/{repositorio}', [RepositorioController::class, 'show'])
+        ->name('repositorios.show');
+});
+
+
+Route::get('repositorios/descargar/{repositorio}', [RepositorioController::class, 'downloadFile'])
+    ->name('repositorios.download');
+
 Route::delete('/repositorios/{repositorio}', [RepositorioController::class, 'destroy'])
     ->middleware('auth:admin')
     ->name('repositorios.destroy');
@@ -102,11 +106,11 @@ Route::delete('/repositorios/{repositorio}', [RepositorioController::class, 'des
 // Archivos
 
 Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
-    ->middleware('auth:alumno,docente,admin')
+    // ->middleware('auth:alumno,docente,admin')
     ->name('files.download');
 
 Route::get('acerca', function(){
     return view('about');
-})->middleware('auth:alumno,docente,admin')->name('about');
+})->middleware(['optionalAuthentication:alumno,docente,admin'])->name('about');
 
 require __DIR__.'/auth.php';

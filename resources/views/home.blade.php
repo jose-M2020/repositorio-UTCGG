@@ -27,7 +27,7 @@
   }
 </style>
 
-  <main>
+<main>
   <div class="home container-fluid w-100 p-0 m-0">
     <div class="p-4 portal">
       <form method="GET" action="{{ route('repositorios.index') }}">
@@ -63,8 +63,48 @@
       </div>
     </div> --}}
 
-    <div class="row p-4 mt-4 carreras">
-      {{-- <h4 class="mb-4">Recursos destacados</h4> --}}
+    <div id="carousel" class="" >
+      <ul class="">
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L1.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L2.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L3.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L4.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L5.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L6.png') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L7.jpg') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L8.jpg') }}" class="d-block w-100" alt="...">
+        </li>
+        <li class="item active">
+          <img src="{{ set_url('img/carreras/L9.png') }}" class="d-block w-100" alt="...">
+        </li>
+      </ul>
+      {{-- <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button> --}}
+    </div>
+
+
+    {{-- <div class="row p-4 mt-4 carreras">
       <div class="col-md-4">
         <h5 class="card-title text-center p-4">Desarrollo e Inovación Empresarial</h5>
         <div class="card mb-4">
@@ -119,17 +159,11 @@
           <a href="{{ route('repositorios.index') }}?carrera[]=TIC"><img src="{{ set_url('img/carreras/ti.jpeg') }}" class="card-img-top" alt="Tecnologías de la Información"></a>
         </div>
       </div>
-    </div>
+    </div> --}}
   </div><!-- /.row -->
-  </div>
-
 </main>
   <p>
     {{-- Auth::guard()->name() --}}
   </p>
-          
-
-
-
 
 @endsection

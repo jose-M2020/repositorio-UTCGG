@@ -1,8 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title', 'Crear repositorio')
 
-@section('content')
+@section('dashboard-content')
 
 <div class="row justify-content-center align-items-center pt-3" style="height: 80vh;">
 	<div class="col-xs-12 col-sm-5 col-md-3 h-100 d-flex flex-column justify-content-center h-100 bg-dark bg-gradient text-white px-3 py-4">
@@ -10,7 +10,7 @@
 			<h1>Registro de repositorio</h1>
 		</div>
 		<div class="d-none d-sm-block">
-			<img style="width: 100%" src="{{ asset('img/form/repository.svg') }}">
+			<img class="w-100" src="{{ asset('img/form/repository.svg') }}">
 		</div>
 	</div>
 	<div class="col-12 col-md-6 col-sm-7 h-100 py-4 px-5 bg-light overflow-auto">
@@ -47,7 +47,7 @@
 				<fieldset id="project" class="section active">
 					<div class="form__field">
 						<label for="nombre_repositorio" class="form__label">Nombre del repositorio</label>
-						<input type="text" name="nombre_repositorio" class="form__input"value="{{old('nombre_repositorio')}}">
+						<input type="text" name="nombre_repositorio" class="form__input" value="{{old('nombre_repositorio')}}">
 					</div>
 					<div class="form__field">
 						<label for="description" class="form__label">Descripción</label>

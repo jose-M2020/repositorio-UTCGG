@@ -17,6 +17,7 @@ class Alumno extends Authenticatable
 
     protected $fillable = [
         'nombre',
+        'apellido',
         'email',
         'password',
         'carrera',

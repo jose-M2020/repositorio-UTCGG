@@ -1,8 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title', 'Administradores')
 
-@section('content')
+@section('dashboard-content')
 
 	<div class="users container-fluid mt-4 px-sm-0 px-md-5">
     <div class="d-flex justify-content-between align-items-center py-3">
@@ -129,8 +129,12 @@
          @csrf
          @method('PUT')
          <div class="form__field">
-           <label>Nombre Completo</label>
+           <label>Nombre</label>
            <input type="text" name="nombre" class="form__input" id="nombre" value="">
+         </div>
+         <div class="form__field">
+           <label>Apellidos</label>
+           <input type="text" name="apellido" class="form__input" id="apellido" value="">
          </div>
          <div class="form__field">
            <label>Email</label>
@@ -163,7 +167,7 @@
       button.addEventListener('click', function(e) {
         let {dataset: {user} } = this;
         user = JSON.parse(user);
-        setModalData(user)
+        setModalData(user);
         
         let url = '{{ route('admin.update', ':admin') }}';
         url = url.replace(':admin', user.id);

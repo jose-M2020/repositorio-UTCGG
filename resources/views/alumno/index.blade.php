@@ -1,8 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('title', 'Alumnos')
 
-@section('content')
+@section('dashboard-content')
 
   <div class="users container-fluid mt-4 px-sm-0 px-md-5">
     <div class="d-flex justify-content-between align-items-center py-3">
@@ -167,11 +167,15 @@
          @csrf
          @method('put')
          <div class="form__field">
-           <label>Nombre Completo</label>
+           <label>Nombre</label>
            <input type="text" name="nombre" class="form__input" id="nombre" value="">
          </div>
          <div class="form__field">
-           <label>Usuario</label>
+           <label>Apellido</label>
+           <input type="text" name="apellido" class="form__input" id="apellido" value="">
+         </div>
+         <div class="form__field">
+           <label>Email</label>
            <input type="text" name="email" id="email" class="form__input" value="">
          </div>
          <div class="form__field">

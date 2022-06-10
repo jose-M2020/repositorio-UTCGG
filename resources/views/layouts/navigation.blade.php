@@ -1,4 +1,4 @@
-    <header>
+<header>
         <nav class="navbar navbar-expand-md fixed-top">
           <div class="container-fluid">
             <a class="navbar-logo" href="/">
@@ -15,75 +15,95 @@
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
-                <li class="nav-item text-center p-2 p-md-0">
-                  <a class="nav-link {{ request()->routeIs('home') ? 'active' : ''}}" aria-current="page" href="{{ route('home') }}">Inicio</a>
-                </li>
-                <li class="nav-item text-center p-2 p-md-0">
-                  <a class="nav-link {{ request()->routeIs('repositorios.*') ? 'active' : ''}}" aria-current="page" href="{{ route('repositorios.index') }}">Repositorios</a>
-                </li>
-                <li class="nav-item text-center p-2 p-md-0">
-                  <a class="nav-link {{ request()->routeIs('about') ? 'active' : ''}}" href="{{ route('about') }}">Acerca</a>
-                </li>
-                <li class="nav-item text-center p-2 p-md-0 dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ auth()->user()->nombre }}
-                  </a>
-                  <ul class="dropdown-menu">
-                    {{-- <li><a class="dropdown-item" href="/dashboard">Panel de control</a><li> --}}
+                <x-navbar.link link="{{ route('home') }}" name="Inicio" routeName="home" class="px-2" />
+                <x-navbar.link link="{{ route('repositorios.index') }}" name="Repositorios" routeName="repositorios.*" class="px-2" />
+                <x-navbar.link link="{{ route('about') }}" name="Acerca" routeName="about" class="px-2" />
+                @guest
+                    <x-navbar.link link="{{ route('login') }}" name="Ingresa" routeName="login" class="px-2" />
+                @endguest
+                @auth
+                    <x-navbar.link dropdown="true" routeName="" class="px-2">
+                        <x-slot name="name"><i class="far fa-user-circle me-1"></i> {{ explode(" ", auth()->user()->nombre)[0] }}</x-slot>
+                        <ul class="dropdown-menu nav-user p-2">
+                            <li>
+                                <div class="nav-user-header d-flex align-items-center">
+                                  <i class="fas fa-user-circle"></i>
+                                  <div class="text-start ms-2">
+                                      <span>Bienvenido {{ explode(" ", auth()->user()->nombre)[0] }}!</span>
+                                      @auth('alumno')
+                                        <p class="mb-0">Alumno</p>
+                                      @endauth
+                                      @auth('docente')
+                                        <p class="mb-0">Docente</p>
+                                      @endauth
+                                      @auth('admin')
+                                        <p class="mb-0">Administrador</p>
+                                      @endauth
+                                  </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <x-navbar.link link="/files">
+                                <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
+                            </x-navbar.link>
+                            @auth('alumno')
+                                <x-navbar.link link="/files">
+                                    <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis archivos</x-slot>
+                                </x-navbar.link>
+                                <x-navbar.link link="{{ route('repositorios.create') }}">
+                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir archivos</x-slot>
+                                </x-navbar.link>
+                            @endauth
+                            @auth('docente')
+                                <x-navbar.link link="{{ route('alumnos') }}">
+                                    <x-slot name="name"><i class="fas fa-users fs-5 me-2"></i> Usuarios</x-slot>
+                                </x-navbar.link>
+                                <x-navbar.link link="{{ route('alumnos') }}">
+                                    <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
+                                </x-navbar.link>
+                                <li><hr class="dropdown-divider"></li>
+                                <x-navbar.link link="{{ route('repositorios.create') }}">
+                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir Archivos</x-slot>
+                                </x-navbar.link>
+                            @endauth
+                            @auth('admin')
+                                <x-navbar.link link="{{ route('alumnos') }}">
+                                    <x-slot name="name"><i class="fas fa-users me-2"></i> Usuarios</x-slot>
+                                </x-navbar.link>
+                                <x-navbar.link link="{{ route('alumnos') }}">
+                                    <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
+                                </x-navbar.link>
+                                <li><hr class="dropdown-divider"></li>
+                                <x-navbar.link link="{{ route('repositorios.create') }}">
+                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir Archivos</x-slot>
+                                </x-navbar.link>      
+                            @endauth
+                            <li><hr class="dropdown-divider"></li>
 
-                    @auth('alumno')
-                        {{-- <li class="nav-item">
-                            <a href="/files" class="nav-link px-0">
-                                <i class="far fa-folder-open fs-5"></i> <span class="ms-1 d-none d-sm-inline">Archivos</span>
-                            </a>
-                        </li> --}}
-                        <li class="nav-item">
-                            <a href="{{ route('repositorios.create') }}" class="nav-link px-0">
-                                <i class="far fa-file fs-5"></i> <span class="ms-1 d-none d-sm-inline">Registrar repositorio</span>
-                            </a>
-                        </li>
-                    @endauth
-                    @auth('docente')
-                        <li class="nav-item position-relative">
-                            <a href="{{ route('alumnos') }}" class="nav-link px-0">
-                                <i class="far fa-user fs-5"></i> <span class="ms-1 d-none d-sm-inline">Usuarios</span>
-                            </a>
-                            {{-- <ul class="bg-dark p-3 position-absolute top-0 start-100">
-                                <li>Alumnos</li>
-                                <li>Docentes</li>
-                                <li>Administradores</li>
-                            </ul> --}}
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('repositorios.create') }}" class="nav-link px-0">
-                                <i class="far fa-file fs-5"></i> <span class="ms-1 d-none d-sm-inline">Registrar repositorio</span>
-                            </a>
-                        </li>
-                    @endauth
-                    @auth('admin')
-                        <li class="nav-item">
-                            <a href="{{ route('alumnos') }}" class="nav-link px-0">
-                                <i class="far fa-user fs-5"></i> <span class="ms-1 d-none d-sm-inline">Usuarios</span>
-                            </a>
-                        </li> 
-                        <li class="nav-item">
-                            <a href="{{ route('repositorios.create') }}" class="nav-link px-0">
-                                <i class="far fa-user fs-5"></i> <span class="ms-1 d-none d-sm-inline">Registrar repositorio</span>
-                            </a>
-                        </li>                        
-                    @endauth
+                            <!-- <x-navbar.link link="{{ route('repositorios.create') }}">
+                                <x-slot name="name">
+                                    <form id="logout" method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"><i class="fas fa-sign-out-alt me-2"></i> Salir</button>
+                                    </form>
+                                </x-slot>
+                            </x-navbar.link> -->
 
-                    <li>
-                        {{-- <a class="dropdown-item" href="#">Another action</a> --}}
-                        <form id="logout" method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit">Cerrar sesión <i class="fas fa-sign-out-alt"></i></button>
-                        </form>
-                    <li>
-                        
-                  </ul>
-                </li>
-                {{-- @auth('admin')
+                            <li class="nav-item">
+                                <form id="logout" method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-100 text-start"><i class="fas fa-sign-out-alt me-1"></i> Salir</button>
+                                </form>
+                            <li>
+                        </ul>
+                    </x-navbar.link>
+                @endauth
+                @auth('alumno')
+                    <x-navbar.link dropdown="true">
+                        <x-slot name="name"><i class="far fa-star me-1"></i>Favoritos</x-slot>
+                    </x-navbar.link>
+                @endauth
+                @auth('admin')
                   <li class="nav-item text-center p-2 p-md-0 dropdown">
                     <a
                       class="nav-link dropdown-toggle hidden-arrow"
@@ -94,7 +114,7 @@
                       aria-expanded="false"
                     >
                       <div class="position-relative d-inline">
-                          <i class="d-none d-md-inline fas fa-bell"></i>
+                          <i class="d-none d-md-inline fas fa-bell me-2"></i>
                           <p class="d-inline d-md-none">Notificaciones</p>
                           <span class="badge rounded-pill badge-notification bg-danger position-absolute top-0 start-100 translate-middle">1</span>
                       </div>
@@ -123,7 +143,7 @@
                       </li>
                     </ul>
                   </li>
-                @endauth --}}
+                @endauth
               </ul>
             </div>
           </div>

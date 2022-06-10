@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 
         Admin::insert([
             'nombre' => 'Administrador',
+            'apellido' => 'lopéz',
             'email' => 'admin@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
 
         Docente::insert([
             'nombre' => 'Docente',
+            'apellido' => 'Hernandez',
             'email' => 'docente@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
@@ -39,6 +41,7 @@ class DatabaseSeeder extends Seeder
 
         Docente::insert([
             'nombre' => 'Docente 2',
+            'apellido' => 'Piedra',
             'email' => 'docente2@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
@@ -46,6 +49,7 @@ class DatabaseSeeder extends Seeder
 
         Docente::insert([
             'nombre' => 'Docente 3',
+            'apellido' => 'lopéz',
             'email' => 'docente3@utcgg.edu.mx',
             'password' => Hash::make('password'),
             'created_at' => Carbon::now(),
@@ -53,6 +57,7 @@ class DatabaseSeeder extends Seeder
         Alumno::insert([
             // 'docente_id' => 1,
             'nombre' => 'Alumno',
+            'apellido' => 'klein',
             'email' => 'alumno@utcgg.edu.mx',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'carrera' => 'TIC',
@@ -62,6 +67,7 @@ class DatabaseSeeder extends Seeder
         Alumno::insert([
             // 'docente_id' => 1,
             'nombre' => 'José Manuel',
+            'apellido' => 'Silva',
             'email' => 'jose@utcgg.edu.mx',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'carrera' => 'TIC',
