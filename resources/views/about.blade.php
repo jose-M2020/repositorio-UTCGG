@@ -25,6 +25,13 @@
 			haya liberado la memoria de Estadía.
 			</p>	
 		</div>
+		<p>Esta plataforma tiene como objetivo almacenar, preservar y difundir la producción científica y académica 
+			de la comunidad politécnica en formato digital. El Repositorio Digital Institucional, es un sistema abierto 
+			el cual forma parte del movimiento internacional conocido como Open Access Initiative. Dicha iniciativa promueve 
+			el acceso libre a la literatura científica, incrementando el impacto de los trabajos desarrollados por los 
+			investigadores contribuyendo a mejorar el sistema de comunicación científica y el acceso abierto al conocimiento. 
+			Así como maximizar la visibilidad, el uso y el impacto de la producción científica y académica de la comunidad 
+			Politécnica</p>
 	</div>
 
 @endsection

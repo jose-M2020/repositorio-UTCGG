@@ -1,5 +1,7 @@
 @extends('layouts.guest')
 
+@section('title', 'Iniciar sesión')
+
 @section('content')
 	
 <div class="row h-100 position-relative">
@@ -391,7 +393,7 @@
 				<img src="{{ asset('img/logo1.png') }}" alt="Avatar Image">
 			</div>
 			
-			<h1>Iniciar sesión </h1>
+			<h3>Iniciar sesión </h3>
 
 			<form action="{{ route('login') }}" method="POST">
 				@csrf

@@ -1,9 +1,8 @@
-<header>
-        <nav class="navbar navbar-expand-md fixed-top">
-          <div class="container-fluid">
+<header class="sticky-top">
+        <nav class="navbar navbar-expand-md">
+          <div class="container">
             <a class="navbar-logo" href="/">
-                <img src="{{ set_url('img/logo1.png') }}">
-                Repositorio UTCGG
+                <img src="{{ set_url('img/logo1.png') }}" alt="logo repositorio" />
             </a>
             
             <div class="d-flex align-items-center justify-content-center">
@@ -17,9 +16,8 @@
               <ul class="navbar-nav ms-auto">
                 <x-navbar.link link="{{ route('home') }}" name="Inicio" routeName="home" class="px-2" />
                 <x-navbar.link link="{{ route('repositorios.index') }}" name="Repositorios" routeName="repositorios.*" class="px-2" />
-                <x-navbar.link link="{{ route('about') }}" name="Acerca" routeName="about" class="px-2" />
                 @guest
-                    <x-navbar.link link="{{ route('login') }}" name="Ingresa" routeName="login" class="px-2" />
+                    <x-navbar.link link="{{ route('login') }}" name="Acceder" routeName="login" class="px-2" />
                 @endguest
                 @auth
                     <x-navbar.link dropdown="true" routeName="" class="px-2">

@@ -5,7 +5,7 @@
 @section('content')
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
   
-  <div class="repository container-fluid position-relative">
+  <div class="repository container position-relative">
     {{-- Sección de buscar --}}
     <div class="row position-relative">
       <div class="p-0 m-0">
