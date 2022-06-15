@@ -3,13 +3,14 @@
 	--green: #056221;
 	--blue: #297d8f;
 	--white: #fafafa;
+	--light-green: #71fcb9;
 }
 
 body{
 	font-family: 'Dosis', sans-serif;
 	font-size: 1rem;
 	background: var(--color-5);
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
 }
 
 h1{

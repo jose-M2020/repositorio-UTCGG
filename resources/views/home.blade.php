@@ -29,49 +29,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div id="carousel" class="" >
-      <ul class="">
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L1.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L2.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L3.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L4.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L5.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L6.png') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L7.jpg') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L8.jpg') }}" class="d-block w-100" alt="...">
-        </li>
-        <li class="item active">
-          <img src="{{ set_url('img/carreras/L9.png') }}" class="d-block w-100" alt="...">
-        </li>
-      </ul>
-      {{-- <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button> --}}
-    </div> -->
-
-
-    
   </div>
   <!-- /.row -->
 

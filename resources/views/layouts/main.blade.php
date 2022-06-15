@@ -5,7 +5,6 @@
 	<meta name="description" content="Repositorio académico digital de la universidad de Guerrero">
   	<meta name="keywords" content="repositorio, repositorio institucional, repositorio digital, articulos, documentos, tesis, guerrero, educación, Open Access Initiative.">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>
 		@hasSection('title')
 			@yield('title') | Repositorio digital
