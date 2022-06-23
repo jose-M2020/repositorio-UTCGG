@@ -56,7 +56,7 @@ class RepositorioController extends Controller
                 ->when($request->year, function ($query, $date){
                     return $query->whereBetween('created_at', [$date[0], $date[1]]);
                 })
-                ->paginate(10);
+                ->paginate(15);
 
         return view('repositorio.index', compact('repositorios', 'search', 'search_field', 'filters'));
 

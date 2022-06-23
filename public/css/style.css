@@ -4,12 +4,16 @@
 	--blue: #297d8f;
 	--white: #fafafa;
 	--light-green: #71fcb9;
+
+	--duration-sidebar: .4s;
+	--delay-sidebar: .2s;
 }
 
 body{
 	font-family: 'Dosis', sans-serif;
 	font-size: 1rem;
 	background: var(--color-5);
+	letter-spacing: .5px;
 	/* overflow-x: hidden; */
 }
 
@@ -57,14 +61,21 @@ h3{
 	margin-bottom: 7rem !important;
 }
 
-span{
-	font-size: 16px;
-	font-family: verdana;
-	font-style: italic;
-}
 
 svg > *{
 	pointer-events: none;
+}
+
+/* Custom classes
+----------------------------------------------------- */
+.btn-green{
+	background-color: #18705a;
+	color: var(--white);
+}
+
+.btn-green:hover{
+	background-color: #105c49;
+	color: var(--white);
 }
 
 /* Navbar
@@ -453,7 +464,6 @@ footer{
 .pagination{
 	justify-content: center;
 	align-items: center;
-	margin: 40px 0;
 }
 
 .pagination .page-link{
@@ -491,7 +501,7 @@ footer{
 	border: none;
 }
 
-/* Sidebar
+/* Dashboard Sidebar
 ----------------------------------------------------- */
 
 .dashboard-sidebar{
@@ -501,13 +511,17 @@ footer{
     height: 100%;
 	width: 70px;
 	padding: 0 10px;
-    transition: width .4s .2s;
 	overflow: hidden;
     z-index: 100;  
+	box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0);
+	transition-property: width box-shadow;
+	/* transition-delay: .1s; */
+	transition-duration: var(--duration-sidebar);
 }
 
 .dashboard-sidebar:hover{
 	width: 250px;
+	box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
 }
 
 .dashboard-sidebar i{
@@ -526,7 +540,7 @@ footer{
     font-weight: 500;
     white-space: nowrap;
     opacity: 0;
-	transition: opacity .4s .2s;
+	transition: opacity var(--duration-sidebar);
 }
 
 .dashboard-sidebar .nav-link[aria-expanded="true"] .submenu-icon{
@@ -544,18 +558,6 @@ footer{
 
 .dashboard-sidebar .submenu{
 	padding-left: 4rem;
-}
-
-.overlay::after {
-	content: '';
-	position: fixed;
-	top: 0;
-	left: 00;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, .6);
-	z-index: 90;
-	transition: background-color .5s;
 }
 
 .dashboard-sidebar .collapse.show{

@@ -58,10 +58,12 @@ body{
   color: #fff;
   background-color: #048249;
   border: 1px solid #0b6734;
+  width: 100%;
+  border-radius: 100vmax;
+  text-transform: uppercase;
+  font-weight: 600;
   transition: background .5s;
-  /* border-color: var; */
 }
-
 
 .login__box button[type="submit"]:hover {
   background: #0a4028;

@@ -5,7 +5,8 @@
 const body = document.body,
       navbar = document.querySelector('.navbar'),
       scrollUp = "scroll-up",
-      scrollDown = "scroll-down";
+      scrollDown = "scroll-down",
+      {pathname} = window.location;
 
 let lastScroll = 0;
 
@@ -41,7 +42,7 @@ const listenScrollEvent = () => {
   });
 }
 
-if(window.location.pathname === '/'){
+if(pathname === '/' || pathname === '/repositorios'){
   listenScrollEvent();
 } else {
   navbar.classList.add(scrollDown);
