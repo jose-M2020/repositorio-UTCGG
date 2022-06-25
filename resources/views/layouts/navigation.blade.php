@@ -19,10 +19,61 @@
                 @guest
                     <x-navbar.link link="{{ route('login') }}" name="Acceder" routeName="login" class="px-2" />
                 @endguest
+
+                {{--
+                @auth('alumno')
+                    <x-navbar.link dropdown="true">
+                        <x-slot name="name"><i class="far fa-star me-1"></i>Favoritos</x-slot>
+                    </x-navbar.link>
+                @endauth
+                --}}
+                
+                @auth('admin')
+                  <li class="nav-item text-center p-2 p-md-0 dropdown">
+                    <a
+                      class="nav-link dropdown-toggle hidden-arrow"
+                      href="#"
+                      id="navbarDropdownMenuLink"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <div class="position-relative d-inline">
+                          <i class="d-none d-md-inline fas fa-bell me-2"></i>
+                          <p class="d-inline d-md-none">Notificaciones</p>
+                          <span class="badge rounded-pill badge-notification bg-danger position-absolute top-0 start-100 translate-middle">1</span>
+                      </div>
+                    </a>
+                    <ul class="notifications dropdown-menu dropdown-menu-end">
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Daniel Vargas H.</div>
+                          Modificación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Hoy</span>
+                      </li>
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Ana Lopéz M.</div>
+                          Modificación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Ayer</span>
+                      </li>
+                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">Gerardo Luis Marcos F.</div>
+                          Eliminación de repositorio.
+                        </div>
+                        <span class="bg-ligth rounded-rounded">Ayer</span>
+                      </li>
+                    </ul>
+                  </li>
+                @endauth
+               
                 @auth
-                    <x-navbar.link dropdown="true" routeName="" class="px-2">
-                        <x-slot name="name"><i class="far fa-user-circle me-1"></i> {{ explode(" ", auth()->user()->nombre)[0] }}</x-slot>
-                        <ul class="dropdown-menu nav-user p-2">
+                    <x-navbar.link dropdown="true" routeName="" class="px-2 auth">
+                        <x-slot name="name"><i class="auth__icon far fa-user-circle me-1"></i> Mi cuenta</x-slot>
+                        <ul class="dropdown-menu dropdown-menu-end p-2">
                             <li>
                                 <div class="nav-user-header d-flex align-items-center">
                                   <i class="fas fa-user-circle"></i>
@@ -95,52 +146,6 @@
                             <li>
                         </ul>
                     </x-navbar.link>
-                @endauth
-                @auth('alumno')
-                    <x-navbar.link dropdown="true">
-                        <x-slot name="name"><i class="far fa-star me-1"></i>Favoritos</x-slot>
-                    </x-navbar.link>
-                @endauth
-                @auth('admin')
-                  <li class="nav-item text-center p-2 p-md-0 dropdown">
-                    <a
-                      class="nav-link dropdown-toggle hidden-arrow"
-                      href="#"
-                      id="navbarDropdownMenuLink"
-                      role="button"
-                      data-mdb-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div class="position-relative d-inline">
-                          <i class="d-none d-md-inline fas fa-bell me-2"></i>
-                          <p class="d-inline d-md-none">Notificaciones</p>
-                          <span class="badge rounded-pill badge-notification bg-danger position-absolute top-0 start-100 translate-middle">1</span>
-                      </div>
-                    </a>
-                    <ul class="notifications list-group dropdown-menu dropdown-menu-end">
-                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                          <div class="fw-bold">Daniel Vargas H.</div>
-                          Modificación de repositorio.
-                        </div>
-                        <span class="bg-ligth rounded-rounded">Hoy</span>
-                      </li>
-                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                          <div class="fw-bold">Ana Lopéz M.</div>
-                          Modificación de repositorio.
-                        </div>
-                        <span class="bg-ligth rounded-rounded">Ayer</span>
-                      </li>
-                      <li class=" dropdown-item list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto">
-                          <div class="fw-bold">Gerardo Luis Marcos F.</div>
-                          Eliminación de repositorio.
-                        </div>
-                        <span class="bg-ligth rounded-rounded">Ayer</span>
-                      </li>
-                    </ul>
-                  </li>
                 @endauth
               </ul>
             </div>

@@ -5,9 +5,9 @@
 @section('content')
 
 {{-- <x-app-layout> --}}
-<div class="">
-    <div class="">
-        <aside class="dashboard-sidebar d-flex flex-column flex-shrink-0 bg-dark text-light position-fixed h-100">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <aside class="dashboard-sidebar col-auto d-none d-md-block d-flex flex-column flex-shrink-0 bg-dark text-light">
             <div class="sidebar-header d-flex align-items-center text-light my-4">
               <i class="fas fa-bars"></i> <span class="text">Panel de control</span>
             </div>
@@ -108,7 +108,7 @@
             </div>
         </div> --}}
 
-        <main class="col py-3" style="margin-left: 3.5rem;">
+        <main class="col py-3">
             @yield('dashboard-content')
         </main>
     </div>
