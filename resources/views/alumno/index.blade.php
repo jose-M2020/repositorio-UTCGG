@@ -3,7 +3,6 @@
 @section('title', 'Alumnos')
 
 @section('dashboard-content')
-
   <div class="users container-fluid mt-4 px-sm-0 px-md-5">
     <div class="d-flex justify-content-between align-items-center py-3">
       <div class="total-records">
@@ -21,14 +20,14 @@
         <a href="/alumnos" class="border-bottom border-3">
           <button type="button" class="btn btn-transparent text-white fw-bold">Alumnos</button>
         </a>
-        @auth('admin')
+        {{-- @auth('admin') --}}
           <a href="/docentes">
             <button type="button" class="btn btn-transparent text-light">Docentes</button>
           </a>
           <a href="/admin">
             <button type="button" class="btn btn-transparent text-light">Administradores</button>
           </a>
-        @endauth
+        {{-- @endauth --}}
       </div>
 
       {{-- Sección Búsqueda --}}

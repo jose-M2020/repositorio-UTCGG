@@ -19,17 +19,10 @@
                 @guest
                     <x-navbar.link link="{{ route('login') }}" name="Acceder" routeName="login" class="px-2" />
                 @endguest
-
-                {{--
-                @auth('alumno')
-                    <x-navbar.link dropdown="true">
-                        <x-slot name="name"><i class="far fa-star me-1"></i>Favoritos</x-slot>
-                    </x-navbar.link>
-                @endauth
-                --}}
                 
-                @auth('admin')
-                  <li class="nav-item text-center p-2 p-md-0 dropdown">
+                {{-- @auth('admin') --}}
+                
+                  {{-- <li class="nav-item text-center p-2 p-md-0 dropdown">
                     <a
                       class="nav-link dropdown-toggle hidden-arrow"
                       href="#"
@@ -67,85 +60,58 @@
                         <span class="bg-ligth rounded-rounded">Ayer</span>
                       </li>
                     </ul>
-                  </li>
-                @endauth
+                  </li> --}}
+
+                {{-- @endauth --}}
                
                 @auth
-                    <x-navbar.link dropdown="true" routeName="" class="px-2 auth">
-                        <x-slot name="name"><i class="auth__icon far fa-user-circle me-1"></i> Mi cuenta</x-slot>
-                        <ul class="dropdown-menu dropdown-menu-end p-2">
-                            <li>
-                                <div class="nav-user-header d-flex align-items-center">
-                                  <i class="fas fa-user-circle"></i>
-                                  <div class="text-start ms-2">
-                                      <span>Bienvenido {{ explode(" ", auth()->user()->nombre)[0] }}!</span>
-                                      @auth('alumno')
-                                        <p class="mb-0">Alumno</p>
-                                      @endauth
-                                      @auth('docente')
-                                        <p class="mb-0">Docente</p>
-                                      @endauth
-                                      @auth('admin')
-                                        <p class="mb-0">Administrador</p>
-                                      @endauth
-                                  </div>
-                                </div>
-                            </li>
+                  <x-navbar.link dropdown="true" routeName="" class="px-2 auth">
+                    <x-slot name="name"><i class="auth__icon far fa-user-circle me-1"></i> Mi cuenta</x-slot>
+                    <ul class="dropdown-menu dropdown-menu-end p-2">
+                        <li>
+                            <div class="nav-user-header d-flex align-items-center">
+                              <i class="fas fa-user-circle"></i>
+                              <div class="text-start ms-2">
+                                  <span>Bienvenido {{ explode(" ", auth()->user()->nombre)[0] }}!</span>
+                                  <p class="mb-0">{{ auth()->user()->roles->pluck('name')[0] }}</p>
+                              </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <x-navbar.link link="/files">
+                            <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
+                        </x-navbar.link>
+                        @role('alumno')
+                          <x-navbar.link link="/files">
+                              <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis archivos</x-slot>
+                          </x-navbar.link>
+                        @endrole
+                        @can('repositorios.create')
                             <li><hr class="dropdown-divider"></li>
-                            <x-navbar.link link="/files">
-                                <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
+                            <x-navbar.link link="{{ route('repositorios.create') }}">
+                                <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Nuevo repositorio</x-slot>
                             </x-navbar.link>
-                            @auth('alumno')
-                                <x-navbar.link link="/files">
-                                    <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis archivos</x-slot>
-                                </x-navbar.link>
-                                <x-navbar.link link="{{ route('repositorios.create') }}">
-                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir archivos</x-slot>
-                                </x-navbar.link>
-                            @endauth
-                            @auth('docente')
-                                <x-navbar.link link="{{ route('alumnos') }}">
-                                    <x-slot name="name"><i class="fas fa-users fs-5 me-2"></i> Usuarios</x-slot>
-                                </x-navbar.link>
-                                <x-navbar.link link="{{ route('alumnos') }}">
-                                    <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
-                                </x-navbar.link>
-                                <li><hr class="dropdown-divider"></li>
-                                <x-navbar.link link="{{ route('repositorios.create') }}">
-                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir Archivos</x-slot>
-                                </x-navbar.link>
-                            @endauth
-                            @auth('admin')
-                                <x-navbar.link link="{{ route('alumnos') }}">
-                                    <x-slot name="name"><i class="fas fa-users me-2"></i> Usuarios</x-slot>
-                                </x-navbar.link>
-                                <x-navbar.link link="{{ route('alumnos') }}">
-                                    <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
-                                </x-navbar.link>
-                                <li><hr class="dropdown-divider"></li>
-                                <x-navbar.link link="{{ route('repositorios.create') }}">
-                                    <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Subir Archivos</x-slot>
-                                </x-navbar.link>      
-                            @endauth
-                            <li><hr class="dropdown-divider"></li>
-
-                            <!-- <x-navbar.link link="{{ route('repositorios.create') }}">
-                                <x-slot name="name">
-                                    <form id="logout" method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit"><i class="fas fa-sign-out-alt me-2"></i> Salir</button>
-                                    </form>
-                                </x-slot>
-                            </x-navbar.link> -->
-
-                            <li class="nav-item">
-                                <form id="logout" method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="w-100 text-start"><i class="fas fa-sign-out-alt me-1"></i> Salir</button>
-                                </form>
-                            <li>
-                        </ul>
-                    </x-navbar.link>
+                        @endcan
+                        @can('usuarios.index')
+                            <x-navbar.link link="{{ route('usuarios.index') }}">
+                                <x-slot name="name"><i class="fas fa-users me-2"></i> Usuarios</x-slot>
+                            </x-navbar.link>
+                        @endcan
+                        @can('usuarios.create')
+                            <x-navbar.link link="{{ route('alumnos.create') }}">
+                                <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
+                            </x-navbar.link>
+                        @endcan
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="nav-item">
+                            <form id="logout" method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-100 text-start"><i class="fas fa-sign-out-alt me-1"></i> Salir</button>
+                            </form>
+                        <li>
+                    </ul>
+                  </x-navbar.link>
                 @endauth
               </ul>
             </div>

@@ -5,7 +5,7 @@
         <span>{{ substr(auth()->user()->nombre, 0, 1) }}</span>
       </div>
       <span class="user-name mt-1">{{ auth()->user()->nombre }}</span>
-      <!-- <small>{{ auth()->user()->email }}</small> -->
+      {{-- <small>{{ auth()->user()->email }}</small> --}}
     </div>
     <ul class="nav nav-pills nav-flush flex-column mb-auto">
       <x-navbar.link collapse="true" id="collapseRep" class="mb-2">
@@ -14,27 +14,36 @@
               <span class="text">Repositorios</span>
           </x-slot>
           <ul class="submenu nav flex-column">
-              <x-navbar.link link="{{ route('repositorios.create') }}" name="Nuevo"/>
-              <x-navbar.link link="files" name="Favoritos"/>
-              <x-navbar.link link="files" name="Mis repositorios"/>
+              @can('repositorios.create')
+                <x-navbar.link link="{{ route('repositorios.create') }}" name="Nuevo"/>
+              @endcan
+              {{-- <x-navbar.link link="files" name="Favoritos"/> --}}
+              @role('alumno')
+                <x-navbar.link link="files" name="Mis repositorios"/>
+              @endrole
           </ul>
       </x-navbar.link>
-      <x-navbar.link class="my-2">
-          <x-slot name="name" link="">
-              <i class="fas fa-bell"></i>
-              <span class="text">Mensajes</span>
-          </x-slot>
-      </x-navbar.link>
-      <x-navbar.link collapse="true" id="collapseUser" class="my-2">
-          <x-slot name="name">
-              <i class="fas fa-user"></i>
-              <span class="text">Usuarios</span>
-          </x-slot>
-          <ul class="submenu nav flex-column">
-              <x-navbar.link link="{{ route('alumnos.create') }}" name="Agregar"/>
-              <x-navbar.link link="{{ route('alumnos') }}" name="Ver todos"/>
-          </ul>
-      </x-navbar.link>
+      {{-- @role('admin')
+        <x-navbar.link class="my-2">
+            <x-slot name="name" link="">
+                <i class="fas fa-bell"></i>
+                <span class="text">Mensajes</span>
+            </x-slot>
+        </x-navbar.link>
+      @endrole --}}
+      @can('usuarios.index')
+        <x-navbar.link collapse="true" id="collapseUser" class="my-2">
+            <x-slot name="name">
+                <i class="fas fa-user"></i>
+                <span class="text">Usuarios</span>
+            </x-slot>
+            <ul class="submenu nav flex-column">
+                <x-navbar.link link="{{ route('alumnos.create') }}" name="Agregar"/>
+                <x-navbar.link link="{{ route('alumnos') }}" name="Ver todos"/>
+            </ul>
+        </x-navbar.link>
+      @endcan
+
       <x-navbar.link collapse="true" id="collapseConfig" class="my-2">
           <x-slot name="name">
               <i class="fas fa-cog"></i>

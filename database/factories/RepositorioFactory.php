@@ -5,8 +5,8 @@ namespace Database\Factories;
 use App\Models\Repositorio;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Alumno;
 use App\Models\Docente;
+use App\Models\Usuario;
 
 class RepositorioFactory extends Factory
 {
@@ -24,14 +24,15 @@ class RepositorioFactory extends Factory
      */
     public function definition()
     {   
-        static $students_id = [];
-        $student = Alumno::whereNotIn('id',$students_id)
-                         ->inRandomOrder()
+        // static $students_id = [];
+        $student = Usuario::
+                        //  whereNotIn('id',$students_id)
+                         inRandomOrder()
                          ->get(['id', 'nombre'])
-                         ->first(); 
-        array_push($students_id, $student->id);
+                         ->first();
+        // array_push($students_id, $student);
 
-        $docentes_id = Docente::pluck('id')->all();
+        // $docentes_id = Docente::pluck('id')->all();
 
         $careers = [
             'TIC' => ['software', 'arduino', 'iot', 'webpage', 'app', 'electronic', 'raspberrypi', 'robotic', 'bot', 'system'],
@@ -54,7 +55,7 @@ class RepositorioFactory extends Factory
             'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
-            'docente_id' => $this->faker->randomElement($docentes_id),
+            // 'docente_id' => $this->faker->randomElement($docentes_id),
             'carrera' => $career,
             'asesor_externo' => $this->faker->name(),
             'empresa' => $this->faker->company(),

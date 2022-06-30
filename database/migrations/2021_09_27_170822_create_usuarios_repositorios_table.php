@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAlumnosRepositoriosTable extends Migration
+class CreateUsuariosRepositoriosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateAlumnosRepositoriosTable extends Migration
      */
     public function up()
     {
-        Schema::create('alumnos_repositorios', function (Blueprint $table) {
+        Schema::create('usuarios_repositorios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('alumno_id')
+            $table->foreignId('usuario_id')
                   ->constrained()
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
@@ -34,6 +34,6 @@ class CreateAlumnosRepositoriosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alumnos_repositorios');
+        Schema::dropIfExists('usuarios_repositorios');
     }
 }

@@ -113,7 +113,7 @@
                     {{-- Marcar como favorito --}}
                     {{-- <button class="repository__star"><i class="far fa-star"></i></button> --}}
                     {{-- Acciones --}}
-                    @auth('admin')
+                    @can('repositorios.destroy')
                       <div class="repository__actions btn-group dropstart">
                         <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                           <i class="fas fa-ellipsis-v"></i>
@@ -127,7 +127,7 @@
                           </li>
                         </ul>
                       </div>
-                    @endauth
+                    @endcan
                   </div>
                   <div class="col-12 col-md-4 col-lg-3 align-self-center" style="color: #2E6A99;">
                     <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->

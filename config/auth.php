@@ -41,20 +41,20 @@ return [
             'provider' => 'users',
         ],
 
-        'alumno' => [
-            'driver' => 'session',
-            'provider' => 'alumnos',
-        ],
+        // 'alumno' => [
+        //     'driver' => 'session',
+        //     'provider' => 'alumnos',
+        // ],
 
-        'docente' => [
-            'driver' => 'session',
-            'provider' => 'docentes',
-        ],
+        // 'docente' => [
+        //     'driver' => 'session',
+        //     'provider' => 'docentes',
+        // ],
 
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'admins',
-        ],
+        // 'admin' => [
+        //     'driver' => 'session',
+        //     'provider' => 'admins',
+        // ],
 
         'api' => [
             'driver' => 'token',
@@ -83,23 +83,23 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Usuario::class,
         ],
 
-        'alumnos' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Alumno::class,
-        ],
+        // 'alumnos' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Alumno::class,
+        // ],
 
-        'docentes' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Docente::class,
-        ],
+        // 'docentes' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Docente::class,
+        // ],
 
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ]
+        // 'admins' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Admin::class,
+        // ]
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

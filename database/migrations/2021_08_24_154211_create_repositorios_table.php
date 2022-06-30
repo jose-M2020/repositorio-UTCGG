@@ -15,11 +15,11 @@ class CreateRepositoriosTable extends Migration
     {
         Schema::create('repositorios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
+            // $table->foreignId('docente_id')
+            //       ->nullable()
+            //       ->constrained()
+            //       ->onUpdate('cascade')
+            //       ->onDelete('cascade');
             $table->string('alumno');
 
             // Datos añadidos-------
