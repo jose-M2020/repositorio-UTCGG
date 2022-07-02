@@ -39,7 +39,11 @@ Route::get('acerca', function(){
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('usuarios', UsuarioController::class);
+    
+    Route::get('usuarios/api/search', [UsuarioController::class, 'search'])
+            ->name('usuarios.search');
 });
+
 
 
 // || Admin

@@ -99,7 +99,7 @@
                             </x-navbar.link>
                         @endcan
                         @can('usuarios.create')
-                            <x-navbar.link link="{{ route('alumnos.create') }}">
+                            <x-navbar.link link="{{ route('usuarios.create') }}">
                                 <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>
                             </x-navbar.link>
                         @endcan

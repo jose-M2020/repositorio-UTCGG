@@ -149,36 +149,37 @@ export let loadData = async (container, page = 1, query = '') => {
 	`;
 
 	if(page <= lastPage){
-		container.appendChild(spinner);
-		try {
-	    let response = await fetch("/alumnos/search?page="+page+"&query="+query);
+	  container.appendChild(spinner);
+	  try {
+	    let response = await fetch("/usuarios/api/search?page="+page+"&query="+query);
 	    let students = await response.json();
 	    lastPage = students.last_page;
 	    
 	    console.log(lastPage)
-			let html = '';
-			let names = students.data.reduce((acc, alumno) => {
-										return [...acc, alumno.nombre]
-									}, []);
-			if(page === 1){
-				// Si es la primera pagina (primero resultados) creamos la lista
-				container.innerHTML = '';
-				
-				if(!students.total){
-					html = createHTML([ {type: 'ul', data: 'No hay resultados.'} ])
-				}else{
-					// Obtenemos solo los nombres y los almacenamos en una array
-					html = createHTML([ 
-						{type: 'ul'}, 
-						{type: 'li', data: names} 
-					]);
-				}
+		let html = '';
+		let names = students.data.reduce((acc, alumno) => {
+			return [...acc, alumno.nombre]
+		}, []);
+
+		if(page === 1){
+			// Si es la primera pagina (primero resultados) creamos la lista
+			container.innerHTML = '';
+			
+			if(!students.total){
+				html = createHTML([ {type: 'ul', data: 'No hay resultados.'} ])
 			}else{
-				// Si no, agregamos los otros resultados a la lista
-				html = createHTML([ {type: 'li', data: names} ])
-				container.removeChild(container.querySelector('.fa-spinner'));
+				// Obtenemos solo los nombres y los almacenamos en una array
+				html = createHTML([ 
+					{type: 'ul'}, 
+					{type: 'li', data: names} 
+				]);
 			}
-			container.appendChild(html);
+		}else{
+			// Si no, agregamos los otros resultados a la lista
+			html = createHTML([ {type: 'li', data: names} ])
+			container.removeChild(container.querySelector('.fa-spinner'));
+		}
+		container.appendChild(html);
 	  } catch(err) {
 	    console.log(err);
 	    let errorMsg = createHTML([ {type: 'ul', data: 'Hubo un error al obtener los datos. Intentalo de nuevo.'} ])

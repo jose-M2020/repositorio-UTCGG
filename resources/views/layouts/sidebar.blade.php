@@ -38,8 +38,8 @@
                 <span class="text">Usuarios</span>
             </x-slot>
             <ul class="submenu nav flex-column">
-                <x-navbar.link link="{{ route('alumnos.create') }}" name="Agregar"/>
-                <x-navbar.link link="{{ route('alumnos') }}" name="Ver todos"/>
+                <x-navbar.link link="{{ route('usuarios.create') }}" name="Agregar"/>
+                <x-navbar.link link="{{ route('usuarios.index') }}" name="Ver todos"/>
             </ul>
         </x-navbar.link>
       @endcan

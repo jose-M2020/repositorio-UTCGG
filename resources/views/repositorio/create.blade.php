@@ -97,12 +97,11 @@
 					<div class="form__field">
 						<label for="alumno" class="form__label">Nombre del alumno:</label>
 						<div style="position: relative;">
-							@auth('alumno')
+							@role('alumno')
 								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth('alumno')->user()->nombre }}" readonly>	
-							@endauth
-							@guest('alumno')
+							@else
 							    <input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{old('alumno.0')}}">
-							@endguest
+							@endrole
 							<div class="search_results"></div>
 						</div>
 						@if(old('alumno'))
@@ -124,10 +123,9 @@
 					<div class="form__field">
 						<label for="carrera" class="form__label">Carrera</label>
 						<select class="form__input" name="carrera" id="carrera">
-							@auth('alumno')
+							@role('alumno')
 								<option value="{{ auth('alumno')->user()->carrera }}" selected="">{{ get_careers()[auth('alumno')->user()->carrera] }}</option>
-							@endauth
-							@guest('alumno')
+							@else
 								<option disabled selected>Seleccionar carrera</option>
 								@foreach(get_careers() as $key=>$career)
 									@if(old('carrera') == $key)
@@ -136,7 +134,7 @@
 									@endif
 									<option value="{{ $key }}">{{ $career }}</option>
 								@endforeach
-							@endguest
+							@endrole
 						</select>
 					</div>
 					<div class="form__field removable">
