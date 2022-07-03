@@ -14,6 +14,13 @@ use Auth;
 
 class RepositorioController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('can:repositorios.create')->only('create','store');
+         $this->middleware('can:repositorios.edit')->only('edit','update');
+         $this->middleware('can:repositorios.delete')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *

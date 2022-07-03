@@ -12,6 +12,14 @@ use Spatie\Permission\Models\Role;
 
 class UsuarioController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('can:usuarios.index')->only('index');
+         $this->middleware('can:usuarios.create')->only('create','store');
+         $this->middleware('can:usuarios.edit')->only('edit','update');
+         $this->middleware('can:usuarios.delete')->only('destroy');
+    }
+
     private $fields = [
         'id', 'nombre', 'apellido', 'email', 'carrera', 'created_at'
     ];

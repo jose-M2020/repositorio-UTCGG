@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
+    function __construct()
+    {
+         $this->middleware('can:archivos.index')->only('index', 'show');
+         $this->middleware('can:archivos.create')->only('create','store');
+         $this->middleware('can:archivos.edit')->only('edit','update');
+         $this->middleware('can:archivos.delete')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
