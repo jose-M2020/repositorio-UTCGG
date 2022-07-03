@@ -43,6 +43,14 @@
             </ul>
         </x-navbar.link>
       @endcan
+      @can('roles.index')
+        <x-navbar.link class="my-2" link="{{ route('roles.index') }}">
+            <x-slot name="name">
+              <i class="fa-solid fa-user-lock"></i>
+              <span class="text">Lista de roles</span>
+            </x-slot>
+        </x-navbar.link>
+      @endcan
 
       <x-navbar.link collapse="true" id="collapseConfig" class="my-2">
           <x-slot name="name">

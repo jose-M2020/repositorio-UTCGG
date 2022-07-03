@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AdminController;
@@ -42,6 +43,13 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::get('usuarios/api/search', [UsuarioController::class, 'search'])
             ->name('usuarios.search');
+});
+
+// || Roles
+// -----------------------------------------
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('roles', RoleController::class);
 });
 
 

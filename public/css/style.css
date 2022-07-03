@@ -391,7 +391,7 @@ footer{
   opacity: 1
 }
 
-/*.users_table thead {
+/*.table-content .custom-table thead {
   position: fixed;
   top: 50px;
   left: 0;
@@ -404,40 +404,40 @@ footer{
   display: table;
 }*/
 
-.users_table tbody tr{
+.table-content .custom-table tbody tr{
 	cursor: pointer;
 }
 
-.users_table input[type=checkbox]{
+.table-content .custom-table input[type=checkbox]{
 	display: none;
 }
 
-.users_table button > * {
+.table-content .custom-table .actions__item > * {
 	pointer-events: none;
 }
 
-.users #editUser{
+.table-content .actions .edit{
 	border: none;
 }
 
-.users button#editUser,
-.users button#deleteUser{
-	font-size: 25px;
+.table-content .actions .edit,
+.table-content .actions .delete{
+	font-size: 20px;
 	color: #413C3C;
 	transition: color .3s;
 	background-color: inherit;
 	border: none;
 }
 
-.users button#editUser:hover{
+.table-content .actions .edit:hover{
 	color: #2BB45F;
 }
 
-.users button#deleteUser:hover{
+.table-content .actions .delete:hover{
 	color: #CC4545;
 }
 
-.users #user-notFound{
+.table-content #user-notFound{
 	max-width: 300px;
 }
 

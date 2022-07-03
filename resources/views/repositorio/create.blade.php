@@ -98,7 +98,7 @@
 						<label for="alumno" class="form__label">Nombre del alumno:</label>
 						<div style="position: relative;">
 							@role('alumno')
-								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth('alumno')->user()->nombre }}" readonly>	
+								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth()->user()->nombre }}" readonly>	
 							@else
 							    <input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{old('alumno.0')}}">
 							@endrole
@@ -124,7 +124,7 @@
 						<label for="carrera" class="form__label">Carrera</label>
 						<select class="form__input" name="carrera" id="carrera">
 							@role('alumno')
-								<option value="{{ auth('alumno')->user()->carrera }}" selected="">{{ get_careers()[auth('alumno')->user()->carrera] }}</option>
+								<option value="{{ auth()->user()->carrera }}" selected="">{{ get_careers()[auth()->user()->carrera] }}</option>
 							@else
 								<option disabled selected>Seleccionar carrera</option>
 								@foreach(get_careers() as $key=>$career)

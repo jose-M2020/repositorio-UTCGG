@@ -98,7 +98,6 @@
 			myCollapsible.forEach(item => {
 				item.addEventListener('click', function () {
 				this.classList.toggle('btn-collapse-open');
-				console.log(this)
 				})
 			})
 

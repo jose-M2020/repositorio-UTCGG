@@ -36,8 +36,13 @@
 					<div class="col-md">
 						<x-form.select text="Carrera" name="carrera" id="carrera" :options="get_careers()"/>
 					</div>
-					<div class="col-md">
+					{{-- <div class="col-md">
 						<x-form.input text="Cuatrimestre" type="number" name="cuatrimestre" id="Cuatrimestre" />
+					</div> --}}
+				</div>
+				<div class="row">
+					<div class="col-md">
+						<x-form.select text="Rol" name="rol" id="rol" :options="$roles"/>
 					</div>
 				</div>
 

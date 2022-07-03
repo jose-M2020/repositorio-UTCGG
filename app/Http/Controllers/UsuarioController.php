@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
 use PhpParser\Builder\Use_;
 
+use Spatie\Permission\Models\Role;
+
 class UsuarioController extends Controller
 {
     private $fields = [
@@ -40,12 +42,19 @@ class UsuarioController extends Controller
             if(!$date_range[0] || !$date_range[1]) unset($filters['rango_fecha']);
         }
 
-        return view('usuario.index', compact('users','filters'));
+        // TODO: obtener el rol e asignarlo en el array, y mostrarlo en la vista
+        // foreach($users as $user){
+        //     $userRole = $user->roles->pluck('name','id')->all();
+        //     $user->roles = implode(', ',$userRole);
+        // }
+
+        return view('usuario.index', compact('users','filters')); 
     }
 
     public function create()
     {
-        return view('usuario.create');
+        $roles = Role::pluck('name','id')->all();
+        return view('usuario.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -56,6 +65,7 @@ class UsuarioController extends Controller
             'email' => 'required|string|email|max:255|unique:usuarios',
             'contraseña' => ['required', 'confirmed'],
             'carrera' => 'required|string|max:20',
+            'rol' => 'required',
             // 'cuatrimestre' => 'required|integer|max:11'
         ]);
 
@@ -67,6 +77,8 @@ class UsuarioController extends Controller
             'carrera' => $request->carrera,
             // 'cuatrimestre' => $request->cuatrimestre
         ]);
+
+        $user->assignRole($request->rol);
 
         return redirect()->route('usuarios.index')
                 ->with('status', 'Alumno registrado exitosamente!');
