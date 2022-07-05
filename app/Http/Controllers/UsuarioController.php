@@ -138,7 +138,7 @@ class UsuarioController extends Controller
 
     public function search(Request $request)
     {
-        $users = $this->getData($request, ['id', 'nombre']);
+        $users = $this->getData($request, ['id', 'nombre', 'apellido']);
         return response()->json($users);
         
        

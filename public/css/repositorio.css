@@ -443,10 +443,50 @@
 
 /* Archivos */
 
-.upload-files input[type="file"]{
-    display: none;
+.files .files__drop-zone {
+	position: relative;
+	width: 100%;
+	height: 200px;
+	border: 4px dashed #ddd;
 }
 
+.files .files__input{
+    width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.files .files__info{
+	color: #818181;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	transform: translateY(-50%);
+	text-align: center;
+}
+
+.files .files__info > *{
+	display: block;
+}
+
+.files .files__info .files__icon{
+	font-size: 3.5rem;
+}
+
+.files .files__info .files__title{
+	font-size: 1.5rem;
+	letter-spacing: 1.5px;
+    line-height: 1;
+    margin-top: 3px;
+}
+
+.files .file-item{
+	box-shadow: 2px 2px 5px #b0b0b0;
+}
+
+/* 
 .upload-files{
 	text-align: center;
 }
@@ -484,7 +524,7 @@
 	color: #32b197;
 	background-color: #f8fffa;
 	border: 1px solid #04886d;
-}
+} */
 
 /* icono para eliminar inputs */
 
@@ -500,10 +540,12 @@ input ~ .remove{
 
 /* icono para eliminar inputs tipo file */
 
-label ~ .remove{
+.files .file-remove{
+	color: #b60000;
+	position: absolute;
 	top: 15px;
 	right: 15px;
-	font-size: 20px;
+	font-size: 1.5rem;
 	transition: 0.3s right;
 }
 

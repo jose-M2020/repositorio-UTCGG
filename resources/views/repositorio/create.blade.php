@@ -5,15 +5,15 @@
 @section('dashboard-content')
 
 <div class="row justify-content-center align-items-center pt-3" style="height: 80vh;">
-	<div class="col-xs-12 col-sm-5 col-md-3 h-100 d-flex flex-column justify-content-center h-100 bg-dark bg-gradient text-white px-3 py-4">
+	<div class="col-11 col-xl-3 h-100 d-flex flex-column justify-content-center h-100 bg-dark bg-gradient text-white px-3 py-4">
 	   	<div class="pb-5">
-			<h1>Registro de repositorio</h1>
+			<h2>Registro de repositorio</h2>
 		</div>
-		<div class="d-none d-sm-block">
+		<div class="d-none d-xl-block">
 			<img class="w-100" src="{{ asset('img/form/repository.svg') }}">
 		</div>
 	</div>
-	<div class="col-12 col-md-6 col-sm-7 h-100 py-4 px-5 bg-light overflow-auto">
+	<div class="col-11 col-xl-8 h-100 py-4 px-5 bg-light overflow-auto">
 		<div id="progress">
 			<div class="progressbar">
 				<div class="bar"></div>
@@ -155,19 +155,31 @@
 					</div>
 				</fieldset>
 				<fieldset id="files" class="section">
-					<div class="form__field">
-						<div class="preview_images"></div>
-						<div class="upload-files">
-							<div class="project__file">
-								<input class="file__input" type="file" id="imagenes" name="imagenes[]" multiple="">
-								<label for="imagenes" class="file__label">
-									<i class="fas fa-file-upload"></i>
-									Seleccionar imagenes
-								</label>
+					<div class="form__field files images">
+						<div class="files__drop-zone">
+							<div class="files__info" for="imagenes">
+								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
+								<span class="files__title">
+									Arrastrar y soltar archivos aquí
+								</span>
 							</div>
+							<input class="files__input" type="file" id="imagenes" name="imagenes[]" multiple="">
 						</div>
+						<div class="files__selected preview_images"></div>
 					</div>
-					<div class="form__field">
+					<div class="form__field files projects">
+						<div class="files__drop-zone">
+							<div class="files__info" for="archivos">
+								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
+								<span class="files__title">
+									Seleccionar archivos
+								</span>
+							</div>
+							<input class="files__input" type="file" id="archivos" name="archivos[]" multiple="">
+						</div>
+						<div class="files__selected preview_images"></div>
+					</div>
+					{{-- <div class="form__field">
 						<p>Archivos subidos:</p>
 						<div class="upload-files files">
 							<div class="project__file">
@@ -179,7 +191,7 @@
 							</div>
 							<span class="form__span add_element"><i class="fas fa-plus"></i> Nuevo archivo</span>
 						</div>
-					</div>
+					</div> --}}
 					<div class="text-end d-block mt-5">
 					 	<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
 						<x-button name="BotonSubir" type="submit">Registrar <i class="far fa-paper-plane"></i></x-button>
@@ -269,6 +281,7 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="{{ set_url('js/class/File.js') }}" type="module"></script>
 <script src="{{ set_url('js/main.js') }}" type="module"></script>
 
 @endsection

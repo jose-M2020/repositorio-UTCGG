@@ -46,6 +46,7 @@
 				@yield('dashboard-content')
             </main>
 		</div>
+	</div>
 
 	{{-- JQUERY --}}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

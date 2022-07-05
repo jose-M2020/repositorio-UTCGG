@@ -126,21 +126,21 @@ export const searchEvent = input => {
 	// console.log(resultsBox)
 }
 
-function createElement(type, attributes) {
-  let element = document.createElement(type);
-  for (var key in attributes) {
-    if (key == "class") {
-      element.classList.add.apply(element.classList, attributes[key]);
-    } else {
-      element[key] = attributes[key];
-    }
-  }
-  //someElement.appendChild(element);
-}
+// function createElement(type, attributes) {
+//   let element = document.createElement(type);
+//   for (var key in attributes) {
+//     if (key == "class") {
+//       element.classList.add.apply(element.classList, attributes[key]);
+//     } else {
+//       element[key] = attributes[key];
+//     }
+//   }
+//   //someElement.appendChild(element);
+// }
 
 let lastPage = 1;
 export let loadData = async (container, page = 1, query = '') => {
-	let spinner = createHTML([ {type: 'i', attributes: { class: ['fas', 'fa-spinner', 'fa-spin']} } ]);
+	let spinner = createHTML([ {type: 'i', attributes: { class: 'fas fa-spinner fa-spin'} } ]);
 	spinner.style.cssText = `
 		font-size: 20px; 
 		color: #419F6D; 
@@ -158,7 +158,7 @@ export let loadData = async (container, page = 1, query = '') => {
 	    console.log(lastPage)
 		let html = '';
 		let names = students.data.reduce((acc, alumno) => {
-			return [...acc, alumno.nombre]
+			return [...acc, `${alumno.nombre} ${alumno.apellido}`]
 		}, []);
 
 		if(page === 1){
@@ -206,33 +206,38 @@ export const addNewElement = e => {
 		dataLoadEvent(newElement.querySelector('.search_results'));
 	}else {
 		// Para inputs de tipo file usamos el label para hacer referencia al input
-		i++;
-		let label = newElement.querySelector('label');
-		input.setAttribute('id','file' + i);
-		label.setAttribute('for','file' + i);
-		label.innerHTML = `
-		 	<i class="fas fa-file-upload"></i>
-			Cargar Archivo`;
-		label.style.cssText = `
-			color: #32b197;
-			backgroundColor: #f8fffa;
-			border: 1px solid #04886d;
-		`;
-		addFileListener(input);
+
+		// i++;
+		// let label = newElement.querySelector('label');
+		// input.setAttribute('id','file' + i);
+		// label.setAttribute('for','file' + i);
+		// label.innerHTML = `
+		//  	<i class="fas fa-file-upload"></i>
+		// 	Cargar Archivo`;
+		// label.style.cssText = `
+		// 	color: #32b197;
+		// 	backgroundColor: #f8fffa;
+		// 	border: 1px solid #04886d;
+		// `;
+		// addFileListener(input);
 	}
 	
 	i++;
-	// Creamos el icono de eliminar
-	let node = document.createElement("I");
-	node.classList.add('fas', 'fa-times-circle', 'remove');
-	node.id = 'icon'+i;
+
+	const icon = createElement({
+		type: 'I',
+		attributes: {class: 'fas fa-times-circle remove', id: 'icon' + i}
+	})
 
 	// Agregamos el icono de eliminar al nuevo elemento creado
-	newElement.appendChild(node);
+	newElement.appendChild(icon);
 	parent.insertBefore(newElement, parent.lastElementChild);
 
 	// removeElementListener(node.id);
 }
+
+// !! Create elements
+// ----------------------------------------------------------------
 
 /**
 	* El elemento sera agregado como hijo del elemento anterior (al menos que se declare child como false).
@@ -241,84 +246,120 @@ export const addNewElement = e => {
   *
 	* Para el uso de esta función, se pasa como parametro un array de objetos.
 	*
-	*	@param type 			- El tipo de elemento que se va a crear.
-	*	@param attributes	- Un objeto con los atributos (id, class, name, etc).
-	*				   class 		  - debe ser un array con la clase o clases.
-	*				   id 				- un string con el id, en el caso de que sea para un elemento que se repetira varias
-	*										    veces, se puede pasar un array con el id correspondiente.
-	*	@param child 			- True o false, si el elemento a agregar es hijo o no del elemento anteror. Por default es true.
-	*	@param ascend 			- Para ascender a un elemento especifico.
-	*	@param data 				- El texto que tendra el elemento, puede ser un string o array de string.
+	*	@param {string} type 			- El tipo de elemento que se va a crear.
+	*	@param {object} attributes		- Un objeto con los atributos (id, class, name, etc).
+	*				   						class 	- string con la clase o clases.
+	*				   						id 		- String con el id, en el caso de que sea para un elemento que se repetira varias
+	*										 	 	  veces, se puede pasar un array con el id correspondiente.
+	*	@param {boolean} isChild 		- True o false, si el elemento a agregar es hijo o no del elemento anteror. Por default es true.
+	*	@param {string} ascend 			- Para ascender a un elemento especifico.
+	*	@param {string or array} data 	- El texto que tendra el elemento, puede ser un string o array de string.
 */
 
 export const createHTML = elements => {
-	// Creamos los elementos y lo guardamos en un array
-	let createdElements = elements.reduce( (accumulator, element) => {
-		let newElement;
-		if(Array.isArray(element.data)){
-			// Si el data es un array, creamos cada elemento que tendra los textos en cada elemento del array
-			newElement = document.createDocumentFragment();
-			let attributeIndex = 0;
-			// Creamos los elementos del mismo tipo
-			element.data.forEach( text => {
-				let elmt = document.createElement(element.type);
-				newElement.appendChild(elmt);
+	const createdElements = elements.reduce( (accumulator, element) => {
+		const newElement = createElement(element);
 
-				// Agregamos el texto
-				elmt.textContent = text;
-
-				// Agregamos los atributos
-				for(let attribute in element.attributes){
-					if (attribute == "class") {
-				      elmt.classList.add.apply(elmt.classList, element.attributes[attribute]);
-				  } else {
-				  	// Si el atributo es un array, es decir cada atributo de los elementos tiene un valor unico.
-				  	if(Array.isArray(element.attributes[attribute])){
-				  		elmt[attribute] = element.attributes[attribute][attributeIndex];	
-				  		attributeIndex++;
-				  	}else{
-				  		elmt[attribute] = element.attributes[attribute];
-				  	}
-				    
-				  }
-				}
-			})
-		}else{
-			// Si es un string, creamos solo un elemento
-			newElement = document.createElement(element.type);
-			// Agregamos los atributos
-			for(let attribute in element.attributes){
-				if (attribute == "class") {
-			      newElement.classList.add.apply(newElement.classList, element.attributes[attribute]);
-			    } else {
-			      newElement[attribute] = element.attributes[attribute];
-			    }
-			}
-			// Agregamos el texto
-			newElement.textContent = element.data;
-		}
-
-		// El append representa si sera agregado como hijo del elemento anterior, por default es verdadero
 	  	return [...accumulator, {
 	  		element: newElement,
-	  		child: element.hasOwnProperty('child') ? element.child : true
+	  		isChild: element.hasOwnProperty('isChild') ? element.isChild : true,
+			ascend: element.hasOwnProperty('ascend') ? element.ascend : null
 	  	}];
 	}, []);
 
-	for(let i = 0; i < createdElements.length; i++) {
-		if(elements[i].hasOwnProperty('ascend')){
-			let ascendedElement = createdElements[i-2].element.closest(elements[i].ascend);
-			ascendedElement.appendChild(createdElements[i].element);
-		}
-		else if(i !== 0 && createdElements[i].child) {
-			// Si es child en true se agrega comp hijo del elemento anterior
-			createdElements[i-1].element.appendChild(createdElements[i].element);		
-		}
-		else if(i >= 2 && !createdElements[i].child){
-			// Si child es false se agrega como hermano del elemento anterior
-			createdElements[i-1].element.parentElement.appendChild(createdElements[i].element);
-		}
-	}
+	console.log(createdElements);
+	
+	organizeElements(createdElements);
+
+	console.log(createdElements)
 
 	return createdElements[0].element;
+}
+
+const organizeElements = (elements = []) => {
+	elements.forEach( (element, i) => {
+		if(element.ascend){
+			let ascendedElement = elements[i-2].element.closest(element.ascend);
+			ascendedElement.appendChild(element.element);
+		}
+		else if(i !== 0 && element.isChild) {
+			elements[i-1].element.appendChild(element.element);		
+		}
+		else if(i >= 2 && !element.isChild){
+			elements[i-1].element.parentElement.appendChild(element.element);
+		}
+	})
+
+	// for(let i = 0; i < createdElements.length; i++) {
+	// 	if(elements[i].hasOwnProperty('ascend')){
+	// 		let ascendedElement = createdElements[i-2].element.closest(elements[i].ascend);
+	// 		ascendedElement.appendChild(createdElements[i].element);
+	// 	}
+	// 	else if(i !== 0 && createdElements[i].child) {
+	// 		// Si es child en true se agrega comp hijo del elemento anterior
+	// 		createdElements[i-1].element.appendChild(createdElements[i].element);		
+	// 	}
+	// 	else if(i >= 2 && !createdElements[i].child){
+	// 		// Si child es false se agrega como hermano del elemento anterior
+	// 		createdElements[i-1].element.parentElement.appendChild(createdElements[i].element);
+	// 	}
+	// }
+}
+
+/**
+ * 
+ * @param {object} elementData 
+ * @returns One or multiple elements of a single tag type
+ */
+
+const createElement = elementData => {
+	// TODO: trartar de crear elementos especificos como <select></select>
+	if(Array.isArray(elementData.data)){
+		// Create elements for every array item of data with the id
+
+		const documentFragment = document.createDocumentFragment();
+		let attributeIndex = 0;
+		
+		// multiple elements of a tag type
+		elementData.data.forEach( text => {
+			let elmt = document.createElement(elementData.type);
+			documentFragment.appendChild(elmt);
+
+			// Agregamos el texto
+			elmt.textContent = text;
+
+			addAttributes(elmt, elementData.attributes, attributeIndex);
+			attributeIndex++;
+		})
+
+		return documentFragment;
+	}else{
+		// Si es un string, creamos solo un elemento
+		const newElement = document.createElement(elementData.type);
+		
+		addAttributes(newElement, elementData.attributes);
+
+		// Agregamos el texto
+		newElement.textContent = elementData.data;
+
+		return newElement;
+	}
+}
+
+const addAttributes = (element, attributes = {}, index) => {
+	for(const key in attributes){
+		if (key == "class") {
+		  const classessArray = attributes[key].split(' ');
+		  element.classList.add(...classessArray);
+		} else {
+			// Si el atributo es un array, es decir cada atributo de los elementos tiene un valor unico.
+		  if(Array.isArray(attributes[key])){
+			element[key] = attributes[key][index];	
+		  	// index++;
+		  }else{
+			  element[key] = attributes[key];
+		  }
+
+		}
+	}
 }
