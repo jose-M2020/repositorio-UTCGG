@@ -267,11 +267,11 @@ export const createHTML = elements => {
 	  	}];
 	}, []);
 
-	console.log(createdElements);
+	// console.log(createdElements);
 	
 	organizeElements(createdElements);
 
-	console.log(createdElements)
+	// console.log(createdElements)
 
 	return createdElements[0].element;
 }
@@ -336,12 +336,34 @@ const createElement = elementData => {
 	}else{
 		// Si es un string, creamos solo un elemento
 		const newElement = document.createElement(elementData.type);
-		
 		addAttributes(newElement, elementData.attributes);
 
-		// Agregamos el texto
-		newElement.textContent = elementData.data;
+		if(elementData.type === 'select'){
+			const option = document.createElement('option');
+			option.text = elementData.data;
+			option.disabled = true;
+			option.selected = true;
+			newElement.appendChild(option);
 
+			for(const key in elementData.options){
+				const option = document.createElement('option');
+				option.value = key;
+				option.text = elementData.options[key];
+				newElement.appendChild(option);
+			}
+		}else{
+			if(elementData.data){
+				const textNode = document.createTextNode(elementData.data);
+				newElement.appendChild(textNode);
+				if(elementData.icon){
+					const icon = document.createElement('I');
+					addAttributes(icon, elementData.icon);
+					newElement.insertBefore(icon, textNode)
+				}
+			}
+		}
+		
+		
 		return newElement;
 	}
 }

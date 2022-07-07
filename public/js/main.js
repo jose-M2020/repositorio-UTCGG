@@ -156,6 +156,8 @@ window.onload = (event) => {
 	let progress = (100 / (stepsProgress.length - 1));
 	let previousPosition = 0;
 
+	// FIXME: Fix the progress bar animation
+
 	const showProgres  = position => {
 		let currentStep = stepsProgress[position], 
 			previousStep;
@@ -264,47 +266,47 @@ window.onload = (event) => {
 
 
 
-	const element = functions.createHTML([
-		{
-		  type: 'div',
-		  attributes: { class: `container`}
-		},
-		{
-			type: 'p',
-		  	attributes: { class: `position-relative`},
-			// ascend: '.container',
-			// isChild: false,
-			data: 'hola que hace'
-		},
-		{
-		  type: 'ul',
-		  isChild: false,
-		  attributes: { class: `position-relative`}
-		},
-		{
-		  type: 'li',
-		  attributes: { class: 'file-name', id: ['item1', 'item2', 'item3'] },
-		  data: ['Text of node','Text of node','Text of node']
-		},
-		{
-			type: 'select',
-		  	attributes: { class: `position-relative`},
-			ascend: '.container',
-			data: 'Tipo de archivo',
-			options: {
-				'doc': 'documentacion',
-				'project': 'proyecto'
-			}
-		},
+	// const element = functions.createHTML([
+	// 	{
+	// 	  type: 'div',
+	// 	  attributes: { class: `container`}
+	// 	},
+	// 	{
+	// 		type: 'p',
+	// 	  	attributes: { class: `position-relative`},
+	// 		// ascend: '.container',
+	// 		// isChild: false,
+	// 		data: 'hola que hace'
+	// 	},
+	// 	{
+	// 	  type: 'ul',
+	// 	  isChild: false,
+	// 	  attributes: { class: `position-relative`}
+	// 	},
+	// 	{
+	// 	  type: 'li',
+	// 	  attributes: { class: 'file-name', id: ['item1', 'item2', 'item3'] },
+	// 	  data: ['Text of node','Text of node','Text of node']
+	// 	},
+	// 	{
+	// 		type: 'select',
+	// 	  	attributes: { class: `position-relative`},
+	// 		ascend: '.container',
+	// 		data: 'Tipo de archivo',
+	// 		options: {
+	// 			'doc': 'documentacion',
+	// 			'project': 'proyecto'
+	// 		}
+	// 	},
 		
-		// {
-		//   type: 'i',
-		//   child: false,
-		//   attributes: { class: 'file-remove fas fa-times-circle' }
-		// }
-	  ]);
+	// 	// {
+	// 	//   type: 'i',
+	// 	//   child: false,
+	// 	//   attributes: { class: 'file-remove fas fa-times-circle' }
+	// 	// }
+	//   ]);
 
-	  document.querySelector('body').appendChild(element);
+	//   document.querySelector('body').appendChild(element);
 
 
 
@@ -325,7 +327,7 @@ window.onload = (event) => {
 			'.files.projects .files__drop-zone',
 			'.files.projects .preview_images',
 			{
-				validExtensions: ['pdf', 'txt', 'docx', 'rar']
+				validExtensions: ['pdf', 'txt', `doc`, 'docx', 'rar', 'zip']
 			}
 		)
 	}else{

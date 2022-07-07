@@ -155,27 +155,33 @@
 					</div>
 				</fieldset>
 				<fieldset id="files" class="section">
-					<div class="form__field files images">
-						<div class="files__drop-zone">
+					<div class="form__field files files-images images mb-5">
+						<h5>Galería</h5>
+						<div class="files__drop-zone mb-3">
 							<div class="files__info" for="imagenes">
 								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
 								<span class="files__title">
-									Arrastrar y soltar archivos aquí
+									Arrastra las imágenes aquí
 								</span>
+								<span class="mb-2">o</span>
+								<span class="border border border-secondary d-inline p-1">Seleccionar archivos</span>
 							</div>
-							<input class="files__input" type="file" id="imagenes" name="imagenes[]" multiple="">
+							<input class="files__input" type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple="">
 						</div>
 						<div class="files__selected preview_images"></div>
 					</div>
-					<div class="form__field files projects">
-						<div class="files__drop-zone">
+					<div class="form__field files files projects mb-5">
+						<h5>Documentos del proyecto</h5>
+						<div class="files__drop-zone mb-3">
 							<div class="files__info" for="archivos">
 								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
 								<span class="files__title">
-									Seleccionar archivos
+									Arrastra los documentos aquí
 								</span>
+								<span class="mb-2">o</span>
+								<span class="border border border-secondary d-inline p-1">Seleccionar archivos</span>
 							</div>
-							<input class="files__input" type="file" id="archivos" name="archivos[]" multiple="">
+							<input class="files__input" type="file" id="archivos" name="archivos[]" accept=".doc,.docx,.zip,.rar,.pdf,.txt" multiple="">
 						</div>
 						<div class="files__selected preview_images"></div>
 					</div>

@@ -390,31 +390,6 @@
 	position: absolute;
 }
 
-/* Contenedor de imagenes seleccionadas  */
-
-#register-repository .preview_images{
-	display: grid;
-  	grid-gap: 10px;
-  	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-}
-#register-repository .preview_images .image{
-	position: relative;
-}
-#register-repository .preview_images img{
-	width: 100%;
-	object-fit: contain;
-}
-
-#register-repository .preview_images .remove{
-	position: absolute;
-	right: 3px;
-	top: 3px;
-	color: #D00202 !important;
-	font-size: 25px;
-	cursor: pointer;
-	transition-property: opacity, color;
-	transition-duration: .4s;
-}
 
 /* tooltip */
 
@@ -479,12 +454,69 @@
 	font-size: 1.5rem;
 	letter-spacing: 1.5px;
     line-height: 1;
-    margin-top: 3px;
+    margin-top: 5px;
+}
+
+
+
+.files .files__selected{
+	display: grid;
+  	grid-gap: 14px;	
+}
+
+.files-images .files__selected{
+  	grid-template-columns: repeat(auto-fit, minmax(150px, 0fr));
 }
 
 .files .file-item{
+	padding: 6px;
 	box-shadow: 2px 2px 5px #b0b0b0;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: center;
+	overflow: hidden;
 }
+
+.files-images .file-item{
+	flex-direction: column;
+	max-width: 150px;
+	justify-content: center;
+}
+
+.files-images .file-item img{
+	width: 100%;
+	object-fit: contain;
+}
+
+.files .file-item i.file-remove{
+	color: #b60000;
+	font-size: 1.5rem;
+	transition: 0.3s right;
+	cursor: pointer;
+}
+
+.files-images .file-item i.file-remove{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.files .file-item .file-name{
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.files .file-item .file-name i{
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.files .file-item select{
+	width: auto;
+}
+
 
 /* 
 .upload-files{
@@ -540,14 +572,7 @@ input ~ .remove{
 
 /* icono para eliminar inputs tipo file */
 
-.files .file-remove{
-	color: #b60000;
-	position: absolute;
-	top: 15px;
-	right: 15px;
-	font-size: 1.5rem;
-	transition: 0.3s right;
-}
+
 
 input#student_name:focus + .search_results{
 	visibility: visible;

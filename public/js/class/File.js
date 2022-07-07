@@ -8,14 +8,13 @@ export default class File {
         this.validExtensions = [];
         this.config = {
             canDropFiles: true,
-            allowedFiles: [],
-            fileSize: 10000,
-            fileLength: 10,
+            validExtensions: [],
+            fileSize: 1e+7,
+            numberFiles: 10,
             ...config
         };
         this.base64Files = [];
         this.files =  new DataTransfer();
-        this.validImageExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
 
         this.listenEvents();
     }
@@ -38,11 +37,12 @@ export default class File {
         if (this.fileInput) {
             this.fileInput.addEventListener("change", event => {
                 const { target: {files} } = event;
-                // console.log(files)
 
                 for (const file of files) {
-                    const fileReader = new FileReader(),
-                          extension = this._getFileExtension(file.name);
+                    if(!this._validate(file)) continue;
+                    // console.log('Files valid: ', file)
+
+                    const fileReader = new FileReader();
                     fileReader.readAsDataURL(file);
                     
                     fileReader.onloadend = () => {
@@ -50,16 +50,21 @@ export default class File {
                       const tempImage = fileReader.result;
                       
                       file.id = 'id' + Math.ceil(Math.random()*1000000000);
-
-                      this._addFile(file);
                       
-                    //   if(isImage){
-                    //     this.base64Files.push(tempImage);
-                    //   }
-
+                      //   if(isImage){
+                      //     this.base64Files.push(tempImage);
+                      //   }
+                          
                       this._addElement(file, isImage, tempImage);
-                    };
+                      this._addFile(file);
+                    };                    
                 }
+
+                setTimeout(() =>{
+                    console.log(this.files)
+                    this.fileInput.files = this.files.files;
+                    console.log(this.fileInput.files)
+                },50)
             });
         }
     }
@@ -85,7 +90,6 @@ export default class File {
 
     _addFile(file){
         this.files.items.add(file);
-        this.fileInput.files = this.files.files;
     }
 
     _removeFile(id) {
@@ -117,24 +121,41 @@ export default class File {
             },
             {
               type: 'i',
-              child: false,
+              isChild: false,
               attributes: { class: 'file-remove fas fa-times-circle' }
-            }
+            },
+            // {
+            //   type: 'span',
+            //   isChild: false,
+            //   data: fileData.name
+            // }
           ]);
         }else{
             element = createHTML([
               {
                 type: 'div',
-                attributes: { class: `${fileContainerClass} position-relative`, id: fileContainerId}
+                attributes: { class: `${fileContainerClass} d-flex position-relative`, id: fileContainerId}
               },
               {
                 type: 'span',
                 attributes: { class: 'file-name' },
-                data: fileData.name
+                data: fileData.name,
+                icon: { class: `fa-solid fa-file fs-3`}
+              },
+              {
+                type: 'select',
+                isChild: false,
+                attributes: { class: 'file-type form-select ms-auto', name: 'type-file[]' },
+                data: 'Tipo de documento',
+                options: {
+                    documentacion: 'Documentación',
+                    proyecto: 'Proyecto desarrollado',
+                    otro: 'Otro',
+                }
               },
               {
                 type: 'i',
-                child: false,
+                isChild: false,
                 attributes: { class: 'file-remove fas fa-times-circle' }
               }
             ]);
@@ -155,10 +176,22 @@ export default class File {
         })
     }
 
-    validate(file){
-        if(this.validExtensions){
+    _validate(file) {
+        let errors = [];
 
+        if(file.size === 0 || file.size > this.config.fileSize){
+            errors.push('Size not valid');
         }
+        if(this.config.validExtensions.length > 0){
+            const fileExtension = file.name.split('.').pop();
+            const isValid = this.config.validExtensions.find(ext => ext === fileExtension);
+            
+            !isValid ? errors.push('Extension not valid') : '';
+        }
+        if(errors.length > 0 || this.files.files.length === this.config.numberFiles){
+            return false;
+        }
+        return true
     }
 
     _getElement(name) {
