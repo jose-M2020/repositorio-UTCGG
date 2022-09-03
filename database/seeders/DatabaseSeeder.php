@@ -8,7 +8,7 @@ use App\Models\Admin;
 use App\Models\Usuario;
 use App\Models\Repositorio;
 use App\Models\File;
-use App\Models\Alumno_repositorio;
+use App\Models\Repositorio_usuario;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -98,12 +98,43 @@ class DatabaseSeeder extends Seeder
             'email' => 'alumno@example.com',
         ])->assignRole('alumno');
 
-
-
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        Usuario::factory()->create()->assignRole('alumno');
+        
         Repositorio::factory()->count(30)->create();
 
         File::factory()->count(30)->create();
 
-        // Alumno_repositorio::factory(30)->create();
+        Repositorio_usuario::factory(30)->create();
     }
 }

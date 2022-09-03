@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Repositorio;
-use App\Models\Alumno;
-use App\Models\Docente;
+// use App\Models\Alumno;
+// use App\Models\Docente;
 use App\Models\File;
+use App\Models\Usuario;
+use App\Models\Repositorio_usuario;
 use Auth;
 
 class RepositorioController extends Controller
@@ -63,6 +65,7 @@ class RepositorioController extends Controller
                 ->when($request->year, function ($query, $date){
                     return $query->whereBetween('created_at', [$date[0], $date[1]]);
                 })
+                ->where('publico', true)
                 ->paginate(15);
 
         return view('repositorio.index', compact('repositorios', 'search', 'search_field', 'filters'));
@@ -85,7 +88,7 @@ class RepositorioController extends Controller
     public function create(Request $request)
     {
         // if(auth('alumno')){
-        //     $id = auth('alumno')->user()->id;
+        //     $id  e ge hehe jeje0= auth('alumno')->user()->id;
         //     return view('repositorio.create');
         // }
         return view('repositorio.create');
@@ -99,85 +102,71 @@ class RepositorioController extends Controller
      */
     public function store(Request $request)
     {   
-        $logged_user = auth()->user();
+        $logged_user = auth()->user(); 
+        $isEstadia = $request->tipo_proyecto == 'Estadía';
 
-        // Campos a validar
-        $fields_validate = [
-            'alumno' => 'required|array|max:8',
-            'alumno.*' => 'required|string|max:255|distinct',
+        // $docente_id = Usuario::where('email', $request->asesor_academico)->pluck('id')->first();
 
-            // Nuevos campos
-            'carrera' => 'required|string|max:80',            
-            'empresa' => 'required|string|max:255',
-            // ---------------
-
+        $request->validate([
             'nombre_repositorio' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
             'tipo_proyecto' => 'required|string|max:80',
             'nivel_proyecto' => 'required|string|max:80',
-
-            // Nuevos campos
             'palabras_clave' => 'required|string|max:255',
-            'generacion' => 'required|string|max:255',
-            'imagenes' => 'required|array|max:5',
-            'imagenes.*' => 'required|file|distinct|mimes:png,jpg,jpeg',
-            // -----------------
 
-            'archivos' => 'required|array|max:5',
-            'archivos.*' => 'required|file|distinct|mimes:zip,rar,pdf,doc,docx'
-        ];
+            'usuario' => 'required|array|max:8',
+            'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
+            'carrera' => 'required|string|max:80',            
+            'empresa' => 'required|string|max:255',
+            'asesor_academico' => $isEstadia ? 'required|string|max:255|exists:usuarios,email' : '',
+            'asesor_externo' => $isEstadia ? 'required|string|max:255' : '',
+            'generacion' => 'required|string|max:255',
+        ]);
         
-        // Datos que se guardarán en la BD
-        $data = [
-            'alumno' => '',
-            'carrera' => $request->carrera,
-            // 'asesor_academico' => $request->asesor_academico,
-            'empresa' => $request->empresa,
+        $repository_created = Repositorio::create([
             'nombre_rep' => $request->nombre_repositorio,
             'slug' => Str::slug($request->nombre_repositorio, '-'),
             'descripcion' => $request->descripcion,
             'tipo_proyecto' => $request->tipo_proyecto,
             'nivel_proyecto' => $request->nivel_proyecto,
             'palabras_clave' => $request->palabras_clave,
+            'publico' => $request->publico ? true : false,
+            'carrera' => $request->carrera,
+            'empresa' => $request->empresa,
+            // 'asesor_academico' => $request->asesor_academico,
+            'asesor_externo' => $request->asesor_externo ?? null,
             'generacion' => $request->generacion,
-            'imagenes' => '',
             'created_by' => $logged_user->nombre
-        ];
+        ]);
 
-        if($request->tipo_proyecto == 'Estadía'){
-            // Agregamos nuevos campos a validar y datos que se guardarán en la BD
-            $docente_id = Docente::where('nombre', $request->asesor_academico)->get('id');
+        $usersRep = Usuario::whereIn('email', $request->usuario)
+                       ->get('id')
+                       ->map(function ($item, $key) use ($repository_created) {
+                             return [
+                                 'repositorio_id' => $repository_created->id,
+                                 'usuario_id' => $item->id
+                             ];
+                         })->toArray();
 
-            $fields_validate['asesor_academico'] = 'required|string|max:255|exists:docentes,nombre';
-            $fields_validate['asesor_externo'] = 'required|string|max:255';
-
-            $request->validate($fields_validate);
-
-            $data['docente_id'] = $docente_id[0]->id;
-            $data['asesor_externo'] = $request->asesor_externo;
-        }else{
-            $request->validate($fields_validate);
-        }
+        Repositorio_usuario::insert($usersRep);
         
-        // $data = Alumno::where('nombre', $request->alumno[0]);
-        
-        // Convertimos el o los nombres en una array codificado
-        foreach($request->alumno as $name){
-            $nombre_alumno[] = $name;
-        }
-        $data['alumno'] = json_encode($nombre_alumno);
-        
-        if($logged_user){
-            // Creamos la ruta donde se almacenaran los archivos e imagenes
+        return redirect()->route('files.create', $repository_created->slug)
+                         ->with('status', 'Repositorio creado exitosamente!');
+    }
+
+    private function uploadFile($request, $typeFile)
+    {
+            // File path
             $currentYear = date("Y");
             $path = 'files/'.
                     $request->carrera .'/'.
                     $currentYear .'/'.
                     // $logged_user->cuatrimestre. '/'.
-                    $request->alumno[0];
+                    $request->usuario[0];
 
-            // Guardamos las imagenes y convertimos las rutas en una array codificado
-            if($request->hasfile('imagenes')) { 
+            $url_files_saved = [];
+
+            if($request->hasfile($typeFile)) { 
                 // foreach($request->file('imagenes') as $image)
                 // {
                 //     $image_path = $path.'/images';
@@ -185,80 +174,30 @@ class RepositorioController extends Controller
                 //     $img[] = $image_stored;
                 // }
 
-                // En amazon
-                foreach($request->file('imagenes') as $image)
+                // Store files in Amazon S3
+                foreach($request->file($typeFile) as $file)
                 {
-                    $image_path = $path.'/images';
-                    $image_stored = $image->store($image_path, 's3');
-                    $img[] = Storage::disk('s3')->url($image_stored);
-                }
-            }    
-            $data['imagenes'] = json_encode($img);
+                    $file_path = $path. '/'. $typeFile;
+                    $file_stored = $file->store($file_path, 's3');
+                    $url_files_saved[] = Storage::disk('s3')->url($file_stored);
 
-            // Guardamos los datos en la base de datos
-            $repository_created = Repositorio::create($data);
-
-            // Guardamos los archivos y los datos en la BD
-            $archivo = '';
-            if($request->hasfile('archivos')) {
-                foreach($request->file('archivos') as $file) {   
-                    // $file_stored = $file->storePublicly($path, 'public');
-
-                    // En amazon
-                    $file_stored = $file->store($path, 's3');
-
-                    File::create([
-                        'repositorio_id' => $repository_created->id,
-                        // 'alumno_id' => $logged_user->id,
-                        'original_name' => $file->getClientOriginalName(),
-                        'file_type' => $file->extension(),
-                        'file_path' => $file_stored,
-                        'is_public' => 0
-                    ]);
-                    // $archivo .= $file->getClientOriginalName().'|';
-                    // $name = time().rand(1,100).'.'.$file->extension();
-                    // $file->move(public_path('files'), $name);  
-                    // $files[] = $name;  
-                    // echo $file->getClientOriginalName();
+                    if($typeFile !== 'imagenes') {
+                        $fileData[] = [
+                            'original_name' => $file->getClientOriginalName(),
+                            'file_type' => $file->extension(),
+                            'file_path' => $file_stored,
+                            'is_public' => 1
+                        ];
+                        // $archivo .= $file->getClientOriginalName().'|';
+                        // $name = time().rand(1,100).'.'.$file->extension();
+                        // $file->move(public_path('files'), $name);  
+                        // $files[] = $name;  
+                        // echo $file->getClientOriginalName();
+                    }
                 }
             }
-        }else{
-            throw ValidationException::withMessages(['El nombre de alumno ingresado no fue encontrado']);
-        }
-        
-        
 
-
-
-
-        // Test - Almacenar archivos en Amazon S3
-
-        /*
-        $currentYear = date("Y");
-        $path = 'files/'.
-                    $logged_user->carrera .'/'.
-                    $currentYear .'/'.
-                    $logged_user->cuatrimestre. '/'.
-                    $logged_user->nombre;
-
-        if($request->hasfile('imagenes')) { 
-            foreach($request->file('imagenes') as $image)
-            {
-                $new_path = $path.'/images';
-                $image_path = $image->store($new_path, 's3');
-            }
-        }            
-        if($request->hasfile('archivos')) {
-            foreach($request->file('archivos') as $file) 
-            { 
-                    $file_path = $file->store($path, 's3');                    
-            }
-        }
-        */
-
-
-        return redirect()->route('repositorios.create')
-                ->with('status', 'Repositorio agregado exitosamente!');
+            return $typeFile !== 'imagenes' ? $fileData : json_encode($url_files_saved);
     }
 
     /**
@@ -271,8 +210,28 @@ class RepositorioController extends Controller
     {   
         // dd($repositorio);
         // $repositorio = Repositorio::findOrFail($id);
+
+        $users = Repositorio::find($repositorio->id)
+                            ->users()
+                            ->role('docente')
+                            ->get()
+                            ->toArray();
+        
+        $repositorio['autores'] = $users;
+        
         $files = Repositorio::findOrFail($repositorio->id)->getFile;
         return view('repositorio.show', compact('repositorio', 'files'));
+    }
+
+    public function showByUser(Repositorio $repositorio)
+    {   
+        $files = $repositorio->files()
+                             ->get();
+
+        $usuarios = $repositorio->users()
+                             ->get();
+
+        return view('dashboard.repositorio.show', compact('repositorio', 'files', 'usuarios'));
     }
 
     /**
@@ -311,31 +270,7 @@ class RepositorioController extends Controller
         return redirect()->route('repositorios.index')
             ->with('status','Repositorio eliminado exitosamente!');
     }
-
-    public function downloadFile($id)
-    {
-        // Primera opción
-        $file = Repositorio::find($id)->getFile;
-        return Storage::disk('s3')->download($file[0]->file_path, $file[0]->original_name);
-
-        // foreach($files as $file){
-        //     $filepath = 'public/'.$file->file_path;
-
-        //     return Storage::download($filepath, $file->original_name);
-        // }
-
-        // $url = Storage::disk('s3')->temporaryUrl(
-        //     $file[0]->file_path, now()->addMinutes(10)
-        // );
-        
-        // Segunda opción
-        $headers = [
-            'Content-Type'        => 'application/'.$file[0]->file_type,
-            'Content-Disposition' => 'attachment; filename="'. $file[0]->original_name .'"',
-        ];
-        return \Response::make(Storage::disk('s3')->get($file[0]->file_path), 200, $headers);
-    }
-
+    
     public function files($user){
         
     }

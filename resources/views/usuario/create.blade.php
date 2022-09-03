@@ -1,4 +1,4 @@
-@extends('layouts.app-old')
+@extends('layouts.app')
 
 @section('title', 'Registrar alumno')
 

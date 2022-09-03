@@ -1,11 +1,11 @@
-@extends('layouts.app-old')
+@extends('layouts.app')
 
 @section('title', 'Roles')
 
 @section('dashboard-content')
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
   
-  <div class="roles container-fluid mt-4 px-sm-0 px-md-5">
+  <div class="roles">
     <div class="d-flex justify-content-between align-items-center py-3">
       <div class="total-records">
           <p>Roles totales: <b>{{ $roles->total() }}</b></p>

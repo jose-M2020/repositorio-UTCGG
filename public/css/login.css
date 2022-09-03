@@ -3,6 +3,7 @@
 	--blue: #297d8f;
 	--white: #fafafa;
   --light-green: #71fcb9;
+  --text-grey: #555;
 
   --xs: 0;
   --sm: 576px;
@@ -15,18 +16,31 @@ body{
   font-family: sans-serif;
   height: 100vh;
   overflow: hidden;
+}
+
+body::after{
+  content: '';
   background: linear-gradient(to right, var(--green), var(--blue));
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50vh;
+  width: 100%;
+  z-index: -1;;
 }
 
 
-
-.login__box {
-  padding: 12px;
+.login {
+  padding: 1.5rem;
   border-radius: 12px;
   max-width: 900px;
+
+  background: var(--white);
+  box-shadow: 2px 2px 11px 0px #959595;
 }
 
-.login__box .logo{
+
+.login .logo{
   max-width: 100px;
   aspect-ratio: 1/1;
   border: 1px solid var(--light-green);
@@ -36,25 +50,31 @@ body{
   margin-bottom: 22px;
 }
 
-.login__box .logo img {
+.login .logo img {
   width: 100%;
   object-fit: contain;
 }
 
-.login__box input {
-  background: transparent;
-  border: 1px solid var(--light-green);
-  color: var(--white);
+.login__title{
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: var(--text-grey);
 }
 
-.login__box .form-control:focus {
-  color: var(--white);
+.login input {
+  color: var(--text-grey);
+  background: transparent;
+  border: 1px solid var(--light-green);
+}
+
+.login .form-control:focus {
+  color: var(--text-grey);
   background-color: rgb(113 252 185 / 12%);
   border-color: var(--light-green);
   box-shadow: 0 0 5px 0.25rem rgb(104 241 175 / 17%);
 }
 
-.login__box button[type="submit"] {
+.login button[type="submit"] {
   color: #fff;
   background-color: #048249;
   border: 1px solid #0b6734;
@@ -65,12 +85,12 @@ body{
   transition: background .5s;
 }
 
-.login__box button[type="submit"]:hover {
+.login button[type="submit"]:hover {
   background: #0a4028;
 }
 
 
-.login__box .eyeBtn{
+.login .eyeBtn{
   position: absolute;
   right: 0;
   top: 50%;
@@ -79,12 +99,12 @@ body{
   border: none;
 }
 
-.login__box .eyeBtn i{
+.login .eyeBtn i{
   font-size: 18px; 
   color: #aaa;
 }
 
-.login__box .eyeBtn.active i{
+.login .eyeBtn.active i{
   color: var(--light-green);
 }
 

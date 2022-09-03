@@ -11,12 +11,12 @@
 	<!-- Validation Errors -->
 	<x-auth-validation-errors class="mb-4" :errors="$errors" />
 	
-	<div class="row justify-content-center w-100 text-light">		
-		<div class="login__box col-md-5 text-center">
-			<div class="logo">
-				<img src="{{ set_url('img/logo.png') }}" class="" alt="logo">
-			</div>
-			<h3 class="mb-4">Iniciar sesión </h3>
+	<div class="row justify-content-center w-100">
+		<div class="logo d-flex justify-content-center mb-5">
+			<img src="{{ set_url('img/logo1.png') }}" class="" alt="logo" style="max-width: 280px; width: 100%">
+		</div>
+		<div class="login col-md-5 text-center">
+			<h3 class="login__title">Iniciar sesión </h3>
 			<form action="{{ route('login') }}" method="POST">
 				@csrf
 
@@ -42,7 +42,7 @@
 					  </select>                
 				</div>	 --}}
 					
-				<button class="btn mt-3" type="submit" name="loginButton">Acceder</button>
+				<button class="btn mt-4" type="submit" name="loginButton">Acceder</button>
 			</form>
 		</div>
 	</div>

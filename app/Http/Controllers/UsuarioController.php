@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Repositorio;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
@@ -12,17 +13,21 @@ use Spatie\Permission\Models\Role;
 
 class UsuarioController extends Controller
 {
-    function __construct()
-    {
-         $this->middleware('can:usuarios.index')->only('index');
-         $this->middleware('can:usuarios.create')->only('create','store');
-         $this->middleware('can:usuarios.edit')->only('edit','update');
-         $this->middleware('can:usuarios.delete')->only('destroy');
-    }
-
     private $fields = [
         'id', 'nombre', 'apellido', 'email', 'carrera', 'created_at'
     ];
+
+    private $roles;
+
+    public function __construct()
+    {
+        $this->middleware('can:usuarios.index')->only('index');
+        $this->middleware('can:usuarios.create')->only('create','store');
+        $this->middleware('can:usuarios.edit')->only('edit','update');
+        $this->middleware('can:usuarios.delete')->only('destroy');
+    
+        $this->roles = Role::all()->pluck('name')->toArray();
+    }
 
     public function index(Request $request)
     {
@@ -97,6 +102,26 @@ class UsuarioController extends Controller
         //
     }
 
+    public function showRepositories(Request $request)
+    {
+        $userId = auth()->id();
+
+        $repositorios = Usuario::find($userId)->repositories()
+                                ->get();
+
+        return view('dashboard.repositorio.index', compact('repositorios'));
+    }
+
+    // public function showRepository(Usuario $usuario, Repositorio $repositorio)
+    // {
+    //     $files = $usuario->files()
+    //     ->get();
+        
+    //     dd($files);
+
+    //     return view('dashboard.repositorio.show', compact('repositorio'));
+    // }
+
     public function edit($id)
     {
         //
@@ -137,16 +162,14 @@ class UsuarioController extends Controller
     }
 
     public function search(Request $request)
-    {
-        $users = $this->getData($request, ['id', 'nombre', 'apellido']);
+    {    
+        $users = $this->getData($request, ['alumno', 'docente'], ['id', 'nombre', 'apellido', 'email']);
         return response()->json($users);
-        
-       
     }
 
-    private function getData($request, $fields = null){
+    private function getData($request, $roles = null, $fields = null){
         $date_range = $request->rango_fecha ?? ['', ''];
-        
+
         $users = Usuario::orderBy('id', 'desc')
             ->when($request->input('query'), function ($query, $value) {
                 return $query->where('nombre', 'like', '%'.$value.'%')
@@ -179,6 +202,7 @@ class UsuarioController extends Controller
                     return $query->whereBetween('created_at', [$value[0], $value[1]]);
                 }
             })
+            ->role($roles ? $roles : $this->roles)
             ->paginate(10, $fields ?? $this->fields);
 
         return $users;

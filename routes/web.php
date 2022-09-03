@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepositorioController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
+use App\Models\Repositorio;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -41,8 +42,8 @@ Route::get('acerca', function(){
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('usuarios', UsuarioController::class);
     
-    Route::get('usuarios/api/search', [UsuarioController::class, 'search'])
-            ->name('usuarios.search');
+    Route::get('api/usuarios', [UsuarioController::class, 'search'])
+            ->name('usuarios.get');
 });
 
 // || Roles
@@ -88,19 +89,32 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('repositorios', RepositorioController::class)
          ->except(['index', 'show']);
+
+    Route::get('mi-cuenta/repositories', [UsuarioController::class, 'showRepositories'])
+         ->name('repositorios.user');
+
+    Route::get('mi-cuenta/repositorios/{repositorio}', [RepositorioController::class, 'showByUser'])
+        ->name('repositorios.user.show');
 });
 
 Route::resource('repositorios', RepositorioController::class)
          ->only(['index', 'show']);
 
-Route::get('repositorios/descargar/{repositorio}', [RepositorioController::class, 'downloadFile'])
-    ->name('repositorios.download');
-
 // || Files
 // -----------------------------------------
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('files', FileController::class);
+    Route::resource('files', FileController::class)
+         ->except(['store', 'create']);
+
+    Route::get('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'create'])
+         ->name('files.create');
+
+    Route::post('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'store'])
+         ->name('files.store');
+    
+    Route::get('files/download/{file}', [FileController::class, 'download'])
+         ->name('files.download');
 });
 
 // Route::get('/archivos', [RepositorioController::class, 'downloadFile'])

@@ -44,4 +44,14 @@ class Usuario extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function repositories()
+    {
+        return $this->belongsToMany(Repositorio::class);
+    }
+
+    public function files()
+    {
+        return $this->hasManyThrough(File::class, Repositorio::class);
+    }
 }

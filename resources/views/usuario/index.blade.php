@@ -1,4 +1,4 @@
-@extends('layouts.app-old')
+@extends('layouts.app')
 
 @section('title', 'Alumnos')
 
@@ -55,7 +55,7 @@
                    id="search_box" 
                    class="form-control ms-auto" 
                    data-search="auto" 
-                   data-link="{{ route('usuarios.search') }}" 
+                   data-link="{{ route('usuarios.get') }}" 
                    placeholder="Buscar usuario..." 
                   @if(array_key_exists('query', $filters))
                     value=" {{ $filters['query'] }} "
@@ -250,7 +250,8 @@
       </div>
   </div>  --}}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="{{ set_url('js/table.js') }}"></script>
+@endsection
 
+@section('footer')
+<script src="{{ set_url('js/table.js') }}"></script>
 @endsection

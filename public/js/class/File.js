@@ -61,9 +61,8 @@ export default class File {
                 }
 
                 setTimeout(() =>{
-                    console.log(this.files)
                     this.fileInput.files = this.files.files;
-                    console.log(this.fileInput.files)
+                    // console.log(this.fileInput.files)
                 },50)
             });
         }
@@ -110,55 +109,73 @@ export default class File {
         let element;
 
         if(isImage) {
-          element = createHTML([
-            {
-              type: 'div',
-              attributes: { class: `${fileContainerClass} position-relative`, id: fileContainerId}
-            },
-            {
-              type: 'img',
-              attributes: { src: tempImage, title: fileData.name }
-            },
-            {
-              type: 'i',
-              isChild: false,
-              attributes: { class: 'file-remove fas fa-times-circle' }
-            },
-            // {
-            //   type: 'span',
-            //   isChild: false,
-            //   data: fileData.name
-            // }
-          ]);
+        //   element = createHTML([
+        //     {
+        //       type: 'div',
+        //       attributes: { class: `${fileContainerClass} position-relative`, id: fileContainerId}
+        //     },
+        //     {
+        //       type: 'img',
+        //       attributes: { src: tempImage, title: fileData.name }
+        //     },
+        //     {
+        //       type: 'i',
+        //       isChild: false,
+        //       attributes: { class: 'file-remove fas fa-times-circle' }
+        //     },
+        //     // {
+        //     //   type: 'span',
+        //     //   isChild: false,
+        //     //   data: fileData.name
+        //     // }
+        //   ]);
+            element = Emmet(`
+            .${fileContainerClass}.position-relative#${fileContainerId}>
+                img(src="${tempImage}",title="${fileData.name }")
+                +i.file-remove.fas.fa-times-circle
+            `);
         }else{
-            element = createHTML([
-              {
-                type: 'div',
-                attributes: { class: `${fileContainerClass} d-flex position-relative`, id: fileContainerId}
-              },
-              {
-                type: 'span',
-                attributes: { class: 'file-name' },
-                data: fileData.name,
-                icon: { class: `fa-solid fa-file fs-3`}
-              },
-              {
-                type: 'select',
-                isChild: false,
-                attributes: { class: 'file-type form-select ms-auto', name: 'type-file[]' },
-                data: 'Tipo de documento',
-                options: {
-                    documentacion: 'Documentación',
-                    proyecto: 'Proyecto desarrollado',
-                    otro: 'Otro',
-                }
-              },
-              {
-                type: 'i',
-                isChild: false,
-                attributes: { class: 'file-remove fas fa-times-circle' }
-              }
-            ]);
+            // element = createHTML([
+            //   {
+            //     type: 'div',
+            //     attributes: { class: `${fileContainerClass} d-flex position-relative`, id: fileContainerId}
+            //   },
+            //   {
+            //     type: 'span',
+            //     attributes: { class: 'file-name' },
+            //     data: fileData.name,
+            //     icon: { class: `fa-solid fa-file fs-3`}
+            //   },
+            //   {
+            //     type: 'select',
+            //     isChild: false,
+            //     attributes: { class: 'file-type form-select ms-auto', name: `type_file[]`, id: fileData.id },
+            //     data: 'Tipo de documento',
+            //     options: {
+            //         documentacion: 'Documentación',
+            //         proyecto: 'Proyecto desarrollado',
+            //         otro: 'Otro',
+            //     }
+            //   },
+            //   {
+            //     type: 'i',
+            //     isChild: false,
+            //     attributes: { class: 'file-remove fas fa-times-circle' }
+            //   }
+            // ]);
+
+            element = Emmet(`
+            .${fileContainerClass}.d-flex.position-relative#${fileContainerId}
+                >div.file-name
+                    >i.fa-solid.fa-file.fs-3
+                    +span{${fileData.name}}
+                ^select.file-type.form-select.ms-auto#${fileData.id}(name="type_file[]")
+                    >option(selected="",disabled=""){Tipo de documento}
+                    +option(value="documentacion"){Documentación}
+                    +option(value="proyecto"){Proyecto desarrollado}
+                    +option(value="otro"){Otro}
+                ^i.file-remove.fas.fa-times-circle
+            `)
         }
 
         this.selectedFilesContainer.appendChild(element);

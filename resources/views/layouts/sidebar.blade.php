@@ -19,7 +19,7 @@
               @endcan
               {{-- <x-navbar.link link="files" name="Favoritos"/> --}}
               @role('alumno')
-                <x-navbar.link link="files" name="Mis repositorios"/>
+                <x-navbar.link link="{{ route('repositorios.user') }}" name="Mis repositorios"/>
               @endrole
           </ul>
       </x-navbar.link>

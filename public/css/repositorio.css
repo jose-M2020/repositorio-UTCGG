@@ -1,7 +1,6 @@
 :root {
-	--delay-circle: .28s;
-	--delay-progressbar: 0s;
-	--animation-duration: .5s;
+	--progress-circle-size: 3.5rem;
+	--progress-duration-animation: calc(500ms/2);
 }
 
 /*  Cabecera */
@@ -302,92 +301,110 @@
 ----------------------------------------------------- */
 
 #register-repository fieldset{
+	background-color: #fff;
+	box-shadow: 0px 0 7px 7px #e2e2e2;
+	border-radius: 6px;
+	padding: 0;
 	opacity: 0;
 	max-height: 0;
-	transition: .6s;
 	overflow: hidden;
-	/*display: none;*/
+	transition: opacity 1000ms;
 }
 	
 #register-repository fieldset.active{
-	opacity: 1;
 	max-height: 4000px;
-	/*visibility: visible;*/
-	/*display: block;*/
+	padding: 1rem;
+	opacity: 1;
+}
+
+#register-repository .section__title{
+	margin: 2rem auto;
 }
 
 /* Barra de progreso */
 
-#progress{
-	position: relative;
-	max-width: 600px;
-	margin: 20px auto 50px auto;
-}
-#progress .progressbar .bar{
-	position: absolute;
-	width: 100%;
-	height: 10px;
-	background-color: #CAD3D7;
-	top: 50%;
-	transform: translateY(-50%);
-}
-#progress .progressbar .filled{
-	width: 0;
-	background-color: #3CB38A;
-	transition: width var(--animation-duration) var(--delay-progressbar);
-}
-#progress ul{
+.progressbar{
 	display: flex;
-	justify-content: space-between;
 	list-style: none;
 	padding: 0;
+	margin: 0;
 }
-#progress ul li{ position: relative; }
-#progress ul li .step{
+
+.progressbar li{ 
 	position: relative;
-	background-color: #CAD3D7;
-	width: 60px;
-	height: 60px;
+}
+
+.progressbar li:not(:first-child){
+	flex-grow: 1;
+}
+
+.progressbar li .circle{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: linear-gradient(to right, var(--blue) 50%, var(--light-gray) 50%);
+	background-size: 200% 100%;
+	background-position: right;
+	border-radius: 50%;
+	/* border: 1px solid #d5d5da; */
+	cursor: pointer;
+	float: right;
+	width: var(--progress-circle-size);
+	height: var(--progress-circle-size);
+	transition: background var(--progress-duration-animation) ease-out;
+}
+
+.progressbar li.active .circle{
+	background-position: left;
+	transition: background var(--progress-duration-animation) ease-out var(--progress-duration-animation);
+}
+
+.progressbar li .circle .label{
+	display: inline-block;
+	background-color: var(--white);
+	width: 83%;
+	height: 83%;
 	border-radius: 50%;
 	color: #676D7B;
-	cursor: pointer;
-	z-index: 20;
+	position: relative;
 }
-#progress ul li::after{
+
+.progressbar li .circle .label > *{
+	position: absolute;
+	font-size: 1.5rem;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.progressbar li .bar{
 	content: '';
 	position: absolute;
-	width: 110%;
-	height: 110%;
-	border-radius: 50%;
+	padding-left: calc(var(--progress-circle-size) - 1px);
 	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background: linear-gradient(to right, #3CB38A 50%, #CAD3D7 50%);
-  	background-size: 200% 100%;
-  	background-position: right;
-  	transition: background var(--animation-duration) ease-out var(--delay-circle);
+	right: calc(var(--progress-circle-size) - 1px);
+	transform: translateY(-50%);
+	height: 5px;
+	width: 100%;
+	pointer-events: none;
 }
-	
-#progress ul li.active::after{
+
+.progressbar li .bar span{
+	background: linear-gradient(to right, var(--blue) 50%, var(--light-gray) 50%);
+	background-size: 200% 100%;
+	background-position: right;
+	/* border: 1px solid #d5d5da; */
+	border-right: none;
+	border-left: none;
+	height: 100%;
+	display: block;
+	width: 100%;
+	transition: background var(--progress-duration-animation) var(--progress-duration-animation);
+}
+
+.progressbar li.active .bar span{
 	background-position: left;
-}
-#progress ul li.finished::after{
-	background: #3CB38A;
-}
-#progress ul li.finished .step{
-	background-color: #3CB38A;
-	color: #fff;
-	transition: background-color .5s;
-}
-#progress ul li .step span{
-	position: absolute;
-	font-size: 25px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-#progress ul li .title{
-	position: absolute;
+	transition: background var(--progress-duration-animation);
 }
 
 
@@ -506,6 +523,7 @@
 	overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+	vertical-align: middle;
 }
 
 .files .file-item .file-name i{
@@ -574,14 +592,14 @@ input ~ .remove{
 
 
 
-input#student_name:focus + .search_results{
+input#student_name:focus + .search-box__results{
 	visibility: visible;
 	opacity: 1;
 }
 
 /* Resultados de búsqueda */
 
-.search_results{
+.search-box__results{
 	position: absolute;
 	background-color: #D2EDE0;
 	width: 100%;
@@ -594,22 +612,140 @@ input#student_name:focus + .search_results{
 	overflow-y: auto;
 }
 
-.search_results ul{
+.search-box__results ul{
 	list-style: none;
 	padding: 0;
+	margin: 0;
 }
 
-.search_results ul li{
-	padding: 3px 6px;
+.search-box__results ul li{
+	display: flex;
+    align-items: center;
+    gap: 10px;
+	padding: 8px 10px;
 	cursor: pointer;
 	transition: color .3s;
 }
-.search_results ul li:hover{
+.search-box__results ul li:hover{
 	background-color: #ddd;
 	
+}
+.search-box__results ul li > * {
+	pointer-events: none;
+}
+
+.search-box__results ul li i{
+	font-size: 1.5rem;
+}
+
+.search-box__results ul li .user-info{
+	line-height: 16px;
+}
+
+.search-box__results ul li .name{
+	display: block;
 }
 
 .repository #folder_notFound{
 	max-width: 400px;
 
+}
+
+
+/* Repositories dashboard
+----------------------------------------------------- */
+.projects-list__item{
+	color: var(--text-grey);
+}
+
+.projects-list__item a{
+	color: #4b4b4b;
+    text-decoration: none;
+}
+
+.projects-list__item:hover{
+	cursor: pointer;
+	background-color: #f1f1f1;
+}
+
+.projects-list__title{
+	font-size: 1.2rem;
+}
+
+.projects-list__arrow i{
+	font-size: 1.2rem;
+}
+
+.projects-list__title span{
+	background: var(--blue);
+    color: #fff;
+	font-size: 12px;
+    padding: 2px;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+.projects-list__description, 
+.projects-list__info{
+	font-size: 14px;
+}
+
+/* Table */
+
+.project-info__table,
+.project-files__table{
+	border-color: #c1c1c1 !important;
+}
+
+.project-info__form.active button#enableEdit{
+	opacity: .4;
+	pointer-events: none;
+}
+
+.project-info__header{
+	background-color: #d3d3d3;
+} 
+
+.project-info__table tr td:last-child{
+	padding: 0;
+}
+
+.project-info__form input,
+.project-info__form textarea,
+.project-info__form select {
+	width: 100%;
+    background: transparent;
+    border: none;
+	padding: 11px 10px;
+}
+
+.project-info__form.active input,
+.project-info__form.active select,
+.project-info__form.active textarea{
+	border: 1px solid #cfcfcf;
+}
+
+.project-info__form input:focus,
+.project-info__form textarea:focus,
+.project-info__form select:focus{
+	outline: none;
+	box-shadow: 0 0 6px 0px #676767;
+}
+
+.project-info__form .bootstrap-tagsinput input {
+	width: auto;
+}
+
+.bootstrap-tagsinput .tag [data-role=remove] {
+    display: none;
+}
+.project-info__form.active .bootstrap-tagsinput .tag [data-role=remove] {
+    display: inline-block;
+}
+
+.project-info__form .project-info__footer{
+	display: none;
+}
+.project-info__form.active .project-info__footer{
+	display: flex;
 }

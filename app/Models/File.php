@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
     protected $fillable = [
         'repositorio_id',
-        'alumno_id',
         'original_name',
         'file_type',
         'file_path',

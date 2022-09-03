@@ -1,61 +1,126 @@
-import * as functions from './helpers.js';
+import { inputListener, cloneElement, onTyping, onScroll } from './helpers.js';
 import File from './class/File.js';
+import ApiClient from "./class/api-client.js";
 
 window.onload = (event) => {
 
 	const form = document.getElementById('register-repository'),
 		  inputs = document.querySelectorAll('input:not([type=submit]), select, textarea'),
-		  addIcon = document.querySelectorAll('.add_element');
+		  addIcon = document.querySelector('.add_element');
 	// const progressbar = document.getElementById('upload-bar');
 	// const progressPercentage = document.querySelector('.details__percentage');
 
 	// Detecta si el campo tiene errores
 	inputs.forEach(input => {
-		functions.inputListener(input);
+		inputListener(input);
 	})
 
+
+
+	const SearchEvent = function(container, spinner){
+		this.container = (typeof container === 'string') ? document.querySelector(container) : container;
+		this.spinner = (typeof spinner === 'string') ? document.querySelector(spinner) : spinner;
+		this.currentPage = 1;
+		this.lastPage = 1;
+		this.query = null;
+		this.data = null;
+
+		this.makeRequest = async () => {
+			if(this.currentPage <= this.lastPage) {
+				this.spinner.classList.remove('hide');
+				this.data = await client.users.get(this.query, this.currentPage);
+				this.lastPage = this.data.last_page;
+				this.addElements();
+				this.spinner.classList.add('hide');
+			}
+		}
+
+		this.addElements = () => {
+			console.log(this.container)
+			let elements;
+	
+			if(this.currentPage === 1) this.container.innerHTML = '';
+	
+			if(!this.data.total){
+				elements = Emmet(`li{No hay resultados.}`);
+			}else{
+				elements = document.createDocumentFragment();
+	
+				this.data.data.forEach( user => {
+					const node = Emmet(`
+						li
+						  >i.fa-solid.fa-user
+						  +.user-info
+							  >span.name{${user.nombre} ${user.apellido}}
+							+small.email{${user.email}}
+					`);
+					elements.appendChild(node);
+				})
+			}
+			
+			this.container.appendChild(elements);
+		}
+
+		this.setElement = element => {
+			return (typeof element === 'string') ? document.querySelector(element) : element;
+		} 
+	}
+
 	// Agregamos nuevo elemento al dar click
-	addIcon.forEach(icon => {
-		icon.addEventListener('click', e => {
-			functions.addNewElement(e);
+	addIcon?.addEventListener('click', e => {
+		const clone = cloneElement('#register-repository .search-box__item'),
+			  input = clone.querySelector('input'),
+			  resultsBox = clone.querySelector('.search-box__results'),
+			  spinner = clone.querySelector('.spinner');
+
+		const event = new SearchEvent(resultsBox.firstElementChild, spinner);
+
+		onTyping(input, e => {
+			event.query = e.target.value;
+			event.currentPage = 1;
+			event.makeRequest();
+		})
+
+		onScroll(resultsBox, e => {
+			event.currentPage++;
+			event.makeRequest();
 		})
 	})
 
+	
+	// || Event typing & scrolling
+	// ----------------------------------------------------------------
 
+	const client = new ApiClient('/api');
+	const searchEvent = new SearchEvent('.search-box__results ul', '.search-box__results .spinner');
 
-	functions.searchEvent(document.getElementById('student_name'));
+	onTyping('input#student_name', e => {
+		searchEvent.query = e.target.value;
+		searchEvent.currentPage = 1;
+		searchEvent.makeRequest();
+	});
 
-	const resultsBox = document.querySelector('.search_results');
+	onScroll('.search-box__results', (e) => {
+		searchEvent.currentPage++;
+		searchEvent.makeRequest();
+	})
 
-	functions.dataLoadEvent(resultsBox)
-
-	form.addEventListener('click', e => {
+	document.addEventListener('click', (e) => {
 		if(e.target.tagName == 'LI' ){
-			let input = e.target.closest('.search_results').previousElementSibling;
-			let name = e.target.textContent;
-			input.value = name;
+			const input = e.target.closest('.search-box__results').previousElementSibling;
+			const email = e.target.querySelector('.email').textContent;
+			input.value = email;
 		}
 	})
 
 
 
-	// $('.historial').scroll(e => {
-	//   const { scrollTop, scrollHeight, offsetHeight } = e.target;
-	
-	//   if(scrollTop < 50 && scrollHeight > offsetHeight && !isLoading){
-	//     isLoading = true;
-	//     loadData()
-	//   }
-	// })
-
-
-
 	// Validamos y mostramos el nombre del archivo seleccionado de cada uno de los inputs de archivos
-	// TODO: Corregir validacion de archivos
+	
 	// functions.addFileListener(inputFile);
 
 	const errors = [];
-	form.addEventListener('submit', e => {
+	form?.addEventListener('submit', e => {
 		// let errors = true;
 
 		// inputs.forEach(input => {
@@ -100,215 +165,90 @@ window.onload = (event) => {
 	}
 
 
-	if(projectType.value != 'Estadía'){
+	if(projectType?.value != 'Estadía'){
 		removableFields.forEach(element => {
 			element.style.display = 'none'
 		})
 	}
-	projectType.addEventListener('change', hideElement)
+	projectType?.addEventListener('change', hideElement)
 
 
 	// || Form step by step
 	// ----------------------------------------------------------------
 
-	const steps = document.querySelectorAll('ul.steps .step');
-	const progressbar = document.querySelector('.progressbar .filled');
-	const imageInput = document.getElementById('imagenes');
-	// const form = document.getElementById('register-repository');
-	
-	// Mostrar la siguiente y anterior sección mediante los botones
-	form.addEventListener('click', e => {
-		let { target } = e;
+	const stepsProgress = document.querySelectorAll('.progressbar li .circle'),
+		  formSections = document.querySelectorAll('#register-repository fieldset');
+		  
+	let previousPosition = 0;
+
+
+	form?.addEventListener('click', e => {
+		const { target } = e;
+
 		if(target.tagName == 'BUTTON'){
-			let section = target.closest('.section');
-			let position = getPosition(section);
-			
+			const section = target.closest('.section'),
+				  position = getPosition(section);
+
 			if(target.id == 'next'){
+				showForm(position+1);
+				showProgress(position+1);
+			}
+			else if(target.id == 'previous'){
+				showForm(position - 1);
+				showProgress(position - 1);
+			}
+		}
+	})
+
+	stepsProgress.forEach(step => {
+		step.addEventListener('click', function(e) {
+			const position = getPosition(this.parentNode);
+			
+			if(position != previousPosition){
 				showForm(position);
 				showProgress(position);
 			}
-			else if(target.id == 'previous'){
-				showForm(position - 2);
-				showProgress(position - 2);
-			}
-		}else if(target.classList.contains('remove')){
-			let parent = target.parentElement;
-			// handleFile().removeFile(imageInput, parent.id)
-			parent.remove();
-		}
-	})
-
-	// Mostrar la siguiente y anterior sección mediante la barra de progreso
-	steps.forEach(step => {
-		step.addEventListener('click', function(e){
-			let li = this.closest('li');
-			let position = getPosition(li);
-			
-			showForm(position);
-			showProgress(position);
 		})
 	})
 
-	const getPosition = element => Array.from(element.parentNode.children).indexOf(element);
-
-	const stepsProgress = document.querySelectorAll('ul.steps li');
-	const duration = getComputedStyle(document.documentElement).getPropertyValue('--animation-duration');
-	let progress = (100 / (stepsProgress.length - 1));
-	let previousPosition = 0;
-
-	// FIXME: Fix the progress bar animation
-
-	const showProgres  = position => {
-		let currentStep = stepsProgress[position], 
-			previousStep;
-
-		// Si se ha dado click en un elemento diferente
-		if(position != previousPosition){
-			// Hacia adelante
+	const getPosition = element => [...element.parentNode.children].indexOf(element);
+	
+	const showProgress = (position) => {
+		const currentElement = stepsProgress[position].parentNode,
+			  nextElement = currentElement.nextElementSibling,
+			  isSkipped = (position - previousPosition > 1) || (position - previousPosition < -1),
+			  animationTime = isSkipped ? Math.abs(500 / (position - previousPosition)) : 500;
+		
+		document.documentElement.style.setProperty('--progress-duration-animation', (animationTime/2)+'ms');
+		
+		if(!isSkipped){
+			currentElement.classList.add("active");
+			
+			if(nextElement) nextElement.classList.remove("active");
+		}else{
+			let pos = 1;
 			if(previousPosition < position){
-				// Si el usuario da click en el ultimo paso agregamos la clase active a los pasos saltados 
-				if(!currentStep.nextElementSibling){
-					stepsProgress[1].classList.add('active');
+				for(let i = (previousPosition + 1); i <= position; i++){
+					setTimeout(() => {
+						stepsProgress[i].parentNode.classList.add("active");							
+					}, pos++ * animationTime)
 				}
-
-				currentStep.classList.add('active');
-				// progressbar.style.setProperty('--delay-circle', '.28s');
-
-				progressbar.style.setProperty('--delay-progressbar', '0s');
 			}else{
-				// Entra a esta concidicion si la posicion es hacia atras
-
-				// Si se encuentra en el ultimo paso, y retrocede al primero, agregamos la clase active a los pasos saltados 
-				if(!currentStep.previousElementSibling){
-					stepsProgress[1].classList.remove('active');
+				for(let i = previousPosition; i > position; i--){
+					setTimeout(() => {
+						stepsProgress[i].parentNode.classList.remove("active");
+					}, pos++ * animationTime)
 				}
-
-				stepsProgress[previousPosition].classList.remove('active');
-
-				// progressbar.style.setProperty('--delay-circle', '.25s');
-
-				// Damos un delay, para esperar hasta que la animacion del circulo este completo
-				progressbar.style.setProperty('--delay-progressbar', duration);
 			}
 		}
 
-		// Calculamos la longitud de la barra, la operacion: stepsProgress.length - 1, es debido a que no se toma en cuenta el primer elemento
-		let progress = (100 / (stepsProgress.length - 1)) * position;
-		progressbar.style.width = progress + '%';
-
-		// definimos la posicion anterior
 		previousPosition = position;
 	}
 
-
-	const showProgress = position => {
-		
-
-		// Si se ha dado click en un elemento diferente
-		if(position != previousPosition){
-			// Verificamos si no se ha saltado pasos
-			if(position - previousPosition === 1 || position - previousPosition === -1){
-				animate(previousPosition, position);
-			}else{
-				animate(previousPosition, position, true);
-			}
-
-			// definimos la posicion anterior
-			previousPosition = position;
-		}
-	}
-
-	const animate = (previousPosition, position, skipped = false) => {
-		let currentStep = stepsProgress[position];
-		
-		// Modicamos el delay y duration de los pasos que se hayan omitidos
-		if(skipped){
-			stepsProgress[1].style.setProperty('--delay-circle', '.10s');
-			stepsProgress[1].style.setProperty('--animation-duration', '.2s');
-		}else{
-			stepsProgress[1].style.setProperty('--delay-circle', '.28s');
-			stepsProgress[1].style.setProperty('--animation-duration', '.5s');
-		}
-
-		// Hacia adelante
-		if(previousPosition < position){
-			currentStep.classList.add('active');
-			skipped ? stepsProgress[1].classList.add('active') : false;
-			
-			progressbar.style.setProperty('--delay-progressbar', '0s');
-		}else{
-			// Entra a esta concidicion si la posicion es hacia atras
-			stepsProgress[previousPosition].classList.remove('active');
-			skipped ? stepsProgress[1].classList.remove('active') : false;
-
-			// Damos un delay, para esperar hasta que la animacion del circulo este completo
-			progressbar.style.setProperty('--delay-progressbar', '.68s');
-		}
-		
-		progressbar.style.width = (progress*position) + '%';
-	}
-
-	const sections = document.querySelectorAll('#register-repository fieldset');
-
 	const showForm = position => {
-		let currentElement = sections[position];
-
-		// Removemos la sección anterior
-		sections.forEach( element => {
-			if(element.classList.contains('active'))
-				element.classList.remove('active');
-		})
-
-		// Mostramos la nueva seción
-		if(!currentElement.classList.contains('active'))
-			currentElement.classList.add('active');
+		formSections[position].classList.add('active');
+		formSections[previousPosition].classList.remove("active");
 	}
-
-
-
-	// const element = functions.createHTML([
-	// 	{
-	// 	  type: 'div',
-	// 	  attributes: { class: `container`}
-	// 	},
-	// 	{
-	// 		type: 'p',
-	// 	  	attributes: { class: `position-relative`},
-	// 		// ascend: '.container',
-	// 		// isChild: false,
-	// 		data: 'hola que hace'
-	// 	},
-	// 	{
-	// 	  type: 'ul',
-	// 	  isChild: false,
-	// 	  attributes: { class: `position-relative`}
-	// 	},
-	// 	{
-	// 	  type: 'li',
-	// 	  attributes: { class: 'file-name', id: ['item1', 'item2', 'item3'] },
-	// 	  data: ['Text of node','Text of node','Text of node']
-	// 	},
-	// 	{
-	// 		type: 'select',
-	// 	  	attributes: { class: `position-relative`},
-	// 		ascend: '.container',
-	// 		data: 'Tipo de archivo',
-	// 		options: {
-	// 			'doc': 'documentacion',
-	// 			'project': 'proyecto'
-	// 		}
-	// 	},
-		
-	// 	// {
-	// 	//   type: 'i',
-	// 	//   child: false,
-	// 	//   attributes: { class: 'file-remove fas fa-times-circle' }
-	// 	// }
-	//   ]);
-
-	//   document.querySelector('body').appendChild(element);
-
-
 
 
 	// || Handle files

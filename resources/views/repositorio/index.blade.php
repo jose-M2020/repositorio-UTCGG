@@ -131,7 +131,7 @@
                   </div>
                   <div class="col-12 col-md-4 col-lg-3 align-self-center" style="color: #2E6A99;">
                     <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
-                    <img src="{{ json_decode($repositorio->imagenes)[0] }}" style="object-fit: cover; width: 100%;" alt="Imagen del repositorio" loading="lazy">
+                    <img src="{{ json_decode($repositorio->imagenes)[0] ?? 'https://repositoriout.s3.us-east-2.amazonaws.com/assets/img/no-image.svg' }}" style="object-fit: cover; width: 100%;" alt="Imagen del repositorio" loading="lazy">
                   </div>
                   <div class="col align-self-center d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                     <div class="repository__tags my-2">
@@ -143,13 +143,13 @@
                       <p class="description">{{ $repositorio->descripcion }}</p>
                       <div class="d-flex justify-content-between">
                         <p class="author">
-                          @foreach(json_decode($repositorio->alumno) as $author)
+                          {{-- @foreach(json_decode($repositorio->alumno) as $author)
                             @if ($loop->last)
                                 {{ $author }}.
                                 @break
                             @endif
                             {{ $author }},
-                          @endforeach
+                          @endforeach --}}
                         </p>
                         <p>{{$repositorio->created_at}}</p>
                       </div>
@@ -190,6 +190,10 @@
        </form>
     </x-slot>
   </x-modal>
+
+@endsection
+
+@section('footer')
 
 <script type="text/javascript">
 

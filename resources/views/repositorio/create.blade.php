@@ -1,50 +1,59 @@
-@extends('layouts.app-old')
+@extends('layouts.app')
 
 @section('title', 'Crear repositorio')
 
+@section('head')
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.6.0/bootstrap-tagsinput.min.css" integrity="sha512-X6069m1NoT+wlVHgkxeWv/W7YzlrJeUhobSzk4J09CWxlplhUzJbiJVvS9mX1GGVYf5LA3N9yQW5Tgnu9P4C7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+	.bootstrap-tagsinput.has-focus {
+		/* background-color: #fff; */
+		/* border-color: #5cb3fd; */
+		background-color: #cbf5c6 !important;
+	}
+
+	.bootstrap-tagsinput .label-info {
+		color: #fff;
+		display: inline-block;
+		background-color: #6b8186;
+		padding: 0 .4em .15em;
+		border-radius: .25rem;
+	}
+
+</style>
+@endsection
+
 @section('dashboard-content')
 
-<div class="row justify-content-center align-items-center pt-3" style="height: 80vh;">
-	<div class="col-11 col-xl-3 h-100 d-flex flex-column justify-content-center h-100 bg-dark bg-gradient text-white px-3 py-4">
-	   	<div class="pb-5">
-			<h2>Registro de repositorio</h2>
-		</div>
-		<div class="d-none d-xl-block">
-			<img class="w-100" src="{{ asset('img/form/repository.svg') }}">
-		</div>
-	</div>
-	<div class="col-11 col-xl-8 h-100 py-4 px-5 bg-light overflow-auto">
-		<div id="progress">
-			<div class="progressbar">
-				<div class="bar"></div>
-				<div class="bar filled"></div>
-			</div>
-			<ul class="steps">
-				<li class="active" id="step2">
-					<div title="Sección 2">
-						<div class="step"><span><i class="fas fa-book"></i></span></div>
-						<div class="title">Proyecto</div>
-					</div>
-				</li>
-				<li id="step1">
-					<div title="Sección 1">
-						<div class="step"><span><i class="fas fa-user"></i></span></div>
-						<div class="title">Datos personales</div>
-					</div>
-				</li>
-				<li id="step3">
-					<div title="Sección 3">
-						<div class="step"><span><i class="fas fa-upload"></i></span></div>
-						<div class="title">Archivos</div>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="">
-			{{--@auth('alumno')--}}
-			<form method="POST" id="register-repository" action="{{ route('repositorios.store') }}" enctype="multipart/form-data">
-				@csrf
+<div class="row justify-content-center align-items-center pt-3">
+	
+	<div class="col-md-7 mb-5">
+		<h4 class="text-center">Registro</h4>
+		<ul class="progressbar my-5">
+			<li class="active" id="step2">
+				<div class="circle">
+					<span class="label"><i class="fas fa-book"></i></span>
+				</div>
+			</li>
+			<li id="step1">
+				<div class="circle">
+					<span class="label"><i class="fas fa-user"></i></span>
+				</div>
+				<div class="bar"><span></span></div>
+			</li>
+			<li id="step3">
+				<div class="circle">
+					<span class="label"><i class="fas fa-upload"></i></span>
+				</div>
+				<div class="bar"><span></span></div>
+			</li>
+		</ul>
+		
+		<form method="POST" id="register-repository" action="{{ route('repositorios.store') }}" enctype="multipart/form-data">
+			@csrf
+			<div>
 				<fieldset id="project" class="section active">
+					<h5 class="text-center section__title">DATOS DEL REPOSITORIO</h5>
 					<div class="form__field">
 						<label for="nombre_repositorio" class="form__label">Nombre del repositorio</label>
 						<input type="text" name="nombre_repositorio" class="form__input" value="{{old('nombre_repositorio')}}">
@@ -79,47 +88,62 @@
 							@endforeach
 						</select>
 					</div>
-
-					<!-- Campos nuevos añadidos -->
 					<div class="form__field">
 						<label for="" class="form__label">Palabras clave de búsqueda</label>
-						<input type="text" name="palabras_clave" class="form__input"  value="{{old('palabras_clave')}}">
+						<input type="text" name="palabras_clave" class="form__input"  value="{{old('palabras_clave')}}" data-role="tagsinput">
 					</div>
-					<div class="form__field">
-						<label for="" class="form__label">Generación</label>
-						<input type="text" name="generacion" class="form__input" value="{{old('generacion')}}">
+					<div class="form__field mt-4">
+						<div class="form-check d-flex align-items-center gap-2">
+							<input class="form-check-input" type="checkbox" id="publico" name="publico" style="width: 20px; height: 20px">
+							<i class="fa-solid fa-lock-open fs-4"></i>
+							<label class="form-check-label" for="publico" style="line-height: 17px">
+							  Público
+							  <small class="d-block">El repositorio será visible para todos</small>
+							</label>
+						  </div>
 					</div>
 					<div class="text-end mt-5">
 						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
 					</div>
 				</fieldset>
 				<fieldset id="personal_data" class="section">
+					<h5 class="text-center section__title">DATOS PERSONALES</h5>
 					<div class="form__field">
 						<label for="alumno" class="form__label">Nombre del alumno:</label>
-						<div style="position: relative;">
-							@role('alumno')
-								<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth()->user()->nombre }}" readonly>	
-							@else
-							    <input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{old('alumno.0')}}">
-							@endrole
-							<div class="search_results"></div>
+	
+						<div class="search-box">
+							<div class="search-box__item" style="position: relative;">
+								@role('alumno')
+									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth()->user()->email }}" readonly>	
+								@else
+									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{old('usuario.0')}}">
+								@endrole
+								<div class="search-box__results">
+									<ul></ul>
+									<div class="spinner hide"></div>
+								</div>
+							</div>
+		
+		
+							@if(old('usuario'))
+								@foreach(old('usuario') as $old_value)
+									   @if($loop->first)
+										   @continue
+									@endif
+									<div class="search-box__item" style="position: relative;">
+										<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{$old_value}}">
+										<div class="search-box__results">
+											<ul></ul>
+											<div class="spinner hide"></div>
+										</div>
+										<i class="fas fa-times-circle remove"></i>
+									</div>                           
+								@endforeach
+							@endif
 						</div>
-						@if(old('alumno'))
-			                @foreach(old('alumno') as $old_value)
-			                   	@if($loop->first)
-			                   		@continue
-			                    @endif
-				                <div style="position: relative;">
-									<input type="text" name="alumno[]" id="student_name" class="form__input" autocomplete="off" value="{{$old_value}}">
-									<div class="search_results"></div>
-									<i class="fas fa-times-circle remove"></i>
-								</div>                           
-			                @endforeach
-			            @endif
+	
 						<span class="form__span add_element"><i class="fas fa-plus"></i> Agregar integrante</span>
 					</div>
-					
-					<!-- Campos nuevos añadidos -->
 					<div class="form__field">
 						<label for="carrera" class="form__label">Carrera</label>
 						<select class="form__input" name="carrera" id="carrera">
@@ -137,6 +161,10 @@
 							@endrole
 						</select>
 					</div>
+					<div class="form__field">
+						<label for="" class="form__label">Generación</label>
+						<input type="text" name="generacion" class="form__input" value="{{old('generacion')}}">
+					</div>
 					<div class="form__field removable">
 						<label for="asesor_academico" class="form__label">Nombre del asesor académico</label>
 						<input type="text" name="asesor_academico" class="form__input" value="{{old('asesor_academico')}}">
@@ -150,11 +178,12 @@
 						<input type="text" name="empresa" class="form__input" value="{{old('empresa')}}">
 					</div>
 					<div class="text-end d-block mt-5">
-					 	<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
+						 <x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
 						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
 					</div>
 				</fieldset>
 				<fieldset id="files" class="section">
+					<h5 class="text-center section__title">DOCUMENTOS</h5>
 					<div class="form__field files files-images images mb-5">
 						<h5>Galería</h5>
 						<div class="files__drop-zone mb-3">
@@ -185,25 +214,13 @@
 						</div>
 						<div class="files__selected preview_images"></div>
 					</div>
-					{{-- <div class="form__field">
-						<p>Archivos subidos:</p>
-						<div class="upload-files files">
-							<div class="project__file">
-								<input class="file__input" type="file" id="archivo" name="archivos[]">
-								<label for="archivo" id="upload" class="file__label">
-									<i class="fas fa-file-upload"></i>
-									Cargar archivo
-								</label>
-							</div>
-							<span class="form__span add_element"><i class="fas fa-plus"></i> Nuevo archivo</span>
-						</div>
-					</div> --}}
 					<div class="text-end d-block mt-5">
-					 	<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
+						 <x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
 						<x-button name="BotonSubir" type="submit">Registrar <i class="far fa-paper-plane"></i></x-button>
 					</div>
 				</fieldset>
-			</form>
+			</div>
+		</form>
 			      	{{--@endauth--}}
 			      	
 			      	{{--
@@ -280,14 +297,32 @@
 					<!-- <div class="msg-error">
 						<p>Completa todos campos</p>
 					</div> -->
-		</div>		
 	</div>		
 </div>
-	
 
+@endsection
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="{{ set_url('js/class/File.js') }}" type="module"></script>
-<script src="{{ set_url('js/main.js') }}" type="module"></script>
+@section('footer')
+	<script type="text/javascript" src="{{ set_url('js/class/Emmet.js') }}"></script>
+	<script src="{{ set_url('js/main.js') }}" type="module"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.6.0/bootstrap-tagsinput.min.js" integrity="sha512-SXJkO2QQrKk2amHckjns/RYjUIBCI34edl9yh0dzgw3scKu0q4Bo/dUr+sGHMUha0j9Q1Y7fJXJMaBi4xtyfDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		$('input[data-role="tagsinput"]').tagsinput({
+			trimValue: true,
+			confirmKeys: [44, 32],
+			focusClass: 'my-focus-class',
+			maxTags: 8
+		});
+
+		$('.bootstrap-tagsinput').addClass('form__input');
+
+		$('.bootstrap-tagsinput input')
+			.on('focus', function() {
+				$(this).closest('.bootstrap-tagsinput').addClass('has-focus');
+			})
+			.on('blur', function() {
+				$(this).closest('.bootstrap-tagsinput').removeClass('has-focus');
+			});
+	</script>
 
 @endsection

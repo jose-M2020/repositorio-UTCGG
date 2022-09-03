@@ -11,11 +11,12 @@ class Repositorio extends Model
 
     // protected $table = 'repositorios';
     protected $fillable = [
-        'alumno_id',
-        'alumno',
+        // 'alumno_id',
+        // 'alumno',
 
         'carrera',
-        'asesor_academico',
+        'generacion',
+        // 'asesor_academico',
         'asesor_externo',
         'empresa',
 
@@ -24,11 +25,9 @@ class Repositorio extends Model
         'descripcion',
         'tipo_proyecto',
         'nivel_proyecto',
-
         'palabras_clave',
-        'generacion',
-        'imagenes',
-        'created_by'
+        'publico',
+        'created_by',
     ];
 
     public function getFile()
@@ -40,6 +39,17 @@ class Repositorio extends Model
     {
         return $this->belongsToMany(Alumno::class, 'alumnos_repositorios')
                     ->wherePivot('carrera', $career);
+    }
+
+
+    public function users()
+    {
+        return $this->belongsToMany(Usuario::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
     }
 
     public function getRouteKeyName()

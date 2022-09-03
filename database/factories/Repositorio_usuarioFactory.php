@@ -2,20 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\Alumno_repositorio;
+use App\Models\Repositorio_usuario;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Repositorio;
 use App\Models\Docente;
-use App\Models\Alumno;
+use App\Models\Usuario;
 
-class Alumno_repositorioFactory extends Factory
+class Repositorio_usuarioFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Alumno_repositorio::class;
+    protected $model = Repositorio_usuario::class;
 
     /**
      * Define the model's default state.
@@ -24,22 +24,24 @@ class Alumno_repositorioFactory extends Factory
      */
     public function definition()
     {   
-        static $students_name = [];
-        $repositorio = Repositorio::whereNotIn('created_by',$students_name)
-                                    ->inRandomOrder()
+        // TODO: insert multuple users with role alumno and once with role docente
+        // static $students_name = [];
+        $repositorio = Repositorio::/*whereNotIn('created_by',$students_name)*/
+                                    inRandomOrder()
                                     ->get(['id', 'created_by'])
                                     ->first();
-        array_push($students_name, $repositorio->created_by);
+        // array_push($students_name, $repositorio->created_by);
         
-        $alumno_id = Alumno::where('nombre', $repositorio->created_by)
+        $usuario_id = Usuario::/*where('nombre', $repositorio->created_by)*/
+                            inRandomOrder()
                             ->value('id');
 
         // $repositorio = Repositorio::all()->random();
         // $a = $
-        // $alumno_id = Alumno::where('nombre', $repositorio->created_by)->value('id');
+        // $usuario_id = Alumno::where('nombre', $repositorio->created_by)->value('id');
 
         return [
-            'alumno_id' => $alumno_id,
+            'usuario_id' => $usuario_id,
             'repositorio_id' => $repositorio->id,
             // 'docente_id' => Docente::all()->random()->id,
         ];

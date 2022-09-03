@@ -72,168 +72,106 @@ export const inputListener = input => {
 
 
 
+export const addListeners = (element, events, callback) =>{
+	events.forEach( evt => {
+		switch (evt) {
+			case 'typing':
+				onTyping(element, callback);
+				break;
 
-let page = 1;
-export const dataLoadEvent = container => {
-	let isLoading = false;
-	container.addEventListener('scroll', function(e) {
+			case 'scrolling':
+				onScroll(element, callback);
+				break;
 		
+			default:
+				element.addEventListener(evt, callback(), false);
+				break;
+		}
+	});
+  }
 
-		const { scrollTop, scrollHeight, offsetHeight, previousElementSibling } = e.target;
-    	// console.log(scrollTop, ' - ', scrollHeight, ' - ', offsetHeight)
+
+
+// !! Typing && Onscroll
+// ----------------------------------------------------------------
+
+export const onScroll = (element, callback) => {
+	const container = typeof element === 'string' ? document.querySelector(element) : element;
+	
+	container?.addEventListener('scroll', function(e) {
+		const { scrollTop, scrollHeight, offsetHeight, previousElementSibling } = this;
+		
+    	// console.table({
+		// 	scrollTop: scrollTop, 
+		// 	scrollHeight: scrollHeight, 
+		// 	offsetHeight:  offsetHeight
+		// })
     
-		if(scrollTop + offsetHeight >= scrollHeight){
-    	page++;
-    	isLoading = true;
-    	loadData(container.firstElementChild, page, previousElementSibling.value);
-    	isLoading = false;
-    	console.log(page);
-  	}
-
-
-
-
-  	
+		if((scrollTop + offsetHeight) + 10 >= scrollHeight){
+			// console.log('%cscroll', 'color:blue');
+			callback(e);
+		}
 	})
 }
 
 const doneTypingInterval = 1000;
 let typing = false;
-let typingTimer;    //timer identifier 
-let query = '';
+let typingTimer;
 
-export const searchEvent = input => {
-	let resultsBox;
-	input.addEventListener('keyup', function(e) {
-		resultsBox = this.nextElementSibling;
-		query = this.value;
-		if(query !== ''){
-				// Reseteamos los valores de lastPage y page para cargar nuevos resultados de la nueva búsqueda
-				lastPage = 1;
-				page = 1;
+export const onTyping = (element, callback) => {
+	const input = typeof element === 'string' ? document.querySelector(element) : element;
+
+	input?.addEventListener('keyup', function(e) {
+		if(this.value !== ''){
 	     	clearTimeout(typingTimer);
+
 		    if(typing == false){
 		      typing = true;
-		      console.log("En espera de búsqueda...");
+		      console.log("Typing...");
 			}
-		    typingTimer = setTimeout(e => {
+			
+		    typingTimer = setTimeout( () => {
 		    	typing = false;
-      			if(query !== ''){loadData(resultsBox, 1, query);}
+				callback(e);
 		    }, doneTypingInterval);
 		}
 	})
-	// dataLoadEvent(resultsBox);
-	// console.log(resultsBox)
 }
 
-// function createElement(type, attributes) {
-//   let element = document.createElement(type);
-//   for (var key in attributes) {
-//     if (key == "class") {
-//       element.classList.add.apply(element.classList, attributes[key]);
-//     } else {
-//       element[key] = attributes[key];
-//     }
-//   }
-//   //someElement.appendChild(element);
-// }
 
-let lastPage = 1;
-export let loadData = async (container, page = 1, query = '') => {
-	let spinner = createHTML([ {type: 'i', attributes: { class: 'fas fa-spinner fa-spin'} } ]);
-	spinner.style.cssText = `
-		font-size: 20px; 
-		color: #419F6D; 
-		margin: 10px auto;
-		display: block;
-	`;
+// ----------------------------------------------------------------
 
-	if(page <= lastPage){
-	  container.appendChild(spinner);
-	  try {
-	    let response = await fetch("/usuarios/api/search?page="+page+"&query="+query);
-	    let students = await response.json();
-	    lastPage = students.last_page;
-	    
-	    console.log(lastPage)
-		let html = '';
-		let names = students.data.reduce((acc, alumno) => {
-			return [...acc, `${alumno.nombre} ${alumno.apellido}`]
-		}, []);
-
-		if(page === 1){
-			// Si es la primera pagina (primero resultados) creamos la lista
-			container.innerHTML = '';
-			
-			if(!students.total){
-				html = createHTML([ {type: 'ul', data: 'No hay resultados.'} ])
-			}else{
-				// Obtenemos solo los nombres y los almacenamos en una array
-				html = createHTML([ 
-					{type: 'ul'}, 
-					{type: 'li', data: names} 
-				]);
-			}
-		}else{
-			// Si no, agregamos los otros resultados a la lista
-			html = createHTML([ {type: 'li', data: names} ])
-			container.removeChild(container.querySelector('.fa-spinner'));
-		}
-		container.appendChild(html);
-	  } catch(err) {
-	    console.log(err);
-	    let errorMsg = createHTML([ {type: 'ul', data: 'Hubo un error al obtener los datos. Intentalo de nuevo.'} ])
-	    container.appendChild(errorMsg);
-	  }
-	}
-}
-
-let i = 1;
-export const addNewElement = e => {
-	let parent = e.target.parentElement;
-	let newElement = e.target.previousElementSibling.cloneNode(true);
-	let input = newElement.querySelector('input');
-	// Evitamos clonar el valor del input
-	input.value = '';
-
-	if(input.type !== 'file') {
-		input.style.border = '2px solid #ddd';
-		input.removeAttribute('readonly')
-		// Evento para Checar errores
-		inputListener(input);
-		// Evento de keyup para buscar usuario
-		searchEvent(input)
-		dataLoadEvent(newElement.querySelector('.search_results'));
-	}else {
-		// Para inputs de tipo file usamos el label para hacer referencia al input
-
-		// i++;
-		// let label = newElement.querySelector('label');
-		// input.setAttribute('id','file' + i);
-		// label.setAttribute('for','file' + i);
-		// label.innerHTML = `
-		//  	<i class="fas fa-file-upload"></i>
-		// 	Cargar Archivo`;
-		// label.style.cssText = `
-		// 	color: #32b197;
-		// 	backgroundColor: #f8fffa;
-		// 	border: 1px solid #04886d;
-		// `;
-		// addFileListener(input);
-	}
+export const cloneElement = name => {
+	const node = document.querySelector(name),
+		  {parentElement} = node,
+		  clone = node.cloneNode(true),
+		  inputs = clone.querySelectorAll("input");
 	
-	i++;
-
-	const icon = createElement({
-		type: 'I',
-		attributes: {class: 'fas fa-times-circle remove', id: 'icon' + i}
+	inputs.forEach(input => {
+		if( input.type=='checkbox'){
+    	    input.checked = false;  
+    	}else{
+			input.value='';               
+			clone.removeAttribute('readonly')
+    	}
 	})
 
-	// Agregamos el icono de eliminar al nuevo elemento creado
-	newElement.appendChild(icon);
-	parent.insertBefore(newElement, parent.lastElementChild);
+		// clone.style.border = '2px solid #ddd';
+		
+		// inputListener(clone); 
 
-	// removeElementListener(node.id);
+		// FIXME Parametro callback en las funciones
+		
+		// onTyping(clone)
+		// onScroll(newElement.querySelector('.search_results'));
+	
+	const icon = Emmet(`i.fas.fa-times-circle.remove`);
+	clone.appendChild(icon);
+	icon.addEventListener('click', () => clone.remove());
+
+	parentElement.appendChild(clone);
+
+	return clone;
 }
 
 // !! Create elements
@@ -313,7 +251,6 @@ const organizeElements = (elements = []) => {
  */
 
 const createElement = elementData => {
-	// TODO: trartar de crear elementos especificos como <select></select>
 	if(Array.isArray(elementData.data)){
 		// Create elements for every array item of data with the id
 
