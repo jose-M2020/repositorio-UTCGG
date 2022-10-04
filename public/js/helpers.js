@@ -152,7 +152,7 @@ export const cloneElement = name => {
     	    input.checked = false;  
     	}else{
 			input.value='';               
-			clone.removeAttribute('readonly')
+			input.removeAttribute('readonly')
     	}
 	})
 

@@ -56,19 +56,28 @@ class FileController extends Controller
         ]); 
         
         try {
-            $imagesURL = $this->uploadFile($request, 'imagenes', $repositorio->id);
+            if($request->file('imagenes')){
+                $oldImages = json_decode($repositorio->imagenes) ?? [];
+                
+                $imagesURL = $this->uploadFile($request, 'imagenes', $repositorio->id);
 
-            $fileData = $this->uploadFile($request, 'archivos', $repositorio->id);
+                $repositorio->imagenes = json_encode([...$oldImages, ...$imagesURL]);
+                $repositorio->save();
+            }
+            if($request->file('archivos')){
+                $fileData = $this->uploadFile($request, 'archivos', $repositorio->id);
+    
+                File::insert(
+                    array_map(fn ($array) => 
+                        array_merge($array, [
+                            'repositorio_id' => $repositorio->id,
+                            'created_at' => now(), 
+                            'updated_at' => now()
+                        ])
+                    , $fileData)
+                );
+            }
 
-            File::insert(
-                array_map(fn ($array) => 
-                    array_merge($array, [
-                        'repositorio_id' => $repositorio->id,
-                        'created_at' => now(), 
-                        'updated_at' => now()
-                    ])
-                , $fileData)
-            );
         } catch (\Throwable $th) {
             return redirect()->route('repositorios.user.show', $repositorio->slug)
                              ->with('warning', 'Ningún archivo ha sido guardado');
@@ -118,11 +127,23 @@ class FileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, File $file)
+    public function destroy($repositorio, $type = null, $file)
     {
-        if(Storage::disk('s3')->exists($file->file_path)) {
-            Storage::disk('s3')->delete($file->file_path);
-            $file->delete();
+        $isImage = $type === 'image';
+        $res = $isImage ? Repositorio::where('slug', $repositorio)->first() : File::find($file);
+        $filePath = $isImage ? json_decode($res->imagenes)[$file] : $res->file_path;
+        
+        if(Storage::disk('s3')->exists($filePath)) {
+            Storage::disk('s3')->delete($filePath);
+            
+            if(!$isImage){
+                $res->delete();
+            }else{
+                $images = json_decode($res->imagenes);
+                unset($images[$file]);
+                $res->imagenes = json_encode($images);
+                $res->save();
+            }
         }
 
         return redirect()->back()
@@ -152,14 +173,14 @@ class FileController extends Controller
                 foreach($request->file($typeFile) as $file)
                 {
                     $file_path = $path. '/'. $typeFile;
-                    $file_stored = $file->store($file_path, 's3');
-                    $url_files_saved[] = Storage::disk('s3')->url($file_stored);
+                    $file_path_stored = $file->store($file_path, 's3');
+                    $files_paths[] = $file_path_stored;
 
                     if($typeFile !== 'imagenes') {
                         $fileData[] = [
                             'original_name' => $file->getClientOriginalName(),
                             'file_type' => $file->extension(),
-                            'file_path' => $file_stored,
+                            'file_path' => $file_path_stored,
                             'is_public' => 1
                         ];
                         // $archivo .= $file->getClientOriginalName().'|';
@@ -171,7 +192,7 @@ class FileController extends Controller
                 }
             }
 
-            return $typeFile !== 'imagenes' ? $fileData : json_encode($url_files_saved);
+            return $typeFile !== 'imagenes' ? $fileData : $files_paths;
     }
 
     public function download(File $file)

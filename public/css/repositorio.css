@@ -1,5 +1,5 @@
 :root {
-	--progress-circle-size: 3.5rem;
+	--progress-circle-size: 3.3rem;
 	--progress-duration-animation: calc(500ms/2);
 }
 
@@ -301,8 +301,7 @@
 ----------------------------------------------------- */
 
 #register-repository fieldset{
-	background-color: #fff;
-	box-shadow: 0px 0 7px 7px #e2e2e2;
+	background: transparent !important;
 	border-radius: 6px;
 	padding: 0;
 	opacity: 0;
@@ -313,12 +312,12 @@
 	
 #register-repository fieldset.active{
 	max-height: 4000px;
-	padding: 1rem;
 	opacity: 1;
 }
 
 #register-repository .section__title{
-	margin: 2rem auto;
+	margin-bottom: 2rem;
+	font-size: 1.4rem;
 }
 
 /* Barra de progreso */
@@ -362,8 +361,8 @@
 .progressbar li .circle .label{
 	display: inline-block;
 	background-color: var(--white);
-	width: 83%;
-	height: 83%;
+	width: 85%;
+	height: 85%;
 	border-radius: 50%;
 	color: #676D7B;
 	position: relative;
@@ -371,7 +370,7 @@
 
 .progressbar li .circle .label > *{
 	position: absolute;
-	font-size: 1.5rem;
+	font-size: 1.3rem;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -384,7 +383,7 @@
 	top: 50%;
 	right: calc(var(--progress-circle-size) - 1px);
 	transform: translateY(-50%);
-	height: 5px;
+	height: 4px;
 	width: 100%;
 	pointer-events: none;
 }
@@ -578,11 +577,11 @@
 
 /* icono para eliminar inputs */
 
-input ~ .remove{
+#personal_data input ~ .remove{
 	font-size: 32px;
 	color: #F45E5E;
 	position: absolute;
-	top: 50%;
+	top: 25px;
 	transform: translateY(-50%);
 	right: 5px;
 	cursor: pointer;
@@ -592,24 +591,53 @@ input ~ .remove{
 
 
 
-input#student_name:focus + .search-box__results{
-	visibility: visible;
-	opacity: 1;
-}
 
 /* Resultados de búsqueda */
 
+.search-box__item.active .search-box__results{
+	/* visibility: visible; */
+	/* opacity: 1; */
+	display: block;
+}
+
+.search-box__item .search-box__selected{
+	display: block;
+}
+
+.search-box__item.active .search-box__selected{
+	display: none;
+}
+.search-box__item .search-box__selected .user-preview{
+	color: white;
+    background-color: rgb(54 65 70 / 71%);
+	border-radius: 8px;
+	margin: 10px 0;
+}
+
+.search-box__selected .user-preview .remove{
+	display: block;
+}
+
+.search-box__selected:empty + button{
+	display: none;
+}
+
 .search-box__results{
-	position: absolute;
-	background-color: #D2EDE0;
-	width: 100%;
-	top: 100%;
-	z-index: 30;
-	visibility: hidden;
-	opacity: 0;
-	transition: .3s;
+	background-color: #ebebeb;
+	box-shadow: 0px 6px 7px #979797;
+	display: none;
 	max-height: 200px;
+	margin-bottom: 12px;
+	/* position: absolute; */
+	/* top: 100%; */
+	/* transition: .4s; */
+	width: 100%;
 	overflow-y: auto;
+	z-index: 30;
+}
+
+.search-box__results.transparent {
+	background-color: transparent;
 }
 
 .search-box__results ul{
@@ -619,31 +647,16 @@ input#student_name:focus + .search-box__results{
 }
 
 .search-box__results ul li{
-	display: flex;
-    align-items: center;
-    gap: 10px;
-	padding: 8px 10px;
 	cursor: pointer;
 	transition: color .3s;
 }
+
 .search-box__results ul li:hover{
 	background-color: #ddd;
 	
 }
 .search-box__results ul li > * {
 	pointer-events: none;
-}
-
-.search-box__results ul li i{
-	font-size: 1.5rem;
-}
-
-.search-box__results ul li .user-info{
-	line-height: 16px;
-}
-
-.search-box__results ul li .name{
-	display: block;
 }
 
 .repository #folder_notFound{
@@ -677,10 +690,10 @@ input#student_name:focus + .search-box__results{
 }
 
 .projects-list__title span{
-	background: var(--blue);
+	background: #406168;
     color: #fff;
 	font-size: 12px;
-    padding: 2px;
+    padding: 5px;
     border-radius: 4px;
     margin-left: 4px;
 }
@@ -710,32 +723,45 @@ input#student_name:focus + .search-box__results{
 	padding: 0;
 }
 
-.project-info__form input,
-.project-info__form textarea,
-.project-info__form select {
+.project-info__form .visibility-content{
+	display: none;
+}
+.project-info__form.active .visibility-content{
+	display: block;
+}
+
+.project-info__form .project-info__input[type=radio] {
+	display: none;
+}
+.project-info__form.active .project-info__input[type=radio] {
+	display: block;
+}
+
+.project-info__form .project-info__input:not([type=radio]),
+.project-info__form .project-info__input-container {
 	width: 100%;
     background: transparent;
     border: none;
 	padding: 11px 10px;
 }
-
-.project-info__form.active input,
-.project-info__form.active select,
-.project-info__form.active textarea{
+.project-info__form.active .project-info__input:not([type=radio]),
+.project-info__form.active .project-info__input-container {
 	border: 1px solid #cfcfcf;
 }
-
-.project-info__form input:focus,
-.project-info__form textarea:focus,
-.project-info__form select:focus{
+.project-info__form .project-info__input:focus,
+.project-info__form .project-info__input-container:focus-within {
 	outline: none;
 	box-shadow: 0 0 6px 0px #676767;
 }
 
+
 .project-info__form .bootstrap-tagsinput input {
 	width: auto;
 }
-
+.project-info__form .bootstrap-tagsinput{
+	background: none;
+	border: none;
+}
 .bootstrap-tagsinput .tag [data-role=remove] {
     display: none;
 }
@@ -748,4 +774,86 @@ input#student_name:focus + .search-box__results{
 }
 .project-info__form.active .project-info__footer{
 	display: flex;
+}
+
+
+
+.project-files__img-container{
+	display: grid;
+  	grid-gap: 14px;	
+	grid-template-columns: repeat(auto-fit, minmax(150px, 0fr));
+}
+
+/* .project-files__img-item{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	max-width: 150px;
+} */
+
+.project-files__img-item img{
+	/* width: 100%; */
+	max-width: 150px;
+	object-fit: cover;
+}
+
+
+/* Profile preview */
+
+.user-preview{
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+
+.user-preview__profile{
+    aspect-ratio: 1/1;
+    align-items: center;
+    background: #424242;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+	font-size: 1.2rem;
+    justify-content: center;
+    margin-right: 10px;
+    width: 2.3rem;
+}
+
+.user-preview__info{
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+}
+
+.user-preview__name{
+	line-height: 12px;
+}
+
+.user-preview__email,
+.user-preview__rol {
+	font-size: 15px;
+}
+
+.user-preview__actions .delete{
+	border: none;
+    background: transparent;
+	box-shadow: 0 0 2px #000000;
+	padding: 8px;
+    border-radius: 5px;
+	transition-property: box-shadow, color;
+	transition-duration: .3s;
+}
+
+.user-preview__actions .delete:hover{
+	box-shadow: 0 0 6px #3c3c3c;
+    color: #d00000;
+}
+
+.user-preview .remove{
+	cursor: pointer;
+	display: none;
+}
+
+.user-preview .remove > *{
+	pointer-events: none;
 }

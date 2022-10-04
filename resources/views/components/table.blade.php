@@ -51,26 +51,29 @@
                 @endforeach
 
                 <td class="actions" id="{{ $item->id }}">
-                  @if($linkEdit)
-                    <a class="actions__item edit" 
-                       href="{{ route($linkEdit, $item->id) }}">
-                       <i class="fas fa-user-edit"></i>
+                  @can('usuarios.edit')
+                    @if($linkEdit)
+                      <a class="actions__item edit" 
+                        href="{{ route($linkEdit, $item->id) }}">
+                        <i class="fas fa-user-edit"></i>
+                      </a>
+                    @else
+                      <a class="actions__item edit" 
+                        data-user="{{ json_encode($item) }}" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modalEdit">
+                        <i class="fas fa-user-edit"></i>
+                      </a>
+                    @endif
+                  @endcan
+                  @can('usuarios.destroy')
+                    <a class="actions__item delete" 
+                      data-id="{{ $item->id }}"  
+                      data-bs-toggle="modal" 
+                      data-bs-target="#modalDelete">
+                        <i class="fas fa-trash-alt"></i>
                     </a>
-                  @else
-                    <a class="actions__item edit" 
-                       data-user="{{ json_encode($item) }}" 
-                       data-bs-toggle="modal" 
-                       data-bs-target="#modalEdit">
-                       <i class="fas fa-user-edit"></i>
-                    </a>
-                  @endif
-
-                  <a class="actions__item delete" 
-                     data-id="{{ $item->id }}"  
-                     data-bs-toggle="modal" 
-                     data-bs-target="#modalDelete">
-                      <i class="fas fa-trash-alt"></i>
-                  </a>
+                  @endcan
                 </td>
               </tr>
             @endforeach

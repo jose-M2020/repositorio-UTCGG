@@ -3,17 +3,17 @@
 @section('title', 'Registrar alumno')
 
 @section('dashboard-content')
-	<div class="row justify-content-center align-items-center pt-3" style="height: 80vh;">
-    	<div class="col-xs-12 col-sm-5 col-md-3 h-100 d-flex flex-column justify-content-center h-100 bg-dark bg-gradient text-white px-3 py-4">
-	      	<div class="pb-5">
-				<h1>Registro de alumno</h1>
+	<div class="row justify-content-center mt-5">
+    	<div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-white px-3 py-4" style="background-color: #389c76;">
+	      	<div>
+				<h3 class="mb-0 mb-md-5 text-center">Registrar usuario</h3>
 			</div>
-			<div class="d-none d-sm-block">
+			<div class="d-none d-md-block">
 				<img style="width: 100%" src="{{ asset('img/form/student.svg') }}">
 			</div>
     	</div>
-	    <div class="col-12 col-md-6 col-sm-7 h-100 py-4 px-5 bg-light overflow-auto d-flex align-items-center">
-			<form id="" method="POST" action="{{ route('usuarios.store') }}">
+	    <div class="col-12 col-md-8 h-100 p-4 overflow-auto d-flex align-items-center" style="box-shadow: 4px 3px 5px #c8c6c6;">
+			<form class="w-100" id="" method="POST" action="{{ route('usuarios.store') }}">
 				@csrf
 				<div class="row g-2">
 					<div class="col-md">
@@ -54,12 +54,10 @@
 					</label>
 				</div> --}}
 				
-				<div class="form__field mt-3">
-					<input class="form__btn-submit" type="submit" name="register" value="Registrar">
+				<div class="form__field mt-3 text-center">
+					<button class="form__btn-submit" type="submit" name="register">Registrar</button>
 				</div>
 			</form>
 		</div>		
     </div>
-	
-
 @endsection

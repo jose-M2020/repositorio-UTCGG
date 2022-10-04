@@ -10,6 +10,7 @@ use \Carbon\Carbon;
 use PhpParser\Builder\Use_;
 
 use Spatie\Permission\Models\Role;
+use Auth;
 
 class UsuarioController extends Controller
 {
@@ -24,7 +25,8 @@ class UsuarioController extends Controller
         $this->middleware('can:usuarios.index')->only('index');
         $this->middleware('can:usuarios.create')->only('create','store');
         $this->middleware('can:usuarios.edit')->only('edit','update');
-        $this->middleware('can:usuarios.delete')->only('destroy');
+        $this->middleware('can:usuarios.destroy')->only('destroy');
+        $this->middleware('can:usuarios.search')->only('search');
     
         $this->roles = Role::all()->pluck('name')->toArray();
     }
@@ -35,8 +37,11 @@ class UsuarioController extends Controller
         $date_range = $request->rango_fecha ?? ['', ''];
         // unset($filters['date']);
         
-        $users = $this->getData($request);
-        
+        $roles = Role::pluck('name','id')->all();
+        $users = $this->getData(
+                    $request, 
+                    ($request->rol && $request->rol !== 'all') ? [$request->rol] : ''
+                 );
         // $docente = Usuario::findOrFail(1)->asesores;
 
         if($request->fecha){
@@ -61,12 +66,19 @@ class UsuarioController extends Controller
         //     $user->roles = implode(', ',$userRole);
         // }
 
-        return view('usuario.index', compact('users','filters')); 
+        return view('usuario.index', compact('users','filters','roles')); 
     }
 
     public function create()
     {
+        $userRole = auth()->user()->roles[0]->name; 
+        
         $roles = Role::pluck('name','id')->all();
+
+        if(($userRole !== 'admin') && (($key = array_search('admin',$roles)) !== false)){
+            unset($roles[$key]);
+        }
+        
         return view('usuario.create', compact('roles'));
     }
 
@@ -122,22 +134,29 @@ class UsuarioController extends Controller
     //     return view('dashboard.repositorio.show', compact('repositorio'));
     // }
 
-    public function edit($id)
+    public function edit(Usuario $usuario)
     {
-        //
+        $roles = Role::pluck('name','id')->all();
+
+        return view('usuario.edit', compact('usuario','roles'));
     }
 
-    public function update(Request $request, $id = null)
+    public function update(Request $request, Usuario $usuario)
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
             'carrera' => 'required|string|max:20',
             // 'cuatrimestre' => 'required|integer|max:11',
-            'email' => 'required|string|email|max:255|unique:usuarios,email,'.$id,
+            'email' => 'required|string|email|max:255|unique:usuarios,email,'.$usuario->id,
+            'rol' => 'required|string|max:20',
         ]);
 
-        Usuario::where('id', $id)->first()->update($request->all());
+        if(($usuario->roles[0]->name) !== $request->rol){
+            $usuario->syncRoles([$request->rol]);
+        }
+
+        $usuario->update($request->all());
 
         return redirect()->route('usuarios.index')
             ->with('status','Alumno actualizado exitosamente!');
@@ -161,10 +180,17 @@ class UsuarioController extends Controller
          }
     }
 
-    public function search(Request $request)
-    {    
+    public function search(Request $request, Repositorio $repositorio)
+    {           
+        // $members = $repositorio->users;
+        
         $users = $this->getData($request, ['alumno', 'docente'], ['id', 'nombre', 'apellido', 'email']);
-        return response()->json($users);
+        $view = view('components.user-preview', compact('users'))->render();
+
+        return response()->json([
+            'result' => $users,
+            'view' => $view
+        ]);
     }
 
     private function getData($request, $roles = null, $fields = null){
@@ -203,7 +229,8 @@ class UsuarioController extends Controller
                 }
             })
             ->role($roles ? $roles : $this->roles)
-            ->paginate(10, $fields ?? $this->fields);
+            ->paginate(10, $fields ?? $this->fields)
+            ->withQueryString();
 
         return $users;
     }

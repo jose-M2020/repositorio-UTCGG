@@ -28,22 +28,22 @@
 <div class="row justify-content-center align-items-center pt-3">
 	
 	<div class="col-md-7 mb-5">
-		<h4 class="text-center">Registro</h4>
-		<ul class="progressbar my-5">
-			<li class="active" id="step2">
+		<h3 class="text-center mt-4">Crear nuevo repositorio</h3>
+		<ul class="progressbar my-4 px-2">
+			<li id="step1" class="active">
 				<div class="circle">
-					<span class="label"><i class="fas fa-book"></i></span>
+					<span class="label"><i class="fa-solid fa-diagram-project"></i></span>
 				</div>
 			</li>
-			<li id="step1">
+			<li id="step2">
 				<div class="circle">
-					<span class="label"><i class="fas fa-user"></i></span>
+					<span class="label"><i class="fa-solid fa-sheet-plastic"></i></span>
 				</div>
 				<div class="bar"><span></span></div>
 			</li>
 			<li id="step3">
 				<div class="circle">
-					<span class="label"><i class="fas fa-upload"></i></span>
+					<span class="label"><i class="fas fa-user"></i></span>
 				</div>
 				<div class="bar"><span></span></div>
 			</li>
@@ -52,16 +52,51 @@
 		<form method="POST" id="register-repository" action="{{ route('repositorios.store') }}" enctype="multipart/form-data">
 			@csrf
 			<div>
-				<fieldset id="project" class="section active">
-					<h5 class="text-center section__title">DATOS DEL REPOSITORIO</h5>
+				<fieldset id="repository" class="section active px-2">
+					<h5 class="section__title">Información del repositorio</h5>
 					<div class="form__field">
 						<label for="nombre_repositorio" class="form__label">Nombre del repositorio</label>
 						<input type="text" name="nombre_repositorio" class="form__input" value="{{old('nombre_repositorio')}}">
 					</div>
 					<div class="form__field">
 						<label for="description" class="form__label">Descripción</label>
-						<textarea name="descripcion" class="form__input">{{old('descripcion')}}</textarea>
+						<textarea name="descripcion" class="form__input" rows="4">{{old('descripcion')}}</textarea>
 					</div>
+					<div class="form__field">
+						<label for="" class="form__label">Palabras clave de búsqueda</label>
+						<input type="text" name="palabras_clave" class="form__input"  value="{{old('palabras_clave')}}" data-role="tagsinput">
+					</div>
+					<div class="mt-3">
+						<div class="form-check mb-1">
+							<input class="form-check-input" 
+								   type="radio" 
+								   name="visibilidad" 
+								   value="privado" 
+								   id="privado" 
+								   checked>
+							<label class="form-check-label" for="privado">
+								<i class="fa-solid fa-lock"></i> Privado
+								<small class="d-block">El acceso al repositorio será restringido</small>
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" 
+								   type="radio" 
+								   name="visibilidad" 
+								   value="publico" 
+								   id="publico">
+							<label class="form-check-label" for="publico">
+								<i class="fa-solid fa-globe"></i> Público
+								<small class="d-block">El repositorio será visible para todo el público</small>
+							</label>
+						</div>
+					</div>
+					<div class="text-end mt-5">
+						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
+					</div>
+				</fieldset>
+				<fieldset id="project" class="section px-2">
+					<h5 class="section__title">Información del proyecto</h5>
 					<div class="form__field">
 						<label for="project_type" class="form__label">Tipo de proyecto</label>
 						<select id="project_type" name="tipo_proyecto" class="form__input">
@@ -89,62 +124,6 @@
 						</select>
 					</div>
 					<div class="form__field">
-						<label for="" class="form__label">Palabras clave de búsqueda</label>
-						<input type="text" name="palabras_clave" class="form__input"  value="{{old('palabras_clave')}}" data-role="tagsinput">
-					</div>
-					<div class="form__field mt-4">
-						<div class="form-check d-flex align-items-center gap-2">
-							<input class="form-check-input" type="checkbox" id="publico" name="publico" style="width: 20px; height: 20px">
-							<i class="fa-solid fa-lock-open fs-4"></i>
-							<label class="form-check-label" for="publico" style="line-height: 17px">
-							  Público
-							  <small class="d-block">El repositorio será visible para todos</small>
-							</label>
-						  </div>
-					</div>
-					<div class="text-end mt-5">
-						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
-					</div>
-				</fieldset>
-				<fieldset id="personal_data" class="section">
-					<h5 class="text-center section__title">DATOS PERSONALES</h5>
-					<div class="form__field">
-						<label for="alumno" class="form__label">Nombre del alumno:</label>
-	
-						<div class="search-box">
-							<div class="search-box__item" style="position: relative;">
-								@role('alumno')
-									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth()->user()->email }}" readonly>	
-								@else
-									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{old('usuario.0')}}">
-								@endrole
-								<div class="search-box__results">
-									<ul></ul>
-									<div class="spinner hide"></div>
-								</div>
-							</div>
-		
-		
-							@if(old('usuario'))
-								@foreach(old('usuario') as $old_value)
-									   @if($loop->first)
-										   @continue
-									@endif
-									<div class="search-box__item" style="position: relative;">
-										<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{$old_value}}">
-										<div class="search-box__results">
-											<ul></ul>
-											<div class="spinner hide"></div>
-										</div>
-										<i class="fas fa-times-circle remove"></i>
-									</div>                           
-								@endforeach
-							@endif
-						</div>
-	
-						<span class="form__span add_element"><i class="fas fa-plus"></i> Agregar integrante</span>
-					</div>
-					<div class="form__field">
 						<label for="carrera" class="form__label">Carrera</label>
 						<select class="form__input" name="carrera" id="carrera">
 							@role('alumno')
@@ -165,10 +144,53 @@
 						<label for="" class="form__label">Generación</label>
 						<input type="text" name="generacion" class="form__input" value="{{old('generacion')}}">
 					</div>
-					<div class="form__field removable">
+					<div class="text-end d-block mt-5">
+						<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
+						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
+					</div>
+				</fieldset>
+				<fieldset id="personal_data" class="section px-2">
+					<h5 class="section__title">Usuarios / organizaciones</h5>
+					<div class="form__field">
+						<div class="d-flex justify-content-between">
+							<label for="alumno" class="form__label">Miembro(s):</label>
+							<span class="form__span add_element ms-auto"><i class="fas fa-plus"></i> Agregar</span>
+						</div>
+						<div class="search-box">
+							<div class="search-box__item position-relative">
+								@role('alumno')
+									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{ auth()->user()->email }}" data-rol="search" readonly>	
+								@else
+									<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{old('usuario.0')}}" data-rol="search">
+								@endrole
+								<div class="search-box__results">
+									<ul></ul>
+									<div class="spinner hide"></div>
+								</div>
+							</div>
+		
+		
+							@if(old('usuario'))
+								@foreach(old('usuario') as $old_value)
+									   @if($loop->first)
+										   @continue
+									@endif
+									<div class="search-box__item" style="position: relative;">
+										<input type="text" name="usuario[]" id="student_name" class="form__input" autocomplete="off" value="{{$old_value}}" data-rol="search">
+										<div class="search-box__results">
+											<ul></ul>
+											<div class="spinner hide"></div>
+										</div>
+										<i class="fas fa-times-circle remove"></i>
+									</div>                           
+								@endforeach
+							@endif
+						</div>	
+					</div>
+					{{-- <div class="form__field removable">
 						<label for="asesor_academico" class="form__label">Nombre del asesor académico</label>
 						<input type="text" name="asesor_academico" class="form__input" value="{{old('asesor_academico')}}">
-					</div> 
+					</div>  --}}
 					<div class="form__field removable">
 						<label for="asesor_externo" class="form__label">Nombre del asesor empresarial/externo</label>
 						<input type="text" name="asesor_externo" class="form__input" value="{{old('asesor_externo')}}">
@@ -178,45 +200,8 @@
 						<input type="text" name="empresa" class="form__input" value="{{old('empresa')}}">
 					</div>
 					<div class="text-end d-block mt-5">
-						 <x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
-						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
-					</div>
-				</fieldset>
-				<fieldset id="files" class="section">
-					<h5 class="text-center section__title">DOCUMENTOS</h5>
-					<div class="form__field files files-images images mb-5">
-						<h5>Galería</h5>
-						<div class="files__drop-zone mb-3">
-							<div class="files__info" for="imagenes">
-								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
-								<span class="files__title">
-									Arrastra las imágenes aquí
-								</span>
-								<span class="mb-2">o</span>
-								<span class="border border border-secondary d-inline p-1">Seleccionar archivos</span>
-							</div>
-							<input class="files__input" type="file" id="imagenes" name="imagenes[]" accept="image/*" multiple="">
-						</div>
-						<div class="files__selected preview_images"></div>
-					</div>
-					<div class="form__field files files projects mb-5">
-						<h5>Documentos del proyecto</h5>
-						<div class="files__drop-zone mb-3">
-							<div class="files__info" for="archivos">
-								<i class="files__icon fa-solid fa-cloud-arrow-up"></i>
-								<span class="files__title">
-									Arrastra los documentos aquí
-								</span>
-								<span class="mb-2">o</span>
-								<span class="border border border-secondary d-inline p-1">Seleccionar archivos</span>
-							</div>
-							<input class="files__input" type="file" id="archivos" name="archivos[]" accept=".doc,.docx,.zip,.rar,.pdf,.txt" multiple="">
-						</div>
-						<div class="files__selected preview_images"></div>
-					</div>
-					<div class="text-end d-block mt-5">
-						 <x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
-						<x-button name="BotonSubir" type="submit">Registrar <i class="far fa-paper-plane"></i></x-button>
+						<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
+						<x-button name="BotonSubir" type="submit">Crear <i class="far fa-paper-plane"></i></x-button>
 					</div>
 				</fieldset>
 			</div>
@@ -314,15 +299,7 @@
 			maxTags: 8
 		});
 
-		$('.bootstrap-tagsinput').addClass('form__input');
-
-		$('.bootstrap-tagsinput input')
-			.on('focus', function() {
-				$(this).closest('.bootstrap-tagsinput').addClass('has-focus');
-			})
-			.on('blur', function() {
-				$(this).closest('.bootstrap-tagsinput').removeClass('has-focus');
-			});
+		$('.bootstrap-tagsinput').addClass('form__input-container');
 	</script>
 
 @endsection

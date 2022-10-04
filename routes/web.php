@@ -8,6 +8,7 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepositorioController;
+use App\Http\Controllers\RepositorioUsuarioController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Models\Repositorio;
@@ -42,7 +43,7 @@ Route::get('acerca', function(){
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('usuarios', UsuarioController::class);
     
-    Route::get('api/usuarios', [UsuarioController::class, 'search'])
+    Route::get('api/usuarios/{repositorio?}', [UsuarioController::class, 'search'])
             ->name('usuarios.get');
 });
 
@@ -86,15 +87,30 @@ Route::group(['middleware' => 'auth'], function () {
 // || Repositories
 // -----------------------------------------
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::resource('repositorios', RepositorioController::class)
-         ->except(['index', 'show']);
+Route::middleware('auth')->group(function () {
+     Route::resource('repositorios', RepositorioController::class)
+          ->only(['create', 'store']);
 
-    Route::get('mi-cuenta/repositories', [UsuarioController::class, 'showRepositories'])
-         ->name('repositorios.user');
+     Route::resource('repositorios', RepositorioController::class)
+          ->middleware('authorizeMember')
+          ->only(['edit', 'update', 'destroy']);     
 
-    Route::get('mi-cuenta/repositorios/{repositorio}', [RepositorioController::class, 'showByUser'])
-        ->name('repositorios.user.show');
+     Route::prefix('mi-cuenta')->group(function () {
+          Route::get('/repositories', [UsuarioController::class, 'showRepositories'])
+               ->name('repositorios.user');
+
+          Route::get('/repositorios/{repositorio}', [RepositorioController::class, 'showByUser'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.user.show');
+               
+          Route::post('/repositorios/{repositorio}/members', [RepositorioUsuarioController::class, 'store'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.member.store');
+          
+          Route::delete('/repositorios/{repositorio}/members/{usuario}', [RepositorioUsuarioController::class, 'destroy'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.member.destroy');
+      });
 });
 
 Route::resource('repositorios', RepositorioController::class)
@@ -105,13 +121,16 @@ Route::resource('repositorios', RepositorioController::class)
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('files', FileController::class)
-         ->except(['store', 'create']);
+         ->except(['store', 'create', 'destroy']);
 
     Route::get('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'create'])
          ->name('files.create');
 
     Route::post('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'store'])
          ->name('files.store');
+
+    Route::delete('mi-cuenta/repositorios/{repositorio}/{type?}/{file}', [FileController::class, 'destroy'])
+         ->name('files.destroy');
     
     Route::get('files/download/{file}', [FileController::class, 'download'])
          ->name('files.download');

@@ -18,10 +18,10 @@
 	@include('layouts.navigation')
 	<div class="container-fluid dashboard">
     	<div class="row flex-nowrap">
-            <aside class="col-auto dashboard__sidebar d-none d-sm-block">
+            <aside class="col-auto dashboard__sidebar d-none d-md-block">
                 @include('layouts.sidebar')
             </aside>
-			<main class="mt-3 col dashboard__main pe-0">
+			<main class="col dashboard__main pe-0">
 				<div class="container">
 					@yield('dashboard-content')
 				</div>

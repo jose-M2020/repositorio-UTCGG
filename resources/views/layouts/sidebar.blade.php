@@ -1,10 +1,13 @@
 <div class="d-flex flex-column flex-shrink-0 min-vh-100">
     <div class="sidebar-header d-flex flex-column justify-content-center align-items-center my-4">
       <!-- <i class="fas fa-bars"></i> <span class="text"> -->
-      <div class="user-icon">
-        <span>{{ substr(auth()->user()->nombre, 0, 1) }}</span>
+      <div class="user-icon mb-1">
+        <span>{{ ucfirst(substr(auth()->user()->nombre, 0, 1)) }}</span>
       </div>
-      <span class="user-name mt-1">{{ auth()->user()->nombre }}</span>
+      <DIV class="user-info text-center">
+        <span class="user-name mt-1">{{ Str::title(auth()->user()->nombre) }}</span>
+        <small class="d-block">{{ auth()->user()->email }}</small>
+      </DIV>
       {{-- <small>{{ auth()->user()->email }}</small> --}}
     </div>
     <ul class="nav nav-pills nav-flush flex-column mb-auto">
@@ -20,6 +23,9 @@
               {{-- <x-navbar.link link="files" name="Favoritos"/> --}}
               @role('alumno')
                 <x-navbar.link link="{{ route('repositorios.user') }}" name="Mis repositorios"/>
+              @endrole
+              @role('docente')
+                <x-navbar.link link="{{ route('repositorios.user') }}" name="Colaboraciones"/>
               @endrole
           </ul>
       </x-navbar.link>

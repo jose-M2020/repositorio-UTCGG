@@ -17,11 +17,13 @@
     {{-- CDN Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     {{-- Estilos CSS personalizado --}}
-	<!-- <link rel="stylesheet" href="{{ set_url('css/main.css') }}"> -->
+	<link rel="stylesheet" href="{{ set_url('css/main.css') }}">
     <link rel="stylesheet" href="{{ set_url('css/login.css') }}">
 </head>
 <body>
-
+    <div class="position-absolute w-100">
+        @include('layouts.navigation')
+    </div>
     @yield('content')
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>

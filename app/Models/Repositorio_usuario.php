@@ -9,4 +9,10 @@ class Repositorio_usuario extends Model
 {
     use HasFactory;
     protected $table = "Repositorio_usuario";
+
+    protected $fillale = [
+        'id',
+        'usuario_id',
+        'repositorio_id',
+    ];
 }

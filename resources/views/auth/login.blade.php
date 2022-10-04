@@ -5,18 +5,18 @@
 @section('content')
 	
 <div class="container d-flex h-100 align-items-center justify-content-center position-relative">
-	<!-- Session Status -->
+	{{-- Session Status --}}
 	<x-auth-session-status class="mb-4" :status="session('status')" />
 
-	<!-- Validation Errors -->
+	{{-- Validation Errors --}}
 	<x-auth-validation-errors class="mb-4" :errors="$errors" />
 	
 	<div class="row justify-content-center w-100">
-		<div class="logo d-flex justify-content-center mb-5">
+		{{-- <div class="logo d-flex justify-content-center mb-5">
 			<img src="{{ set_url('img/logo1.png') }}" class="" alt="logo" style="max-width: 280px; width: 100%">
-		</div>
+		</div> --}}
 		<div class="login col-md-5 text-center">
-			<h3 class="login__title">Iniciar sesión </h3>
+			<h3 class="login__title">INICIAR SESIÓN</h3>
 			<form action="{{ route('login') }}" method="POST">
 				@csrf
 

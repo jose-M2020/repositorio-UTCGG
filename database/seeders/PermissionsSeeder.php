@@ -27,6 +27,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'usuarios.create', 'description' => 'Crear usuario'],
             ['name' => 'usuarios.edit', 'description' => 'Editar usuario'],
             ['name' => 'usuarios.destroy', 'description' => 'Borrar usuario'],
+            ['name' => 'usuarios.search', 'description' => 'Buscar usuarios'],
 
             //Operaciones sobre tabla roles
             ['name' => 'roles.index', 'description' => 'Ver roles'],
@@ -72,7 +73,7 @@ class PermissionsSeeder extends Seeder
                 'archivos.destroy',
             ],
             'alumno' => [
-                'usuarios.index',
+                'usuarios.search',
 
                 'repositorios.index',
                 'repositorios.create',

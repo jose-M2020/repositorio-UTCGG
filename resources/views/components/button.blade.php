@@ -7,7 +7,8 @@
     }
 </style>
 
-<button {{ $attributes->merge(['type' => 'button', 'class' => 'btn btn-outline-primary']) }}>
+<button {{ $attributes->merge(['type' => 'button', 'class' => 'form__btn-submit']) }}>
     {{ $slot }}
 </button>
 
+{{-- <button class="form__btn-submit" type="submit" name="register">Registrar</button> --}}

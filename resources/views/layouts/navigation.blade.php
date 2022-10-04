@@ -17,7 +17,9 @@
             <x-navbar.link link="{{ route('home') }}" name="Inicio" routeName="home" class="px-2" />
             <x-navbar.link link="{{ route('repositorios.index') }}" name="Repositorios" routeName="repositorios.*" class="px-2" />
             @guest
-                <x-navbar.link link="{{ route('login') }}" name="Acceder" routeName="login" class="px-2" />
+              @if(Route::currentRouteName() !== 'login')
+                  <x-navbar.link link="{{ route('login') }}" name="Acceder" routeName="login" class="px-2" />
+              @endif
             @endguest
                 
             {{-- @auth('admin') --}}
@@ -67,37 +69,39 @@
             @auth
               <x-navbar.link dropdown="true" routeName="" class="px-2 auth">
                 <x-slot name="name"><i class="auth__icon far fa-user-circle me-1"></i> Mi cuenta</x-slot>
-                <ul class="dropdown-menu dropdown-menu-end p-2">
+                <ul class="dropdown-menu dropdown-menu-end p-2 text-white">
                     <li>
                         <div class="nav-user-header d-flex align-items-center">
-                          <i class="fas fa-user-circle"></i>
+                          <i class="fas fa-user-circle fs-4"></i>
                           <div class="text-start ms-2">
-                              <span>Bienvenido {{ explode(" ", auth()->user()->nombre)[0] }}!</span>
-                              <p class="mb-0">{{ auth()->user()->roles->pluck('name')[0] }}</p>
+                              <span>Bienvenido {{ ucfirst(explode(" ", auth()->user()->nombre)[0]) }}!</span>
                           </div>
                         </div>
                     </li>
                     <li><hr class="dropdown-divider"></li>
-
-                    <x-navbar.link link="/files">
-                        <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
+                    <x-navbar.link link="{{ route('repositorios.create') }}">
+                      <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Nuevo repositorio</x-slot>
                     </x-navbar.link>
                     @role('alumno')
-                      <x-navbar.link link="/files">
-                          <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis archivos</x-slot>
+                      <x-navbar.link link="{{route('repositorios.user')}}">
+                          <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis repositorios</x-slot>
+                      </x-navbar.link>
+                    @endrole
+                    @role('docente')
+                      <x-navbar.link link="{{route('repositorios.user')}}">
+                          <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Colaboraciones</x-slot>
                       </x-navbar.link>
                     @endrole
                     @can('repositorios.create')
-                        <li><hr class="dropdown-divider"></li>
-                        <x-navbar.link link="{{ route('repositorios.create') }}">
-                            <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Nuevo repositorio</x-slot>
+                        <x-navbar.link link="/files">
+                          <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
                         </x-navbar.link>
                     @endcan
-                    @can('usuarios.index')
+                    @role('admin') 
                         <x-navbar.link link="{{ route('usuarios.index') }}">
                             <x-slot name="name"><i class="fas fa-users me-2"></i> Usuarios</x-slot>
                         </x-navbar.link>
-                    @endcan
+                    @endrole
                     @can('usuarios.create')
                         <x-navbar.link link="{{ route('usuarios.create') }}">
                             <x-slot name="name"><i class="fas fa-user-plus fs-5 me-2"></i> Agregar usuario</x-slot>

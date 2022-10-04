@@ -47,7 +47,7 @@
             <div class="files__selected preview_images"></div>
         </div>
         <div class="text-center mb-5">
-            <button type="submit" class="btn btn-green">Guardar</button>
+            <button type="submit" class="form__btn-submit">Guardar</button>
         </div>
     </form>
 

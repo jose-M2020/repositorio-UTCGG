@@ -473,14 +473,17 @@ footer{
 .form-floating select,
 .form-floating textarea{
 	background-color: transparent;
-	border: 3px solid #9BA0A6;
+	box-shadow: 0 0 3px #9f9e9e;
+	border: none;
 	border-radius: 8px;
 }
 
-.form-floating .form-control:focus{
+.form-floating input:focus,
+.form-floating select:focus,
+.form-floating textarea:focus{
 	background-color: transparent;
-	border: 3px solid #2BB45F;
-	box-shadow: 3px 3px 3px #CDF9DE;
+	border: none;
+	box-shadow: 0 0 5px 1px #287c55;
 }
 
 /* || Paginación
@@ -553,10 +556,10 @@ footer{
 
 .dashboard__sidebar .user-icon{
 	position: relative;
-	background-color: #2e7d61;
+	background-color: #456365;
     color: #fff;
     border-radius: 50%;
-    width: 50px;
+    width: 55px;
     aspect-ratio: 1/1;
     font-size: 1.7rem;
 }
@@ -620,7 +623,7 @@ footer{
 		width: var(--collapsed-sidebar-width);
 	}
 
-	.dashboard__sidebar .user-name{
+	.dashboard__sidebar .user-info{
 		display: none;
 	}
 
@@ -629,7 +632,7 @@ footer{
 		box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
 	}
 	
-	.dashboard__sidebar:hover .user-name{
+	.dashboard__sidebar:hover .user-info{
 		display: block;
 	}	
 
@@ -647,6 +650,12 @@ footer{
 	
 	.dashboard__sidebar:hover .collapse.show{
 		display: block;
+	}
+}
+
+@media (max-width: 768px) {
+	.dashboard__main{
+		padding-left: 0;
 	}
 }
 
@@ -687,4 +696,23 @@ footer{
 	.carreras .card .card-title{
 		font-size: 1.1rem;
 	}
+}
+
+/* || Modal
+----------------------------------------------------- */
+.modal-content {
+	background-color: rgb(255, 255, 255, .7);
+	backdrop-filter: blur(2px);
+    border-radius: 7px;
+} 
+
+.modal-content input{
+	background: transparent;
+    border: 1px solid #726d6dde;
+}
+
+.modal-content .form-control:focus{
+	background-color: transparent;
+	box-shadow: 1px 1px 5px #343434;
+	border-color: transparent;
 }

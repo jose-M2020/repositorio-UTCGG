@@ -9,6 +9,8 @@ class Repositorio extends Model
 {
     use HasFactory;
 
+    // protected $primaryKey = 'slug';
+    
     // protected $table = 'repositorios';
     protected $fillable = [
         // 'alumno_id',
@@ -45,6 +47,11 @@ class Repositorio extends Model
     public function users()
     {
         return $this->belongsToMany(Usuario::class);
+    }
+
+    public function asesor()
+    {
+        return $this->belongsToMany(Usuario::class)->role('docente');
     }
 
     public function files()

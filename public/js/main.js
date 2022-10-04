@@ -11,15 +11,15 @@ window.onload = (event) => {
 	// const progressPercentage = document.querySelector('.details__percentage');
 
 	// Detecta si el campo tiene errores
-	inputs.forEach(input => {
-		inputListener(input);
-	})
+	// inputs.forEach(input => {
+	// 	inputListener(input);
+	// })
 
-
+	
 
 	const SearchEvent = function(container, spinner){
-		this.container = (typeof container === 'string') ? document.querySelector(container) : container;
-		this.spinner = (typeof spinner === 'string') ? document.querySelector(spinner) : spinner;
+		this.container = (container instanceof HTMLElement) ? container : document.querySelector(container);
+		this.spinner = (spinner instanceof HTMLElement) ? spinner : document.querySelector(spinner);
 		this.currentPage = 1;
 		this.lastPage = 1;
 		this.query = null;
@@ -29,50 +29,32 @@ window.onload = (event) => {
 			if(this.currentPage <= this.lastPage) {
 				this.spinner.classList.remove('hide');
 				this.data = await client.users.get(this.query, this.currentPage);
-				this.lastPage = this.data.last_page;
+				this.lastPage = this.data.result.last_page;
 				this.addElements();
 				this.spinner.classList.add('hide');
 			}
 		}
 
 		this.addElements = () => {
-			console.log(this.container)
-			let elements;
-	
 			if(this.currentPage === 1) this.container.innerHTML = '';
-	
-			if(!this.data.total){
-				elements = Emmet(`li{No hay resultados.}`);
-			}else{
-				elements = document.createDocumentFragment();
-	
-				this.data.data.forEach( user => {
-					const node = Emmet(`
-						li
-						  >i.fa-solid.fa-user
-						  +.user-info
-							  >span.name{${user.nombre} ${user.apellido}}
-							+small.email{${user.email}}
-					`);
-					elements.appendChild(node);
-				})
-			}
-			
-			this.container.appendChild(elements);
+
+			this.container.insertAdjacentHTML('beforeend', this.data.view);
 		}
 
 		this.setElement = element => {
-			return (typeof element === 'string') ? document.querySelector(element) : element;
-		} 
+			return (element instanceof HTMLElement) ? element : document.querySelector(element) ;
+		}
 	}
 
-	// Agregamos nuevo elemento al dar click
+	// || Add new input element
+	// ----------------------------------------------------------------
+	
 	addIcon?.addEventListener('click', e => {
 		const clone = cloneElement('#register-repository .search-box__item'),
 			  input = clone.querySelector('input'),
 			  resultsBox = clone.querySelector('.search-box__results'),
 			  spinner = clone.querySelector('.spinner');
-
+		
 		const event = new SearchEvent(resultsBox.firstElementChild, spinner);
 
 		onTyping(input, e => {
@@ -85,6 +67,8 @@ window.onload = (event) => {
 			event.currentPage++;
 			event.makeRequest();
 		})
+
+		listenFocus(input);
 	})
 
 	
@@ -94,7 +78,7 @@ window.onload = (event) => {
 	const client = new ApiClient('/api');
 	const searchEvent = new SearchEvent('.search-box__results ul', '.search-box__results .spinner');
 
-	onTyping('input#student_name', e => {
+	onTyping('input[data-rol=search]:not([readonly])', e => {
 		searchEvent.query = e.target.value;
 		searchEvent.currentPage = 1;
 		searchEvent.makeRequest();
@@ -105,14 +89,47 @@ window.onload = (event) => {
 		searchEvent.makeRequest();
 	})
 
-	document.addEventListener('click', (e) => {
-		if(e.target.tagName == 'LI' ){
-			const input = e.target.closest('.search-box__results').previousElementSibling;
-			const email = e.target.querySelector('.email').textContent;
-			input.value = email;
-		}
-	})
 
+
+	const resultsSelected = document.querySelector('.search-box__selected');
+	let searchBoxResults = document.querySelector('.search-box__item :not(input[readonly])');
+
+	document.addEventListener('click', (e) => {
+		const { target } = e;
+
+		if(!searchBoxResults?.contains(target)){
+			searchBoxResults.classList.remove('active');
+		}
+
+		if(target.classList.contains('search-box__result-item')){
+			
+			target.closest('.search-box__item').classList.remove('active');
+
+			if(resultsSelected){
+				resultsSelected.appendChild(target);
+			}else{
+				const input = target.closest('.search-box__results').previousElementSibling;
+				const email = target.querySelector('.user-preview__email').textContent;
+				input.value = email;
+			}
+		}
+
+		if (target.classList.contains('remove')) {
+			target.closest('.item-content').remove();
+		}
+	});
+
+
+	const listenFocus = element => {
+		const target = (element instanceof HTMLElement) ? element : document.querySelector(element);
+		
+		target?.addEventListener('focus', (e) => {
+			searchBoxResults.classList.remove('active');
+			searchBoxResults = target.closest('.search-box__item');
+			searchBoxResults.classList.add('active');
+		});
+	}
+	listenFocus('input[data-rol=search]:not([readonly])');
 
 
 	// Validamos y mostramos el nombre del archivo seleccionado de cada uno de los inputs de archivos

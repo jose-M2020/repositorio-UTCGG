@@ -347,9 +347,3 @@ template {
 [hidden] {
   display: none;
 }
-
-/* Adicional */
-
-textarea{
-  resize: none;
-}

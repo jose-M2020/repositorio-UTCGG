@@ -130,10 +130,9 @@ class RepositorioController extends Controller
             'tipo_proyecto' => $request->tipo_proyecto,
             'nivel_proyecto' => $request->nivel_proyecto,
             'palabras_clave' => $request->palabras_clave,
-            'publico' => $request->publico ? true : false,
+            'publico' => ($request->visibilidad === 'publico') ? true : false,
             'carrera' => $request->carrera,
             'empresa' => $request->empresa,
-            // 'asesor_academico' => $request->asesor_academico,
             'asesor_externo' => $request->asesor_externo ?? null,
             'generacion' => $request->generacion,
             'created_by' => $logged_user->nombre
@@ -225,12 +224,13 @@ class RepositorioController extends Controller
 
     public function showByUser(Repositorio $repositorio)
     {   
+        $usuarios = $repositorio->users()
+                                ->get();
         $files = $repositorio->files()
                              ->get();
-
-        $usuarios = $repositorio->users()
-                             ->get();
-
+        $asesor = $repositorio->asesor()
+                              ->get();
+    
         return view('dashboard.repositorio.show', compact('repositorio', 'files', 'usuarios'));
     }
 
@@ -252,9 +252,40 @@ class RepositorioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Repositorio $repositorio)
     {
-        //
+        $isEstadia = $request->tipo_proyecto == 'Estadía';
+
+        $request->validate([
+            'nombre_repositorio' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255',
+            'tipo_proyecto' => 'required|string|max:80',
+            'nivel_proyecto' => 'required|string|max:80',
+            'palabras_clave' => 'required|string|max:255',
+            // 'usuario' => 'required|array|max:8',
+            // 'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
+            'carrera' => 'required|string|max:80',            
+            'empresa' => 'required|string|max:255',
+            'asesor_externo' => $isEstadia ? 'required|string|max:255' : '',
+            'generacion' => 'required|string|max:255',
+        ]);
+
+        $repositorio->update([
+            'nombre_rep' => $request->nombre_repositorio,
+            'slug' => Str::slug($request->nombre_repositorio, '-'),
+            'descripcion' => $request->descripcion,
+            'tipo_proyecto' => $request->tipo_proyecto,
+            'nivel_proyecto' => $request->nivel_proyecto,
+            'palabras_clave' => $request->palabras_clave,
+            'publico' => ($request->visibilidad === 'publico') ? true : false,
+            'carrera' => $request->carrera,
+            'empresa' => $request->empresa,
+            'asesor_externo' => $request->asesor_externo ?? null,
+            'generacion' => $request->generacion,
+        ]);
+
+        return redirect()->route('repositorios.user.show', $repositorio->slug)
+                         ->with('status', 'Repositorio actualizado exitosamente!');
     }
 
     /**
