@@ -20,14 +20,21 @@
             slidesToScroll: 4,
             responsive: [
                 {
-                    breakpoint: 576,
+                    breakpoint: 600,
                     settings: {
                         slidesToShow: 1,
                         slidesToScroll: 1,
                     }
                 },
                 {
-                    breakpoint: 1024,
+                    breakpoint: 900,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 1100,
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 3,

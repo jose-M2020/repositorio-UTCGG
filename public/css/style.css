@@ -31,7 +31,6 @@ h1{
   font-weight: 800;
   text-transform: uppercase;
   margin: 0 0 .8rem;
-  line-height: 4.3rem;
 }
 
 h2{
@@ -362,6 +361,39 @@ footer{
 	margin: 0;
   }
 
+  .ultimos .card .card-title,
+  .destacados .card .card-title {
+	color: var(--blue);
+    font-size: 1.06rem;
+    font-weight: bold;
+    text-decoration: none;
+	overflow: hidden;
+   	text-overflow: ellipsis;
+   	display: -webkit-box;
+   	-webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+  .ultimos .card .card-title:hover,
+  .destacados .card .card-title:hover {
+	text-decoration: underline;
+  }
+
+  .ultimos .card .card-text,
+  .destacados .card .card-text {
+	overflow: hidden;
+   	text-overflow: ellipsis;
+   	display: -webkit-box;
+   	-webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
+
+  .card .card-image img {
+	object-fit: cover;
+	height: 12rem;
+  }
+
+
 /* || Tabla usuarios
 ----------------------------------------------------- */
 
@@ -486,47 +518,6 @@ footer{
 	box-shadow: 0 0 5px 1px #287c55;
 }
 
-/* || Paginación
------------------------------------------------------ */
-.pagination{
-	justify-content: center;
-	align-items: center;
-}
-
-.pagination .page-link{
-	padding: 12px;
-	font-size: 16px;
-	border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pagination .page-link{
-	margin-right: 5px;
-}
-
-.pagination li:first-child .page-link,
-.pagination li:last-child .page-link{
-	font-size: 34px;
-	font-weight: bold;
-	background-color: transparent;
-	border: none;
-	color: #19764f;
-}
-
-.pagination li:not(:first-child) span,
-.pagination li:not(:last-child) span{
-	/*background-color: transparent;*/
-	/*border: none ;*/
-}
-
-.pagination .active .page-link{
-	background-color: rgb(25, 118, 79);
-	border: none;
-}
 
 /* || Dashboard
 ----------------------------------------------------- */

@@ -4,14 +4,14 @@
 
 @section('dashboard-content')
   {{-- $_SERVER['REQUEST_URI'] != '/repositorios' ? $_SERVER['REQUEST_URI'].'&' : $_SERVER['REQUEST_URI'].'?'--}}
-  
+  {{ Breadcrumbs::render('roles.index',) }}
   <div class="roles">
-    <div class="d-flex justify-content-between align-items-center py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="total-records">
           <p>Roles totales: <b>{{ $roles->total() }}</b></p>
       </div>
       <div>
-        <a href="{{ route('roles.create') }}" class="btn btn-success">Nuevo</a>
+        <x-button.success href="{{ route('roles.create') }}">Nuevo</x-button.success>
       </div>
     </div>
     <x-table :data="$roles" linkEdit="roles.edit"/>
@@ -23,7 +23,7 @@
       <form id="delete-repository" method="POST" action="{{ route('roles.destroy', ':id') }}">
         @method('delete')
         @csrf
-        <button type="submit" class="btn btn-success">Aceptar</button>      
+        <x-button.danger type="submit">Aceptar</x-button.danger>
        </form>
     </x-slot>
   </x-modal>

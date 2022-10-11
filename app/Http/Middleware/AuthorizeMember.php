@@ -17,12 +17,13 @@ class AuthorizeMember
      */
     public function handle(Request $request, Closure $next)
     {
+        $user = auth()->user();
         $repositorio = $request->route()->parameter('repositorio');
-        // dd($request)
         $usuarios = $repositorio->users()
                                 ->get();
+            
 
-        if(($usuarios->find(auth()->user()->id)) || (auth()->user()->roles[0]->name === 'admin')){
+        if($usuarios->find($user->id) || $user->hasRole('admin') ){
             return $next($request);
         }
         

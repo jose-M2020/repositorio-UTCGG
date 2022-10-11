@@ -3,7 +3,7 @@
   'id',
   'footer' => null, 
   'body' => null, 
-  'hasCancelBtn' => 'true',
+  'hasCancelBtn' => 'false',
   'isCenter' => null 
 ])
 

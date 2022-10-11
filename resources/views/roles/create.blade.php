@@ -5,11 +5,12 @@
 @section('dashboard-content')
   
   <div class="roles container-fluid mt-4 px-sm-0 px-md-5">
+	{{ Breadcrumbs::render('roles.create',) }}
     <form action="{{ route('roles.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label fs-5">Nombre</label>
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form__input" id="name" name="name">
         </div>
     
         <h5 class="mt-4 fs-5">Permisos</h5>
@@ -32,7 +33,8 @@
 	            </div>
 	        @endforeach
 	    </div>
-	    <button class="btn btn-green mt-4">Crear</button>
+		<x-button.success type="submit" class="mt-4">Crear</x-button.success>
+	    {{-- <button class="btn btn-green mt-4">Crear</button> --}}
 	</form>
   </div>
 

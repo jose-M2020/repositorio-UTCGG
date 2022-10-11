@@ -91,15 +91,15 @@ if(!function_exists('get_careers')){
 	function get_careers()
 	{
 		return [
-			'TIC' => 'Tecnologias de la información y comunicación',
+			'TIC' => 'Tecnologias de la Información y Comunicación',
 			'G' => 'Gastronomía',
-			'MM' => 'Metal mecánica',
-			'ER' => 'Energías renovables',
-			'PA' => 'Procesos alimentarios',
-			'LI' => 'Logística internacional',
-			'MI' => 'Mantenimiento industrial',
-			'GCH' => 'Gestión del capital humano',
-			'GDT' => 'Gestión y desarrollo turístico'
+			'MM' => 'Metal Mecánica',
+			'ER' => 'Energías Renovables',
+			'PA' => 'Procesos Alimentarios',
+			'LI' => 'Logística Internacional',
+			'MI' => 'Mantenimiento Industrial',
+			'GCH' => 'Gestión del Capital Humano',
+			'GDT' => 'Gestión y Desarrollo Turístico'
 		];
 	}
 }

@@ -63,12 +63,13 @@ class RepositorioFactory extends Factory
 
             'nombre_rep' => $title,
             'slug' => Str::slug($title, '-'),
-            'descripcion' => $this->faker->paragraph(),
+            'descripcion' => $this->faker->text(600) ,
             'tipo_proyecto' => $this->faker->randomElement(['Integradora', 'Estadía', 'Proyecto Especial']),
             'nivel_proyecto' => $this->faker->randomElement(['TSU', 'Ingeniería']),
 
             // ----Campos añadidos----------------
             'palabras_clave' => $keyword,
+            'publico' => 1,
             'generacion' => $this->faker->randomElement(['2018-2021', '2015-2018', '2013-2015', '2010-2013']),
             'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword]),
             // ------------------------------------

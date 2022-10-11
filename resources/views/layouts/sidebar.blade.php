@@ -20,13 +20,16 @@
               @can('repositorios.create')
                 <x-navbar.link link="{{ route('repositorios.create') }}" name="Nuevo"/>
               @endcan
-              {{-- <x-navbar.link link="files" name="Favoritos"/> --}}
-              @role('alumno')
-                <x-navbar.link link="{{ route('repositorios.user') }}" name="Mis repositorios"/>
-              @endrole
-              @role('docente')
-                <x-navbar.link link="{{ route('repositorios.user') }}" name="Colaboraciones"/>
-              @endrole
+              @switch(auth()->user()->roles[0]->name)
+                @case('alumno')
+                  <x-navbar.link link="{{ route('repositorios.user') }}" name="Mis repositorios"/>
+                  @break
+                @case('docente')
+                  <x-navbar.link link="{{ route('repositorios.user') }}" name="Colaboraciones"/>
+                  @break
+                @default
+                  <x-navbar.link link="{{ route('repositorios.user') }}" name="Repositorios"/>
+              @endswitch
           </ul>
       </x-navbar.link>
       {{-- @role('admin')
@@ -58,7 +61,7 @@
         </x-navbar.link>
       @endcan
 
-      <x-navbar.link collapse="true" id="collapseConfig" class="my-2">
+      {{-- <x-navbar.link collapse="true" id="collapseConfig" class="my-2">
           <x-slot name="name">
               <i class="fas fa-cog"></i>
               <span class="text">Configuración</span>
@@ -66,30 +69,14 @@
           <ul class="submenu nav flex-column">
               <x-navbar.link link="" name="Mis datos"/>
           </ul>
+      </x-navbar.link> --}}
+
+      <x-navbar.link class="my-2" link="{{ route('usuarios.show', auth()->user()->id) }}">
+        <x-slot name="name">
+          <i class="fa-solid fa-cog"></i>
+          <span class="text">Perfil</span>
+        </x-slot>
       </x-navbar.link>
-      {{-- <li class="nav-item">
-        <a href="#" class="nav-link active py-3 border-bottom" aria-current="page" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Home">
-          <svg class="bi" width="24" height="24" role="img" aria-label="Home"><use xlink:href="#home"></use></svg>
-        </a>
-      </li> --}}
-      
-      {{-- <li>
-        <a href="#" class="nav-link py-3 border-bottom" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Dashboard">
-          <svg class="bi" width="24" height="24" role="img" aria-label="Dashboard"><use xlink:href="#speedometer2"></use></svg>
-        </a>
-      </li> --}}
       
     </ul>
-    {{-- <div class="dropdown border-top">
-      <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle">
-      </a>
-      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3" style="">
-        <li><a class="dropdown-item" href="#">New project...</a></li>
-        <li><a class="dropdown-item" href="#">Settings</a></li>
-        <li><a class="dropdown-item" href="#">Profile</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li>
-      </ul>
-    </div> --}}
 </div>

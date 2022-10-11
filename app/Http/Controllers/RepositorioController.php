@@ -50,7 +50,9 @@ class RepositorioController extends Controller
                         return $query->where('descripcion', 'like', '%'.$search.'%');
                     }
                     if($search_field === 'author'){
-                        return $query->where('alumno', 'like', '%'.$search.'%');
+                        return $query->whereHas('users', function ($query) use ($search){
+                            $query->where('nombre', 'like', '%'.$search.'%');
+                        });
                     }
                 })
                 ->when($request->carrera, function ($query, $career){
@@ -109,7 +111,7 @@ class RepositorioController extends Controller
 
         $request->validate([
             'nombre_repositorio' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
+            'descripcion' => 'required|string',
             'tipo_proyecto' => 'required|string|max:80',
             'nivel_proyecto' => 'required|string|max:80',
             'palabras_clave' => 'required|string|max:255',
@@ -118,7 +120,7 @@ class RepositorioController extends Controller
             'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
             'carrera' => 'required|string|max:80',            
             'empresa' => 'required|string|max:255',
-            'asesor_academico' => $isEstadia ? 'required|string|max:255|exists:usuarios,email' : '',
+            // 'asesor_academico' => $isEstadia ? 'required|string|max:255|exists:usuarios,email' : '',
             'asesor_externo' => $isEstadia ? 'required|string|max:255' : '',
             'generacion' => 'required|string|max:255',
         ]);
@@ -207,19 +209,28 @@ class RepositorioController extends Controller
      */
     public function show(Repositorio $repositorio)
     {   
-        // dd($repositorio);
-        // $repositorio = Repositorio::findOrFail($id);
+        $user = auth()->user();
+        $members = $repositorio->users;
 
-        $users = Repositorio::find($repositorio->id)
-                            ->users()
-                            ->role('docente')
-                            ->get()
-                            ->toArray();
-        
-        $repositorio['autores'] = $users;
-        
-        $files = Repositorio::findOrFail($repositorio->id)->getFile;
-        return view('repositorio.show', compact('repositorio', 'files'));
+        if(
+            $repositorio->publico || 
+            $user?->hasRole('admin') || 
+            $members->find($user?->id)
+        ) {
+            // dd(explode(',', $repositorio->palabras_clave));
+            $relatedItems = Repositorio::where('carrera', $repositorio->carrera)
+                                       ->where('id', '!=' ,$repositorio->id)
+                                       ->inRandomOrder()
+                                       ->paginate(10);
+                        
+            $files = Repositorio::findOrFail($repositorio->id)
+                                ->getFile
+                                ->where('is_public', true);
+
+            return view('repositorio.show', compact('repositorio', 'files','relatedItems'));
+        }
+
+        abort(404);
     }
 
     public function showByUser(Repositorio $repositorio)
@@ -258,7 +269,7 @@ class RepositorioController extends Controller
 
         $request->validate([
             'nombre_repositorio' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255',
+            'descripcion' => 'required|string',
             'tipo_proyecto' => 'required|string|max:80',
             'nivel_proyecto' => 'required|string|max:80',
             'palabras_clave' => 'required|string|max:255',

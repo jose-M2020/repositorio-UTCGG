@@ -4,8 +4,9 @@
 
 @section('dashboard-content')
 
+{{ Breadcrumbs::render('usuarios.edit', $usuario) }}
 <div class="row">
-	<h3 class="mt-4 mb-5">Editar Perfil</h1>
+	<h3 class="mb-4">Editar Perfil</h1>
 </div>
 <form id="edit-student" method="POST" action="{{ route('usuarios.update', $usuario->id) }}">
 	<div class="row">
@@ -87,7 +88,7 @@
 					</div>
 				</div> --}}
 				<div class="form__field mt-4 text-center">
-					<button type="submit" class="form__btn-submit">Actualizar</button>
+					<x-button.success type="submit">Actualizar</x-button.success>
 				</div>
 			</div>
 		</div>

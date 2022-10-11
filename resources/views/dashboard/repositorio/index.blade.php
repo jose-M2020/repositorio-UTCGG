@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mis repositorios')
+@section('title', 'Repositorios')
 
 @section('head')
 
@@ -8,15 +8,27 @@
 
 @section('dashboard-content')
 
+{{ Breadcrumbs::render('repositorios.user') }}
 <div class="row">
-  <div class="d-flex justify-content-between align-items-center my-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-      <h1 class="mb-0" style="font-size: 2rem">
-        {{ auth()->user()->roles[0]->name === 'alumno' ? 'Mis repositorios' : 'Colaboraciones' }}
+      <h1 style="font-size: 1.8rem; letter-spacing: 3px;">
+        @switch(auth()->user()->roles[0]->name)
+            @case('alumno')
+              Mis repositorios
+              @break
+            @case('docente')
+              Colaboraciones
+              @break
+            @default
+              Repositorios
+        @endswitch
       </h1>
     </div>
     <div>
-      <a href="{{ route('repositorios.create') }}" class="btn btn-green"><i class="fa-solid fa-folder-open"></i> Nuevo</a>
+      <x-button.success href="{{ route('repositorios.create') }}">
+        <i class="fa-solid fa-folder-open"></i> Nuevo
+      </x-button.success>
     </div>
   </div>
 		{{-- {{ dd($repositorios) }} --}}
@@ -42,12 +54,14 @@
                     </div>
                   </a>
                 </li>  
-
             @empty
                 <p>Aún no has creado ningún repositorio</p>
                 <button class="btn">Crear nuevo repositorio</button>
             @endforelse
           </ul>
+        </div>
+        <div class="mb-5">
+          {{ $repositorios->links() }}
         </div>
 </div>
 

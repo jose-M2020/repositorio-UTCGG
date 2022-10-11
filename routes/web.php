@@ -121,15 +121,18 @@ Route::resource('repositorios', RepositorioController::class)
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('files', FileController::class)
-         ->except(['store', 'create', 'destroy']);
+         ->except(['store', 'create', 'destroy', 'update']);
 
-    Route::get('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'create'])
+    Route::get('mi-cuenta/repositorios/{repositorio}/archivos/upload', [FileController::class, 'create'])
          ->name('files.create');
 
-    Route::post('mi-cuenta/repositorios/{repositorio}/upload', [FileController::class, 'store'])
+    Route::post('mi-cuenta/repositorios/{repositorio}/archivos/upload', [FileController::class, 'store'])
          ->name('files.store');
+     
+    Route::put('mi-cuenta/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'update'])
+         ->name('files.update');
 
-    Route::delete('mi-cuenta/repositorios/{repositorio}/{type?}/{file}', [FileController::class, 'destroy'])
+    Route::delete('mi-cuenta/repositorios/{repositorio}/archivos/{type?}/{file}', [FileController::class, 'destroy'])
          ->name('files.destroy');
     
     Route::get('files/download/{file}', [FileController::class, 'download'])

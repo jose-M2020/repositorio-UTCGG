@@ -46,10 +46,11 @@
     </div>
 
     <div class="container">
+      {{ Breadcrumbs::render('repositorios.index') }}
       <div class="row">
   
         {{-- Menú de filtro --}}
-        <nav class="filters col-md-3 d-block sidebar collapse p-0">
+        <nav class="filters col-md-3 d-block sidebar collapse">
           <button class="close d-block d-md-none mt-2 fs-5 ms-auto"><i class="fas fa-times"></i></button>
           <div class="filters__content pt-3">
             <div class="collapse navbar-collapse navbar-ex1-collapse d-block">
@@ -131,7 +132,17 @@
                   </div>
                   <div class="col-12 col-md-4 col-lg-3 align-self-center" style="color: #2E6A99;">
                     <!-- <i class="fas fa-file-pdf" style="font-size: 100px"></i> -->
-                    <img src="{{ json_decode($repositorio->imagenes)[0] ?? 'https://repositoriout.s3.us-east-2.amazonaws.com/assets/img/no-image.svg' }}" style="object-fit: cover; width: 100%;" alt="Imagen del repositorio" loading="lazy">
+                    @if ($imagenes = json_decode($repositorio?->imagenes))
+                      <img src="{{ Str::contains($imagenes[0], 'https') ? $imagenes[0] : Storage::disk('s3')->url($imagenes[0]) }}" 
+                           style="object-fit: cover; width: 100%;" 
+                           alt="Imagen del repositorio" 
+                           loading="lazy">
+                    @else
+                      <img src="https://repositoriout.s3.us-east-2.amazonaws.com/assets/img/no-image.svg" 
+                          style="object-fit: cover; width: 100%;" 
+                          alt="Imagen del repositorio" 
+                          loading="lazy">
+                    @endif
                   </div>
                   <div class="col align-self-center d-flex flex-column w-100 pb-3 mb-0 small lh-sm">
                     <div class="repository__tags my-2">
@@ -140,18 +151,16 @@
                     </div>
                     <a class="mb-2 title" href="{{ route('repositorios.show', $repositorio) }}">{{ $repositorio->nombre_rep }}</a>
                     <div class="repository__datails">
-                      <p class="description">{{ $repositorio->descripcion }}</p>
+                      <p class="repository__description">{{ $repositorio->descripcion }}</p>
                       <div class="d-flex justify-content-between">
                         <p class="author">
-                          {{-- @foreach(json_decode($repositorio->alumno) as $author)
-                            @if ($loop->last)
-                                {{ $author }}.
-                                @break
+                          @foreach($repositorio->users as $user)
+                            @if ($user->hasRole('alumno'))
+                              {{ $user->nombre }},
                             @endif
-                            {{ $author }},
-                          @endforeach --}}
+                          @endforeach
                         </p>
-                        <p>{{$repositorio->created_at}}</p>
+                        <p>{{$repositorio->created_at->format("m/d/Y")}}</p>
                       </div>
                     </div>
                     {{--
@@ -186,7 +195,7 @@
       <form id="delete-repository" method="POST" action="">
         @method('delete')
         @csrf
-        <button type="submit" class="btn btn-success">Aceptar</button>      
+        <button type="submit" class="btn btn-success">Confirmar eliminaciòn</button>      
        </form>
     </x-slot>
   </x-modal>

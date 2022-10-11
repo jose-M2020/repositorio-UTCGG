@@ -22,13 +22,13 @@
 
 @section('dashboard-content')
 
+<div class="d-flex align-items-center justify-content-between">
+    {{ Breadcrumbs::render('repositorios.user.show', $repositorio) }}
+    <a href="{{ route('repositorios.show', $repositorio->slug) }}"><i class="fa-solid fa-eye"></i> Ver</a>
+</div>
 <div class="row">
-    <div class="mt-2 mb-4">
-        <a href="{{ route('repositorios.user', auth()->user()->id) }}"><i class="fa-solid fa-arrow-left"></i> Regresar</a>
-    </div>
-    
     <div>
-        <ul class="nav nav-tabs mb-4 justify-content-center" id="myTab" role="tablist">
+        <ul class="nav nav-tabs nav-tabs-green mb-4 justify-content-center" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active" id="file-tab" data-bs-toggle="tab" data-bs-target="#file" type="button" role="tab" aria-controls="file" aria-selected="true"><i class="fa-solid fa-folder-tree"></i> Archivos</button>
             </li>
@@ -42,15 +42,18 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="file" role="tabpanel" aria-labelledby="file-tab">
                 <div class="project-files mb-5">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4>Documentos</h4>
-                        <a href="{{ route('files.create', $repositorio->slug) }}" class="btn btn-secondary btn-sm me-2"><i class="fa-solid fa-upload"></i> Subir archivo</a>
+                        <x-button.success href="{{ route('files.create', $repositorio->slug) }}" class="btn-sm">
+                            <i class="fa-solid fa-upload"></i> Subir archivo
+                        </x-button.success>
                     </div>
-                    <table class="table project-files__table">
+                    <table class="table project-files__table mb-4">
                         {{-- <thead>
                             <tr>
                                 <td>Nombre</td>
-            
+                                <td>Fecha</td>
+                                <td>Estado</td>
                             </tr>
                         </thead> --}}
                         <tbody>
@@ -59,21 +62,45 @@
                                     <td>{{ $file->original_name }}</td>
                                     <td>{{ $file->created_at->format("m/d/Y") }}</td>
                                     <td>
+                                        @if ($file->is_public)
+                                            <span style="background: #2e7d61; padding: 6px; border-radius: 10px; color: #fff"><i class="fa-solid fa-globe"></i> Público</span>
+                                        @else
+                                            <span style="background: rgb(46, 125, 97, .7); padding: 6px; border-radius: 10px; color: #fff"><i class="fa-solid fa-lock"></i> Privado</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <div class="btn-group dropstart">
                                             <button type="button" class="btn py-0 px-3" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                                             </button>
                                             
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="{{ route('files.download', $file->id) }}"><i class="fa-solid fa-download"></i> Descargar</a></li>
-                                                {{-- <li><a class="dropdown-item" href="#"><i class="fa-solid fa-trash-can"></i> Eliminar</a></li> --}}
+                                                <li><a class="dropdown-item" href="{{ route('files.download', $file->id) }}"><i class="fa-solid fa-download me-2"></i>Descargar</a></li>
+                                                <li>
+                                                    <form action="{{ route('files.update', ['repositorio' => $repositorio->slug, 'file' => $file->id]) }}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                        <input type="hidden" value="{{ $file->is_public ? '' : 'true' }}" name="publico">
+                                                        <button class="btn btn-transparent"><i class="fa-solid fa-eye me-2"></i>Hacer {{ $file->is_public ? 'Privado' : 'Público' }}</button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    @if ($file->file_type === 'pdf')
+                                                        <button class="btn btn-transparent"
+                                                            id="show-file"
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#modalFile-{{$file->id}}">
+                                                            <i class="fa-solid fa-eye me-2"></i>Visualizar
+                                                        </button>
+                                                    @endif
+                                                </li>
                                                 <li>
                                                     <a class="dropdown-item delete"
                                                         id="doc-file"
                                                         data-id="{{ $file->id }}"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#modalDeleteFile">
-                                                        <i class="fa-solid fa-trash-can"></i> Eliminar
+                                                        <i class="fa-solid fa-trash-can me-2"></i>Eliminar
                                                     </a>
                                                 </li>
                                             </ul>
@@ -81,6 +108,19 @@
                                         
                                     </td>
                                 </tr>
+
+                                @if ($file->file_type === 'pdf')
+                                    <x-modal id="modalFile-{{$file->id}}" title="{{$file->original_name}}" class="modal-file">
+                                        <x-slot name="body">
+                                            <iframe style="width: 100%; height: 600px;" 
+                                                    allowfullscreen 
+                                                    title="Archivo" 
+                                                    src="{{ Storage::disk('s3')->url($file->file_path) }}"
+                                                    loading="lazy"
+                                            ></iframe>
+                                        </x-slot>
+                                    </x-modal>
+                                @endif
                             @empty
                                 <div class="text-center my-5">
                                     <i class="fa-regular fa-folder-open fs-1"></i>
@@ -90,11 +130,11 @@
                         </tbody>
                     </table>
                     @if ($repositorio->imagenes)
-                        <h4>Galeria</h4>
+                        <h4 class="mb-3">Galeria</h4>
                         <div class="project-files__img-container">
                             @foreach (json_decode($repositorio->imagenes) as $index => $img)
                                 <div class="project-files__img-item position-relative">
-                                    <img src="{{ Storage::disk('s3')->url($img) }}" alt="Imagen del repositorio" loading="lazy">
+                                    <img src="{{ Str::contains($img, 'https') ? $img : Storage::disk('s3')->url($img) }}" alt="Imagen del repositorio" loading="lazy">
                                     <div class="btn-group dropstart position-absolute top-0 end-0">
                                         <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -122,15 +162,17 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-                <h4>Repositorio</h4>
                 <div class="project-info mb-5">
                     <form class="project-info__form mb-4" action="{{ route('repositorios.update', $repositorio->slug) }}" method="POST">
                         @csrf
                         @method('put')
-                        <div class="project-info__header p-3">
+                        <div class="project-info__header px-2 py-4">
                           <div class="d-flex justify-content-between">
                               <h4>Datos del repositorio</h4>
-                              <button type="button" id="enableEdit" class="btn btn-secondary btn-sm align-self-end mb-3"><i class="fa-solid fa-pen"></i> Editar</button>
+                              <x-button.success id="enableEdit" class="btn-sm align-self-end mb-3">
+                                <i class="fa-solid fa-pen"></i> Editar
+                              </x-button.success>
+                              {{-- <button type="button" id="enableEdit" class="btn btn-secondary btn-sm align-self-end mb-3"><i class="fa-solid fa-pen"></i> Editar</button> --}}
                           </div>
                           <div class="d-flex justify-content-between">
                               <span><i class="fa-solid fa-user"></i> {{ $repositorio->created_by }}</span>
@@ -317,8 +359,12 @@
                             </tbody>
                         </table>
                         <div class="project-info__footer justify-content-end">
-                            <button type="button" id="cancel" class="btn btn-danger me-2"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                            <button class="btn btn-green" type="submit">Actualizar</button>
+                            <x-button.danger id="cancel" class="me-2">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </x-button.danger>
+                            <x-button.success type="submit">
+                                Actualizar
+                            </x-button.success>
                         </div>
                     </form>
                 </div>
@@ -332,11 +378,14 @@
                     <div class="col-md-10">
                         <div class="d-flex justify-content-between mb-3">
                             <h4 class="fs-3">Miembros</h4>
-                            <a  class="btn btn-green"
+                            {{-- <a  class="btn btn-green"
                                 data-bs-toggle="modal" 
                                 data-bs-target="#modalSearch">
                                 Agregar miembro
-                            </a>
+                            </a> --}}
+                            <x-button.success class="btn-sm" data-bs-toggle="modal" data-bs-target="#modalSearch">
+                                Agregar miembro
+                            </x-button.success>
                         </div>
                         <table class="table">
                             <tbody>
@@ -365,11 +414,13 @@
                                                 <!-- Modal - Delete member -->
                                                 <x-modal id="modalDeleteMember-{{$index}}" title="¿Quieres eliminar el usuario de este repositorio?" isCenter="true">
                                                     <x-slot name="footer">
-                                                    <form id="delete-student" method="POST" action="{{ route('repositorios.member.destroy', ['repositorio' => $repositorio->slug, 'usuario' => $user->id ]) }}">
-                                                        @method('delete')
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-success">Aceptar</button>      
-                                                    </form>
+                                                        <form id="delete-student" method="POST" action="{{ route('repositorios.member.destroy', ['repositorio' => $repositorio->slug, 'usuario' => $user->id ]) }}">
+                                                            @method('delete')
+                                                            @csrf 
+                                                            <x-button.danger type="submit">
+                                                                Confirmar eliminaciòn
+                                                            </x-button.danger>    
+                                                        </form>
                                                     </x-slot>
                                                 </x-modal>
                                             </div>
@@ -619,7 +670,9 @@
       <form id="delete-student" method="POST" action="{{ route('files.destroy', ['repositorio' => $repositorio->slug,'type' => 'doc', 'file' => ':id']) }}">
         @method('delete')
         @csrf
-        <button type="submit" class="btn btn-success">Aceptar</button>      
+        <x-button.danger type="submit">
+            Confirmar eliminaciòn
+        </x-button.danger> 
        </form>
     </x-slot>
 </x-modal>
@@ -636,13 +689,12 @@
             <form action="{{ route('repositorios.member.store', $repositorio->slug) }}" method="POST">
                 @csrf
                 <ul class="search-box__selected p-0"></ul>
-                <button type="submit" class="form__btn-submit w-100 mt-3">Agregar</button>
+                <x-button.success type="submit" class="w-100 mt-3">
+                    Agregar
+                </x-button.success> 
             </form>
         </div>
     </x-slot>
-    {{-- <x-slot name="footer">
-        <button type="submit" class="btn btn-green w-100">Agregar</button>      
-    </x-slot> --}}
 </x-modal>
 
 @endsection

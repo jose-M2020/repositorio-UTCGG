@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Repositorio;
 use Illuminate\Http\Request;
-use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
 use PhpParser\Builder\Use_;
-
-use Spatie\Permission\Models\Role;
 use Auth;
+
+use App\Models\Usuario;
+use App\Models\Repositorio;
+use Spatie\Permission\Models\Role;
 
 class UsuarioController extends Controller
 {
@@ -109,17 +109,31 @@ class UsuarioController extends Controller
                 ->with('status', 'Alumno registrado exitosamente!');
     }
 
-    public function show($id)
+    public function show(Usuario $usuario)
     {
-        //
+        $user = auth()->user();
+        $repositorios = Usuario::find($user->id)->repositories()
+                                   ->orderBy('repositorios.created_at', 'desc')
+                                   ->get(['nombre_rep', 'slug', 'publico']);
+                
+        $repPublico = $repositorios->where('publico', true);
+        $repPrivado = $repositorios->where('publico', false);
+
+        return view('usuario.show', compact('usuario','repPublico','repPrivado'));
     }
 
     public function showRepositories(Request $request)
     {
-        $userId = auth()->id();
+        $user = auth()->user();
 
-        $repositorios = Usuario::find($userId)->repositories()
-                                ->get();
+        if($user->roles[0]->name === 'admin'){
+            $repositorios = Repositorio::orderByDesc('created_at')
+                                       ->paginate(15);
+        } else{
+            $repositorios = Usuario::find($user->id)->repositories()
+                                   ->orderBy('created_at', 'desc')
+                                   ->paginate(15);
+        }
 
         return view('dashboard.repositorio.index', compact('repositorios'));
     }
@@ -229,6 +243,7 @@ class UsuarioController extends Controller
                 }
             })
             ->role($roles ? $roles : $this->roles)
+            // ->where('id', '!=' , auth()->id())
             ->paginate(10, $fields ?? $this->fields)
             ->withQueryString();
 

@@ -82,19 +82,24 @@
                     <x-navbar.link link="{{ route('repositorios.create') }}">
                       <x-slot name="name"><i class="fas fa-folder-plus fs-5 me-2"></i> Nuevo repositorio</x-slot>
                     </x-navbar.link>
-                    @role('alumno')
-                      <x-navbar.link link="{{route('repositorios.user')}}">
-                          <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Mis repositorios</x-slot>
-                      </x-navbar.link>
-                    @endrole
-                    @role('docente')
-                      <x-navbar.link link="{{route('repositorios.user')}}">
-                          <x-slot name="name"><i class="fas fa-folder-open fs-5 me-2"></i> Colaboraciones</x-slot>
-                      </x-navbar.link>
-                    @endrole
+                    <x-navbar.link link="{{route('repositorios.user')}}">
+                        <x-slot name="name">
+                          <i class="fas fa-folder-open fs-5 me-2"></i> 
+                          @switch(auth()->user()->roles[0]->name)
+                            @case('alumno')
+                              Mis repositorios
+                              @break
+                            @case('docente')
+                              Colaboraciones
+                              @break
+                            @default
+                              Repositorios
+                          @endswitch
+                        </x-slot>
+                    </x-navbar.link>
                     @can('repositorios.create')
-                        <x-navbar.link link="/files">
-                          <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Mis datos</x-slot>
+                        <x-navbar.link link="{{ route('usuarios.show', auth()->user()->id) }}">
+                          <x-slot name="name"><i class="fas fa-user-lock me-2"></i> Perfil</x-slot>
                         </x-navbar.link>
                     @endcan
                     @role('admin') 

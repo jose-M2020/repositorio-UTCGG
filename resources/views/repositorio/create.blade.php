@@ -25,6 +25,7 @@
 
 @section('dashboard-content')
 
+{{ Breadcrumbs::render('repositorios.create') }}
 <div class="row justify-content-center align-items-center pt-3">
 	
 	<div class="col-md-7 mb-5">
@@ -92,7 +93,7 @@
 						</div>
 					</div>
 					<div class="text-end mt-5">
-						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
+						<x-button.success id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button.success>
 					</div>
 				</fieldset>
 				<fieldset id="project" class="section px-2">
@@ -145,8 +146,8 @@
 						<input type="text" name="generacion" class="form__input" value="{{old('generacion')}}">
 					</div>
 					<div class="text-end d-block mt-5">
-						<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
-						<x-button id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button>
+						<x-button.success id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button.success>
+						<x-button.success id="next">Siguiente <i class="fas fa-chevron-right"></i></x-button.success>
 					</div>
 				</fieldset>
 				<fieldset id="personal_data" class="section px-2">
@@ -200,8 +201,8 @@
 						<input type="text" name="empresa" class="form__input" value="{{old('empresa')}}">
 					</div>
 					<div class="text-end d-block mt-5">
-						<x-button id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button>
-						<x-button name="BotonSubir" type="submit">Crear <i class="far fa-paper-plane"></i></x-button>
+						<x-button.success id="previous"><i class="fas fa-chevron-left"></i> Anterior</x-button.success>
+						<x-button.success name="BotonSubir" type="submit">Crear <i class="far fa-paper-plane"></i></x-button.success>
 					</div>
 				</fieldset>
 			</div>

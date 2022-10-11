@@ -25,25 +25,25 @@ class Repositorio_usuarioFactory extends Factory
     public function definition()
     {   
         // TODO: insert multuple users with role alumno and once with role docente
-        // static $students_name = [];
-        $repositorio = Repositorio::/*whereNotIn('created_by',$students_name)*/
-                                    inRandomOrder()
-                                    ->get(['id', 'created_by'])
-                                    ->first();
-        // array_push($students_name, $repositorio->created_by);
-        
-        $usuario_id = Usuario::/*where('nombre', $repositorio->created_by)*/
-                            inRandomOrder()
-                            ->value('id');
 
-        // $repositorio = Repositorio::all()->random();
-        // $a = $
-        // $usuario_id = Alumno::where('nombre', $repositorio->created_by)->value('id');
+        static $idReps = [];
+
+        $repositorio = Repositorio::whereNotIn('id',$idReps)
+                                  ->inRandomOrder()
+                                  ->get(['id', 'created_by'])
+                                  ->first();
+
+        array_push($idReps, $repositorio->id);
+        
+        $usuario_id = Usuario::inRandomOrder()
+                             ->role(['alumno'])
+                             ->value('id');
+
+        // $usuario_id = Usuario::doesntHave('repositories')->inRandomOrder()->get()->first();
 
         return [
             'usuario_id' => $usuario_id,
-            'repositorio_id' => $repositorio->id,
-            // 'docente_id' => Docente::all()->random()->id,
+            'repositorio_id' => $repositorio->id
         ];
     }
 

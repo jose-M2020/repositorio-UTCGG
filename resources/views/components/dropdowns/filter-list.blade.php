@@ -1,4 +1,4 @@
-  <p class="filters__title mt-2">Filtros</p>
+  <p class="filters__title">Filtros</p>
   <ul class="navbar-nav filters__list">
       <li>
           <a class="menu-title" href="javascript:void(0)" data-toggle="collapse" data-target="#submenu-1">

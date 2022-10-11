@@ -31,9 +31,7 @@ class FileFactory extends Factory
         array_push($repositories_id, $repository_id);
 
         return [
-            // 'repositorio_id' => $this->faker->unique()->numberBetween(1, 30),
             'repositorio_id' => $repository_id,
-            // 'alumno_id' => $number++,
             'original_name' => 'Documentación',
             'file_type' => 'pdf',
             'file_path' => 'files/test/Documentación.pdf',

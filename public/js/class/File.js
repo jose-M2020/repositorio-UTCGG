@@ -70,20 +70,20 @@ export default class File {
 
     _onDragLeave() {
         this.fileInput.addEventListener('dragleave', event => {
-            this.dropZone.style.backgroundColor = '';
+            this.dropZone.classList.remove('files__drop-zone--enter');
         });
     }
     
     _onDragEnter() {
         this.fileInput.addEventListener('dragenter', event => {
             // const target = validateTarget(event.target);
-            this.dropZone.style.backgroundColor = '#eaeaea';
+            this.dropZone.classList.add('files__drop-zone--enter');
         });
     }
 
     _onDrop() {
         this.fileInput.addEventListener('drop', event => {
-            this.dropZone.style.backgroundColor = '';
+            this.dropZone.classList.remove('files__drop-zone--enter');
         });
     }
 
@@ -135,45 +135,15 @@ export default class File {
                 +i.file-remove.fas.fa-times-circle
             `);
         }else{
-            // element = createHTML([
-            //   {
-            //     type: 'div',
-            //     attributes: { class: `${fileContainerClass} d-flex position-relative`, id: fileContainerId}
-            //   },
-            //   {
-            //     type: 'span',
-            //     attributes: { class: 'file-name' },
-            //     data: fileData.name,
-            //     icon: { class: `fa-solid fa-file fs-3`}
-            //   },
-            //   {
-            //     type: 'select',
-            //     isChild: false,
-            //     attributes: { class: 'file-type form-select ms-auto', name: `type_file[]`, id: fileData.id },
-            //     data: 'Tipo de documento',
-            //     options: {
-            //         documentacion: 'Documentación',
-            //         proyecto: 'Proyecto desarrollado',
-            //         otro: 'Otro',
-            //     }
-            //   },
-            //   {
-            //     type: 'i',
-            //     isChild: false,
-            //     attributes: { class: 'file-remove fas fa-times-circle' }
-            //   }
-            // ]);
+            // `^.form-check#${fileData.id}(name="type_file[]")
+            //         >input.form-check-input(type="checkbox",id="publco-${fileData.id}",name="publco[]")
+            //         +label.form-check-label(for="publco-${fileData.id}"){Público}`
 
             element = Emmet(`
             .${fileContainerClass}.d-flex.position-relative#${fileContainerId}
                 >div.file-name
                     >i.fa-solid.fa-file.fs-3
                     +span{${fileData.name}}
-                ^select.file-type.form-select.ms-auto#${fileData.id}(name="type_file[]")
-                    >option(selected="",disabled=""){Tipo de documento}
-                    +option(value="documentacion"){Documentación}
-                    +option(value="proyecto"){Proyecto desarrollado}
-                    +option(value="otro"){Otro}
                 ^i.file-remove.fas.fa-times-circle
             `)
         }

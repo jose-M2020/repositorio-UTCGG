@@ -3,7 +3,8 @@
 @section('title', 'Registrar alumno')
 
 @section('dashboard-content')
-	<div class="row justify-content-center mt-5">
+	{{ Breadcrumbs::render('usuarios.create') }}
+	<div class="row justify-content-center">
     	<div class="col-md-3 d-flex flex-column justify-content-center align-items-center text-white px-3 py-4" style="background-color: #389c76;">
 	      	<div>
 				<h3 class="mb-0 mb-md-5 text-center">Registrar usuario</h3>
@@ -55,7 +56,7 @@
 				</div> --}}
 				
 				<div class="form__field mt-3 text-center">
-					<button class="form__btn-submit" type="submit" name="register">Registrar</button>
+					<x-button.success type="submit">Registrar</x-button.success>
 				</div>
 			</form>
 		</div>		

@@ -116,9 +116,14 @@ class FileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Repositorio $repositorio, File $file)
     {
-        //
+        $file->update([
+            'is_public' => $request->publico ? true : false,
+        ]);
+
+        return redirect()->route('repositorios.user.show', $repositorio->slug)
+                         ->with('status', 'Archivo actualizado exitosamente!');
     }
 
     /**
@@ -181,7 +186,7 @@ class FileController extends Controller
                             'original_name' => $file->getClientOriginalName(),
                             'file_type' => $file->extension(),
                             'file_path' => $file_path_stored,
-                            'is_public' => 1
+                            'is_public' => 0
                         ];
                         // $archivo .= $file->getClientOriginalName().'|';
                         // $name = time().rand(1,100).'.'.$file->extension();

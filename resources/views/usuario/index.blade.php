@@ -3,13 +3,17 @@
 @section('title', 'Alumnos')
 
 @section('dashboard-content')
-  <div class="users container-fluid mt-4 px-sm-0 px-md-5">
-    <div class="d-flex justify-content-between align-items-center py-3">
+
+  <div class="users container-fluid mt-4">
+    {{ Breadcrumbs::render('usuarios.index',) }}
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="total-records">
           <p>Alumnos totales: <b>{{ $users->total() }}</b></p>
       </div>
       <div>
-        <a href="{{ route('usuarios.create') }}" class="btn btn-success">Nuevo</a>
+        <x-button.success href="{{ route('usuarios.create') }}">
+          Nuevo
+        </x-button.success>
       </div>
     </div>
 
@@ -291,12 +295,12 @@
   </x-modal>
 
   <!-- Modal Delete -->
-  <x-modal id="modalDelete" title="¿Desea eliminar el alumno?">
+  <x-modal id="modalDelete" title="¿Desea eliminar el usuario?">
     <x-slot name="footer">
       <form id="delete-student" method="POST" action="{{ route('usuarios.destroy', ':id') }}">
         @method('delete')
         @csrf
-        <button type="submit" class="btn btn-success">Aceptar</button>      
+        <x-button.danger type="submit">Confirmar eliminaciòn</x-button.danger>      
        </form>
     </x-slot>
   </x-modal>

@@ -13,7 +13,8 @@
 
 @section('dashboard-content')
 
-    <h4 class="text-center my-5">{{ $repositorio->nombre_rep }}</h4>
+    {{ Breadcrumbs::render('files.create', $repositorio) }}
+    <h4 class="text-center mb-4">{{ $repositorio->nombre_rep }}</h4>
     <form id="files" action="{{ route('files.store', $repositorio->slug) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form__field files files-images images mb-5">
@@ -47,7 +48,7 @@
             <div class="files__selected preview_images"></div>
         </div>
         <div class="text-center mb-5">
-            <button type="submit" class="form__btn-submit">Guardar</button>
+            <x-button.success type="submit">Guardar</x-button.success>
         </div>
     </form>
 

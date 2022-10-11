@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
         
         Repositorio::factory()->count(30)->create();
 
-        File::factory()->count(30)->create();
+        // File::factory()->count(30)->create();
 
         Repositorio_usuario::factory(30)->create();
     }
