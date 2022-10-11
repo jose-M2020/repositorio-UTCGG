@@ -15,34 +15,32 @@ class CreateRepositoriosTable extends Migration
     {
         Schema::create('repositorios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
-            $table->string('alumno');
-
-            // Datos añadidos-------
-            $table->string('carrera');
-            // $table->string('asesor_academico');
-            $table->string('asesor_externo')
-                  ->nullable();
-            $table->string('empresa');
-            // ----------------------
-
             $table->string('nombre_rep');
             $table->string('slug');
             $table->text('descripcion');
             $table->string('tipo_proyecto');
             $table->string('nivel_proyecto');
-            // $table->string('nombre_proyecto');
-
-            // Datos añadidos-------
             $table->string('palabras_clave');
-            $table->string('generacion');
-            $table->string('imagenes');
-            // -------------------------------
+            $table->boolean('publico')
+                  ->nullable()
+                  ->default(false);
 
+            // $table->foreignId('docente_id')
+            //       ->nullable()
+            //       ->constrained()
+            //       ->onUpdate('cascade')
+            //       ->onDelete('cascade');
+            // $table->string('alumno');
+
+            $table->string('carrera');
+            // $table->string('asesor_academico');
+            $table->string('asesor_externo')
+                  ->nullable();
+            $table->string('empresa');
+            $table->string('generacion');
+
+            $table->text('imagenes')
+                  ->nullable();
             $table->string('created_by');
             $table->timestamps();
         });

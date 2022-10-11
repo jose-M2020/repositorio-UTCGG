@@ -50,7 +50,7 @@ class AlumnoController extends Controller
                     return $query->whereBetween('created_at', [$date[0], $date[1]]);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'email', 'carrera', 'cuatrimestre', 'created_at']);
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'carrera', 'cuatrimestre', 'created_at']);
         // $docente = Alumno::findOrFail(1)->asesores;
 
         if($request->fecha){
@@ -92,6 +92,7 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:alumnos|unique:docentes|unique:admin',
             'contraseña' => ['required', 'confirmed'],
             'carrera' => 'required|string|max:20',
@@ -100,6 +101,7 @@ class AlumnoController extends Controller
 
         $user = Alumno::create([
             'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->contraseña),
             'carrera' => $request->carrera,
@@ -145,12 +147,14 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
             'carrera' => 'required|string|max:20',
             'cuatrimestre' => 'required|integer|max:11',
             'email' => 'required|string|email|max:255',
         ]);
 
         $alumno->nombre = $request->nombre;
+        $alumno->apellido = $request->apellido;
         $alumno->email = $request->email;
         $alumno->carrera = $request->carrera;
         $alumno->cuatrimestre = $request->cuatrimestre;

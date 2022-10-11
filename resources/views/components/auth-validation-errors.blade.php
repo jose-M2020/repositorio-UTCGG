@@ -13,7 +13,7 @@
         </ul>
     </div> --}}
     {{-- <div class="" > --}}
-        <div class="alert alert-danger alert-dismissible fade show w-auto position-fixed start-50 translate-middle-x text-white rounded" role="alert" style="z-index: 100; top: 20px; background-color: rgb(149, 70, 70, .9); border: none;">
+        <div class="alert alert-danger alert-dismissible fade show w-auto position-fixed start-50 translate-middle-x text-white rounded" role="alert" style="z-index: 1500; top: 20px; background-color: rgb(149, 70, 70, .9); border: none;">
             <p><i class="fas fa-exclamation-circle"></i>  Error al iniciar sesión.</p>
             <ul style="margin: 0; padding: 0; list-style: none;">
                 @foreach ($errors->all() as $error)

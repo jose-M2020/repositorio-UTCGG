@@ -21,6 +21,7 @@ class Docente extends Authenticatable
      */
     protected $fillable = [
         'nombre',
+        'apellido',
         'email',
         'password',
         'created_at'

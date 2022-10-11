@@ -5,8 +5,8 @@ namespace Database\Factories;
 use App\Models\Repositorio;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Alumno;
 use App\Models\Docente;
+use App\Models\Usuario;
 
 class RepositorioFactory extends Factory
 {
@@ -24,14 +24,15 @@ class RepositorioFactory extends Factory
      */
     public function definition()
     {   
-        static $students_id = [];
-        $student = Alumno::whereNotIn('id',$students_id)
-                         ->inRandomOrder()
+        // static $students_id = [];
+        $student = Usuario::
+                        //  whereNotIn('id',$students_id)
+                         inRandomOrder()
                          ->get(['id', 'nombre'])
-                         ->first(); 
-        array_push($students_id, $student->id);
+                         ->first();
+        // array_push($students_id, $student);
 
-        $docentes_id = Docente::pluck('id')->all();
+        // $docentes_id = Docente::pluck('id')->all();
 
         $careers = [
             'TIC' => ['software', 'arduino', 'iot', 'webpage', 'app', 'electronic', 'raspberrypi', 'robotic', 'bot', 'system'],
@@ -46,15 +47,15 @@ class RepositorioFactory extends Factory
         ];
 
         $career = $this->faker->randomElement(array_keys($careers));
-        $keyword = $this->faker->randomElement($careers[$career]);
+        $keyword = implode(',',$careers[$career]);
 
         $title = $this->faker->sentence(5);
 
         return [
-            'alumno' => json_encode([$this->faker->name()]),
+            // 'alumno' => json_encode([$this->faker->name()]),
 
             // ----Campos añadidos----------------
-            'docente_id' => $this->faker->randomElement($docentes_id),
+            // 'docente_id' => $this->faker->randomElement($docentes_id),
             'carrera' => $career,
             'asesor_externo' => $this->faker->name(),
             'empresa' => $this->faker->company(),
@@ -62,12 +63,13 @@ class RepositorioFactory extends Factory
 
             'nombre_rep' => $title,
             'slug' => Str::slug($title, '-'),
-            'descripcion' => $this->faker->paragraph(),
+            'descripcion' => $this->faker->text(600) ,
             'tipo_proyecto' => $this->faker->randomElement(['Integradora', 'Estadía', 'Proyecto Especial']),
             'nivel_proyecto' => $this->faker->randomElement(['TSU', 'Ingeniería']),
 
             // ----Campos añadidos----------------
-            'palabras_clave' => json_encode([$keyword]),
+            'palabras_clave' => $keyword,
+            'publico' => 1,
             'generacion' => $this->faker->randomElement(['2018-2021', '2015-2018', '2013-2015', '2010-2013']),
             'imagenes' => json_encode(['https://source.unsplash.com/1600x900/?'.$keyword]),
             // ------------------------------------

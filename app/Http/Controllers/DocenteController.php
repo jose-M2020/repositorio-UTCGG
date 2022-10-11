@@ -44,7 +44,7 @@ class DocenteController extends Controller
                     return $query->whereBetween('created_at', [$date[0], $date[1]]);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'email', 'created_at']);
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'created_at']);
 
         if($request->fecha){
             if(!$date_range[0] && !$date_range[1]){
@@ -86,12 +86,14 @@ class DocenteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:alumnos|unique:docentes|unique:admin',
             'contraseña' => ['required', 'confirmed'],
         ]);
         
         $user = Docente::create([
             'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->contraseña)
         ]);
@@ -133,10 +135,12 @@ class DocenteController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
             'email' => 'required|string|email|max:255'
         ]);
 
         $docente->nombre = $request->nombre;
+        $docente->apellido = $request->apellido;
         $docente->email = $request->email;
 
         if($docente->isDirty('email')){

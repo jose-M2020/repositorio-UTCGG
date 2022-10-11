@@ -2,10 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepositorioController;
+use App\Http\Controllers\RepositorioUsuarioController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\HomeController;
+use App\Models\Repositorio;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -19,94 +25,123 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->middleware(['auth:alumno,docente,admin'])->name('home');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth:alumno,docente,admin'])->name('dashboard');
-
-
-// Administradores
-
-Route::group(['middleware' => 'auth:admin'], function () {
-    Route::resources(['admin' => AdminController::class]);
-});
-
-// Docentes
-
-Route::group(['middleware' => 'auth:admin'], function () {
-    Route::resources(['docentes' => DocenteController::class]);
-});
-
-// Alumnos
-
-Route::middleware(['auth:docente,admin'])->prefix('alumnos')->group(function () {
-    Route::get('/', [AlumnoController::class, 'index'])
-        ->name('alumnos');
-
-    Route::get('/editar/{id}', [AlumnoController::class, 'edit'])
-        ->name('alumnos.edit');
-    Route::put('/editar/{alumno}', [AlumnoController::class, 'update'])
-        ->name('alumnos.update');
-
-    Route::get('/registrar', [AlumnoController::class, 'create'])
-        ->name('alumnos.create');
-    Route::post('/registrar', [AlumnoController::class, 'store'])
-        ->name('alumnos.store');
-
-    Route::delete('/{alumno}', [AlumnoController::class, 'destroy'])
-        ->name('alumnos.destroy');
-});
-
-
-Route::middleware(['auth:alumno,docente,admin'])->prefix('alumnos')->group(function () {
-    Route::get('/fetch_data', [AlumnoController::class, 'fetch_data'])
-        ->name('alumnos.fetch');
-
-    Route::get('/search', [AlumnoController::class, 'search'])
-        ->name('alumnos.search');
-});
-
-
-// Repositorios
-
-Route::middleware(['auth:alumno,docente,admin'])->prefix('repositorios')->group(function () {
-    Route::get('/', [RepositorioController::class, 'index'])
-        ->name('repositorios.index');
-
-    Route::get('/registrar', [RepositorioController::class, 'create'])
-        ->name('repositorios.create');
-    Route::post('/registrar', [RepositorioController::class, 'store'])
-        ->name('repositorios.store');
-
-    Route::get('/{repositorio}', [RepositorioController::class, 'show'])
-        ->name('repositorios.show');
-
-    Route::get('/descargar/{repositorio}', [RepositorioController::class, 'downloadFile'])
-        ->name('repositorios.download');
-});
-
-Route::middleware(['auth:docente,admin'])->prefix('repositorios')->group(function () {
-    Route::get('/editar/{id}', [RepositorioController::class, 'edit'])
-        ->name('repositorios.edit');
-    Route::post('/editar/{id}', [RepositorioController::class, 'update'])
-        ->name('repositorios.update');
-});
-
-Route::delete('/repositorios/{repositorio}', [RepositorioController::class, 'destroy'])
-    ->middleware('auth:admin')
-    ->name('repositorios.destroy');
-
-// Archivos
-
-Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
-    ->middleware('auth:alumno,docente,admin')
-    ->name('files.download');
+Route::get('/', [HomeController::class, 'index'])
+    // ->middleware(['optionalAuthentication:alumno,docente,admin'])
+    ->name('home');
 
 Route::get('acerca', function(){
     return view('about');
-})->middleware('auth:alumno,docente,admin')->name('about');
+})/*->middleware(['optionalAuthentication:alumno,docente,admin'])*/->name('about');
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// });
+
+// || Users
+// -----------------------------------------
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('usuarios', UsuarioController::class);
+    
+    Route::get('api/usuarios/{repositorio?}', [UsuarioController::class, 'search'])
+            ->name('usuarios.get');
+});
+
+// || Roles
+// -----------------------------------------
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('roles', RoleController::class);
+});
+
+
+
+// || Admin
+// -----------------------------------------
+
+// Route::group(['middleware' => 'auth'], function () {
+//     Route::resources(['admin' => AdminController::class]);
+// });
+
+// || Teachers
+// -----------------------------------------
+
+// Route::group(['middleware' => 'auth'], function () {
+//     Route::resources(['docentes' => DocenteController::class]);
+// });
+
+// || Students
+// -----------------------------------------
+
+// Route::middleware('auth')->group(function () {
+//     Route::resource('alumnos', AlumnoController::class);
+    
+//     Route::get('alumnos/fetch_data', [AlumnoController::class, 'fetch_data'])
+//         ->name('alumnos.fetch');
+    
+//     Route::get('alumnos/search', [AlumnoController::class, 'search'])
+//         ->name('alumnos.search');
+// });
+
+
+// || Repositories
+// -----------------------------------------
+
+Route::middleware('auth')->group(function () {
+     Route::resource('repositorios', RepositorioController::class)
+          ->only(['create', 'store']);
+
+     Route::resource('repositorios', RepositorioController::class)
+          ->middleware('authorizeMember')
+          ->only(['edit', 'update', 'destroy']);     
+
+     Route::prefix('mi-cuenta')->group(function () {
+          Route::get('/repositories', [UsuarioController::class, 'showRepositories'])
+               ->name('repositorios.user');
+
+          Route::get('/repositorios/{repositorio}', [RepositorioController::class, 'showByUser'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.user.show');
+               
+          Route::post('/repositorios/{repositorio}/members', [RepositorioUsuarioController::class, 'store'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.member.store');
+          
+          Route::delete('/repositorios/{repositorio}/members/{usuario}', [RepositorioUsuarioController::class, 'destroy'])
+               ->middleware('authorizeMember')
+               ->name('repositorios.member.destroy');
+      });
+});
+
+Route::resource('repositorios', RepositorioController::class)
+         ->only(['index', 'show']);
+
+// || Files
+// -----------------------------------------
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('files', FileController::class)
+         ->except(['store', 'create', 'destroy', 'update']);
+
+    Route::get('mi-cuenta/repositorios/{repositorio}/archivos/upload', [FileController::class, 'create'])
+         ->name('files.create');
+
+    Route::post('mi-cuenta/repositorios/{repositorio}/archivos/upload', [FileController::class, 'store'])
+         ->name('files.store');
+     
+    Route::put('mi-cuenta/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'update'])
+         ->name('files.update');
+
+    Route::delete('mi-cuenta/repositorios/{repositorio}/archivos/{type?}/{file}', [FileController::class, 'destroy'])
+         ->name('files.destroy');
+    
+    Route::get('files/download/{file}', [FileController::class, 'download'])
+         ->name('files.download');
+});
+
+// Route::get('/archivos', [RepositorioController::class, 'downloadFile'])
+//     ->middleware('auth')
+//     ->name('files.download');
+
 
 require __DIR__.'/auth.php';

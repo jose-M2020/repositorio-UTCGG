@@ -1,4 +1,11 @@
-@props(['title', 'body' => null, 'footer', 'id'])
+@props([
+  'title', 
+  'id',
+  'footer' => null, 
+  'body' => null, 
+  'hasCancelBtn' => 'false',
+  'isCenter' => null 
+])
 
 <div {{ $attributes->merge([
   'class' => 'modal fade',
@@ -7,7 +14,10 @@
   'aria-labelledby' => $id.'Label',
   'aria-hidden' => "true"
   ]) }}>
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div @class([
+        'modal-dialog',
+        'modal-dialog-centered' => $isCenter,
+    ])>
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="{{$id.'Label'}}">{{ $title }}</h5>
@@ -18,10 +28,14 @@
             {{ $body }}
           </div>
         @endif
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          {{ $footer }}
-        </div>
+        @if ($footer)
+          <div class="modal-footer">
+            @if ($hasCancelBtn === 'true')
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            @endif
+            {{ $footer }}
+          </div>
+        @endif
       </div>
     </div>
 </div>
