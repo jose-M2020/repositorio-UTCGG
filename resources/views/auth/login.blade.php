@@ -31,18 +31,7 @@
 						<i id="eyeIcon" class="fa-solid fa-eye"></i>
 					</button>
 				</div>
-
-				{{-- <div class="mt-4">
-					  <label for="rol">Modo de acceso</label>
-					  <select id="rol" class="block mt-1 w-full" name="rol">
-						<option selected disabled>Seleccionar</option>
-						<option value="alumno">Alumno</option>
-						<option value="docente">Docente</option>
-						<option value="admin">Administrador</option>
-					  </select>                
-				</div>	 --}}
-					
-				<button class="btn mt-4" type="submit" name="loginButton">Acceder</button>
+				<x-button.success type="submit" class="mt-4 w-100">Acceder</x-button.success>
 			</form>
 		</div>
 	</div>

@@ -63,33 +63,20 @@ body::after{
 }
 
 .login input {
-  color: var(--text-grey);
-  background: transparent;
-  border: 1px solid var(--light-green);
+  background-color: transparent !important;
+	border-radius: 12px !important;
+	border: 1px solid #b0b0b0 !important;
+	outline: none !important;
+  transition: box-shadow .2s;
 }
 
-.login .form-control:focus {
-  color: var(--text-grey);
-  background-color: rgb(113 252 185 / 12%);
-  border-color: var(--light-green);
-  box-shadow: 0 0 5px 0.25rem rgb(104 241 175 / 17%);
+.login input[name=password] {
+  padding-right: 32px;
 }
 
-.login button[type="submit"] {
-  color: #fff;
-  background-color: #048249;
-  border: 1px solid #0b6734;
-  width: 100%;
-  border-radius: 100vmax;
-  text-transform: uppercase;
-  font-weight: 600;
-  transition: background .5s;
+.login input:focus{
+	box-shadow: 0px 0 6px 0px #797979;
 }
-
-.login button[type="submit"]:hover {
-  background: #0a4028;
-}
-
 
 .login .eyeBtn{
   position: absolute;
@@ -106,7 +93,7 @@ body::after{
 }
 
 .login .eyeBtn.active i{
-  color: var(--light-green);
+  color: var(--green);
 }
 
 
