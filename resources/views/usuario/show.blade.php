@@ -71,44 +71,48 @@
 				@unlessrole('admin')
 					<div class="mb-4">
 						<h4 class="border-bottom border-secondary mb-3">Repositorios</h4>
-						<div class="accordion" id="accordionPanelsStayOpen">
-							@if ($countPublico = $repPublico->count())
-								<div class="accordion-item ms-0 ms-md-5 mb-4 bg-transparent">
-								  <h3 class="accordion-header" id="panelsStayOpen-headingOne">
-									<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-repPublico" aria-expanded="true" aria-controls="panelsStayOpen-repPublico">
-										<i class="fa-solid fa-globe me-3"></i>{{ $countPublico }} {{ Str::of('Público')->plural($countPublico); }}
-									</button>
-								  </h2>
-								  <div id="panelsStayOpen-repPublico" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-									<div class="accordion-body">
-									  @foreach ($repPublico as $item)
-									  	<div class="mb-1">
-										  <a href="{{ route('repositorios.show', $item->slug) }}">{{ $item->nombre_rep }}</a>
-										</div>
-									  @endforeach
-									</div>
-								  </div>
-								</div>
-							@endif
-							@if ($countPrivado = $repPrivado->count())
-								<div class="accordion-item ms-0 ms-md-5 bg-transparent">
-								  <h3 class="accordion-header" id="panelsStayOpen-headingTwo">
-								  	<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-repPrivado" aria-expanded="true" aria-controls="panelsStayOpen-repPrivado">
-										<i class="fa-solid fa-lock me-3"></i>{{ $countPrivado }} {{ Str::of('Privado')->plural($countPrivado); }}
-								  	</button>
-								  </h3>
-								  <div id="panelsStayOpen-repPrivado" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
-								  	<div class="accordion-body">
-									  @foreach ($repPrivado as $item)
-										<div class="mb-1">
+						@if($repPublico->count() && $repPrivado->count())
+							<div class="accordion" id="accordionPanelsStayOpen">
+								@if ($countPublico = $repPublico->count())
+									<div class="accordion-item ms-0 ms-md-5 mb-4 bg-transparent">
+									<h3 class="accordion-header" id="panelsStayOpen-headingOne">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-repPublico" aria-expanded="true" aria-controls="panelsStayOpen-repPublico">
+											<i class="fa-solid fa-globe me-3"></i>{{ $countPublico }} {{ Str::of('Público')->plural($countPublico); }}
+										</button>
+									</h2>
+									<div id="panelsStayOpen-repPublico" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+										<div class="accordion-body">
+										@foreach ($repPublico as $item)
+											<div class="mb-1">
 											<a href="{{ route('repositorios.show', $item->slug) }}">{{ $item->nombre_rep }}</a>
+											</div>
+										@endforeach
 										</div>
-									  @endforeach
-								  	</div>
-								  </div>
-								</div>
-							@endif
-						  </div>
+									</div>
+									</div>
+								@endif
+								@if ($countPrivado = $repPrivado->count())
+									<div class="accordion-item ms-0 ms-md-5 bg-transparent">
+									<h3 class="accordion-header" id="panelsStayOpen-headingTwo">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-repPrivado" aria-expanded="true" aria-controls="panelsStayOpen-repPrivado">
+											<i class="fa-solid fa-lock me-3"></i>{{ $countPrivado }} {{ Str::of('Privado')->plural($countPrivado); }}
+										</button>
+									</h3>
+									<div id="panelsStayOpen-repPrivado" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
+										<div class="accordion-body">
+										@foreach ($repPrivado as $item)
+											<div class="mb-1">
+												<a href="{{ route('repositorios.show', $item->slug) }}">{{ $item->nombre_rep }}</a>
+											</div>
+										@endforeach
+										</div>
+									</div>
+									</div>
+								@endif
+							</div>
+						@else
+							<h5 class="ms-0 ms-md-5 mb-4">No se encontró ningún repositorio</h5>
+						@endif
 					</div>
 				@endunlessrole
 

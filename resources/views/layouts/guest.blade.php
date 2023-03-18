@@ -50,6 +50,18 @@
             alert.style.display = 'none';
         }, 8000)
     }
+
+    window.onload = () => {
+        document
+          .getElementById('loginForm')
+          .addEventListener('submit', () => {
+            console.log('submit');
+            document
+              .querySelector('button[type=submit]')
+              .setAttribute('loading', 'true');
+          })
+
+    }
 </script>
 </body>
 </html>

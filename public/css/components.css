@@ -61,6 +61,23 @@
   text-decoration: none;
 }
 
+.btn-custom .loading-msg{
+  display: none;
+}
+
+.btn-custom[loading='true']{
+  opacity: .7;
+  pointer-events: none;
+}
+
+.btn-custom[loading='true'] .loading-msg{
+  display: block;
+}
+
+.btn-custom[loading='true'] .loading-msg + div{
+  display: none;
+}
+
 .btn-custom > * {
   pointer-events: none;
 }

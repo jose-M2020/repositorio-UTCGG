@@ -17,21 +17,44 @@
 		</div> --}}
 		<div class="login col-md-5 text-center">
 			<h3 class="login__title">INICIAR SESIÓN</h3>
-			<form action="{{ route('login') }}" method="POST">
+			<form id='loginForm' action="{{ route('login') }}" method="POST">
 				@csrf
 
 				<div class="form-floating mb-3">
-					<input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required>
-					<label for="email">Correo electrónico</label>
+					<input 
+					  type="email"
+					  name="email"
+					  class="form-control"
+					  id="email"
+					  placeholder="name@example.com"
+					  required
+					  list="users"
+					>
+					<label for="email">Seleccionar correo electrónico</label>
+					<datalist id="users">
+					  <option value="alumno@example.com">
+					  <option value="docente@example.com">
+					  <option value="admin@example.com">
+					</datalist>
 				</div>
 				<div class="form-floating position-relative">
-					<input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+					<input 
+					  type="password"
+					  name="password"
+					  value="password"
+					  class="form-control"
+					  id="password"
+					  placeholder="Password"
+					  required
+					>
 					<label for="password">Contraseña</label>
 					<button class="eyeBtn" type="button" onclick="showPassword()">
 						<i id="eyeIcon" class="fa-solid fa-eye"></i>
 					</button>
 				</div>
-				<x-button.success type="submit" class="mt-4 w-100">Acceder</x-button.success>
+				<x-button.success type="submit" class="mt-4 w-100">
+					Acceder
+				</x-button.success>
 			</form>
 		</div>
 	</div>
