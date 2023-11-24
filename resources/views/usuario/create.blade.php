@@ -27,10 +27,10 @@
 				<x-form.input text="Email" type="email" name="email" id="email" />
 				<div class="row g-2">
 					<div class="col-md">
-						<x-form.input text="Contraseña" type="password" name="contraseña" id="password" />
+						<x-form.input text="Contraseña" type="password" name="password" id="password" />
 					</div>
 					<div class="col-md">
-						<x-form.input text="Confirmar contraseña" type="password" name="contraseña_confirmation" id="password_confirmation" />
+						<x-form.input text="Confirmar contraseña" type="password" name="password_confirmation" id="password_confirmation" />
 					</div>
 				</div>
 				<div class="row g-2">

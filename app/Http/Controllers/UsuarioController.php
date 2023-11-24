@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
@@ -82,27 +83,13 @@ class UsuarioController extends Controller
         return view('usuario.create', compact('roles'));
     }
 
-    public function store(Request $request)
+    public function store(SaveUserRequest $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:usuarios',
-            'contraseña' => ['required', 'confirmed'],
-            'carrera' => 'required|string|max:20',
-            'rol' => 'required',
-            // 'cuatrimestre' => 'required|integer|max:11'
-        ]);
+        $validatedData = $request->validated();
+        $validatedData['password'] = Hash::make($validatedData['password']);
 
-        $user = Usuario::create([
-            'nombre' => $request->nombre,
-            'apellido' => $request->apellido,
-            'email' => $request->email,
-            'password' => Hash::make($request->contraseña),
-            'carrera' => $request->carrera,
-            // 'cuatrimestre' => $request->cuatrimestre
-        ]);
-
+        $user = Usuario::create($validatedData);
+        
         $user->assignRole($request->rol);
 
         return redirect()->route('usuarios.index')
@@ -155,22 +142,13 @@ class UsuarioController extends Controller
         return view('usuario.edit', compact('usuario','roles'));
     }
 
-    public function update(Request $request, Usuario $usuario)
+    public function update(SaveUserRequest $request, Usuario $usuario)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'carrera' => 'required|string|max:20',
-            // 'cuatrimestre' => 'required|integer|max:11',
-            'email' => 'required|string|email|max:255|unique:usuarios,email,'.$usuario->id,
-            'rol' => 'required|string|max:20',
-        ]);
-
         if(($usuario->roles[0]->name) !== $request->rol){
             $usuario->syncRoles([$request->rol]);
         }
 
-        $usuario->update($request->all());
+        $usuario->update($request->validated());
 
         return redirect()->route('usuarios.index')
             ->with('status','Alumno actualizado exitosamente!');
