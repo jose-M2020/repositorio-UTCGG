@@ -262,7 +262,7 @@
                                 <tr>
                                     <td>Nombre</td>
                                     <td><input type="text"
-                                               name="nombre_repositorio"
+                                               name="nombre_rep"
                                                class="project-info__input" 
                                                value="{{ $repositorio->nombre_rep }}"
                                                disabled

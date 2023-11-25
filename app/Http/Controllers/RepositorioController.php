@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveRepositoryRequest;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -102,43 +103,18 @@ class RepositorioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaveRepositoryRequest $request)
     {   
         $logged_user = auth()->user(); 
-        $isEstadia = $request->tipo_proyecto == 'Estadía';
-
-        // $docente_id = Usuario::where('email', $request->asesor_academico)->pluck('id')->first();
-
-        $request->validate([
-            'nombre_repositorio' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'tipo_proyecto' => 'required|string|max:80',
-            'nivel_proyecto' => 'required|string|max:80',
-            'palabras_clave' => 'required|string|max:255',
-
-            'usuario' => 'required|array|max:8',
-            'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
-            'carrera' => 'required|string|max:80',            
-            'empresa' => 'required|string|max:255',
-            // 'asesor_academico' => $isEstadia ? 'required|string|max:255|exists:usuarios,email' : '',
-            'asesor_externo' => $isEstadia ? 'required|string|max:255' : '',
-            'generacion' => 'required|string|max:255',
-        ]);
         
-        $repository_created = Repositorio::create([
-            'nombre_rep' => $request->nombre_repositorio,
-            'slug' => Str::slug($request->nombre_repositorio, '-'),
-            'descripcion' => $request->descripcion,
-            'tipo_proyecto' => $request->tipo_proyecto,
-            'nivel_proyecto' => $request->nivel_proyecto,
-            'palabras_clave' => $request->palabras_clave,
-            'publico' => ($request->visibilidad === 'publico') ? true : false,
-            'carrera' => $request->carrera,
-            'empresa' => $request->empresa,
-            'asesor_externo' => $request->asesor_externo ?? null,
-            'generacion' => $request->generacion,
-            'created_by' => $logged_user->nombre
-        ]);
+        $fields = $request->validated();
+        $fields['slug'] = Str::slug($request->nombre_rep, '-');
+        $fields['publico'] = $request->visibilidad === 'publico';
+        $fields['created_by'] = $logged_user->nombre;
+        
+        // $docente_id = Usuario::where('email', $request->asesor_academico)->pluck('id')->first();
+        
+        $repository_created = Repositorio::create($fields);
 
         $usersRep = Usuario::whereIn('email', $request->usuario)
                        ->get('id')
@@ -263,37 +239,13 @@ class RepositorioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Repositorio $repositorio)
+    public function update(SaveRepositoryRequest $request, Repositorio $repositorio)
     {
-        $isEstadia = $request->tipo_proyecto == 'Estadía';
+        $fields = $request->validated();
+        $fields['slug'] = Str::slug($request->nombre_rep, '-');
+        $fields['publico'] = $request->visibilidad === 'publico';
 
-        $request->validate([
-            'nombre_repositorio' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'tipo_proyecto' => 'required|string|max:80',
-            'nivel_proyecto' => 'required|string|max:80',
-            'palabras_clave' => 'required|string|max:255',
-            // 'usuario' => 'required|array|max:8',
-            // 'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
-            'carrera' => 'required|string|max:80',            
-            'empresa' => 'required|string|max:255',
-            'asesor_externo' => $isEstadia ? 'required|string|max:255' : '',
-            'generacion' => 'required|string|max:255',
-        ]);
-
-        $repositorio->update([
-            'nombre_rep' => $request->nombre_repositorio,
-            'slug' => Str::slug($request->nombre_repositorio, '-'),
-            'descripcion' => $request->descripcion,
-            'tipo_proyecto' => $request->tipo_proyecto,
-            'nivel_proyecto' => $request->nivel_proyecto,
-            'palabras_clave' => $request->palabras_clave,
-            'publico' => ($request->visibilidad === 'publico') ? true : false,
-            'carrera' => $request->carrera,
-            'empresa' => $request->empresa,
-            'asesor_externo' => $request->asesor_externo ?? null,
-            'generacion' => $request->generacion,
-        ]);
+        $repositorio->update($fields);
 
         return redirect()->route('repositorios.user.show', $repositorio->slug)
                          ->with('status', 'Repositorio actualizado exitosamente!');

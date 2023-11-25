@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveRoleRequest;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
 
@@ -48,16 +49,9 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaveRoleRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
-
-        $role = Role::create([
-            'name' => $request->name
-        ]);
-        
+        $role = Role::create($request->validated());
         $role->syncPermissions($request->permissions);
 
         return redirect()->route('roles.index')
@@ -100,14 +94,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(SaveRoleRequest $request, Role $role)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
-
-        $role->update($request->all());
-
+        $role->update($request->validated());
         $role->syncPermissions($request->permissions);
 
         return redirect()->route('roles.index')

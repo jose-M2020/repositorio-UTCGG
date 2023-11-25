@@ -85,10 +85,10 @@ class UsuarioController extends Controller
 
     public function store(SaveUserRequest $request)
     {
-        $validatedData = $request->validated();
-        $validatedData['password'] = Hash::make($validatedData['password']);
+        $fields = $request->validated();
+        $fields['password'] = Hash::make($fields['password']);
 
-        $user = Usuario::create($validatedData);
+        $user = Usuario::create($fields);
         
         $user->assignRole($request->rol);
 

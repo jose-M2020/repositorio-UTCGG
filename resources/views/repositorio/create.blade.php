@@ -56,8 +56,8 @@
 				<fieldset id="repository" class="section active px-2">
 					<h5 class="section__title">Información del repositorio</h5>
 					<div class="form__field">
-						<label for="nombre_repositorio" class="form__label">Nombre del repositorio</label>
-						<input type="text" name="nombre_repositorio" class="form__input" value="{{old('nombre_repositorio')}}">
+						<label for="nombre_rep" class="form__label">Nombre del repositorio</label>
+						<input type="text" name="nombre_rep" class="form__input" value="{{old('nombre_rep')}}">
 					</div>
 					<div class="form__field">
 						<label for="description" class="form__label">Descripción</label>

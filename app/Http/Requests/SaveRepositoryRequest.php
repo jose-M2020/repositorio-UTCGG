@@ -23,17 +23,18 @@ class SaveRepositoryRequest extends FormRequest
      */
     public function rules()
     {
+        $isCreating = $this->isMethod('post');
         $isEstadia = $this->tipo_proyecto == 'Estadía';
-        
+
         return [
-            'nombre_repositorio' => 'required|string|max:255',
+            'nombre_rep' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'tipo_proyecto' => 'required|string|max:80',
             'nivel_proyecto' => 'required|string|max:80',
             'palabras_clave' => 'required|string|max:255',
 
-            'usuario' => 'required|array|max:8',
-            'usuario.*' => 'required|string|max:255|distinct|exists:usuarios,email',
+            'usuario' => $isCreating ? 'required|array|max:8' : 'nullable',
+            'usuario.*' => $isCreating ? 'required|string|max:255|distinct|exists:usuarios,email' : 'nullable',
             'carrera' => 'required|string|max:80',            
             'empresa' => 'required|string|max:255',
             // 'asesor_academico' => $isEstadia ? 'required|string|max:255|exists:usuarios,email' : '',
