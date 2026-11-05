@@ -1,2 +1,2 @@
 export { cn } from './lib';
-export { Button, buttonVariants } from './components/ui';
+export { Button, buttonVariants, Input } from './components/ui';

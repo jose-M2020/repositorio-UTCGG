@@ -1,6 +1,8 @@
+import UserController from './UserController'
 import Auth from './Auth'
 const Controllers = {
-    Auth: Object.assign(Auth, Auth),
+    UserController: Object.assign(UserController, UserController),
+Auth: Object.assign(Auth, Auth),
 }
 
 export default Controllers
