@@ -1,9 +1,4 @@
 *
+!private/
 !public/
-!public/images/
-!public/images/*
-!public/files/
-!public/files/test/
-!public/files/test/*
 !.gitignore
-
