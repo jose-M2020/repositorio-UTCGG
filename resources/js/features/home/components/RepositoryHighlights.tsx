@@ -16,16 +16,14 @@ export const RepositoryHighlights = ({
     return (
         <section className="mx-auto w-full max-w-6xl px-4 py-16">
             <div className="mb-8 max-w-2xl">
-                <h2 className="font-serif text-3xl tracking-tight text-slate-900 dark:text-slate-50">
+                <h2 className="relative inline-block text-3xl tracking-wide text-foreground after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-[75px] after:-translate-x-1/2 after:bg-secondary">
                     {title}
                 </h2>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
-                    {description}
-                </p>
+                <p className="mt-4 text-muted-foreground">{description}</p>
             </div>
 
             {items.length === 0 ? (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-muted-foreground">
                     Aún no hay repositorios públicos para mostrar.
                 </p>
             ) : (
@@ -34,15 +32,15 @@ export const RepositoryHighlights = ({
                         <li key={item.id}>
                             <Link
                                 href={show.url(item.slug)}
-                                className="block h-full border-b border-teal-900/10 py-4 transition hover:border-teal-700 dark:border-teal-100/10"
+                                className="block h-full border-b border-border py-4 transition hover:border-primary"
                             >
-                                <p className="text-xs tracking-wide text-teal-700 uppercase dark:text-teal-300">
+                                <p className="text-xs tracking-wide text-secondary uppercase">
                                     {item.carrera}
                                 </p>
-                                <h3 className="mt-1 text-xl font-medium text-slate-900 dark:text-slate-50">
+                                <h3 className="mt-1 text-xl font-medium text-foreground">
                                     {item.nombre_rep}
                                 </h3>
-                                <p className="mt-2 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">
+                                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                                     {item.descripcion}
                                 </p>
                             </Link>

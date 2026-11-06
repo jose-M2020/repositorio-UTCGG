@@ -17,6 +17,13 @@ export type UserFormValues = {
     rol: string | null;
 };
 
+export type UserRepositorySummary = {
+    id: number;
+    nombre_rep: string;
+    slug: string;
+    publico: boolean;
+};
+
 export type UserDetails = {
     id: number;
     nombre: string;

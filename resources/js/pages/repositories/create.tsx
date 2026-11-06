@@ -1,11 +1,16 @@
 import { Head } from '@inertiajs/react';
 import { RepositoryCreateContainer } from '@/features/repositories';
+import type { RepositoryCatalog } from '@/shared/data/catalog';
 
-export default function RepositoriesCreatePage() {
+type PageProps = {
+    catalog?: RepositoryCatalog;
+};
+
+export default function RepositoriesCreatePage({ catalog }: PageProps) {
     return (
         <>
             <Head title="Nuevo repositorio" />
-            <RepositoryCreateContainer />
+            <RepositoryCreateContainer catalog={catalog} />
         </>
     );
 }

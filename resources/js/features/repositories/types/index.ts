@@ -48,7 +48,10 @@ export type RepositoryListItem = {
 export type RepositoryFilters = {
     query: string;
     search_field: string;
-    carrera: string;
+    carrera: string[];
+    tipo: string[];
+    nivel: string[];
+    year: string[];
 };
 
 export type PaginatedRepositories = {

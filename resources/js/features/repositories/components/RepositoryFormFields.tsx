@@ -1,15 +1,27 @@
 import { Input } from '@/shared/components/ui';
+import type { RepositoryCatalog } from '@/shared/data/catalog';
+import {
+    academicDegrees,
+    careers,
+    projectTypes,
+} from '@/shared/data/catalog';
 import type { Repository, RepositoryFormErrors } from '../types';
 
 type RepositoryFormFieldsProps = {
     errors: RepositoryFormErrors;
     defaults?: Partial<Repository> & { visibilidad?: string };
+    catalog?: RepositoryCatalog;
 };
 
 export const RepositoryFormFields = ({
     errors,
     defaults,
+    catalog,
 }: RepositoryFormFieldsProps) => {
+    const careerOptions = catalog?.careers ?? careers;
+    const typeOptions = catalog?.types ?? [...projectTypes];
+    const levelOptions = catalog?.levels ?? academicDegrees;
+
     return (
         <div className="space-y-4">
             <div className="space-y-1">
@@ -24,7 +36,7 @@ export const RepositoryFormFields = ({
                     aria-invalid={Boolean(errors.nombre_rep)}
                 />
                 {errors.nombre_rep ? (
-                    <p className="text-sm text-red-600">{errors.nombre_rep}</p>
+                    <p className="text-sm text-destructive">{errors.nombre_rep}</p>
                 ) : null}
             </div>
 
@@ -38,11 +50,11 @@ export const RepositoryFormFields = ({
                     required
                     rows={4}
                     defaultValue={defaults?.descripcion}
-                    className="w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+                    className="w-full rounded-lg border border-input bg-card px-2.5 py-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                     aria-invalid={Boolean(errors.descripcion)}
                 />
                 {errors.descripcion ? (
-                    <p className="text-sm text-red-600">{errors.descripcion}</p>
+                    <p className="text-sm text-destructive">{errors.descripcion}</p>
                 ) : null}
             </div>
 
@@ -56,17 +68,19 @@ export const RepositoryFormFields = ({
                         name="tipo_proyecto"
                         required
                         defaultValue={defaults?.tipo_proyecto ?? ''}
-                        className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30"
+                        className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                     >
                         <option value="" disabled>
                             Selecciona
                         </option>
-                        <option value="Estadía">Estadía</option>
-                        <option value="Proyecto">Proyecto</option>
-                        <option value="Investigación">Investigación</option>
+                        {typeOptions.map((type) => (
+                            <option key={type} value={type}>
+                                {type}
+                            </option>
+                        ))}
                     </select>
                     {errors.tipo_proyecto ? (
-                        <p className="text-sm text-red-600">
+                        <p className="text-sm text-destructive">
                             {errors.tipo_proyecto}
                         </p>
                     ) : null}
@@ -84,13 +98,16 @@ export const RepositoryFormFields = ({
                         name="nivel_proyecto"
                         required
                         defaultValue={defaults?.nivel_proyecto ?? ''}
-                        className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30"
+                        className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                     >
                         <option value="" disabled>
                             Selecciona
                         </option>
-                        <option value="TSU">TSU</option>
-                        <option value="Ingeniería">Ingeniería</option>
+                        {Object.entries(levelOptions).map(([code, label]) => (
+                            <option key={code} value={code}>
+                                {label}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
@@ -100,12 +117,22 @@ export const RepositoryFormFields = ({
                     <label htmlFor="carrera" className="text-sm font-medium">
                         Carrera
                     </label>
-                    <Input
+                    <select
                         id="carrera"
                         name="carrera"
                         required
-                        defaultValue={defaults?.carrera}
-                    />
+                        defaultValue={defaults?.carrera ?? ''}
+                        className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
+                    >
+                        <option value="" disabled>
+                            Selecciona
+                        </option>
+                        {Object.entries(careerOptions).map(([code, label]) => (
+                            <option key={code} value={code}>
+                                {code} — {label}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="space-y-1">
                     <label htmlFor="generacion" className="text-sm font-medium">
@@ -168,13 +195,12 @@ export const RepositoryFormFields = ({
                     name="visibilidad"
                     required
                     defaultValue={defaults?.visibilidad ?? 'privado'}
-                    className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30"
+                    className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                 >
                     <option value="privado">Privado</option>
                     <option value="publico">Público</option>
                 </select>
             </div>
-
         </div>
     );
 };

@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Test',
             'apellido' => 'User',
             'email' => 'test@example.com',
-            'carrera' => 'TI',
+            'carrera' => 'TIC',
         ]);
 
         $user->assignRole('admin');

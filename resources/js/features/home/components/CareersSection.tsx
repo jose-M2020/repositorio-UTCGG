@@ -1,34 +1,42 @@
 import { Link } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
-import { careerAreas } from '../data/careers';
+import { homeCareers } from '@/shared/data/catalog';
 
 export const CareersSection = () => {
     return (
         <section className="mx-auto w-full max-w-6xl px-4 py-16">
-            <div className="mb-8 max-w-2xl">
-                <h2 className="font-serif text-3xl tracking-tight text-slate-900 dark:text-slate-50">
+            <div className="mb-10 text-center">
+                <h2 className="relative inline-block text-3xl tracking-wide text-foreground after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-[75px] after:-translate-x-1/2 after:bg-secondary">
                     Áreas de estudio
                 </h2>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
-                    Explora la producción académica filtrada por carrera.
-                </p>
             </div>
 
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {careerAreas.map((career) => (
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {homeCareers.map((career) => (
                     <li key={career.code}>
                         <Link
                             href={index.url({
-                                query: { carrera: career.code },
+                                query: {
+                                    carrera: [career.code],
+                                },
                             })}
-                            className="block rounded-xl border border-teal-900/10 bg-gradient-to-br from-teal-50 to-white px-5 py-6 transition hover:border-teal-700/40 hover:shadow-sm dark:border-teal-100/10 dark:from-slate-900 dark:to-slate-950"
+                            className="group relative block min-h-44 overflow-hidden rounded-xl"
+                            aria-label={`Ver repositorios de ${career.name}`}
                         >
-                            <span className="text-xs font-semibold tracking-wider text-teal-700 uppercase dark:text-teal-300">
-                                {career.code}
-                            </span>
-                            <p className="mt-2 text-lg font-medium text-slate-900 dark:text-slate-100">
-                                {career.name}
-                            </p>
+                            <img
+                                src={career.image}
+                                alt=""
+                                className="absolute inset-0 size-full object-cover transition duration-300 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-primary/70 transition group-hover:bg-primary/55" />
+                            <div className="relative flex h-full min-h-44 flex-col justify-end p-5 text-primary-foreground">
+                                <span className="text-xs font-semibold tracking-wider uppercase">
+                                    {career.code}
+                                </span>
+                                <p className="mt-1 text-lg font-semibold">
+                                    {career.name}
+                                </p>
+                            </div>
                         </Link>
                     </li>
                 ))}

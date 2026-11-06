@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -23,6 +24,7 @@ class UserController extends Controller implements HasMiddleware
             new Middleware('can:usuarios.create', only: ['create', 'store']),
             new Middleware('can:usuarios.edit', only: ['edit', 'update']),
             new Middleware('can:usuarios.destroy', only: ['destroy']),
+            new Middleware('can:usuarios.search', only: ['search']),
         ];
     }
 
@@ -79,6 +81,10 @@ class UserController extends Controller implements HasMiddleware
     {
         $user->load('roles:id,name');
 
+        $repositorios = $user->repositories()
+            ->orderByDesc('repositorios.created_at')
+            ->get(['repositorios.id', 'nombre_rep', 'slug', 'publico']);
+
         return Inertia::render('users/show', [
             'user' => [
                 'id' => $user->id,
@@ -89,7 +95,30 @@ class UserController extends Controller implements HasMiddleware
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
             ],
+            'repositoriosPublicos' => $repositorios->where('publico', true)->values(),
+            'repositoriosPrivados' => $repositorios->where('publico', false)->values(),
         ]);
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $search = $request->string('query')->toString();
+
+        $users = User::query()
+            ->latest('id')
+            ->when($search !== '', function ($query) use ($search): void {
+                $query->where(function ($inner) use ($search): void {
+                    $inner->where('nombre', 'like', "%{$search}%")
+                        ->orWhere('apellido', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->role(['alumno', 'docente'])
+            ->with('roles:id,name')
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email'])
+            ->withQueryString();
+
+        return response()->json($users);
     }
 
     public function edit(User $user): Response

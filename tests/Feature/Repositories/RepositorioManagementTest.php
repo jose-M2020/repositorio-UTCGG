@@ -49,11 +49,12 @@ class RepositorioManagementTest extends TestCase
         $response = $this->actingAs($user)->post(route('repositorios.store'), [
             'nombre_rep' => 'Repo Test',
             'descripcion' => 'Descripcion de prueba',
-            'tipo_proyecto' => 'Proyecto',
+            'tipo_proyecto' => 'Integradora',
             'nivel_proyecto' => 'TSU',
             'palabras_clave' => 'laravel, inertia',
             'visibilidad' => 'privado',
-            'carrera' => 'TI',
+            'usuario' => [$user->email],
+            'carrera' => 'TIC',
             'empresa' => 'UTCGG',
             'generacion' => '2026',
         ]);

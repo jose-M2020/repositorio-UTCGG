@@ -6,8 +6,3 @@ export type HomeRepository = {
     carrera: string;
     created_at: string;
 };
-
-export type CareerArea = {
-    code: string;
-    name: string;
-};

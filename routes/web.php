@@ -14,6 +14,11 @@ Route::get('/acerca', [HomeController::class, 'about'])->name('about');
 Route::resource('usuarios', UserController::class)
     ->parameters(['usuarios' => 'user']);
 
+Route::middleware('auth')->group(function (): void {
+    Route::get('api/usuarios/{repositorio?}', [UserController::class, 'search'])
+        ->name('usuarios.get');
+});
+
 Route::resource('roles', RoleController::class);
 
 Route::resource('repositorios', RepositorioController::class)

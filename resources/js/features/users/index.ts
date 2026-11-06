@@ -6,5 +6,6 @@ export type {
     PaginatedUsers,
     UserDetails,
     UserFormValues,
+    UserRepositorySummary,
     UsersFilters,
 } from './types';

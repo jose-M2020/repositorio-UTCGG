@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateRepositorioRequest;
 use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
+use App\Support\Catalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -33,6 +34,10 @@ class RepositorioController extends Controller implements HasMiddleware
     {
         $search = $request->string('query')->toString();
         $searchField = $request->string('search_field')->toString() ?: 'title';
+        $carreras = array_values(array_filter((array) $request->input('carrera', [])));
+        $tipos = array_values(array_filter((array) $request->input('tipo', [])));
+        $niveles = array_values(array_filter((array) $request->input('nivel', [])));
+        $years = array_values(array_filter((array) $request->input('year', [])));
 
         $repositorios = Repositorio::query()
             ->with('users:id,nombre,apellido,email')
@@ -56,7 +61,13 @@ class RepositorioController extends Controller implements HasMiddleware
 
                 $query->where('nombre_rep', 'like', "%{$search}%");
             })
-            ->when($request->filled('carrera'), fn ($query) => $query->where('carrera', $request->string('carrera')->toString()))
+            ->when($carreras !== [], fn ($query) => $query->whereIn('carrera', $carreras))
+            ->when($tipos !== [], fn ($query) => $query->whereIn('tipo_proyecto', $tipos))
+            ->when($niveles !== [], fn ($query) => $query->whereIn('nivel_proyecto', $niveles))
+            ->when(
+                count($years) === 2 && $years[0] !== '' && $years[1] !== '',
+                fn ($query) => $query->whereBetween('created_at', [$years[0], $years[1]]),
+            )
             ->paginate(15)
             ->withQueryString();
 
@@ -65,14 +76,28 @@ class RepositorioController extends Controller implements HasMiddleware
             'filters' => [
                 'query' => $search,
                 'search_field' => $searchField,
-                'carrera' => $request->string('carrera')->toString(),
+                'carrera' => $carreras,
+                'tipo' => $tipos,
+                'nivel' => $niveles,
+                'year' => $years,
+            ],
+            'catalog' => [
+                'careers' => Catalog::careers(),
+                'types' => Catalog::projectTypes(),
+                'levels' => Catalog::academicDegrees(),
             ],
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('repositories/create');
+        return Inertia::render('repositories/create', [
+            'catalog' => [
+                'careers' => Catalog::careers(),
+                'types' => Catalog::projectTypes(),
+                'levels' => Catalog::academicDegrees(),
+            ],
+        ]);
     }
 
     public function store(StoreRepositorioRequest $request): RedirectResponse
@@ -160,6 +185,11 @@ class RepositorioController extends Controller implements HasMiddleware
             'repositorio' => [
                 ...$this->serializeRepository($repositorio),
                 'visibilidad' => $repositorio->publico ? 'publico' : 'privado',
+            ],
+            'catalog' => [
+                'careers' => Catalog::careers(),
+                'types' => Catalog::projectTypes(),
+                'levels' => Catalog::academicDegrees(),
             ],
         ]);
     }

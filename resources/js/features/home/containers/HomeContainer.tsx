@@ -3,6 +3,7 @@ import { SiteHeader } from '@/shared/components';
 import { CareersSection } from '../components/CareersSection';
 import { HomeHero } from '../components/HomeHero';
 import { RepositoryHighlights } from '../components/RepositoryHighlights';
+import { StatsStrip } from '../components/StatsStrip';
 import type { HomeRepository } from '../types';
 
 type HomeContainerProps = {
@@ -12,9 +13,10 @@ type HomeContainerProps = {
 
 export const HomeContainer = ({ latest, featured }: HomeContainerProps) => {
     return (
-        <div className="min-h-screen bg-stone-50 dark:bg-slate-950">
+        <div className="min-h-screen bg-background">
             <SiteHeader aboutUrl={about.url()} />
             <HomeHero />
+            <StatsStrip />
             <CareersSection />
             <RepositoryHighlights
                 title="Recursos destacados"

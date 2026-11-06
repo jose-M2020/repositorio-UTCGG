@@ -4,55 +4,55 @@ import { Button, Input } from '@/shared/components/ui';
 
 export const HomeHero = () => {
     return (
-        <section className="relative overflow-hidden border-b border-teal-900/10 bg-gradient-to-br from-teal-950 via-teal-900 to-slate-900 text-teal-50">
-            <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-30"
-                style={{
-                    backgroundImage:
-                        'radial-gradient(circle at 20% 20%, rgba(45,212,191,0.35), transparent 40%), radial-gradient(circle at 80% 0%, rgba(15,118,110,0.45), transparent 35%)',
-                }}
-            />
-
-            <div className="relative mx-auto flex min-h-[70vh] w-full max-w-6xl flex-col justify-center gap-8 px-4 py-16">
-                <div className="max-w-3xl space-y-4">
-                    <p className="text-sm font-medium tracking-[0.2em] text-teal-200/80 uppercase">
-                        UTCGG
-                    </p>
-                    <h1 className="font-serif text-4xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <section className="relative overflow-hidden bg-gradient-to-tr from-primary to-secondary text-primary-foreground">
+            <div className="relative mx-auto grid min-h-[88vh] w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
+                <div className="space-y-6">
+                    <h1 className="text-4xl font-extrabold tracking-[0.12em] text-white uppercase sm:text-5xl lg:text-6xl">
                         Repositorio digital
                     </h1>
-                    <p className="max-w-2xl text-base text-teal-100/90 sm:text-lg">
+                    <p className="max-w-xl text-base text-white/90 sm:text-lg">
                         Acceso virtual, libre y abierto al conocimiento académico
                         y científico de la Universidad Tecnológica de la Costa
                         Grande de Guerrero.
                     </p>
+
+                    <Form
+                        {...index.form()}
+                        className="flex w-full max-w-xl flex-col gap-3 sm:flex-row"
+                    >
+                        <Input
+                            name="query"
+                            placeholder="Buscar..."
+                            aria-label="Buscar en el repositorio"
+                            className="h-11 border-transparent bg-card text-foreground"
+                        />
+                        <select
+                            name="search_field"
+                            defaultValue="title"
+                            aria-label="Campo de búsqueda"
+                            className="h-11 rounded-lg border-transparent bg-card px-3 text-sm text-foreground"
+                        >
+                            <option value="title">Título</option>
+                            <option value="description">Descripción</option>
+                            <option value="author">Autor</option>
+                        </select>
+                        <Button
+                            type="submit"
+                            size="lg"
+                            className="h-11 shrink-0 bg-card text-primary hover:bg-accent"
+                        >
+                            Buscar
+                        </Button>
+                    </Form>
                 </div>
 
-                <Form
-                    {...index.form()}
-                    className="flex w-full max-w-2xl flex-col gap-3 sm:flex-row"
-                >
-                    <Input
-                        name="query"
-                        placeholder="Buscar proyectos, tesis o autores..."
-                        aria-label="Buscar en el repositorio"
-                        className="h-11 border-teal-700/40 bg-white/95 text-slate-900"
+                <div className="hidden justify-end lg:flex">
+                    <img
+                        src="/img/library.png"
+                        alt="Biblioteca digital UTCGG"
+                        className="max-h-[28rem] w-auto object-contain"
                     />
-                    <select
-                        name="search_field"
-                        defaultValue="title"
-                        aria-label="Campo de búsqueda"
-                        className="h-11 rounded-lg border border-teal-700/40 bg-white/95 px-3 text-sm text-slate-900"
-                    >
-                        <option value="title">Título</option>
-                        <option value="description">Descripción</option>
-                        <option value="author">Autor</option>
-                    </select>
-                    <Button type="submit" size="lg" className="h-11 shrink-0">
-                        Buscar
-                    </Button>
-                </Form>
+                </div>
             </div>
         </section>
     );

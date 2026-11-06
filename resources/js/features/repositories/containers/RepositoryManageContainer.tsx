@@ -1,4 +1,5 @@
 import { Form, Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import {
     destroy as destroyRepo,
     edit,
@@ -7,7 +8,11 @@ import {
     destroy as destroyMember,
     store as storeMember,
 } from '@/actions/App/Http/Controllers/RepositorioUsuarioController';
-import { Button, Input } from '@/shared/components/ui';
+import {
+    UserSearchPicker,
+    type SearchableUser,
+} from '@/shared/components';
+import { Button } from '@/shared/components/ui';
 import { RepositoryDetails } from '../components/RepositoryDetails';
 import type { Repository } from '../types';
 
@@ -19,11 +24,14 @@ export const RepositoryManageContainer = ({
     repositorio,
 }: RepositoryManageContainerProps) => {
     const { flash } = usePage().props;
+    const [selected, setSelected] = useState<SearchableUser[]>([]);
 
     return (
         <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8">
             <header className="flex flex-wrap items-center justify-between gap-3">
-                <h1 className="text-2xl font-semibold">Gestionar repositorio</h1>
+                <h1 className="text-2xl font-semibold text-primary">
+                    Gestionar repositorio
+                </h1>
                 <div className="flex gap-2">
                     <Link href={edit.url(repositorio.slug)}>
                         <Button type="button" variant="outline">
@@ -45,51 +53,45 @@ export const RepositoryManageContainer = ({
             </header>
 
             {flash.status ? (
-                <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+                <p className="rounded-lg border border-primary/20 bg-accent px-3 py-2 text-sm text-accent-foreground">
                     {flash.status}
                 </p>
             ) : null}
 
-            <section className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+            <section className="rounded-xl border border-border bg-card p-6">
                 <RepositoryDetails repositorio={repositorio} />
             </section>
 
-            <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-                <h2 className="text-lg font-semibold">Agregar miembro</h2>
-                <Form
-                    {...storeMember.form(repositorio.slug)}
-                    className="flex flex-wrap items-end gap-3"
-                >
+            <section className="space-y-4 rounded-xl border border-border bg-card p-6">
+                <h2 className="text-lg font-semibold text-secondary">
+                    Agregar miembro
+                </h2>
+                <Form {...storeMember.form(repositorio.slug)} className="space-y-4">
                     {({ errors, processing }) => (
                         <>
-                            <div className="min-w-56 flex-1 space-y-1">
-                                <label
-                                    htmlFor="user_ids"
-                                    className="text-sm font-medium"
-                                >
-                                    ID de usuario
-                                </label>
-                                <Input
-                                    id="user_ids"
-                                    name="user_ids[]"
-                                    type="number"
-                                    required
-                                    min={1}
-                                />
-                                {errors.user_ids ? (
-                                    <p className="text-sm text-red-600">
-                                        {errors.user_ids}
-                                    </p>
-                                ) : null}
-                            </div>
-                            <Button type="submit" disabled={processing}>
+                            <UserSearchPicker
+                                mode="id"
+                                selected={selected}
+                                onChange={setSelected}
+                                max={8}
+                                label="Buscar por nombre o correo"
+                            />
+                            {errors.user_ids ? (
+                                <p className="text-sm text-destructive">
+                                    {errors.user_ids}
+                                </p>
+                            ) : null}
+                            <Button
+                                type="submit"
+                                disabled={processing || selected.length === 0}
+                            >
                                 Agregar
                             </Button>
                         </>
                     )}
                 </Form>
 
-                <ul className="divide-y divide-slate-200 dark:divide-slate-800">
+                <ul className="divide-y divide-border">
                     {repositorio.users.map((user) => (
                         <li
                             key={user.id}
