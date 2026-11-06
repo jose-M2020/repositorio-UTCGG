@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-export const download = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const download = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: download.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ download.definition = {
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-download.url = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+download.url = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { file: args }
     }
@@ -52,7 +52,7 @@ download.url = (args: { file: string | number | { id: string | number } } | [fil
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-download.get = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+download.get = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: download.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ download.get = (args: { file: string | number | { id: string | number } } | [fil
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-download.head = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+download.head = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: download.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ download.head = (args: { file: string | number | { id: string | number } } | [fi
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-    const downloadForm = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const downloadForm = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: download.url(args, options),
         method: 'get',
     })
@@ -81,7 +81,7 @@ download.head = (args: { file: string | number | { id: string | number } } | [fi
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-        downloadForm.get = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        downloadForm.get = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: download.url(args, options),
             method: 'get',
         })
@@ -90,7 +90,7 @@ download.head = (args: { file: string | number | { id: string | number } } | [fi
  * @see app/Http/Controllers/FileController.php:137
  * @route '/files/download/{file}'
  */
-        downloadForm.head = (args: { file: string | number | { id: string | number } } | [file: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        downloadForm.head = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: download.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -106,7 +106,7 @@ download.head = (args: { file: string | number | { id: string | number } } | [fi
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-export const create = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const create = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(args, options),
     method: 'get',
 })
@@ -121,7 +121,7 @@ create.definition = {
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-create.url = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+create.url = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { repositorio: args }
     }
@@ -154,7 +154,7 @@ create.url = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-create.get = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+create.get = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(args, options),
     method: 'get',
 })
@@ -163,7 +163,7 @@ create.get = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-create.head = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+create.head = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(args, options),
     method: 'head',
 })
@@ -173,7 +173,7 @@ create.head = (args: { repositorio: string | number | { slug: string | number } 
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-    const createForm = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const createForm = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: create.url(args, options),
         method: 'get',
     })
@@ -183,7 +183,7 @@ create.head = (args: { repositorio: string | number | { slug: string | number } 
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-        createForm.get = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        createForm.get = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: create.url(args, options),
             method: 'get',
         })
@@ -192,7 +192,7 @@ create.head = (args: { repositorio: string | number | { slug: string | number } 
  * @see app/Http/Controllers/FileController.php:34
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-        createForm.head = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        createForm.head = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: create.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -208,7 +208,7 @@ create.head = (args: { repositorio: string | number | { slug: string | number } 
  * @see app/Http/Controllers/FileController.php:45
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-export const store = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -223,7 +223,7 @@ store.definition = {
  * @see app/Http/Controllers/FileController.php:45
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-store.url = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+store.url = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { repositorio: args }
     }
@@ -256,7 +256,7 @@ store.url = (args: { repositorio: string | number | { slug: string | number } } 
  * @see app/Http/Controllers/FileController.php:45
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-store.post = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -266,7 +266,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/FileController.php:45
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-    const storeForm = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const storeForm = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: store.url(args, options),
         method: 'post',
     })
@@ -276,7 +276,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/FileController.php:45
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/upload'
  */
-        storeForm.post = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        storeForm.post = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: store.url(args, options),
             method: 'post',
         })
@@ -287,7 +287,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/FileController.php:82
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-export const update = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -302,7 +302,7 @@ update.definition = {
  * @see app/Http/Controllers/FileController.php:82
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-update.url = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+update.url = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     repositorio: args[0],
@@ -332,7 +332,7 @@ update.url = (args: { repositorio: string | number | { slug: string | number }, 
  * @see app/Http/Controllers/FileController.php:82
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-update.put = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -342,7 +342,7 @@ update.put = (args: { repositorio: string | number | { slug: string | number }, 
  * @see app/Http/Controllers/FileController.php:82
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-    const updateForm = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PUT',
@@ -357,7 +357,7 @@ update.put = (args: { repositorio: string | number | { slug: string | number }, 
  * @see app/Http/Controllers/FileController.php:82
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-        updateForm.put = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.put = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PUT',
@@ -373,7 +373,7 @@ update.put = (args: { repositorio: string | number | { slug: string | number }, 
  * @see app/Http/Controllers/FileController.php:98
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-export const destroy = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -388,7 +388,7 @@ destroy.definition = {
  * @see app/Http/Controllers/FileController.php:98
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-destroy.url = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     repositorio: args[0],
@@ -418,7 +418,7 @@ destroy.url = (args: { repositorio: string | number | { slug: string | number },
  * @see app/Http/Controllers/FileController.php:98
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-destroy.delete = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -428,7 +428,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/FileController.php:98
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-    const destroyForm = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -443,7 +443,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/FileController.php:98
  * @route '/mi-cuenta/repositorios/{repositorio}/archivos/{file}'
  */
-        destroyForm.delete = (args: { repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } } | [repositorio: string | number | { slug: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { repositorio: string | { slug: string }, file: number | { id: number } } | [repositorio: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',
@@ -459,7 +459,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-export const destroyImage = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroyImage = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyImage.url(args, options),
     method: 'delete',
 })
@@ -474,7 +474,7 @@ destroyImage.definition = {
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-destroyImage.url = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions) => {
+destroyImage.url = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     repositorio: args[0],
@@ -502,7 +502,7 @@ destroyImage.url = (args: { repositorio: string | number | { slug: string | numb
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-destroyImage.delete = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroyImage.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyImage.url(args, options),
     method: 'delete',
 })
@@ -512,7 +512,7 @@ destroyImage.delete = (args: { repositorio: string | number | { slug: string | n
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-    const destroyImageForm = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyImageForm = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroyImage.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -527,7 +527,7 @@ destroyImage.delete = (args: { repositorio: string | number | { slug: string | n
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-        destroyImageForm.delete = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyImageForm.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroyImage.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

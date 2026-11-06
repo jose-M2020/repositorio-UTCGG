@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
  * @see app/Http/Controllers/RepositorioUsuarioController.php:22
  * @route '/mi-cuenta/repositorios/{repositorio}/members'
  */
-export const store = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ store.definition = {
  * @see app/Http/Controllers/RepositorioUsuarioController.php:22
  * @route '/mi-cuenta/repositorios/{repositorio}/members'
  */
-store.url = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
+store.url = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { repositorio: args }
     }
@@ -52,7 +52,7 @@ store.url = (args: { repositorio: string | number | { slug: string | number } } 
  * @see app/Http/Controllers/RepositorioUsuarioController.php:22
  * @route '/mi-cuenta/repositorios/{repositorio}/members'
  */
-store.post = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/RepositorioUsuarioController.php:22
  * @route '/mi-cuenta/repositorios/{repositorio}/members'
  */
-    const storeForm = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const storeForm = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: store.url(args, options),
         method: 'post',
     })
@@ -72,7 +72,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/RepositorioUsuarioController.php:22
  * @route '/mi-cuenta/repositorios/{repositorio}/members'
  */
-        storeForm.post = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        storeForm.post = (args: { repositorio: string | { slug: string } } | [repositorio: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: store.url(args, options),
             method: 'post',
         })
@@ -83,7 +83,7 @@ store.post = (args: { repositorio: string | number | { slug: string | number } }
  * @see app/Http/Controllers/RepositorioUsuarioController.php:31
  * @route '/mi-cuenta/repositorios/{repositorio}/members/{user}'
  */
-export const destroy = (args: { repositorio: string | number | { slug: string | number }, user: number | { id: number } } | [repositorio: string | number | { slug: string | number }, user: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { repositorio: string | { slug: string }, user: number | { id: number } } | [repositorio: string | { slug: string }, user: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -98,7 +98,7 @@ destroy.definition = {
  * @see app/Http/Controllers/RepositorioUsuarioController.php:31
  * @route '/mi-cuenta/repositorios/{repositorio}/members/{user}'
  */
-destroy.url = (args: { repositorio: string | number | { slug: string | number }, user: number | { id: number } } | [repositorio: string | number | { slug: string | number }, user: number | { id: number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { repositorio: string | { slug: string }, user: number | { id: number } } | [repositorio: string | { slug: string }, user: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     repositorio: args[0],
@@ -128,7 +128,7 @@ destroy.url = (args: { repositorio: string | number | { slug: string | number },
  * @see app/Http/Controllers/RepositorioUsuarioController.php:31
  * @route '/mi-cuenta/repositorios/{repositorio}/members/{user}'
  */
-destroy.delete = (args: { repositorio: string | number | { slug: string | number }, user: number | { id: number } } | [repositorio: string | number | { slug: string | number }, user: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { repositorio: string | { slug: string }, user: number | { id: number } } | [repositorio: string | { slug: string }, user: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -138,7 +138,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/RepositorioUsuarioController.php:31
  * @route '/mi-cuenta/repositorios/{repositorio}/members/{user}'
  */
-    const destroyForm = (args: { repositorio: string | number | { slug: string | number }, user: number | { id: number } } | [repositorio: string | number | { slug: string | number }, user: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { repositorio: string | { slug: string }, user: number | { id: number } } | [repositorio: string | { slug: string }, user: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -153,7 +153,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/RepositorioUsuarioController.php:31
  * @route '/mi-cuenta/repositorios/{repositorio}/members/{user}'
  */
-        destroyForm.delete = (args: { repositorio: string | number | { slug: string | number }, user: number | { id: number } } | [repositorio: string | number | { slug: string | number }, user: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { repositorio: string | { slug: string }, user: number | { id: number } } | [repositorio: string | { slug: string }, user: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

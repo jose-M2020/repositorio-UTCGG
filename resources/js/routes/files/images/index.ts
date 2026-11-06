@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-export const destroy = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -19,7 +19,7 @@ destroy.definition = {
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-destroy.url = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions) => {
+destroy.url = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     repositorio: args[0],
@@ -47,7 +47,7 @@ destroy.url = (args: { repositorio: string | number | { slug: string | number },
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-destroy.delete = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -57,7 +57,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-    const destroyForm = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -72,7 +72,7 @@ destroy.delete = (args: { repositorio: string | number | { slug: string | number
  * @see app/Http/Controllers/FileController.php:113
  * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
  */
-        destroyForm.delete = (args: { repositorio: string | number | { slug: string | number }, index: string | number } | [repositorio: string | number | { slug: string | number }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

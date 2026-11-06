@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { ComponentType, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { FlashToaster } from '@/shared/components';
 
 type InertiaReactComponent = ComponentType<any> & {
     layout?:
@@ -24,8 +25,16 @@ void createInertiaApp({
             >,
         ),
     setup({ el, App, props }) {
-        createRoot(el).render(<App {...props} />);
+        const initialStatus = props.initialPage.props.flash?.status;
+
+        createRoot(el).render(
+            <>
+                <App {...props} />
+                <FlashToaster initialStatus={initialStatus} />
+            </>,
+        );
     },
+
     progress: {
         color: '#4B5563',
     },
