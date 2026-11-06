@@ -1,12 +1,12 @@
 import { Link } from '@inertiajs/react';
+import { about } from '@/actions/App/Http/Controllers/HomeController';
 import {
     create,
     mine,
 } from '@/actions/App/Http/Controllers/RepositorioController';
+import { SiteFooter, SiteHeader } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import { SiteFooter, SiteHeader } from '@/shared/components';
-import { about } from '@/actions/App/Http/Controllers/HomeController';
 import { RepositoriesList } from '../components/RepositoriesList';
 import { RepositoryFilters } from '../components/RepositoryFilters';
 import type {
@@ -50,11 +50,12 @@ export const RepositoriesIndexContainer = ({
                     </div>
                 </header>
 
-                <RepositoryFilters filters={filters} catalog={catalog} />
-                <RepositoriesList
-                    repositorios={repositorios}
-                    filters={filters}
-                />
+                <RepositoryFilters filters={filters} catalog={catalog}>
+                    <RepositoriesList
+                        repositorios={repositorios}
+                        filters={filters}
+                    />
+                </RepositoryFilters>
             </main>
             <SiteFooter />
         </div>

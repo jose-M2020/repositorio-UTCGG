@@ -1,4 +1,5 @@
 import { Form, router } from '@inertiajs/react';
+import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
@@ -12,6 +13,7 @@ import type { RepositoryFilters as RepositoryFiltersType } from '../types';
 type RepositoryFiltersProps = {
     filters: RepositoryFiltersType;
     catalog?: RepositoryCatalog;
+    children?: ReactNode;
 };
 
 const CheckboxGroup = ({
@@ -53,6 +55,7 @@ const CheckboxGroup = ({
 export const RepositoryFilters = ({
     filters,
     catalog,
+    children,
 }: RepositoryFiltersProps) => {
     const careerOptions = Object.entries(catalog?.careers ?? careers).map(
         ([value, label]) => ({ value, label: `${value} — ${label}` }),
@@ -68,53 +71,62 @@ export const RepositoryFilters = ({
     return (
         <Form
             {...index.form()}
-            className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]"
+            className="grid items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]"
         >
-            <aside className="space-y-5 rounded-xl border border-border bg-card p-4">
-                <h2 className="text-base font-semibold text-primary">Filtros</h2>
+            <aside className="sticky top-4 flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-xl border border-border bg-card">
+                <div className="shrink-0 border-b border-border px-4 py-3">
+                    <h2 className="text-base font-semibold text-primary">
+                        Filtros
+                    </h2>
+                </div>
 
-                <CheckboxGroup
-                    title="Carrera"
-                    name="carrera"
-                    options={careerOptions}
-                    selected={filters.carrera}
-                />
-                <CheckboxGroup
-                    title="Tipo"
-                    name="tipo"
-                    options={typeOptions}
-                    selected={filters.tipo}
-                />
-                <CheckboxGroup
-                    title="Nivel"
-                    name="nivel"
-                    options={levelOptions}
-                    selected={filters.nivel}
-                />
-
-                <fieldset className="space-y-2">
-                    <legend className="text-sm font-semibold text-foreground">
-                        Fecha
-                    </legend>
-                    <Input
-                        type="date"
-                        name="year[]"
-                        defaultValue={filters.year[0] ?? ''}
-                        aria-label="Fecha inicial"
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4">
+                    <CheckboxGroup
+                        title="Carrera"
+                        name="carrera"
+                        options={careerOptions}
+                        selected={filters.carrera}
                     />
-                    <Input
-                        type="date"
-                        name="year[]"
-                        defaultValue={filters.year[1] ?? ''}
-                        aria-label="Fecha final"
+                    <CheckboxGroup
+                        title="Tipo"
+                        name="tipo"
+                        options={typeOptions}
+                        selected={filters.tipo}
                     />
-                </fieldset>
+                    <CheckboxGroup
+                        title="Nivel"
+                        name="nivel"
+                        options={levelOptions}
+                        selected={filters.nivel}
+                    />
 
-                <div className="flex flex-col gap-2">
-                    <Button type="submit">Aplicar filtros</Button>
+                    <fieldset className="space-y-2">
+                        <legend className="text-sm font-semibold text-foreground">
+                            Fecha
+                        </legend>
+                        <Input
+                            type="date"
+                            name="year[]"
+                            defaultValue={filters.year[0] ?? ''}
+                            aria-label="Fecha inicial"
+                        />
+                        <Input
+                            type="date"
+                            name="year[]"
+                            defaultValue={filters.year[1] ?? ''}
+                            aria-label="Fecha final"
+                        />
+                    </fieldset>
+                </div>
+
+                <div className="sticky bottom-0 shrink-0 space-y-2 border-t border-border bg-card px-4 py-3">
+                    <Button type="submit" className="w-full">
+                        Aplicar filtros
+                    </Button>
                     <Button
                         type="button"
                         variant="outline"
+                        className="w-full"
                         onClick={() => router.get(index.url())}
                     >
                         Limpiar
@@ -122,26 +134,30 @@ export const RepositoryFilters = ({
                 </div>
             </aside>
 
-            <div className="space-y-3 rounded-xl border border-border bg-card p-4">
-                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px_auto]">
-                    <Input
-                        name="query"
-                        placeholder="Buscar..."
-                        defaultValue={filters.query}
-                        aria-label="Buscar repositorios"
-                    />
-                    <select
-                        name="search_field"
-                        defaultValue={filters.search_field || 'title'}
-                        className="h-8 rounded-lg border border-input bg-card px-2.5 text-sm"
-                        aria-label="Campo de búsqueda"
-                    >
-                        <option value="title">Título</option>
-                        <option value="description">Descripción</option>
-                        <option value="author">Autor</option>
-                    </select>
-                    <Button type="submit">Buscar</Button>
+            <div className="min-w-0 space-y-4">
+                <div className="rounded-xl border border-border bg-card p-4">
+                    <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px_auto]">
+                        <Input
+                            name="query"
+                            placeholder="Buscar..."
+                            defaultValue={filters.query}
+                            aria-label="Buscar repositorios"
+                        />
+                        <select
+                            name="search_field"
+                            defaultValue={filters.search_field || 'title'}
+                            className="h-8 rounded-lg border border-input bg-card px-2.5 text-sm"
+                            aria-label="Campo de búsqueda"
+                        >
+                            <option value="title">Título</option>
+                            <option value="description">Descripción</option>
+                            <option value="author">Autor</option>
+                        </select>
+                        <Button type="submit">Buscar</Button>
+                    </div>
                 </div>
+
+                {children}
             </div>
         </Form>
     );
