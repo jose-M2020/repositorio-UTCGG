@@ -43,31 +43,52 @@ export const RepositoriesList = ({
                     return (
                         <li
                             key={repo.id}
-                            className="rounded-xl border border-border bg-card p-4"
+                            className="overflow-hidden rounded-xl border border-border bg-card"
                         >
                             <Link
                                 href={hrefForItem(repo.slug)}
-                                className="text-lg font-semibold text-foreground hover:text-primary hover:underline"
+                                className="grid gap-4 p-4 sm:grid-cols-[160px_minmax(0,1fr)]"
                             >
-                                {searchField === 'title'
-                                    ? highlightMatch(repo.nombre_rep, query)
-                                    : repo.nombre_rep}
+                                <img
+                                    src={repo.cover_url || '/img/no-image.jpg'}
+                                    alt=""
+                                    className="h-36 w-full rounded-lg object-cover sm:h-28"
+                                />
+                                <div className="min-w-0">
+                                    <h3 className="text-lg font-semibold text-foreground hover:text-primary">
+                                        {searchField === 'title'
+                                            ? highlightMatch(
+                                                  repo.nombre_rep,
+                                                  query,
+                                              )
+                                            : repo.nombre_rep}
+                                    </h3>
+                                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                                        {searchField === 'description'
+                                            ? highlightMatch(
+                                                  repo.descripcion,
+                                                  query,
+                                              )
+                                            : repo.descripcion}
+                                    </p>
+                                    {searchField === 'author' &&
+                                    authorNames ? (
+                                        <p className="mt-1 text-sm text-foreground">
+                                            {highlightMatch(
+                                                authorNames,
+                                                query,
+                                            )}
+                                        </p>
+                                    ) : null}
+                                    <p className="mt-2 text-xs text-muted-foreground">
+                                        {repo.carrera} · {repo.tipo_proyecto} ·{' '}
+                                        {repo.nivel_proyecto}
+                                        {repo.publico
+                                            ? ' · Público'
+                                            : ' · Privado'}
+                                    </p>
+                                </div>
                             </Link>
-                            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                                {searchField === 'description'
-                                    ? highlightMatch(repo.descripcion, query)
-                                    : repo.descripcion}
-                            </p>
-                            {searchField === 'author' && authorNames ? (
-                                <p className="mt-1 text-sm text-foreground">
-                                    {highlightMatch(authorNames, query)}
-                                </p>
-                            ) : null}
-                            <p className="mt-2 text-xs text-muted-foreground">
-                                {repo.carrera} · {repo.tipo_proyecto} ·{' '}
-                                {repo.nivel_proyecto}
-                                {repo.publico ? ' · Público' : ' · Privado'}
-                            </p>
                         </li>
                     );
                 })}

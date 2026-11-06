@@ -3,6 +3,7 @@ export type RepositoryFile = {
     original_name: string;
     file_type: string;
     is_public: boolean;
+    url?: string;
 };
 
 export type RepositoryUploadTarget = {

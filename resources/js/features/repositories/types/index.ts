@@ -10,6 +10,7 @@ export type RepositoryFileItem = {
     original_name: string;
     file_type: string;
     is_public: boolean;
+    url?: string;
 };
 
 export type Repository = {
@@ -29,6 +30,8 @@ export type Repository = {
     users: RepositoryMember[];
     files: RepositoryFileItem[];
     imagenes: string[];
+    imagen_urls?: string[];
+    cover_url?: string;
     visibilidad?: 'publico' | 'privado';
 };
 
@@ -42,6 +45,7 @@ export type RepositoryListItem = {
     nivel_proyecto: string;
     publico: boolean;
     created_at?: string;
+    cover_url?: string;
     users?: RepositoryMember[];
 };
 

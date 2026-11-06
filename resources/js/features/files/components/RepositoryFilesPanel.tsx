@@ -13,6 +13,7 @@ type RepositoryFilesPanelProps = {
     slug: string;
     files: RepositoryFile[];
     imagenes: string[];
+    imagenUrls?: string[];
     canManage?: boolean;
 };
 
@@ -20,12 +21,15 @@ export const RepositoryFilesPanel = ({
     slug,
     files,
     imagenes,
+    imagenUrls = [],
     canManage = false,
 }: RepositoryFilesPanelProps) => {
+    const pdfFiles = files.filter((file) => file.file_type === 'pdf' && file.url);
+
     return (
-        <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+        <section className="space-y-6 rounded-xl border border-border bg-card p-6">
             <header className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold">Archivos</h2>
+                <h2 className="text-lg font-semibold text-primary">Archivos</h2>
                 {canManage ? (
                     <Link href={create.url(slug)}>
                         <Button type="button">Subir archivos</Button>
@@ -33,12 +37,33 @@ export const RepositoryFilesPanel = ({
                 ) : null}
             </header>
 
+            {pdfFiles.length > 0 ? (
+                <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-secondary">
+                        Documentación
+                    </h3>
+                    {pdfFiles.map((file) => (
+                        <div key={file.id} className="space-y-2">
+                            <iframe
+                                title={file.original_name}
+                                src={file.url}
+                                className="h-[600px] w-full rounded-lg border border-border bg-background"
+                                allowFullScreen
+                            />
+                            <p className="text-center text-sm text-muted-foreground">
+                                {file.original_name}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) : null}
+
             {files.length === 0 ? (
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <p className="text-sm text-muted-foreground">
                     No hay documentos cargados.
                 </p>
             ) : (
-                <ul className="divide-y divide-slate-200 dark:divide-slate-800">
+                <ul className="divide-y divide-border">
                     {files.map((file) => (
                         <li
                             key={file.id}
@@ -48,7 +73,7 @@ export const RepositoryFilesPanel = ({
                                 <p className="font-medium">
                                     {file.original_name}
                                 </p>
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted-foreground">
                                     {file.file_type} ·{' '}
                                     {file.is_public ? 'Público' : 'Privado'}
                                 </p>
@@ -69,7 +94,10 @@ export const RepositoryFilesPanel = ({
                                                 name="is_public"
                                                 value={file.is_public ? 0 : 1}
                                             />
-                                            <Button type="submit" variant="ghost">
+                                            <Button
+                                                type="submit"
+                                                variant="ghost"
+                                            >
                                                 {file.is_public
                                                     ? 'Hacer privado'
                                                     : 'Hacer público'}
@@ -97,30 +125,44 @@ export const RepositoryFilesPanel = ({
             )}
 
             {imagenes.length > 0 ? (
-                <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Imágenes</h3>
-                    <ul className="space-y-2">
+                <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-secondary">
+                        Imágenes
+                    </h3>
+                    <ul className="grid gap-3 sm:grid-cols-2">
                         {imagenes.map((path, index) => (
                             <li
                                 key={`${path}-${index}`}
-                                className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2 text-xs dark:border-slate-800"
+                                className="overflow-hidden rounded-lg border border-border"
                             >
-                                <span className="truncate">{path}</span>
+                                <img
+                                    src={
+                                        imagenUrls[index] ||
+                                        '/img/no-image.jpg'
+                                    }
+                                    alt=""
+                                    className="h-48 w-full object-cover"
+                                />
                                 {canManage ? (
-                                    <Form
-                                        {...destroyImage.form([slug, index])}
-                                    >
-                                        {({ processing }) => (
-                                            <Button
-                                                type="submit"
-                                                variant="destructive"
-                                                size="sm"
-                                                disabled={processing}
-                                            >
-                                                Quitar
-                                            </Button>
-                                        )}
-                                    </Form>
+                                    <div className="flex justify-end p-2">
+                                        <Form
+                                            {...destroyImage.form([
+                                                slug,
+                                                index,
+                                            ])}
+                                        >
+                                            {({ processing }) => (
+                                                <Button
+                                                    type="submit"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    disabled={processing}
+                                                >
+                                                    Quitar
+                                                </Button>
+                                            )}
+                                        </Form>
+                                    </div>
                                 ) : null}
                             </li>
                         ))}

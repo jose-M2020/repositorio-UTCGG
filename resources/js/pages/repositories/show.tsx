@@ -27,6 +27,7 @@ export default function RepositoriesShowPage({
                     slug={repositorio.slug}
                     files={repositorio.files}
                     imagenes={repositorio.imagenes}
+                    imagenUrls={repositorio.imagen_urls}
                 />
             </div>
         </>

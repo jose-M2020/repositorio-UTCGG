@@ -9,6 +9,7 @@ use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
 use App\Support\Catalog;
+use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -69,7 +70,29 @@ class RepositorioController extends Controller implements HasMiddleware
                 fn ($query) => $query->whereBetween('created_at', [$years[0], $years[1]]),
             )
             ->paginate(15)
-            ->withQueryString();
+            ->withQueryString()
+            ->through(function (Repositorio $repositorio): array {
+                $images = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
+
+                return [
+                    'id' => $repositorio->id,
+                    'nombre_rep' => $repositorio->nombre_rep,
+                    'slug' => $repositorio->slug,
+                    'descripcion' => $repositorio->descripcion,
+                    'carrera' => $repositorio->carrera,
+                    'tipo_proyecto' => $repositorio->tipo_proyecto,
+                    'nivel_proyecto' => $repositorio->nivel_proyecto,
+                    'publico' => $repositorio->publico,
+                    'created_at' => $repositorio->created_at?->toDateTimeString(),
+                    'cover_url' => Media::url($images[0] ?? null),
+                    'users' => $repositorio->users->map(fn (User $user) => [
+                        'id' => $user->id,
+                        'nombre' => $user->nombre,
+                        'apellido' => $user->apellido,
+                        'email' => $user->email,
+                    ])->values()->all(),
+                ];
+            });
 
         return Inertia::render('repositories/index', [
             'repositorios' => $repositorios,
@@ -242,6 +265,8 @@ class RepositorioController extends Controller implements HasMiddleware
      */
     private function serializeRepository(Repositorio $repositorio): array
     {
+        $imagePaths = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
+
         return [
             'id' => $repositorio->id,
             'nombre_rep' => $repositorio->nombre_rep,
@@ -256,13 +281,19 @@ class RepositorioController extends Controller implements HasMiddleware
             'empresa' => $repositorio->empresa,
             'generacion' => $repositorio->generacion,
             'created_by' => $repositorio->created_by,
-            'imagenes' => json_decode($repositorio->imagenes ?? '[]', true) ?: [],
+            'imagenes' => $imagePaths,
+            'imagen_urls' => array_map(
+                static fn (string $path): string => Media::url($path),
+                $imagePaths,
+            ),
+            'cover_url' => Media::url($imagePaths[0] ?? null),
             'files' => $repositorio->relationLoaded('files')
                 ? $repositorio->files->map(fn (File $file) => [
                     'id' => $file->id,
                     'original_name' => $file->original_name,
                     'file_type' => $file->file_type,
                     'is_public' => $file->is_public,
+                    'url' => Media::url($file->file_path),
                 ])->values()->all()
                 : [],
             'users' => $repositorio->relationLoaded('users')
