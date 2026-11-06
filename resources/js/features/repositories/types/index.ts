@@ -5,6 +5,13 @@ export type RepositoryMember = {
     email: string;
 };
 
+export type RepositoryFileItem = {
+    id: number;
+    original_name: string;
+    file_type: string;
+    is_public: boolean;
+};
+
 export type Repository = {
     id: number;
     nombre_rep: string;
@@ -20,6 +27,8 @@ export type Repository = {
     generacion: string;
     created_by: string;
     users: RepositoryMember[];
+    files: RepositoryFileItem[];
+    imagenes: string[];
     visibilidad?: 'publico' | 'privado';
 };
 

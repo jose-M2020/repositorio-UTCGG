@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\AuthorizeMember;
 use App\Http\Requests\StoreRepositorioRequest;
 use App\Http\Requests\UpdateRepositorioRequest;
+use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -112,7 +113,10 @@ class RepositorioController extends Controller implements HasMiddleware
             abort(404);
         }
 
-        $repositorio->load('users:id,nombre,apellido,email');
+        $repositorio->load([
+            'users:id,nombre,apellido,email',
+            'files' => fn ($query) => $query->where('is_public', true),
+        ]);
 
         $related = Repositorio::query()
             ->where('carrera', $repositorio->carrera)
@@ -143,7 +147,7 @@ class RepositorioController extends Controller implements HasMiddleware
 
     public function showByUser(Repositorio $repositorio): Response
     {
-        $repositorio->load('users:id,nombre,apellido,email');
+        $repositorio->load(['users:id,nombre,apellido,email', 'files']);
 
         return Inertia::render('repositories/manage', [
             'repositorio' => $this->serializeRepository($repositorio),
@@ -222,6 +226,15 @@ class RepositorioController extends Controller implements HasMiddleware
             'empresa' => $repositorio->empresa,
             'generacion' => $repositorio->generacion,
             'created_by' => $repositorio->created_by,
+            'imagenes' => json_decode($repositorio->imagenes ?? '[]', true) ?: [],
+            'files' => $repositorio->relationLoaded('files')
+                ? $repositorio->files->map(fn (File $file) => [
+                    'id' => $file->id,
+                    'original_name' => $file->original_name,
+                    'file_type' => $file->file_type,
+                    'is_public' => $file->is_public,
+                ])->values()->all()
+                : [],
             'users' => $repositorio->relationLoaded('users')
                 ? $repositorio->users->map(fn (User $user) => [
                     'id' => $user->id,

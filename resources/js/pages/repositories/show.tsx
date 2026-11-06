@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { RepositoryFilesPanel } from '@/features/files';
 import {
     RepositoryShowContainer,
     type Repository,
@@ -21,6 +22,13 @@ export default function RepositoriesShowPage({
                 repositorio={repositorio}
                 related={related}
             />
+            <div className="mx-auto w-full max-w-4xl px-4 pb-8">
+                <RepositoryFilesPanel
+                    slug={repositorio.slug}
+                    files={repositorio.files}
+                    imagenes={repositorio.imagenes}
+                />
+            </div>
         </>
     );
 }

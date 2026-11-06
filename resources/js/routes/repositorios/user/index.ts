@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
 export const show = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
 show.url = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ show.url = (args: { repositorio: string | number | { slug: string | number } } |
 
 /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
 show.get = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +58,7 @@ show.get = (args: { repositorio: string | number | { slug: string | number } } |
 })
 /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
 show.head = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +68,7 @@ show.head = (args: { repositorio: string | number | { slug: string | number } } 
 
     /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
     const showForm = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -78,7 +78,7 @@ show.head = (args: { repositorio: string | number | { slug: string | number } } 
 
             /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
         showForm.get = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -87,7 +87,7 @@ show.head = (args: { repositorio: string | number | { slug: string | number } } 
         })
             /**
 * @see \App\Http\Controllers\RepositorioController::show
- * @see app/Http/Controllers/RepositorioController.php:144
+ * @see app/Http/Controllers/RepositorioController.php:148
  * @route '/mi-cuenta/repositorios/{repositorio}'
  */
         showForm.head = (args: { repositorio: string | number | { slug: string | number } } | [repositorio: string | number | { slug: string | number } ] | string | number | { slug: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

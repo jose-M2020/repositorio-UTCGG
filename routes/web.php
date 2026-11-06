@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\RepositorioController;
 use App\Http\Controllers\RepositorioUsuarioController;
 use App\Http\Controllers\RoleController;
@@ -15,6 +16,9 @@ Route::resource('roles', RoleController::class);
 
 Route::resource('repositorios', RepositorioController::class)
     ->only(['index', 'show']);
+
+Route::get('files/download/{file}', [FileController::class, 'download'])
+    ->name('files.download');
 
 Route::middleware('auth')->group(function (): void {
     Route::resource('repositorios', RepositorioController::class)
@@ -35,6 +39,21 @@ Route::middleware('auth')->group(function (): void {
 
         Route::delete('/repositorios/{repositorio}/members/{user}', [RepositorioUsuarioController::class, 'destroy'])
             ->name('repositorios.member.destroy');
+
+        Route::get('/repositorios/{repositorio}/archivos/upload', [FileController::class, 'create'])
+            ->name('files.create');
+
+        Route::post('/repositorios/{repositorio}/archivos/upload', [FileController::class, 'store'])
+            ->name('files.store');
+
+        Route::put('/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'update'])
+            ->name('files.update');
+
+        Route::delete('/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'destroy'])
+            ->name('files.destroy');
+
+        Route::delete('/repositorios/{repositorio}/imagenes/{index}', [FileController::class, 'destroyImage'])
+            ->name('files.images.destroy');
     });
 });
 
