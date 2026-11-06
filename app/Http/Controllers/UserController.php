@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Support\Catalog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +31,11 @@ class UserController extends Controller implements HasMiddleware
 
     public function index(Request $request): Response
     {
+        $carreras = array_values(array_filter((array) $request->input('carrera', [])));
+        $dateRange = array_values((array) $request->input('rango_fecha', ['', '']));
+        $fecha = $request->string('fecha')->toString();
+        $hasDateRange = ($dateRange[0] ?? '') !== '' && ($dateRange[1] ?? '') !== '';
+
         $users = User::query()
             ->with('roles:id,name')
             ->latest('id')
@@ -40,11 +46,36 @@ class UserController extends Controller implements HasMiddleware
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->when($request->filled('carrera'), fn ($query) => $query->where('carrera', $request->string('carrera')->toString()))
+            ->when($carreras !== [], fn ($query) => $query->whereIn('carrera', $carreras))
             ->when(
                 $request->filled('rol') && $request->string('rol')->toString() !== 'all',
                 fn ($query) => $query->role($request->string('rol')->toString()),
             )
+            ->when($hasDateRange, fn ($query) => $query->whereBetween('created_at', [$dateRange[0], $dateRange[1]]))
+            ->when(! $hasDateRange && $fecha !== '', function ($query) use ($fecha): void {
+                if ($fecha === 'hoy') {
+                    $query->whereDate('created_at', now()->toDateString());
+
+                    return;
+                }
+
+                if ($fecha === 'semana') {
+                    $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+
+                    return;
+                }
+
+                if ($fecha === 'mes') {
+                    $query->whereMonth('created_at', now()->month)
+                        ->whereYear('created_at', now()->year);
+
+                    return;
+                }
+
+                if ($fecha === 'año') {
+                    $query->whereYear('created_at', now()->year);
+                }
+            })
             ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'carrera', 'created_at'])
             ->withQueryString();
 
@@ -52,10 +83,13 @@ class UserController extends Controller implements HasMiddleware
             'users' => $users,
             'filters' => [
                 'query' => $request->string('query')->toString(),
-                'carrera' => $request->string('carrera')->toString(),
+                'carrera' => $carreras,
                 'rol' => $request->string('rol')->toString() ?: 'all',
+                'fecha' => $fecha,
+                'rango_fecha' => $dateRange,
             ],
             'roles' => Role::query()->orderBy('name')->pluck('name'),
+            'careers' => Catalog::careers(),
         ]);
     }
 

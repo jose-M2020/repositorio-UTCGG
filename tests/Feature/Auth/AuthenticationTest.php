@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,32 +11,48 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guest_can_view_login_and_register_pages(): void
+    protected function setUp(): void
     {
-        $this->get(route('login'))->assertOk();
-        $this->get(route('register'))->assertOk();
+        parent::setUp();
+
+        $this->seed(PermissionsSeeder::class);
     }
 
-    public function test_authenticated_user_is_redirected_from_guest_auth_pages(): void
+    public function test_guest_can_view_login_but_not_register(): void
+    {
+        $this->get(route('login'))->assertOk();
+        $this->get(route('register'))->assertRedirect(route('login'));
+    }
+
+    public function test_authenticated_user_can_view_register_page(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('admin');
+
+        $this->actingAs($user)
+            ->get(route('register'))
+            ->assertOk();
+    }
+
+    public function test_authenticated_user_is_redirected_from_login(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)
             ->get(route('login'))
             ->assertRedirect(route('home'));
-
-        $this->actingAs($user)
-            ->get(route('register'))
-            ->assertRedirect(route('home'));
     }
 
-    public function test_user_can_register_and_is_redirected_to_login(): void
+    public function test_authenticated_user_can_register_another_user(): void
     {
-        $response = $this->post(route('register'), [
+        $actor = User::factory()->create();
+        $actor->assignRole('admin');
+
+        $response = $this->actingAs($actor)->post(route('register'), [
             'nombre' => 'Jose',
             'apellido' => 'Martinez',
             'email' => 'jose@example.com',
-            'carrera' => 'TI',
+            'carrera' => 'TIC',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
         ]);
@@ -46,22 +63,25 @@ class AuthenticationTest extends TestCase
             'email' => 'jose@example.com',
             'nombre' => 'Jose',
             'apellido' => 'Martinez',
-            'carrera' => 'TI',
+            'carrera' => 'TIC',
         ]);
-        $this->assertGuest();
     }
 
     public function test_register_requires_unique_email(): void
     {
+        $actor = User::factory()->create();
+        $actor->assignRole('admin');
         User::factory()->create(['email' => 'jose@example.com']);
 
-        $response = $this->from(route('register'))->post(route('register'), [
-            'nombre' => 'Jose',
-            'apellido' => 'Martinez',
-            'email' => 'jose@example.com',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
-        ]);
+        $response = $this->actingAs($actor)
+            ->from(route('register'))
+            ->post(route('register'), [
+                'nombre' => 'Jose',
+                'apellido' => 'Martinez',
+                'email' => 'jose@example.com',
+                'password' => 'Password123!',
+                'password_confirmation' => 'Password123!',
+            ]);
 
         $response->assertRedirect(route('register'));
         $response->assertSessionHasErrors(['email']);

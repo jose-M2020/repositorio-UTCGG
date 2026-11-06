@@ -1,9 +1,11 @@
 import { Link } from '@inertiajs/react';
 import { show } from '@/actions/App/Http/Controllers/RepositorioController';
-import type { PaginatedRepositories } from '../types';
+import { highlightMatch } from '@/shared/lib/highlight';
+import type { PaginatedRepositories, RepositoryFilters } from '../types';
 
 type RepositoriesListProps = {
     repositorios: PaginatedRepositories;
+    filters?: Pick<RepositoryFilters, 'query' | 'search_field'>;
     hrefForItem?: (slug: string) => string;
 };
 
@@ -15,40 +17,60 @@ const formatLabel = (label: string) =>
 
 export const RepositoriesList = ({
     repositorios,
+    filters,
     hrefForItem = (slug) => show.url(slug),
 }: RepositoriesListProps) => {
     if (repositorios.data.length === 0) {
         return (
-            <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">
+            <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
                 No hay repositorios para mostrar.
             </p>
         );
     }
 
+    const query = filters?.query ?? '';
+    const searchField = filters?.search_field || 'title';
+
     return (
         <div className="space-y-4">
             <ul className="space-y-3">
-                {repositorios.data.map((repo) => (
-                    <li
-                        key={repo.id}
-                        className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
-                    >
-                        <Link
-                            href={hrefForItem(repo.slug)}
-                            className="text-lg font-semibold text-slate-900 hover:underline dark:text-slate-100"
+                {repositorios.data.map((repo) => {
+                    const authorNames =
+                        repo.users
+                            ?.map((user) => `${user.nombre} ${user.apellido}`)
+                            .join(', ') ?? '';
+
+                    return (
+                        <li
+                            key={repo.id}
+                            className="rounded-xl border border-border bg-card p-4"
                         >
-                            {repo.nombre_rep}
-                        </Link>
-                        <p className="mt-1 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">
-                            {repo.descripcion}
-                        </p>
-                        <p className="mt-2 text-xs text-slate-500">
-                            {repo.carrera} · {repo.tipo_proyecto} ·{' '}
-                            {repo.nivel_proyecto}
-                            {repo.publico ? ' · Público' : ' · Privado'}
-                        </p>
-                    </li>
-                ))}
+                            <Link
+                                href={hrefForItem(repo.slug)}
+                                className="text-lg font-semibold text-foreground hover:text-primary hover:underline"
+                            >
+                                {searchField === 'title'
+                                    ? highlightMatch(repo.nombre_rep, query)
+                                    : repo.nombre_rep}
+                            </Link>
+                            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                                {searchField === 'description'
+                                    ? highlightMatch(repo.descripcion, query)
+                                    : repo.descripcion}
+                            </p>
+                            {searchField === 'author' && authorNames ? (
+                                <p className="mt-1 text-sm text-foreground">
+                                    {highlightMatch(authorNames, query)}
+                                </p>
+                            ) : null}
+                            <p className="mt-2 text-xs text-muted-foreground">
+                                {repo.carrera} · {repo.tipo_proyecto} ·{' '}
+                                {repo.nivel_proyecto}
+                                {repo.publico ? ' · Público' : ' · Privado'}
+                            </p>
+                        </li>
+                    );
+                })}
             </ul>
 
             <div className="flex flex-wrap gap-2">
@@ -58,7 +80,7 @@ export const RepositoriesList = ({
                         return (
                             <span
                                 key={`${label}-disabled`}
-                                className="rounded-md border border-slate-200 px-3 py-1 text-sm text-slate-400"
+                                className="rounded-md border border-border px-3 py-1 text-sm text-muted-foreground"
                             >
                                 {label}
                             </span>
@@ -71,8 +93,8 @@ export const RepositoriesList = ({
                             href={link.url}
                             className={`rounded-md border px-3 py-1 text-sm ${
                                 link.active
-                                    ? 'border-slate-900 bg-slate-900 text-white'
-                                    : 'border-slate-300 text-slate-700'
+                                    ? 'border-primary bg-primary text-primary-foreground'
+                                    : 'border-border text-foreground'
                             }`}
                         >
                             {label}

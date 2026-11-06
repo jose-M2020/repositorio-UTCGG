@@ -5,7 +5,7 @@ import {
 } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import { SiteHeader } from '@/shared/components';
+import { SiteFooter, SiteHeader } from '@/shared/components';
 import { about } from '@/actions/App/Http/Controllers/HomeController';
 import { RepositoriesList } from '../components/RepositoriesList';
 import { RepositoryFilters } from '../components/RepositoryFilters';
@@ -26,9 +26,9 @@ export const RepositoriesIndexContainer = ({
     catalog,
 }: RepositoriesIndexContainerProps) => {
     return (
-        <div className="min-h-screen bg-background">
+        <div className="flex min-h-screen flex-col bg-background">
             <SiteHeader aboutUrl={about.url()} />
-            <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8">
+            <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8">
                 <header className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-3xl font-semibold tracking-tight text-primary">
@@ -51,8 +51,12 @@ export const RepositoriesIndexContainer = ({
                 </header>
 
                 <RepositoryFilters filters={filters} catalog={catalog} />
-                <RepositoriesList repositorios={repositorios} />
+                <RepositoriesList
+                    repositorios={repositorios}
+                    filters={filters}
+                />
             </main>
+            <SiteFooter />
         </div>
     );
 };

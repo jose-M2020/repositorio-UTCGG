@@ -36,8 +36,10 @@ export type UserDetails = {
 
 export type UsersFilters = {
     query: string;
-    carrera: string;
+    carrera: string[];
     rol: string;
+    fecha: string;
+    rango_fecha: string[];
 };
 
 export type PaginatedUsers = {

@@ -9,12 +9,14 @@ type UsersIndexPageProps = {
     users: PaginatedUsers;
     filters: UsersFilters;
     roles: string[];
+    careers?: Record<string, string>;
 };
 
 export default function UsersIndexPage({
     users,
     filters,
     roles,
+    careers,
 }: UsersIndexPageProps) {
     return (
         <>
@@ -23,6 +25,7 @@ export default function UsersIndexPage({
                 users={users}
                 filters={filters}
                 roles={roles}
+                careers={careers}
             />
         </>
     );
