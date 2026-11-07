@@ -9,7 +9,7 @@ import type { RepositoryCatalog } from '@/shared/data/catalog';
 type PageProps = {
     repositorios: PaginatedRepositories;
     filters: RepositoryFilters;
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 const RepositoriesIndexPage = ({

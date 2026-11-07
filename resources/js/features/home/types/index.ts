@@ -1,3 +1,9 @@
+export type HomeCareer = {
+    code: string;
+    name: string;
+    image: string;
+};
+
 export type HomeRepository = {
     id: number;
     nombre_rep: string;

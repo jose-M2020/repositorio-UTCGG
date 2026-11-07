@@ -4,13 +4,14 @@ import { UserEditContainer, type UserFormValues } from '@/features/users';
 type UsersEditPageProps = {
     user: UserFormValues;
     roles: string[];
+    careers: Record<string, string>;
 };
 
-const UsersEditPage = ({ user, roles }: UsersEditPageProps) => {
+const UsersEditPage = ({ user, roles, careers }: UsersEditPageProps) => {
     return (
         <>
             <Head title="Editar usuario" />
-            <UserEditContainer user={user} roles={roles} />
+            <UserEditContainer user={user} roles={roles} careers={careers} />
         </>
     );
 };

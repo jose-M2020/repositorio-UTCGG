@@ -1,13 +1,12 @@
 import { Form, router } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/UserController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
-import { careers } from '@/shared/data/catalog';
 import type { UsersFilters as UsersFiltersType } from '../types';
 
 type UsersFiltersProps = {
     filters: UsersFiltersType;
     roles: string[];
-    careersOptions?: Record<string, string>;
+    careersOptions: Record<string, string>;
 };
 
 const datePresets = [
@@ -20,7 +19,7 @@ const datePresets = [
 export const UsersFilters = ({
     filters,
     roles,
-    careersOptions = careers,
+    careersOptions,
 }: UsersFiltersProps) => {
     return (
         <Form

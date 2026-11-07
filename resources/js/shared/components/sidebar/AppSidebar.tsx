@@ -11,6 +11,7 @@ import {
     index as repositories,
     mine,
 } from '@/actions/App/Http/Controllers/RepositorioController';
+import { index as catalogs } from '@/actions/App/Http/Controllers/CatalogController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import {
     create as createUser,
@@ -102,6 +103,14 @@ const useNavMainItems = (): NavMainItem[] => {
                   {
                       title: 'Roles y permisos',
                       url: roles.url(),
+                  },
+              ]
+            : []),
+        ...(auth.abilities['catalogs.view']
+            ? [
+                  {
+                      title: 'Catalogos',
+                      url: catalogs.url(),
                   },
               ]
             : []),

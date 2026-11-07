@@ -1,16 +1,11 @@
 import { Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import {
-    academicDegrees,
-    careers,
-    projectTypes,
-} from '@/shared/data/catalog';
 import type { Repository, RepositoryFormErrors } from '../types';
 
 type RepositoryFormFieldsProps = {
     errors: RepositoryFormErrors;
     defaults?: Partial<Repository> & { visibilidad?: string };
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 export const RepositoryFormFields = ({
@@ -18,9 +13,9 @@ export const RepositoryFormFields = ({
     defaults,
     catalog,
 }: RepositoryFormFieldsProps) => {
-    const careerOptions = catalog?.careers ?? careers;
-    const typeOptions = catalog?.types ?? [...projectTypes];
-    const levelOptions = catalog?.levels ?? academicDegrees;
+    const careerOptions = catalog.careers;
+    const typeOptions = catalog.types;
+    const levelOptions = catalog.levels;
 
     return (
         <div className="space-y-4">

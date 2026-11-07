@@ -7,7 +7,7 @@ import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
     repositorio: Repository;
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 const RepositoriesEditPage = ({ repositorio, catalog }: PageProps) => {

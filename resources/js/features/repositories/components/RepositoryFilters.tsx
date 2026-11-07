@@ -3,16 +3,11 @@ import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import {
-    academicDegrees,
-    careers,
-    projectTypes,
-} from '@/shared/data/catalog';
 import type { RepositoryFilters as RepositoryFiltersType } from '../types';
 
 type RepositoryFiltersProps = {
     filters: RepositoryFiltersType;
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
     children?: ReactNode;
 };
 
@@ -55,14 +50,14 @@ export const RepositoryFilters = ({
     catalog,
     children,
 }: RepositoryFiltersProps) => {
-    const careerOptions = Object.entries(catalog?.careers ?? careers).map(
+    const careerOptions = Object.entries(catalog.careers).map(
         ([value, label]) => ({ value, label: `${value} — ${label}` }),
     );
-    const typeOptions = (catalog?.types ?? [...projectTypes]).map((value) => ({
+    const typeOptions = catalog.types.map((value) => ({
         value,
         label: value,
     }));
-    const levelOptions = Object.entries(catalog?.levels ?? academicDegrees).map(
+    const levelOptions = Object.entries(catalog.levels).map(
         ([value, label]) => ({ value, label }),
     );
 

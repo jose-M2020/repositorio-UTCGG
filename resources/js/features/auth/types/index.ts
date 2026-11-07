@@ -28,6 +28,7 @@ export type AuthAbilities = {
     'users.view': boolean;
     'users.create': boolean;
     'roles.view': boolean;
+    'catalogs.view': boolean;
 };
 
 export type Auth = {

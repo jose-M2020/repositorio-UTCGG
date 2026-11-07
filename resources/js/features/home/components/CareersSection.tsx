@@ -1,8 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
-import { homeCareers } from '@/shared/data/catalog';
+import type { HomeCareer } from '../types';
 
-export const CareersSection = () => {
+type CareersSectionProps = {
+    careers: HomeCareer[];
+};
+
+export const CareersSection = ({ careers }: CareersSectionProps) => {
     return (
         <section className="mx-auto w-full max-w-6xl px-4 py-16">
             <div className="mb-10 text-center">
@@ -12,7 +16,7 @@ export const CareersSection = () => {
             </div>
 
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {homeCareers.map((career) => (
+                {careers.map((career) => (
                     <li key={career.code}>
                         <Link
                             href={index.url({

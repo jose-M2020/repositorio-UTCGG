@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\RepositorioController;
 use App\Http\Controllers\RepositorioUsuarioController;
 use App\Http\Controllers\RoleController;
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function (): void {
 });
 
 Route::resource('roles', RoleController::class);
+Route::resource('catalogos', CatalogController::class)
+    ->parameters(['catalogos' => 'catalog']);
 
 Route::get('repositorios', [RepositorioController::class, 'index'])
     ->name('repositorios.index');

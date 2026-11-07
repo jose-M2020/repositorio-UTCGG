@@ -10,15 +10,10 @@ import {
 } from '@/shared/components';
 import { Button, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import {
-    academicDegrees,
-    careers,
-    projectTypes,
-} from '@/shared/data/catalog';
 import { cn } from '@/shared/lib';
 
 type RepositoryCreateContainerProps = {
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 const steps = [
@@ -34,9 +29,9 @@ export const RepositoryCreateContainer = ({
     const currentUser = auth.user;
     const [step, setStep] = useState(1);
 
-    const careerOptions = catalog?.careers ?? careers;
-    const typeOptions = catalog?.types ?? [...projectTypes];
-    const levelOptions = catalog?.levels ?? academicDegrees;
+    const careerOptions = catalog.careers;
+    const typeOptions = catalog.types;
+    const levelOptions = catalog.levels;
 
     const [collaborators, setCollaborators] = useState<SearchableUser[]>(
         currentUser

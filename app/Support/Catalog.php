@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use App\Models\Catalog as CatalogModel;
+
 final class Catalog
 {
     /**
@@ -9,17 +11,12 @@ final class Catalog
      */
     public static function careers(): array
     {
-        return [
-            'TIC' => 'Tecnologías de la Información y Comunicación',
-            'G' => 'Gastronomía',
-            'MM' => 'Metal Mecánica',
-            'ER' => 'Energías Renovables',
-            'PA' => 'Procesos Alimentarios',
-            'LI' => 'Logística Internacional',
-            'MI' => 'Mantenimiento Industrial',
-            'GCH' => 'Gestión del Capital Humano',
-            'GDT' => 'Gestión y Desarrollo Turístico',
-        ];
+        return CatalogModel::query()
+            ->active()
+            ->ofType(CatalogModel::TYPE_CAREER)
+            ->orderBy('sort_order')
+            ->pluck('name', 'code')
+            ->all();
     }
 
     /**
@@ -27,10 +24,12 @@ final class Catalog
      */
     public static function academicDegrees(): array
     {
-        return [
-            'TSU' => 'Técnico Superior Universitario',
-            'Ingeniería' => 'Ingeniería',
-        ];
+        return CatalogModel::query()
+            ->active()
+            ->ofType(CatalogModel::TYPE_ACADEMIC_DEGREE)
+            ->orderBy('sort_order')
+            ->pluck('name', 'code')
+            ->all();
     }
 
     /**
@@ -38,6 +37,42 @@ final class Catalog
      */
     public static function projectTypes(): array
     {
-        return ['Integradora', 'Estadía', 'Proyecto Especial'];
+        return CatalogModel::query()
+            ->active()
+            ->ofType(CatalogModel::TYPE_PROJECT)
+            ->orderBy('sort_order')
+            ->pluck('code')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<array{code: string, name: string, image: string}>
+     */
+    public static function homeCareers(): array
+    {
+        return CatalogModel::query()
+            ->active()
+            ->ofType(CatalogModel::TYPE_CAREER)
+            ->orderBy('sort_order')
+            ->get(['code', 'name', 'meta'])
+            ->map(function (CatalogModel $catalog): ?array {
+                $meta = is_array($catalog->meta) ? $catalog->meta : [];
+                $showOnHome = (bool) ($meta['show_on_home'] ?? false);
+                $image = is_string($meta['image'] ?? null) ? $meta['image'] : null;
+
+                if (! $showOnHome || ! $image) {
+                    return null;
+                }
+
+                return [
+                    'code' => $catalog->code,
+                    'name' => $catalog->name,
+                    'image' => $image,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }

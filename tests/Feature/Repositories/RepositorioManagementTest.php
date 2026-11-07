@@ -4,6 +4,7 @@ namespace Tests\Feature\Repositories;
 
 use App\Models\Repositorio;
 use App\Models\User;
+use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,7 +17,10 @@ class RepositorioManagementTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(PermissionsSeeder::class);
+        $this->seed([
+            CatalogSeeder::class,
+            PermissionsSeeder::class,
+        ]);
     }
 
     public function test_public_index_lists_only_public_repositories(): void

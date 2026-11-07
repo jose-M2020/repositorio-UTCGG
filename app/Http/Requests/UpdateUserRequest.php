@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Catalog;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -33,7 +34,14 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
             'password' => ['nullable', 'confirmed', Password::defaults()],
-            'carrera' => ['required', 'string', 'max:20'],
+            'carrera' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::exists('catalogs', 'code')->where(fn ($query) => $query
+                    ->where('type', Catalog::TYPE_CAREER)
+                    ->where('is_active', true)),
+            ],
             'rol' => ['required', 'string', Rule::exists('roles', 'name')],
         ];
     }

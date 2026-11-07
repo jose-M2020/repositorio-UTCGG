@@ -97,6 +97,7 @@ class UserController extends Controller implements HasMiddleware
     {
         return Inertia::render('users/create', [
             'roles' => $this->availableRolesFor(auth()->user()),
+            'careers' => Catalog::careers(),
         ]);
     }
 
@@ -169,6 +170,7 @@ class UserController extends Controller implements HasMiddleware
                 'rol' => $user->getRoleNames()->first(),
             ],
             'roles' => $this->availableRolesFor(auth()->user()),
+            'careers' => Catalog::careers(),
         ]);
     }
 

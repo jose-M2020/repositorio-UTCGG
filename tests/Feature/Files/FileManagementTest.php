@@ -5,6 +5,7 @@ namespace Tests\Feature\Files;
 use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
+use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -19,13 +20,16 @@ class FileManagementTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(PermissionsSeeder::class);
+        $this->seed([
+            CatalogSeeder::class,
+            PermissionsSeeder::class,
+        ]);
         Storage::fake('s3');
     }
 
     public function test_member_can_upload_files_to_repository(): void
     {
-        $user = User::factory()->create(['carrera' => 'TI']);
+        $user = User::factory()->create(['carrera' => 'TIC']);
         $user->assignRole('docente');
 
         $repo = Repositorio::factory()->create();

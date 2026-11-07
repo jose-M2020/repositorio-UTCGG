@@ -9,7 +9,7 @@ import type {
 type RepositoriesIndexContainerProps = {
     repositorios: PaginatedRepositories;
     filters: RepositoryFiltersType;
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 export const RepositoriesIndexContainer = ({

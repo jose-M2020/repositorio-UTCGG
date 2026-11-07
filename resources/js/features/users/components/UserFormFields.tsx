@@ -4,6 +4,7 @@ import type { UserFormErrors } from '../types';
 type UserFormFieldsProps = {
     errors: UserFormErrors;
     roles: string[];
+    careers: Record<string, string>;
     defaults?: {
         nombre?: string;
         apellido?: string;
@@ -17,6 +18,7 @@ type UserFormFieldsProps = {
 export const UserFormFields = ({
     errors,
     roles,
+    careers,
     defaults,
     requirePassword,
 }: UserFormFieldsProps) => {
@@ -89,14 +91,23 @@ export const UserFormFields = ({
                 >
                     Carrera
                 </label>
-                <Input
+                <select
                     id="carrera"
                     name="carrera"
                     required
-                    maxLength={20}
-                    defaultValue={defaults?.carrera}
+                    defaultValue={defaults?.carrera ?? ''}
+                    className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
                     aria-invalid={Boolean(errors.carrera)}
-                />
+                >
+                    <option value="" disabled>
+                        Selecciona una carrera
+                    </option>
+                    {Object.entries(careers).map(([code, label]) => (
+                        <option key={code} value={code}>
+                            {code} — {label}
+                        </option>
+                    ))}
+                </select>
                 {errors.carrera ? (
                     <p className="text-sm text-red-600">{errors.carrera}</p>
                 ) : null}

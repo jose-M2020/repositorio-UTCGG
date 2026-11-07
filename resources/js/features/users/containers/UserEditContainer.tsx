@@ -10,11 +10,13 @@ import type { UserFormValues } from '../types';
 type UserEditContainerProps = {
     user: UserFormValues;
     roles: string[];
+    careers: Record<string, string>;
 };
 
 export const UserEditContainer = ({
     user,
     roles,
+    careers,
 }: UserEditContainerProps) => {
     return (
         <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
@@ -36,6 +38,7 @@ export const UserEditContainer = ({
                         <UserFormFields
                             errors={errors}
                             roles={roles}
+                            careers={careers}
                             defaults={user}
                             requirePassword={false}
                         />

@@ -9,7 +9,7 @@ type UsersIndexContainerProps = {
     users: PaginatedUsers;
     filters: UsersFiltersType;
     roles: string[];
-    careers?: Record<string, string>;
+    careers: Record<string, string>;
 };
 
 export const UsersIndexContainer = ({

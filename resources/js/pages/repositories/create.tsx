@@ -3,7 +3,7 @@ import { RepositoryCreateContainer } from '@/features/repositories';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 const RepositoriesCreatePage = ({ catalog }: PageProps) => {

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Users;
 
 use App\Models\User;
+use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -15,7 +16,10 @@ class UserManagementTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(PermissionsSeeder::class);
+        $this->seed([
+            CatalogSeeder::class,
+            PermissionsSeeder::class,
+        ]);
     }
 
     public function test_guest_is_redirected_from_users_index(): void
@@ -53,7 +57,7 @@ class UserManagementTest extends TestCase
             'nombre' => 'Ana',
             'apellido' => 'Lopez',
             'email' => 'ana@example.com',
-            'carrera' => 'TI',
+            'carrera' => 'TIC',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'rol' => 'alumno',
@@ -64,7 +68,7 @@ class UserManagementTest extends TestCase
             'email' => 'ana@example.com',
             'nombre' => 'Ana',
             'apellido' => 'Lopez',
-            'carrera' => 'TI',
+            'carrera' => 'TIC',
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();

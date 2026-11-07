@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
                     'users.view' => $user?->can('usuarios.index') ?? false,
                     'users.create' => $user?->can('usuarios.create') ?? false,
                     'roles.view' => $user?->can('roles.index') ?? false,
+                    'catalogs.view' => $user?->can('catalogos.index') ?? false,
                 ],
             ],
             'flash' => [

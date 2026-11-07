@@ -9,7 +9,7 @@ type UsersIndexPageProps = {
     users: PaginatedUsers;
     filters: UsersFilters;
     roles: string[];
-    careers?: Record<string, string>;
+    careers: Record<string, string>;
 };
 
 const UsersIndexPage = ({

@@ -8,9 +8,13 @@ import { UserFormFields } from '../components/UserFormFields';
 
 type UserCreateContainerProps = {
     roles: string[];
+    careers: Record<string, string>;
 };
 
-export const UserCreateContainer = ({ roles }: UserCreateContainerProps) => {
+export const UserCreateContainer = ({
+    roles,
+    careers,
+}: UserCreateContainerProps) => {
     return (
         <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
             <header className="space-y-1">
@@ -31,6 +35,7 @@ export const UserCreateContainer = ({ roles }: UserCreateContainerProps) => {
                         <UserFormFields
                             errors={errors}
                             roles={roles}
+                            careers={careers}
                             requirePassword
                         />
                         <div className="flex justify-end gap-2">

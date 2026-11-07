@@ -10,7 +10,7 @@ import type { Repository } from '../types';
 
 type RepositoryEditContainerProps = {
     repositorio: Repository;
-    catalog?: RepositoryCatalog;
+    catalog: RepositoryCatalog;
 };
 
 export const RepositoryEditContainer = ({
