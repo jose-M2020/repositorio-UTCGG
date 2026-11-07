@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Catalog as CatalogModel;
 use App\Models\User;
-use App\Support\Catalog;
+use App\Support\Catalog as CatalogData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -89,7 +90,7 @@ class UserController extends Controller implements HasMiddleware
                 'rango_fecha' => $dateRange,
             ],
             'roles' => Role::query()->orderBy('name')->pluck('name'),
-            'careers' => Catalog::careers(),
+            'careers' => CatalogData::careers(),
         ]);
     }
 
@@ -97,13 +98,14 @@ class UserController extends Controller implements HasMiddleware
     {
         return Inertia::render('users/create', [
             'roles' => $this->availableRolesFor(auth()->user()),
-            'careers' => Catalog::careers(),
+            'careers' => CatalogData::careers(),
         ]);
     }
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $data = $request->safe()->except(['rol']);
+        $data['career_catalog_id'] = $this->careerCatalogId((string) $data['carrera']);
         $user = User::query()->create($data);
         $user->assignRole($request->string('rol')->toString());
 
@@ -170,7 +172,7 @@ class UserController extends Controller implements HasMiddleware
                 'rol' => $user->getRoleNames()->first(),
             ],
             'roles' => $this->availableRolesFor(auth()->user()),
-            'careers' => Catalog::careers(),
+            'careers' => CatalogData::careers(),
         ]);
     }
 
@@ -181,6 +183,7 @@ class UserController extends Controller implements HasMiddleware
         if ($request->filled('password')) {
             $data['password'] = $request->string('password')->toString();
         }
+        $data['career_catalog_id'] = $this->careerCatalogId((string) $data['carrera']);
 
         $user->update($data);
 
@@ -215,5 +218,13 @@ class UserController extends Controller implements HasMiddleware
         }
 
         return $roles;
+    }
+
+    private function careerCatalogId(string $code): ?int
+    {
+        return CatalogModel::query()
+            ->where('type', CatalogModel::TYPE_CAREER)
+            ->where('code', $code)
+            ->value('id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\RepositorioFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $palabras_clave
  * @property bool $publico
  * @property string $carrera
+ * @property int|null $career_catalog_id
+ * @property int|null $project_type_catalog_id
+ * @property int|null $academic_degree_catalog_id
  * @property string|null $asesor_externo
  * @property string $empresa
  * @property string $generacion
@@ -34,6 +38,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'palabras_clave',
     'publico',
     'carrera',
+    'career_catalog_id',
+    'project_type_catalog_id',
+    'academic_degree_catalog_id',
     'asesor_externo',
     'empresa',
     'generacion',
@@ -65,5 +72,20 @@ class Repositorio extends Model
     public function files(): HasMany
     {
         return $this->hasMany(File::class);
+    }
+
+    public function careerCatalog(): BelongsTo
+    {
+        return $this->belongsTo(Catalog::class, 'career_catalog_id');
+    }
+
+    public function projectTypeCatalog(): BelongsTo
+    {
+        return $this->belongsTo(Catalog::class, 'project_type_catalog_id');
+    }
+
+    public function academicDegreeCatalog(): BelongsTo
+    {
+        return $this->belongsTo(Catalog::class, 'academic_degree_catalog_id');
     }
 }

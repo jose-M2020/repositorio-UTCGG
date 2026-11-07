@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Catalog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -24,13 +25,21 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $careerCode = fake()->optional()->randomElement(['TIC', 'ER', 'MM', 'MI', 'G', 'LI', 'PA', 'GCH', 'GDT']);
+
         return [
             'nombre' => fake()->firstName(),
             'apellido' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'carrera' => fake()->optional()->randomElement(['TIC', 'ER', 'MM', 'MI', 'G', 'LI', 'PA', 'GCH', 'GDT']),
+            'carrera' => $careerCode,
+            'career_catalog_id' => $careerCode
+                ? Catalog::query()
+                    ->where('type', Catalog::TYPE_CAREER)
+                    ->where('code', $careerCode)
+                    ->value('id')
+                : null,
             'remember_token' => Str::random(10),
         ];
     }

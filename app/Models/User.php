@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,11 +22,12 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $carrera
+ * @property int|null $career_catalog_id
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['nombre', 'apellido', 'email', 'password', 'carrera'])]
+#[Fillable(['nombre', 'apellido', 'email', 'password', 'carrera', 'career_catalog_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -48,5 +50,10 @@ class User extends Authenticatable
     public function repositories(): BelongsToMany
     {
         return $this->belongsToMany(Repositorio::class)->withTimestamps();
+    }
+
+    public function careerCatalog(): BelongsTo
+    {
+        return $this->belongsTo(Catalog::class, 'career_catalog_id');
     }
 }

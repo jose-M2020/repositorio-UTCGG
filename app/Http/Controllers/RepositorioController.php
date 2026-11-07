@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\AuthorizeMember;
 use App\Http\Requests\StoreRepositorioRequest;
 use App\Http\Requests\UpdateRepositorioRequest;
+use App\Models\Catalog as CatalogModel;
 use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
-use App\Support\Catalog;
+use App\Support\Catalog as CatalogData;
 use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -105,9 +106,9 @@ class RepositorioController extends Controller implements HasMiddleware
                 'year' => $years,
             ],
             'catalog' => [
-                'careers' => Catalog::careers(),
-                'types' => Catalog::projectTypes(),
-                'levels' => Catalog::academicDegrees(),
+                'careers' => CatalogData::careers(),
+                'types' => CatalogData::projectTypes(),
+                'levels' => CatalogData::academicDegrees(),
             ],
         ]);
     }
@@ -116,9 +117,9 @@ class RepositorioController extends Controller implements HasMiddleware
     {
         return Inertia::render('repositories/create', [
             'catalog' => [
-                'careers' => Catalog::careers(),
-                'types' => Catalog::projectTypes(),
-                'levels' => Catalog::academicDegrees(),
+                'careers' => CatalogData::careers(),
+                'types' => CatalogData::projectTypes(),
+                'levels' => CatalogData::academicDegrees(),
             ],
         ]);
     }
@@ -130,6 +131,9 @@ class RepositorioController extends Controller implements HasMiddleware
 
         $repositorio = Repositorio::query()->create([
             ...$validated,
+            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, (string) $validated['carrera']),
+            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, (string) $validated['tipo_proyecto']),
+            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, (string) $validated['nivel_proyecto']),
             'slug' => $this->uniqueSlug($request->string('nombre_rep')->toString()),
             'publico' => $request->string('visibilidad')->toString() === 'publico',
             'created_by' => $user->nombre,
@@ -210,9 +214,9 @@ class RepositorioController extends Controller implements HasMiddleware
                 'visibilidad' => $repositorio->publico ? 'publico' : 'privado',
             ],
             'catalog' => [
-                'careers' => Catalog::careers(),
-                'types' => Catalog::projectTypes(),
-                'levels' => Catalog::academicDegrees(),
+                'careers' => CatalogData::careers(),
+                'types' => CatalogData::projectTypes(),
+                'levels' => CatalogData::academicDegrees(),
             ],
         ]);
     }
@@ -223,6 +227,9 @@ class RepositorioController extends Controller implements HasMiddleware
 
         $repositorio->update([
             ...$validated,
+            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, (string) $validated['carrera']),
+            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, (string) $validated['tipo_proyecto']),
+            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, (string) $validated['nivel_proyecto']),
             'slug' => $this->uniqueSlug($request->string('nombre_rep')->toString(), $repositorio->id),
             'publico' => $request->string('visibilidad')->toString() === 'publico',
         ]);
@@ -258,6 +265,14 @@ class RepositorioController extends Controller implements HasMiddleware
         }
 
         return $slug;
+    }
+
+    private function catalogIdByCode(string $type, string $code): ?int
+    {
+        return CatalogModel::query()
+            ->where('type', $type)
+            ->where('code', $code)
+            ->value('id');
     }
 
     /**
