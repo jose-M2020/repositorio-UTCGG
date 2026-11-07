@@ -168,7 +168,9 @@ class FileController extends Controller implements HasMiddleware
 
     private function basePath(Repositorio $repositorio): string
     {
-        $carrera = auth()->user()?->carrera ?: $repositorio->carrera;
+        $userCareerCode = auth()->user()?->careerCatalog()->value('code');
+        $repoCareerCode = $repositorio->careerCatalog()->value('code');
+        $carrera = $userCareerCode ?: $repoCareerCode ?: 'general';
 
         return 'files/'.$carrera.'/'.date('Y').'/repositorio-'.$repositorio->id;
     }

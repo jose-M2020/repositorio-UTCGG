@@ -26,11 +26,8 @@ class RepositorioFactory extends Factory
             'nombre_rep' => $nombre,
             'slug' => Str::slug($nombre),
             'descripcion' => fake()->paragraph(),
-            'tipo_proyecto' => $projectTypeCode,
-            'nivel_proyecto' => $academicDegreeCode,
             'palabras_clave' => implode(', ', fake()->words(4)),
             'publico' => true,
-            'carrera' => $careerCode,
             'career_catalog_id' => Catalog::query()
                 ->where('type', Catalog::TYPE_CAREER)
                 ->where('code', $careerCode)

@@ -80,6 +80,14 @@ return new class extends Migration
                         ]);
                 }
             });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('carrera');
+        });
+
+        Schema::table('repositorios', function (Blueprint $table) {
+            $table->dropColumn(['carrera', 'tipo_proyecto', 'nivel_proyecto']);
+        });
     }
 
     /**
@@ -87,6 +95,54 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('carrera')->nullable()->after('password');
+        });
+
+        Schema::table('repositorios', function (Blueprint $table) {
+            $table->string('tipo_proyecto')->after('descripcion');
+            $table->string('nivel_proyecto')->after('tipo_proyecto');
+            $table->string('carrera')->after('publico');
+        });
+
+        $careersById = DB::table('catalogs')
+            ->where('type', 'career')
+            ->pluck('code', 'id');
+        $projectTypesById = DB::table('catalogs')
+            ->where('type', 'project_type')
+            ->pluck('code', 'id');
+        $academicDegreesById = DB::table('catalogs')
+            ->where('type', 'academic_degree')
+            ->pluck('code', 'id');
+
+        DB::table('users')
+            ->select(['id', 'career_catalog_id'])
+            ->orderBy('id')
+            ->chunkById(200, function ($users) use ($careersById): void {
+                foreach ($users as $user) {
+                    DB::table('users')
+                        ->where('id', $user->id)
+                        ->update([
+                            'carrera' => $careersById[$user->career_catalog_id] ?? null,
+                        ]);
+                }
+            });
+
+        DB::table('repositorios')
+            ->select(['id', 'career_catalog_id', 'project_type_catalog_id', 'academic_degree_catalog_id'])
+            ->orderBy('id')
+            ->chunkById(200, function ($repositorios) use ($careersById, $projectTypesById, $academicDegreesById): void {
+                foreach ($repositorios as $repositorio) {
+                    DB::table('repositorios')
+                        ->where('id', $repositorio->id)
+                        ->update([
+                            'carrera' => $careersById[$repositorio->career_catalog_id] ?? null,
+                            'tipo_proyecto' => $projectTypesById[$repositorio->project_type_catalog_id] ?? null,
+                            'nivel_proyecto' => $academicDegreesById[$repositorio->academic_degree_catalog_id] ?? null,
+                        ]);
+                }
+            });
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropConstrainedForeignId('career_catalog_id');
         });

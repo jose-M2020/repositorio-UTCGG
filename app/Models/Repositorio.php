@@ -15,11 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $nombre_rep
  * @property string $slug
  * @property string $descripcion
- * @property string $tipo_proyecto
- * @property string $nivel_proyecto
  * @property string $palabras_clave
  * @property bool $publico
- * @property string $carrera
  * @property int|null $career_catalog_id
  * @property int|null $project_type_catalog_id
  * @property int|null $academic_degree_catalog_id
@@ -33,11 +30,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'nombre_rep',
     'slug',
     'descripcion',
-    'tipo_proyecto',
-    'nivel_proyecto',
     'palabras_clave',
     'publico',
-    'carrera',
     'career_catalog_id',
     'project_type_catalog_id',
     'academic_degree_catalog_id',

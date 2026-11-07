@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Catalog;
 use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
@@ -19,12 +20,16 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CatalogSeeder::class);
         $this->call(PermissionsSeeder::class);
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
 
         $admin = User::factory()->create([
             'nombre' => 'Admin',
             'apellido' => 'Admin',
             'email' => 'admin@example.com',
-            'carrera' => 'TIC',
+            'career_catalog_id' => $ticCareerId,
         ]);
         $admin->assignRole('admin');
 
@@ -32,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Docente',
             'apellido' => 'Docente',
             'email' => 'docente@example.com',
-            'carrera' => 'TIC',
+            'career_catalog_id' => $ticCareerId,
         ]);
         $docente->assignRole('docente');
 
@@ -40,7 +45,7 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Alumno',
             'apellido' => 'Alumno',
             'email' => 'alumno@example.com',
-            'carrera' => 'TIC',
+            'career_catalog_id' => $ticCareerId,
         ]);
         $alumno->assignRole('alumno');
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Users;
 
+use App\Models\Catalog;
 use App\Models\User;
 use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
@@ -64,11 +65,15 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
         $this->assertDatabaseHas('users', [
             'email' => 'ana@example.com',
             'nombre' => 'Ana',
             'apellido' => 'Lopez',
-            'carrera' => 'TIC',
+            'career_catalog_id' => $ticCareerId,
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();
@@ -94,11 +99,15 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
+        $erCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'ER')
+            ->value('id');
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'email' => 'new@example.com',
             'apellido' => 'Actualizada',
-            'carrera' => 'ER',
+            'career_catalog_id' => $erCareerId,
         ]);
         $this->assertTrue($user->fresh()?->hasRole('docente'));
     }

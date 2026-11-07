@@ -39,6 +39,7 @@ class UserController extends Controller implements HasMiddleware
 
         $users = User::query()
             ->with('roles:id,name')
+            ->with('careerCatalog:id,code')
             ->latest('id')
             ->when($request->string('query')->toString(), function ($query, string $search): void {
                 $query->where(function ($inner) use ($search): void {
@@ -47,7 +48,10 @@ class UserController extends Controller implements HasMiddleware
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->when($carreras !== [], fn ($query) => $query->whereIn('carrera', $carreras))
+            ->when($carreras !== [], fn ($query) => $query->whereHas(
+                'careerCatalog',
+                fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
+            ))
             ->when(
                 $request->filled('rol') && $request->string('rol')->toString() !== 'all',
                 fn ($query) => $query->role($request->string('rol')->toString()),
@@ -77,8 +81,20 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'carrera', 'created_at'])
-            ->withQueryString();
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'created_at'])
+            ->withQueryString()
+            ->through(fn (User $user): array => [
+                'id' => $user->id,
+                'nombre' => $user->nombre,
+                'apellido' => $user->apellido,
+                'email' => $user->email,
+                'carrera' => $user->careerCatalog?->code,
+                'created_at' => (string) $user->created_at,
+                'roles' => $user->roles->map(fn (Role $role) => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                ])->values()->all(),
+            ]);
 
         return Inertia::render('users/index', [
             'users' => $users,
@@ -104,8 +120,8 @@ class UserController extends Controller implements HasMiddleware
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $data = $request->safe()->except(['rol']);
-        $data['career_catalog_id'] = $this->careerCatalogId((string) $data['carrera']);
+        $data = $request->safe()->except(['rol', 'carrera']);
+        $data['career_catalog_id'] = $this->careerCatalogId($request->string('carrera')->toString());
         $user = User::query()->create($data);
         $user->assignRole($request->string('rol')->toString());
 
@@ -116,7 +132,7 @@ class UserController extends Controller implements HasMiddleware
 
     public function show(User $user): Response
     {
-        $user->load('roles:id,name');
+        $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
         $repositorios = $user->repositories()
             ->orderByDesc('repositorios.created_at')
@@ -128,7 +144,7 @@ class UserController extends Controller implements HasMiddleware
                 'nombre' => $user->nombre,
                 'apellido' => $user->apellido,
                 'email' => $user->email,
-                'carrera' => $user->carrera,
+                'carrera' => $user->careerCatalog?->code,
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
             ],
@@ -160,7 +176,7 @@ class UserController extends Controller implements HasMiddleware
 
     public function edit(User $user): Response
     {
-        $user->load('roles:id,name');
+        $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
         return Inertia::render('users/edit', [
             'user' => [
@@ -168,7 +184,7 @@ class UserController extends Controller implements HasMiddleware
                 'nombre' => $user->nombre,
                 'apellido' => $user->apellido,
                 'email' => $user->email,
-                'carrera' => $user->carrera,
+                'carrera' => $user->careerCatalog?->code,
                 'rol' => $user->getRoleNames()->first(),
             ],
             'roles' => $this->availableRolesFor(auth()->user()),
@@ -178,12 +194,12 @@ class UserController extends Controller implements HasMiddleware
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $data = $request->safe()->except(['rol', 'password']);
+        $data = $request->safe()->except(['rol', 'password', 'carrera']);
 
         if ($request->filled('password')) {
             $data['password'] = $request->string('password')->toString();
         }
-        $data['career_catalog_id'] = $this->careerCatalogId((string) $data['carrera']);
+        $data['career_catalog_id'] = $this->careerCatalogId($request->string('carrera')->toString());
 
         $user->update($data);
 

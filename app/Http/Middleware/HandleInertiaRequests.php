@@ -36,6 +36,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $careerCode = $user?->careerCatalog()->value('code');
 
         return [
             ...parent::share($request),
@@ -47,7 +48,7 @@ class HandleInertiaRequests extends Middleware
                         'nombre' => $user->nombre,
                         'apellido' => $user->apellido,
                         'email' => $user->email,
-                        'carrera' => $user->carrera,
+                        'carrera' => $careerCode,
                         'roles' => $user->getRoleNames()->values()->all(),
                     ]
                     : null,

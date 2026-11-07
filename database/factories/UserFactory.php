@@ -33,7 +33,6 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'carrera' => $careerCode,
             'career_catalog_id' => $careerCode
                 ? Catalog::query()
                     ->where('type', Catalog::TYPE_CAREER)

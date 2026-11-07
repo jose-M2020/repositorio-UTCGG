@@ -21,13 +21,12 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property string|null $carrera
  * @property int|null $career_catalog_id
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['nombre', 'apellido', 'email', 'password', 'carrera', 'career_catalog_id'])]
+#[Fillable(['nombre', 'apellido', 'email', 'password', 'career_catalog_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
