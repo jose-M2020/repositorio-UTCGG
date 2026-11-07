@@ -1,7 +1,8 @@
-export { Button, buttonVariants, Input } from './ui';
-export { AppNavLink } from './AppNavLink';
+export { Button, buttonVariants, Checkbox, Input } from './ui';export { AppNavLink } from './AppNavLink';
 export { AppBrand } from './AppBrand';
-export { AppShell } from './AppShell';
+export { AppSidebar } from './sidebar/AppSidebar';
+export { NavMain } from './sidebar/nav-main';
+export { NavUser } from './sidebar/nav-user';
 export { FlashToaster } from './FlashToaster';
 export { PublicHeader } from './PublicHeader';
 export { SiteFooter } from './SiteFooter';

@@ -27,6 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectUsersTo(fn () => route('repositorios.user'));
 
+        $middleware->encryptCookies(except: ['sidebar_state']);
+
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

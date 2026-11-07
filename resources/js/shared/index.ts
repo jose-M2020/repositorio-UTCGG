@@ -5,6 +5,6 @@ export {
     Input,
     PublicHeader,
     SiteHeader,
-    AppShell,
+    AppSidebar,
 } from './components';
 export { AuthenticatedLayout, PublicLayout } from './layouts';

@@ -14,7 +14,7 @@ declare module '@inertiajs/core' {
             flash: {
                 status: string | null;
             };
-            sidebarOpen?: boolean;
+            sidebarOpen: boolean;
             [key: string]: unknown;
         };
     }

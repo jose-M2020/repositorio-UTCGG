@@ -1,6 +1,6 @@
 import { Form, router } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/UserController';
-import { Button, Input } from '@/shared/components/ui';
+import { Button, Checkbox, Input } from '@/shared/components/ui';
 import { careers } from '@/shared/data/catalog';
 import type { UsersFilters as UsersFiltersType } from '../types';
 
@@ -58,16 +58,16 @@ export const UsersFilters = ({
                     <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
                         {Object.entries(careersOptions).map(([code, label]) => (
                             <li key={code}>
-                                <label className="flex items-center gap-2 text-sm">
-                                    <input
-                                        type="checkbox"
+                                <label
+                                    className="flex items-center gap-2 text-sm"
+                                    title={label}
+                                >
+                                    <Checkbox
                                         name="carrera[]"
                                         value={code}
                                         defaultChecked={filters.carrera.includes(
                                             code,
                                         )}
-                                        className="size-4 accent-primary"
-                                        title={label}
                                     />
                                     <span>{code}</span>
                                 </label>

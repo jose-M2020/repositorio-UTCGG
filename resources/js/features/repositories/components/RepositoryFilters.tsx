@@ -1,7 +1,7 @@
 import { Form, router } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
-import { Button, Input } from '@/shared/components/ui';
+import { Button, Checkbox, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 import {
     academicDegrees,
@@ -36,12 +36,10 @@ const CheckboxGroup = ({
                 {options.map((option) => (
                     <li key={option.value}>
                         <label className="flex items-center gap-2 text-sm text-foreground">
-                            <input
-                                type="checkbox"
+                            <Checkbox
                                 name={`${name}[]`}
                                 value={option.value}
                                 defaultChecked={selected.includes(option.value)}
-                                className="size-4 rounded border-input accent-primary"
                             />
                             <span>{option.label}</span>
                         </label>

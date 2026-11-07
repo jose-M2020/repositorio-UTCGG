@@ -22,7 +22,7 @@ export const RoleFormFields = ({
             <div className="space-y-1">
                 <label
                     htmlFor="name"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                    className="text-sm font-medium text-foreground"
                 >
                     Nombre del rol
                 </label>
@@ -34,7 +34,7 @@ export const RoleFormFields = ({
                     aria-invalid={Boolean(errors.name)}
                 />
                 {errors.name ? (
-                    <p className="text-sm text-red-600">{errors.name}</p>
+                    <p className="text-sm text-destructive">{errors.name}</p>
                 ) : null}
             </div>
 

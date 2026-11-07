@@ -17,19 +17,19 @@ export const RoleEditContainer = ({
     permissionGroups,
 }: RoleEditContainerProps) => {
     return (
-        <main className="mx-auto w-full max-w-3xl space-y-6 px-4 py-8">
+        <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
             <header className="space-y-1">
-                <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                <h1 className="text-2xl font-semibold text-foreground">
                     Editar rol
                 </h1>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <p className="text-sm text-muted-foreground">
                     Actualiza el nombre y permisos de {role.name}.
                 </p>
             </header>
 
             <Form
                 {...update.form(role.id!)}
-                className="space-y-6 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900"
+                className="space-y-6 rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm"
             >
                 {({ errors, processing }) => (
                     <>
