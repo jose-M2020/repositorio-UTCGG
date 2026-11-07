@@ -4,6 +4,7 @@ namespace Tests\Feature\Users;
 
 use App\Models\Catalog;
 use App\Models\User;
+use App\Support\UserRoles;
 use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,7 +33,7 @@ class UserManagementTest extends TestCase
     public function test_user_without_permission_cannot_view_users_index(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('alumno');
+        $user->assignRole(UserRoles::ALUMNO);
 
         $this->actingAs($user)
             ->get(route('usuarios.index'))
@@ -42,7 +43,7 @@ class UserManagementTest extends TestCase
     public function test_admin_can_view_users_index(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('admin');
+        $admin->assignRole(UserRoles::ADMIN);
 
         $this->actingAs($admin)
             ->get(route('usuarios.index'))
@@ -52,7 +53,7 @@ class UserManagementTest extends TestCase
     public function test_admin_can_create_user(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('admin');
+        $admin->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)->post(route('usuarios.store'), [
             'nombre' => 'Ana',
@@ -61,7 +62,7 @@ class UserManagementTest extends TestCase
             'carrera' => 'TIC',
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
-            'rol' => 'alumno',
+            'rol' => UserRoles::ALUMNO,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -77,25 +78,25 @@ class UserManagementTest extends TestCase
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();
-        $this->assertTrue($created?->hasRole('alumno'));
+        $this->assertTrue($created?->hasRole(UserRoles::ALUMNO));
     }
 
     public function test_admin_can_update_user(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('admin');
+        $admin->assignRole(UserRoles::ADMIN);
 
         $user = User::factory()->create([
             'email' => 'old@example.com',
         ]);
-        $user->assignRole('alumno');
+        $user->assignRole(UserRoles::ALUMNO);
 
         $response = $this->actingAs($admin)->put(route('usuarios.update', $user), [
             'nombre' => 'Ana',
             'apellido' => 'Actualizada',
             'email' => 'new@example.com',
             'carrera' => 'ER',
-            'rol' => 'docente',
+            'rol' => UserRoles::DOCENTE,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -109,13 +110,13 @@ class UserManagementTest extends TestCase
             'apellido' => 'Actualizada',
             'career_catalog_id' => $erCareerId,
         ]);
-        $this->assertTrue($user->fresh()?->hasRole('docente'));
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::DOCENTE));
     }
 
     public function test_admin_can_delete_user(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('admin');
+        $admin->assignRole(UserRoles::ADMIN);
 
         $user = User::factory()->create();
 
@@ -128,7 +129,7 @@ class UserManagementTest extends TestCase
     public function test_create_user_validation_errors(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('admin');
+        $admin->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
             ->from(route('usuarios.create'))
@@ -143,5 +144,112 @@ class UserManagementTest extends TestCase
             'carrera',
             'rol',
         ]);
+    }
+
+    public function test_director_carrera_forces_own_career_when_creating_user(): void
+    {
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
+        $director = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+
+        $response = $this->actingAs($director)->post(route('usuarios.store'), [
+            'nombre' => 'Luis',
+            'apellido' => 'Perez',
+            'email' => 'luis@example.com',
+            'carrera' => 'ER',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'rol' => UserRoles::ALUMNO,
+        ]);
+
+        $response->assertRedirect(route('usuarios.index'));
+        $this->assertDatabaseHas('users', [
+            'email' => 'luis@example.com',
+            'career_catalog_id' => $ticCareerId,
+        ]);
+    }
+
+    public function test_director_carrera_cannot_assign_admin_role(): void
+    {
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
+        $director = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+
+        $response = $this->actingAs($director)
+            ->from(route('usuarios.create'))
+            ->post(route('usuarios.store'), [
+                'nombre' => 'Hack',
+                'apellido' => 'Attempt',
+                'email' => 'hack@example.com',
+                'password' => 'Password123!',
+                'password_confirmation' => 'Password123!',
+                'rol' => UserRoles::ADMIN,
+            ]);
+
+        $response->assertRedirect(route('usuarios.create'));
+        $response->assertSessionHasErrors(['rol']);
+        $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
+    }
+
+    public function test_director_carrera_only_lists_users_from_same_career(): void
+    {
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+        $erCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'ER')
+            ->value('id');
+
+        $director = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+
+        $sameCareer = User::factory()->create([
+            'nombre' => 'Misma',
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $sameCareer->assignRole(UserRoles::ALUMNO);
+
+        $otherCareer = User::factory()->create([
+            'nombre' => 'Otra',
+            'career_catalog_id' => $erCareerId,
+        ]);
+        $otherCareer->assignRole(UserRoles::ALUMNO);
+
+        $this->actingAs($director)
+            ->get(route('usuarios.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('users/index')
+                ->has('users.data', 2)
+                ->where('users.data.0.carrera', 'TIC')
+                ->where('users.data.1.carrera', 'TIC')
+                ->where('careerPolicy.can_select_career', false)
+                ->where('careerPolicy.locked_career', 'TIC'));
+    }
+
+    public function test_docente_cannot_create_users(): void
+    {
+        $docente = User::factory()->create();
+        $docente->assignRole(UserRoles::DOCENTE);
+
+        $this->actingAs($docente)
+            ->get(route('usuarios.create'))
+            ->assertForbidden();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Support\RoleAssignPermissionSync;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -47,11 +48,14 @@ class RoleController extends Controller implements HasMiddleware
 
     public function store(StoreRoleRequest $request): RedirectResponse
     {
+        $roleName = $request->string('name')->toString();
+
         $role = Role::query()->create([
-            'name' => $request->string('name')->toString(),
+            'name' => $roleName,
             'guard_name' => 'web',
         ]);
 
+        RoleAssignPermissionSync::ensureFor($roleName);
         $role->syncPermissions($request->input('permissions', []));
 
         return redirect()
@@ -95,11 +99,22 @@ class RoleController extends Controller implements HasMiddleware
 
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
+        $oldName = $role->name;
+        $newName = $request->string('name')->toString();
+
         $role->update([
-            'name' => $request->string('name')->toString(),
+            'name' => $newName,
         ]);
 
-        $role->syncPermissions($request->input('permissions', []));
+        RoleAssignPermissionSync::rename($oldName, $newName);
+
+        $permissions = RoleAssignPermissionSync::remapPermissionsAfterRename(
+            array_values(array_map('strval', $request->input('permissions', []))),
+            $oldName,
+            $newName,
+        );
+
+        $role->syncPermissions($permissions);
 
         return redirect()
             ->route('roles.index')
@@ -108,7 +123,9 @@ class RoleController extends Controller implements HasMiddleware
 
     public function destroy(Role $role): RedirectResponse
     {
+        $roleName = $role->name;
         $role->delete();
+        RoleAssignPermissionSync::deleteFor($roleName);
 
         return redirect()
             ->route('roles.index')

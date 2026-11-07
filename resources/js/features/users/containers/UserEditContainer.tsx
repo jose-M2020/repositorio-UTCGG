@@ -5,18 +5,24 @@ import {
 } from '@/actions/App/Http/Controllers/UserController';
 import { Button } from '@/shared/components/ui';
 import { UserFormFields } from '../components/UserFormFields';
-import type { UserFormValues } from '../types';
+import type {
+    CareerFormPolicy,
+    RoleOption,
+    UserFormValues,
+} from '../types';
 
 type UserEditContainerProps = {
     user: UserFormValues;
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
 export const UserEditContainer = ({
     user,
     roles,
     careers,
+    careerPolicy,
 }: UserEditContainerProps) => {
     return (
         <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
@@ -39,6 +45,7 @@ export const UserEditContainer = ({
                             errors={errors}
                             roles={roles}
                             careers={careers}
+                            careerPolicy={careerPolicy}
                             defaults={user}
                             requirePassword={false}
                         />

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Catalog as CatalogModel;
 use App\Models\User;
 use App\Support\Catalog as CatalogData;
+use App\Support\UserRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,15 +33,24 @@ class UserController extends Controller implements HasMiddleware
 
     public function index(Request $request): Response
     {
+        $authUser = $request->user();
         $carreras = array_values(array_filter((array) $request->input('carrera', [])));
         $dateRange = array_values((array) $request->input('rango_fecha', ['', '']));
         $fecha = $request->string('fecha')->toString();
         $hasDateRange = ($dateRange[0] ?? '') !== '' && ($dateRange[1] ?? '') !== '';
 
+        if (UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id) {
+            $carreras = [];
+        }
+
         $users = User::query()
             ->with('roles:id,name')
             ->with('careerCatalog:id,code')
             ->latest('id')
+            ->when(
+                UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
+                fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
+            )
             ->when($request->string('query')->toString(), function ($query, string $search): void {
                 $query->where(function ($inner) use ($search): void {
                     $inner->where('nombre', 'like', "%{$search}%")
@@ -105,23 +115,28 @@ class UserController extends Controller implements HasMiddleware
                 'fecha' => $fecha,
                 'rango_fecha' => $dateRange,
             ],
-            'roles' => Role::query()->orderBy('name')->pluck('name'),
+            'roles' => UserRoles::filterOptions(),
             'careers' => CatalogData::careers(),
+            'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
         ]);
     }
 
     public function create(): Response
     {
+        $authUser = auth()->user();
+
         return Inertia::render('users/create', [
-            'roles' => $this->availableRolesFor(auth()->user()),
+            'roles' => UserRoles::assignableOptionsFor($authUser),
             'careers' => CatalogData::careers(),
+            'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
         ]);
     }
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $data = $request->safe()->except(['rol', 'carrera']);
-        $data['career_catalog_id'] = $this->careerCatalogId($request->string('carrera')->toString());
+        $data['career_catalog_id'] = $this->resolveCareerCatalogId($request);
+
         $user = User::query()->create($data);
         $user->assignRole($request->string('rol')->toString());
 
@@ -132,6 +147,8 @@ class UserController extends Controller implements HasMiddleware
 
     public function show(User $user): Response
     {
+        $this->ensureCanManage($user);
+
         $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
         $repositorios = $user->repositories()
@@ -156,9 +173,14 @@ class UserController extends Controller implements HasMiddleware
     public function search(Request $request): JsonResponse
     {
         $search = $request->string('query')->toString();
+        $authUser = $request->user();
 
         $users = User::query()
             ->latest('id')
+            ->when(
+                UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
+                fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
+            )
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($inner) use ($search): void {
                     $inner->where('nombre', 'like', "%{$search}%")
@@ -166,7 +188,7 @@ class UserController extends Controller implements HasMiddleware
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->role(['alumno', 'docente'])
+            ->role([UserRoles::ALUMNO, UserRoles::DOCENTE])
             ->with('roles:id,name')
             ->paginate(10, ['id', 'nombre', 'apellido', 'email'])
             ->withQueryString();
@@ -176,6 +198,9 @@ class UserController extends Controller implements HasMiddleware
 
     public function edit(User $user): Response
     {
+        $this->ensureCanManage($user);
+
+        $authUser = auth()->user();
         $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
         return Inertia::render('users/edit', [
@@ -187,19 +212,23 @@ class UserController extends Controller implements HasMiddleware
                 'carrera' => $user->careerCatalog?->code,
                 'rol' => $user->getRoleNames()->first(),
             ],
-            'roles' => $this->availableRolesFor(auth()->user()),
+            'roles' => UserRoles::assignableOptionsFor($authUser),
             'careers' => CatalogData::careers(),
+            'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
         ]);
     }
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
+        $this->ensureCanManage($user);
+
         $data = $request->safe()->except(['rol', 'password', 'carrera']);
 
         if ($request->filled('password')) {
             $data['password'] = $request->string('password')->toString();
         }
-        $data['career_catalog_id'] = $this->careerCatalogId($request->string('carrera')->toString());
+
+        $data['career_catalog_id'] = $this->resolveCareerCatalogId($request);
 
         $user->update($data);
 
@@ -215,6 +244,8 @@ class UserController extends Controller implements HasMiddleware
 
     public function destroy(User $user): RedirectResponse
     {
+        $this->ensureCanManage($user);
+
         $user->delete();
 
         return redirect()
@@ -222,18 +253,21 @@ class UserController extends Controller implements HasMiddleware
             ->with('status', 'Usuario eliminado exitosamente.');
     }
 
-    /**
-     * @return list<string>
-     */
-    private function availableRolesFor(?User $actor): array
+    private function resolveCareerCatalogId(StoreUserRequest|UpdateUserRequest $request): ?int
     {
-        $roles = Role::query()->orderBy('name')->pluck('name')->all();
+        $authUser = $request->user();
 
-        if ($actor && ! $actor->hasRole('admin')) {
-            return array_values(array_filter($roles, fn (string $role): bool => $role !== 'admin'));
+        if (UserRoles::isCareerScoped($authUser)) {
+            return $authUser?->career_catalog_id;
         }
 
-        return $roles;
+        $code = $request->string('carrera')->toString();
+
+        if ($code === '') {
+            return null;
+        }
+
+        return $this->careerCatalogId($code);
     }
 
     private function careerCatalogId(string $code): ?int
@@ -242,5 +276,20 @@ class UserController extends Controller implements HasMiddleware
             ->where('type', CatalogModel::TYPE_CAREER)
             ->where('code', $code)
             ->value('id');
+    }
+
+    private function ensureCanManage(User $user): void
+    {
+        $authUser = auth()->user();
+
+        if (! UserRoles::isCareerScoped($authUser)) {
+            return;
+        }
+
+        abort_unless(
+            $authUser?->career_catalog_id
+                && $user->career_catalog_id === $authUser->career_catalog_id,
+            403,
+        );
     }
 }

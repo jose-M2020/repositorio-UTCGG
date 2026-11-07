@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Support\RoleAssignPermissionSync;
+use App\Support\UserRoles;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -22,6 +24,7 @@ class PermissionsSeeder extends Seeder
             ['name' => 'usuarios.edit', 'description' => 'Editar usuario'],
             ['name' => 'usuarios.destroy', 'description' => 'Borrar usuario'],
             ['name' => 'usuarios.search', 'description' => 'Buscar usuarios'],
+            ['name' => UserRoles::CAREER_ANY, 'description' => 'Seleccionar cualquier carrera al registrar usuarios'],
             ['name' => 'roles.index', 'description' => 'Ver roles'],
             ['name' => 'roles.create', 'description' => 'Crear rol'],
             ['name' => 'roles.edit', 'description' => 'Editar rol'],
@@ -47,13 +50,25 @@ class PermissionsSeeder extends Seeder
             );
         }
 
-        Role::query()->firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::ADMIN, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::DIRECTOR, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::DIRECTOR_CARRERA, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::DOCENTE, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::ALUMNO, 'guard_name' => 'web']);
 
-        $docente = Role::query()->firstOrCreate(['name' => 'docente', 'guard_name' => 'web']);
-        $docente->syncPermissions([
+        RoleAssignPermissionSync::syncAllExistingRoles();
+
+        $director = Role::query()->where('name', UserRoles::DIRECTOR)->firstOrFail();
+        $director->syncPermissions([
             'usuarios.index',
             'usuarios.create',
             'usuarios.edit',
+            'usuarios.destroy',
+            'usuarios.search',
+            UserRoles::CAREER_ANY,
+            RoleAssignPermissionSync::permissionName(UserRoles::DIRECTOR_CARRERA),
+            RoleAssignPermissionSync::permissionName(UserRoles::DOCENTE),
+            RoleAssignPermissionSync::permissionName(UserRoles::ALUMNO),
             'repositorios.index',
             'repositorios.create',
             'repositorios.edit',
@@ -64,7 +79,38 @@ class PermissionsSeeder extends Seeder
             'archivos.destroy',
         ]);
 
-        $alumno = Role::query()->firstOrCreate(['name' => 'alumno', 'guard_name' => 'web']);
+        $directorCarrera = Role::query()->where('name', UserRoles::DIRECTOR_CARRERA)->firstOrFail();
+        $directorCarrera->syncPermissions([
+            'usuarios.index',
+            'usuarios.create',
+            'usuarios.edit',
+            'usuarios.search',
+            RoleAssignPermissionSync::permissionName(UserRoles::DOCENTE),
+            RoleAssignPermissionSync::permissionName(UserRoles::ALUMNO),
+            'repositorios.index',
+            'repositorios.create',
+            'repositorios.edit',
+            'repositorios.destroy',
+            'archivos.index',
+            'archivos.create',
+            'archivos.edit',
+            'archivos.destroy',
+        ]);
+
+        $docente = Role::query()->where('name', UserRoles::DOCENTE)->firstOrFail();
+        $docente->syncPermissions([
+            'usuarios.search',
+            'repositorios.index',
+            'repositorios.create',
+            'repositorios.edit',
+            'repositorios.destroy',
+            'archivos.index',
+            'archivos.create',
+            'archivos.edit',
+            'archivos.destroy',
+        ]);
+
+        $alumno = Role::query()->where('name', UserRoles::ALUMNO)->firstOrFail();
         $alumno->syncPermissions([
             'usuarios.search',
             'repositorios.index',
@@ -75,5 +121,7 @@ class PermissionsSeeder extends Seeder
             'archivos.edit',
             'archivos.destroy',
         ]);
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

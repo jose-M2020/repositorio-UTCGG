@@ -5,15 +5,18 @@ import {
 } from '@/actions/App/Http/Controllers/UserController';
 import { Button } from '@/shared/components/ui';
 import { UserFormFields } from '../components/UserFormFields';
+import type { CareerFormPolicy, RoleOption } from '../types';
 
 type UserCreateContainerProps = {
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
 export const UserCreateContainer = ({
     roles,
     careers,
+    careerPolicy,
 }: UserCreateContainerProps) => {
     return (
         <main className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
@@ -36,6 +39,7 @@ export const UserCreateContainer = ({
                             errors={errors}
                             roles={roles}
                             careers={careers}
+                            careerPolicy={careerPolicy}
                             requirePassword
                         />
                         <div className="flex justify-end gap-2">

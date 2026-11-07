@@ -1,16 +1,29 @@
 import { Head } from '@inertiajs/react';
-import { UserCreateContainer } from '@/features/users';
+import {
+    UserCreateContainer,
+    type CareerFormPolicy,
+    type RoleOption,
+} from '@/features/users';
 
 type UsersCreatePageProps = {
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
-const UsersCreatePage = ({ roles, careers }: UsersCreatePageProps) => {
+const UsersCreatePage = ({
+    roles,
+    careers,
+    careerPolicy,
+}: UsersCreatePageProps) => {
     return (
         <>
             <Head title="Nuevo usuario" />
-            <UserCreateContainer roles={roles} careers={careers} />
+            <UserCreateContainer
+                roles={roles}
+                careers={careers}
+                careerPolicy={careerPolicy}
+            />
         </>
     );
 };

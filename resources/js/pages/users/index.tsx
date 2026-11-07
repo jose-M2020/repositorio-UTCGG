@@ -1,15 +1,18 @@
 import { Head } from '@inertiajs/react';
 import {
     UsersIndexContainer,
+    type CareerFormPolicy,
     type PaginatedUsers,
+    type RoleOption,
     type UsersFilters,
 } from '@/features/users';
 
 type UsersIndexPageProps = {
     users: PaginatedUsers;
     filters: UsersFilters;
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
 const UsersIndexPage = ({
@@ -17,6 +20,7 @@ const UsersIndexPage = ({
     filters,
     roles,
     careers,
+    careerPolicy,
 }: UsersIndexPageProps) => {
     return (
         <>
@@ -26,6 +30,7 @@ const UsersIndexPage = ({
                 filters={filters}
                 roles={roles}
                 careers={careers}
+                careerPolicy={careerPolicy}
             />
         </>
     );

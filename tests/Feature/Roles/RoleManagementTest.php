@@ -3,8 +3,10 @@
 namespace Tests\Feature\Roles;
 
 use App\Models\User;
+use App\Support\RoleAssignPermissionSync;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -61,6 +63,10 @@ class RoleManagementTest extends TestCase
         $this->assertNotNull($role);
         $this->assertTrue($role->hasPermissionTo('usuarios.index'));
         $this->assertTrue($role->hasPermissionTo('roles.index'));
+        $this->assertDatabaseHas('permissions', [
+            'name' => RoleAssignPermissionSync::permissionName('coordinador'),
+            'guard_name' => 'web',
+        ]);
     }
 
     public function test_admin_can_update_role(): void
@@ -69,6 +75,7 @@ class RoleManagementTest extends TestCase
         $admin->assignRole('admin');
 
         $role = Role::query()->create(['name' => 'temporal', 'guard_name' => 'web']);
+        RoleAssignPermissionSync::ensureFor('temporal');
         $role->syncPermissions(['usuarios.index']);
 
         $response = $this->actingAs($admin)->put(route('roles.update', $role), [
@@ -83,6 +90,13 @@ class RoleManagementTest extends TestCase
         ]);
         $this->assertTrue($role->fresh()?->hasPermissionTo('roles.index'));
         $this->assertFalse($role->fresh()?->hasPermissionTo('usuarios.index'));
+        $this->assertDatabaseMissing('permissions', [
+            'name' => RoleAssignPermissionSync::permissionName('temporal'),
+        ]);
+        $this->assertDatabaseHas('permissions', [
+            'name' => RoleAssignPermissionSync::permissionName('temporal-editado'),
+            'guard_name' => 'web',
+        ]);
     }
 
     public function test_admin_can_delete_role(): void
@@ -91,11 +105,35 @@ class RoleManagementTest extends TestCase
         $admin->assignRole('admin');
 
         $role = Role::query()->create(['name' => 'borrar', 'guard_name' => 'web']);
+        RoleAssignPermissionSync::ensureFor('borrar');
 
         $response = $this->actingAs($admin)->delete(route('roles.destroy', $role));
 
         $response->assertRedirect(route('roles.index'));
         $this->assertDatabaseMissing('roles', ['id' => $role->id]);
+        $this->assertDatabaseMissing('permissions', [
+            'name' => RoleAssignPermissionSync::permissionName('borrar'),
+        ]);
+    }
+
+    public function test_assign_permission_is_seeded_for_existing_roles(): void
+    {
+        foreach (['admin', 'director', 'director_carrera', 'docente', 'alumno'] as $role) {
+            $this->assertTrue(
+                Permission::query()
+                    ->where('name', RoleAssignPermissionSync::permissionName($role))
+                    ->exists(),
+            );
+        }
+
+        $director = Role::query()->where('name', 'director')->firstOrFail();
+        $this->assertTrue($director->hasPermissionTo('usuarios.career.any'));
+        $this->assertTrue($director->hasPermissionTo(RoleAssignPermissionSync::permissionName('alumno')));
+
+        $directorCarrera = Role::query()->where('name', 'director_carrera')->firstOrFail();
+        $this->assertFalse($directorCarrera->hasPermissionTo('usuarios.career.any'));
+        $this->assertTrue($directorCarrera->hasPermissionTo(RoleAssignPermissionSync::permissionName('alumno')));
+        $this->assertFalse($directorCarrera->hasPermissionTo(RoleAssignPermissionSync::permissionName('admin')));
     }
 
     public function test_create_role_validation_errors(): void

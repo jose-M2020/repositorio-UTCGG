@@ -3,13 +3,19 @@ import { create } from '@/actions/App/Http/Controllers/UserController';
 import { Button } from '@/shared/components/ui';
 import { UsersFilters } from '../components/UsersFilters';
 import { UsersTable } from '../components/UsersTable';
-import type { PaginatedUsers, UsersFilters as UsersFiltersType } from '../types';
+import type {
+    CareerFormPolicy,
+    PaginatedUsers,
+    RoleOption,
+    UsersFilters as UsersFiltersType,
+} from '../types';
 
 type UsersIndexContainerProps = {
     users: PaginatedUsers;
     filters: UsersFiltersType;
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
 export const UsersIndexContainer = ({
@@ -17,6 +23,7 @@ export const UsersIndexContainer = ({
     filters,
     roles,
     careers,
+    careerPolicy,
 }: UsersIndexContainerProps) => {
     const { flash } = usePage().props;
 
@@ -28,7 +35,7 @@ export const UsersIndexContainer = ({
                         Usuarios
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                        Alumnos totales: <b>{users.total}</b>
+                        Usuarios totales: <b>{users.total}</b>
                     </p>
                 </div>
                 <Link href={create.url()}>
@@ -46,6 +53,7 @@ export const UsersIndexContainer = ({
                 filters={filters}
                 roles={roles}
                 careersOptions={careers}
+                careerPolicy={careerPolicy}
             />
             <UsersTable users={users} />
         </main>

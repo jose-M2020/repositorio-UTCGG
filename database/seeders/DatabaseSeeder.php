@@ -6,6 +6,7 @@ use App\Models\Catalog;
 use App\Models\File;
 use App\Models\Repositorio;
 use App\Models\User;
+use App\Support\UserRoles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,9 +30,25 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Admin',
             'apellido' => 'Admin',
             'email' => 'admin@example.com',
+            'career_catalog_id' => null,
+        ]);
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $director = User::factory()->create([
+            'nombre' => 'Director',
+            'apellido' => 'General',
+            'email' => 'director@example.com',
+            'career_catalog_id' => null,
+        ]);
+        $director->assignRole(UserRoles::DIRECTOR);
+
+        $directorCarrera = User::factory()->create([
+            'nombre' => 'Director',
+            'apellido' => 'TIC',
+            'email' => 'director.tic@example.com',
             'career_catalog_id' => $ticCareerId,
         ]);
-        $admin->assignRole('admin');
+        $directorCarrera->assignRole(UserRoles::DIRECTOR_CARRERA);
 
         $docente = User::factory()->create([
             'nombre' => 'Docente',
@@ -39,7 +56,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'docente@example.com',
             'career_catalog_id' => $ticCareerId,
         ]);
-        $docente->assignRole('docente');
+        $docente->assignRole(UserRoles::DOCENTE);
 
         $alumno = User::factory()->create([
             'nombre' => 'Alumno',
@@ -47,13 +64,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'alumno@example.com',
             'career_catalog_id' => $ticCareerId,
         ]);
-        $alumno->assignRole('alumno');
+        $alumno->assignRole(UserRoles::ALUMNO);
 
         $docentes = User::factory(10)->create();
-        $docentes->each(fn (User $user) => $user->assignRole('docente'));
+        $docentes->each(fn (User $user) => $user->assignRole(UserRoles::DOCENTE));
 
         $alumnos = User::factory(30)->create();
-        $alumnos->each(fn (User $user) => $user->assignRole('alumno'));
+        $alumnos->each(fn (User $user) => $user->assignRole(UserRoles::ALUMNO));
 
         $users = $docentes->merge($alumnos);
 

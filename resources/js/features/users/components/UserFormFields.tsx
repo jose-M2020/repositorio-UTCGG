@@ -1,10 +1,15 @@
 import { Input } from '@/shared/components/ui';
-import type { UserFormErrors } from '../types';
+import type {
+    CareerFormPolicy,
+    RoleOption,
+    UserFormErrors,
+} from '../types';
 
 type UserFormFieldsProps = {
     errors: UserFormErrors;
-    roles: string[];
+    roles: RoleOption[];
     careers: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
     defaults?: {
         nombre?: string;
         apellido?: string;
@@ -19,9 +24,16 @@ export const UserFormFields = ({
     errors,
     roles,
     careers,
+    careerPolicy,
     defaults,
     requirePassword,
 }: UserFormFieldsProps) => {
+    const lockedCareer =
+        careerPolicy.locked_career ?? defaults?.carrera ?? '';
+    const careerValue = careerPolicy.can_select_career
+        ? (defaults?.carrera ?? '')
+        : lockedCareer;
+
     return (
         <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -91,23 +103,43 @@ export const UserFormFields = ({
                 >
                     Carrera
                 </label>
-                <select
-                    id="carrera"
-                    name="carrera"
-                    required
-                    defaultValue={defaults?.carrera ?? ''}
-                    className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-                    aria-invalid={Boolean(errors.carrera)}
-                >
-                    <option value="" disabled>
-                        Selecciona una carrera
-                    </option>
-                    {Object.entries(careers).map(([code, label]) => (
-                        <option key={code} value={code}>
-                            {code} — {label}
+                {careerPolicy.can_select_career ? (
+                    <select
+                        id="carrera"
+                        name="carrera"
+                        required
+                        defaultValue={careerValue}
+                        className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+                        aria-invalid={Boolean(errors.carrera)}
+                    >
+                        <option value="" disabled>
+                            Selecciona una carrera
                         </option>
-                    ))}
-                </select>
+                        {Object.entries(careers).map(([code, label]) => (
+                            <option key={code} value={code}>
+                                {code} — {label}
+                            </option>
+                        ))}
+                    </select>
+                ) : (
+                    <>
+                        <input type="hidden" name="carrera" value={lockedCareer} />
+                        <Input
+                            id="carrera"
+                            value={
+                                careerPolicy.locked_career_label ??
+                                lockedCareer ??
+                                'Sin carrera asignada'
+                            }
+                            readOnly
+                            aria-readonly="true"
+                            aria-invalid={Boolean(errors.carrera)}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                            La carrera se asigna automáticamente según tu rol.
+                        </p>
+                    </>
+                )}
                 {errors.carrera ? (
                     <p className="text-sm text-red-600">{errors.carrera}</p>
                 ) : null}
@@ -132,8 +164,8 @@ export const UserFormFields = ({
                         Selecciona un rol
                     </option>
                     {roles.map((role) => (
-                        <option key={role} value={role}>
-                            {role}
+                        <option key={role.value} value={role.value}>
+                            {role.label}
                         </option>
                     ))}
                 </select>

@@ -1,12 +1,17 @@
 import { Form, router } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/UserController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
-import type { UsersFilters as UsersFiltersType } from '../types';
+import type {
+    CareerFormPolicy,
+    RoleOption,
+    UsersFilters as UsersFiltersType,
+} from '../types';
 
 type UsersFiltersProps = {
     filters: UsersFiltersType;
-    roles: string[];
+    roles: RoleOption[];
     careersOptions: Record<string, string>;
+    careerPolicy: CareerFormPolicy;
 };
 
 const datePresets = [
@@ -20,6 +25,7 @@ export const UsersFilters = ({
     filters,
     roles,
     careersOptions,
+    careerPolicy,
 }: UsersFiltersProps) => {
     return (
         <Form
@@ -41,8 +47,8 @@ export const UsersFilters = ({
                 >
                     <option value="all">Todos</option>
                     {roles.map((role) => (
-                        <option key={role} value={role}>
-                            {role}
+                        <option key={role.value} value={role.value}>
+                            {role.label}
                         </option>
                     ))}
                 </select>
@@ -50,30 +56,42 @@ export const UsersFilters = ({
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
-                <fieldset className="space-y-2">
-                    <legend className="text-sm font-semibold text-foreground">
-                        Por carrera
-                    </legend>
-                    <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-                        {Object.entries(careersOptions).map(([code, label]) => (
-                            <li key={code}>
-                                <label
-                                    className="flex items-center gap-2 text-sm"
-                                    title={label}
-                                >
-                                    <Checkbox
-                                        name="carrera[]"
-                                        value={code}
-                                        defaultChecked={filters.carrera.includes(
-                                            code,
-                                        )}
-                                    />
-                                    <span>{code}</span>
-                                </label>
-                            </li>
-                        ))}
-                    </ul>
-                </fieldset>
+                {careerPolicy.can_select_career ? (
+                    <fieldset className="space-y-2">
+                        <legend className="text-sm font-semibold text-foreground">
+                            Por carrera
+                        </legend>
+                        <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+                            {Object.entries(careersOptions).map(
+                                ([code, label]) => (
+                                    <li key={code}>
+                                        <label
+                                            className="flex items-center gap-2 text-sm"
+                                            title={label}
+                                        >
+                                            <Checkbox
+                                                name="carrera[]"
+                                                value={code}
+                                                defaultChecked={filters.carrera.includes(
+                                                    code,
+                                                )}
+                                            />
+                                            <span>{code}</span>
+                                        </label>
+                                    </li>
+                                ),
+                            )}
+                        </ul>
+                    </fieldset>
+                ) : (
+                    <div className="space-y-1 rounded-lg border border-border bg-muted/40 p-3 text-sm">
+                        <p className="font-medium text-foreground">Carrera</p>
+                        <p className="text-muted-foreground">
+                            {careerPolicy.locked_career_label ??
+                                'Tu carrera asignada'}
+                        </p>
+                    </div>
+                )}
 
                 <fieldset className="space-y-2">
                     <legend className="text-sm font-semibold text-foreground">

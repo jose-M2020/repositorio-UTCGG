@@ -56,3 +56,14 @@ export type PaginatedUsers = {
 };
 
 export type UserFormErrors = Record<string, string>;
+
+export type RoleOption = {
+    value: string;
+    label: string;
+};
+
+export type CareerFormPolicy = {
+    can_select_career: boolean;
+    locked_career: string | null;
+    locked_career_label: string | null;
+};
