@@ -12,11 +12,11 @@ type PageProps = {
     catalog?: RepositoryCatalog;
 };
 
-export default function RepositoriesIndexPage({
+const RepositoriesIndexPage = ({
     repositorios,
     filters,
     catalog,
-}: PageProps) {
+}: PageProps) => {
     return (
         <>
             <Head title="Repositorios" />
@@ -27,4 +27,6 @@ export default function RepositoriesIndexPage({
             />
         </>
     );
-}
+};
+
+export default RepositoriesIndexPage;

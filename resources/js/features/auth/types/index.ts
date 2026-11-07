@@ -23,6 +23,14 @@ export type AuthUser = {
     roles?: string[];
 };
 
+export type AuthAbilities = {
+    'repositories.create': boolean;
+    'users.view': boolean;
+    'users.create': boolean;
+    'roles.view': boolean;
+};
+
 export type Auth = {
     user: AuthUser | null;
+    abilities: AuthAbilities;
 };

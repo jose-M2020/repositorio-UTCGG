@@ -6,11 +6,13 @@ type HomePageProps = {
     featured: HomeRepository[];
 };
 
-export default function HomePage({ latest, featured }: HomePageProps) {
+const HomePage = ({ latest, featured }: HomePageProps) => {
     return (
         <>
             <Head title="Inicio" />
             <HomeContainer latest={latest} featured={featured} />
         </>
     );
-}
+};
+
+export default HomePage;

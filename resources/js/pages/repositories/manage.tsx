@@ -9,7 +9,7 @@ type PageProps = {
     repositorio: Repository;
 };
 
-export default function RepositoriesManagePage({ repositorio }: PageProps) {
+const RepositoriesManagePage = ({ repositorio }: PageProps) => {
     return (
         <>
             <Head title={`Gestionar · ${repositorio.nombre_rep}`} />
@@ -25,4 +25,6 @@ export default function RepositoriesManagePage({ repositorio }: PageProps) {
             </div>
         </>
     );
-}
+};
+
+export default RepositoriesManagePage;

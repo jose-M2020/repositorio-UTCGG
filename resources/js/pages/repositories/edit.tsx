@@ -10,10 +10,7 @@ type PageProps = {
     catalog?: RepositoryCatalog;
 };
 
-export default function RepositoriesEditPage({
-    repositorio,
-    catalog,
-}: PageProps) {
+const RepositoriesEditPage = ({ repositorio, catalog }: PageProps) => {
     return (
         <>
             <Head title="Editar repositorio" />
@@ -23,4 +20,6 @@ export default function RepositoriesEditPage({
             />
         </>
     );
-}
+};
+
+export default RepositoriesEditPage;

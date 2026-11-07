@@ -51,6 +51,12 @@ class HandleInertiaRequests extends Middleware
                         'roles' => $user->getRoleNames()->values()->all(),
                     ]
                     : null,
+                'abilities' => [
+                    'repositories.create' => $user?->can('repositorios.create') ?? false,
+                    'users.view' => $user?->can('usuarios.index') ?? false,
+                    'users.create' => $user?->can('usuarios.create') ?? false,
+                    'roles.view' => $user?->can('roles.index') ?? false,
+                ],
             ],
             'flash' => [
                 'status' => fn () => $request->session()->get('status'),

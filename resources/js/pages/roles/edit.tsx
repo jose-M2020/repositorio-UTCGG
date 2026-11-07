@@ -10,10 +10,7 @@ type RolesEditPageProps = {
     permissionGroups: PermissionGroups;
 };
 
-export default function RolesEditPage({
-    role,
-    permissionGroups,
-}: RolesEditPageProps) {
+const RolesEditPage = ({ role, permissionGroups }: RolesEditPageProps) => {
     return (
         <>
             <Head title="Editar rol" />
@@ -23,4 +20,6 @@ export default function RolesEditPage({
             />
         </>
     );
-}
+};
+
+export default RolesEditPage;

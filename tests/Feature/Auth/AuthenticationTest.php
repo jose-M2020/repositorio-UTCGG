@@ -18,20 +18,9 @@ class AuthenticationTest extends TestCase
         $this->seed(PermissionsSeeder::class);
     }
 
-    public function test_guest_can_view_login_but_not_register(): void
+    public function test_guest_can_view_login(): void
     {
         $this->get(route('login'))->assertOk();
-        $this->get(route('register'))->assertRedirect(route('login'));
-    }
-
-    public function test_authenticated_user_can_view_register_page(): void
-    {
-        $user = User::factory()->create();
-        $user->assignRole('admin');
-
-        $this->actingAs($user)
-            ->get(route('register'))
-            ->assertOk();
     }
 
     public function test_authenticated_user_is_redirected_from_login(): void
@@ -40,51 +29,7 @@ class AuthenticationTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('login'))
-            ->assertRedirect(route('home'));
-    }
-
-    public function test_authenticated_user_can_register_another_user(): void
-    {
-        $actor = User::factory()->create();
-        $actor->assignRole('admin');
-
-        $response = $this->actingAs($actor)->post(route('register'), [
-            'nombre' => 'Jose',
-            'apellido' => 'Martinez',
-            'email' => 'jose@example.com',
-            'carrera' => 'TIC',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
-        ]);
-
-        $response->assertRedirect(route('login'));
-
-        $this->assertDatabaseHas('users', [
-            'email' => 'jose@example.com',
-            'nombre' => 'Jose',
-            'apellido' => 'Martinez',
-            'carrera' => 'TIC',
-        ]);
-    }
-
-    public function test_register_requires_unique_email(): void
-    {
-        $actor = User::factory()->create();
-        $actor->assignRole('admin');
-        User::factory()->create(['email' => 'jose@example.com']);
-
-        $response = $this->actingAs($actor)
-            ->from(route('register'))
-            ->post(route('register'), [
-                'nombre' => 'Jose',
-                'apellido' => 'Martinez',
-                'email' => 'jose@example.com',
-                'password' => 'Password123!',
-                'password_confirmation' => 'Password123!',
-            ]);
-
-        $response->assertRedirect(route('register'));
-        $response->assertSessionHasErrors(['email']);
+            ->assertRedirect(route('repositorios.user'));
     }
 
     public function test_user_can_login_with_valid_credentials(): void
@@ -99,7 +44,7 @@ class AuthenticationTest extends TestCase
             'password' => 'Password123!',
         ]);
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('repositorios.user'));
         $this->assertAuthenticatedAs($user);
     }
 

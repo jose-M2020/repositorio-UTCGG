@@ -1,2 +1,10 @@
 export { cn } from './lib';
-export { Button, buttonVariants, Input, SiteHeader } from './components';
+export {
+    Button,
+    buttonVariants,
+    Input,
+    PublicHeader,
+    SiteHeader,
+    AppShell,
+} from './components';
+export { AuthenticatedLayout, PublicLayout } from './layouts';

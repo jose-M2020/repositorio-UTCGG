@@ -1,7 +1,7 @@
 export { LoginContainer } from './containers/LoginContainer';
-export { RegisterContainer } from './containers/RegisterContainer';
 export type {
     Auth,
+    AuthAbilities,
     AuthFieldProps,
     AuthFormErrors,
     AuthUser,

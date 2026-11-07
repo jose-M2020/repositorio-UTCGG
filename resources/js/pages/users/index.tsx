@@ -12,12 +12,12 @@ type UsersIndexPageProps = {
     careers?: Record<string, string>;
 };
 
-export default function UsersIndexPage({
+const UsersIndexPage = ({
     users,
     filters,
     roles,
     careers,
-}: UsersIndexPageProps) {
+}: UsersIndexPageProps) => {
     return (
         <>
             <Head title="Usuarios" />
@@ -29,4 +29,6 @@ export default function UsersIndexPage({
             />
         </>
     );
-}
+};
+
+export default UsersIndexPage;

@@ -25,6 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'authorizeMember' => AuthorizeMember::class,
         ]);
 
+        $middleware->redirectUsersTo(fn () => route('repositorios.user'));
+
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

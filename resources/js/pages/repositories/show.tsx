@@ -11,10 +11,7 @@ type PageProps = {
     related: RepositoryListItem[];
 };
 
-export default function RepositoriesShowPage({
-    repositorio,
-    related,
-}: PageProps) {
+const RepositoriesShowPage = ({ repositorio, related }: PageProps) => {
     return (
         <>
             <Head title={repositorio.nombre_rep} />
@@ -32,4 +29,6 @@ export default function RepositoriesShowPage({
             </div>
         </>
     );
-}
+};
+
+export default RepositoriesShowPage;

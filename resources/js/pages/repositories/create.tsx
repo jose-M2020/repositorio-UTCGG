@@ -6,11 +6,13 @@ type PageProps = {
     catalog?: RepositoryCatalog;
 };
 
-export default function RepositoriesCreatePage({ catalog }: PageProps) {
+const RepositoriesCreatePage = ({ catalog }: PageProps) => {
     return (
         <>
             <Head title="Nuevo repositorio" />
             <RepositoryCreateContainer catalog={catalog} />
         </>
     );
-}
+};
+
+export default RepositoriesCreatePage;

@@ -5,11 +5,13 @@ type UsersCreatePageProps = {
     roles: string[];
 };
 
-export default function UsersCreatePage({ roles }: UsersCreatePageProps) {
+const UsersCreatePage = ({ roles }: UsersCreatePageProps) => {
     return (
         <>
             <Head title="Nuevo usuario" />
             <UserCreateContainer roles={roles} />
         </>
     );
-}
+};
+
+export default UsersCreatePage;

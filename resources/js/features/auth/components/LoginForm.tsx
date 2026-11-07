@@ -1,4 +1,3 @@
-import { Link } from '@inertiajs/react';
 import { Button } from '@/shared/components/ui';
 import type { AuthFormErrors } from '../types';
 import { AuthField } from './AuthField';
@@ -6,14 +5,9 @@ import { AuthField } from './AuthField';
 type LoginFormProps = {
     errors: AuthFormErrors;
     processing: boolean;
-    registerUrl: string;
 };
 
-export const LoginForm = ({
-    errors,
-    processing,
-    registerUrl,
-}: LoginFormProps) => {
+export const LoginForm = ({ errors, processing }: LoginFormProps) => {
     return (
         <div className="space-y-4">
             <AuthField
@@ -36,13 +30,7 @@ export const LoginForm = ({
                 error={errors.password}
             />
 
-            <div className="flex items-center justify-between gap-3 pt-2">
-                <Link
-                    href={registerUrl}
-                    className="text-sm text-slate-600 underline underline-offset-4 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
-                >
-                    Crear cuenta
-                </Link>
+            <div className="flex justify-end pt-2">
                 <Button type="submit" disabled={processing}>
                     {processing ? 'Ingresando...' : 'Entrar'}
                 </Button>

@@ -1,5 +1,3 @@
-import { about } from '@/actions/App/Http/Controllers/HomeController';
-import { SiteFooter, SiteHeader } from '@/shared/components';
 import { CareersSection } from '../components/CareersSection';
 import { HomeHero } from '../components/HomeHero';
 import { RepositoryHighlights } from '../components/RepositoryHighlights';
@@ -13,8 +11,7 @@ type HomeContainerProps = {
 
 export const HomeContainer = ({ latest, featured }: HomeContainerProps) => {
     return (
-        <div className="flex min-h-screen flex-col bg-background">
-            <SiteHeader aboutUrl={about.url()} />
+        <>
             <HomeHero />
             <StatsStrip />
             <CareersSection />
@@ -28,7 +25,6 @@ export const HomeContainer = ({ latest, featured }: HomeContainerProps) => {
                 description="Los últimos repositorios publicados para consulta abierta."
                 items={latest}
             />
-            <SiteFooter />
-        </div>
+        </>
     );
 };

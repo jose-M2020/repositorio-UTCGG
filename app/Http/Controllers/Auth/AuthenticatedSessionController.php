@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home', absolute: false));
+        return redirect()->intended(route('repositorios.user', absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse

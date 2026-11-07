@@ -65,6 +65,19 @@ class RepositorioManagementTest extends TestCase
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
     }
 
+    public function test_user_with_permission_can_view_create_repository_page(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('docente');
+
+        $this->actingAs($user)
+            ->get(route('repositorios.create'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('repositories/create')
+                ->has('catalog'));
+    }
+
     public function test_non_member_cannot_manage_repository(): void
     {
         $owner = User::factory()->create();

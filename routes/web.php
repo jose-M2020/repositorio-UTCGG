@@ -21,8 +21,8 @@ Route::middleware('auth')->group(function (): void {
 
 Route::resource('roles', RoleController::class);
 
-Route::resource('repositorios', RepositorioController::class)
-    ->only(['index', 'show']);
+Route::get('repositorios', [RepositorioController::class, 'index'])
+    ->name('repositorios.index');
 
 Route::get('files/download/{file}', [FileController::class, 'download'])
     ->name('files.download');
@@ -63,5 +63,8 @@ Route::middleware('auth')->group(function (): void {
             ->name('files.images.destroy');
     });
 });
+
+Route::get('repositorios/{repositorio}', [RepositorioController::class, 'show'])
+    ->name('repositorios.show');
 
 require __DIR__.'/auth.php';

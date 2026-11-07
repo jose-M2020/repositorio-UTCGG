@@ -11,11 +11,11 @@ type UsersShowPageProps = {
     repositoriosPrivados: UserRepositorySummary[];
 };
 
-export default function UsersShowPage({
+const UsersShowPage = ({
     user,
     repositoriosPublicos,
     repositoriosPrivados,
-}: UsersShowPageProps) {
+}: UsersShowPageProps) => {
     return (
         <>
             <Head title="Detalle de usuario" />
@@ -26,4 +26,6 @@ export default function UsersShowPage({
             />
         </>
     );
-}
+};
+
+export default UsersShowPage;

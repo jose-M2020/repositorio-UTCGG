@@ -1,8 +1,10 @@
 export { Button, buttonVariants, Input } from './ui';
+export { AppNavLink } from './AppNavLink';
+export { AppBrand } from './AppBrand';
+export { AppShell } from './AppShell';
 export { FlashToaster } from './FlashToaster';
+export { PublicHeader } from './PublicHeader';
 export { SiteFooter } from './SiteFooter';
 export { SiteHeader } from './SiteHeader';
-export {
-    UserSearchPicker,
-    type SearchableUser,
-} from './UserSearchPicker';
+export { SurfaceNavLink } from './SurfaceNavLink';
+export { UserSearchPicker, type SearchableUser } from './UserSearchPicker';

@@ -8,11 +8,13 @@ type PageProps = {
     repositorios: PaginatedRepositories;
 };
 
-export default function RepositoriesMinePage({ repositorios }: PageProps) {
+const RepositoriesMinePage = ({ repositorios }: PageProps) => {
     return (
         <>
             <Head title="Mis repositorios" />
             <RepositoriesMineContainer repositorios={repositorios} />
         </>
     );
-}
+};
+
+export default RepositoriesMinePage;
