@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import type { PermissionGroups, RoleFormErrors } from '../types';
+import {
+    moduleLabel,
+    partitionPermissions,
+    permissionLabel,
+} from '../lib/permissionDisplay';
 
 type RolePermissionGroupsProps = {
     permissionGroups: PermissionGroups;
@@ -49,17 +54,22 @@ export const RolePermissionGroups = ({
         setCheckedState(next);
     };
 
+    const isAllChecked = (permissions: { name: string }[]): boolean =>
+        permissions.length > 0 &&
+        permissions.every((permission) => checkedState.has(permission.name));
+
+    const isIndeterminate = (permissions: { name: string }[]): boolean =>
+        permissions.some((permission) => checkedState.has(permission.name)) &&
+        !isAllChecked(permissions);
+
     return (
         <div className="space-y-4">
             <p className="text-sm font-medium text-foreground">Permisos</p>
             {groups.map(([group, permissions]) => {
-                const allChecked = permissions.every((p) =>
-                    checkedState.has(p.name),
-                );
-                const someChecked = permissions.some((p) =>
-                    checkedState.has(p.name),
-                );
-                const isIndeterminate = someChecked && !allChecked;
+                const partitioned = partitionPermissions(permissions);
+                const hasSpecialSections =
+                    partitioned.assign.length > 0 ||
+                    partitioned.career.length > 0;
 
                 return (
                     <fieldset
@@ -67,53 +77,52 @@ export const RolePermissionGroups = ({
                         className="space-y-3 rounded-lg border border-border p-4 shadow-sm"
                     >
                         <legend className="px-1 text-sm font-semibold text-foreground capitalize">
-                            {group}
+                            {moduleLabel(group)}
                         </legend>
-                        <div className="mb-2 border-b border-border pb-2">
-                            <label className="flex items-center gap-2 text-sm font-medium text-foreground">
-                                <Checkbox
-                                    checked={allChecked}
-                                    indeterminate={isIndeterminate}
-                                    onCheckedChange={() =>
-                                        handleToggleGroup(permissions)
-                                    }
+                        {hasSpecialSections ? (
+                            <div className="space-y-4">
+                                <PermissionSection
+                                    title="Gestion"
+                                    description="Permisos base para ver y administrar este modulo."
+                                    permissions={partitioned.management}
+                                    isAllChecked={isAllChecked}
+                                    isIndeterminate={isIndeterminate}
+                                    checkedState={checkedState}
+                                    onToggleGroup={handleToggleGroup}
+                                    onTogglePermission={handleTogglePermission}
                                 />
-                                <span>Seleccionar todos ({group})</span>
-                            </label>
-                        </div>
-                        <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {permissions.map((permission) => (
-                                <label
-                                    key={permission.id}
-                                    className="flex items-start gap-2 text-sm text-foreground"
-                                >
-                                    <Checkbox
-                                        name="permissions[]"
-                                        value={permission.name}
-                                        checked={checkedState.has(
-                                            permission.name,
-                                        )}
-                                        onCheckedChange={(checked) =>
-                                            handleTogglePermission(
-                                                permission.name,
-                                                checked,
-                                            )
-                                        }
-                                        className="mt-0.5"
-                                    />
-                                    <span>
-                                        <span className="font-medium">
-                                            {permission.name}
-                                        </span>
-                                        {permission.description ? (
-                                            <span className="block text-xs text-muted-foreground">
-                                                {permission.description}
-                                            </span>
-                                        ) : null}
-                                    </span>
-                                </label>
-                            ))}
-                        </div>
+                                <PermissionSection
+                                    title="Roles que puede asignar"
+                                    description="Al crear o editar usuarios, este rol podra asignar estos roles."
+                                    permissions={partitioned.assign}
+                                    isAllChecked={isAllChecked}
+                                    isIndeterminate={isIndeterminate}
+                                    checkedState={checkedState}
+                                    onToggleGroup={handleToggleGroup}
+                                    onTogglePermission={handleTogglePermission}
+                                />
+                                <PermissionSection
+                                    title="Alcance de carrera"
+                                    description="Define si puede elegir cualquier carrera o se fuerza su carrera."
+                                    permissions={partitioned.career}
+                                    isAllChecked={isAllChecked}
+                                    isIndeterminate={isIndeterminate}
+                                    checkedState={checkedState}
+                                    onToggleGroup={handleToggleGroup}
+                                    onTogglePermission={handleTogglePermission}
+                                />
+                            </div>
+                        ) : (
+                            <PermissionSection
+                                title={`Permisos de ${moduleLabel(group).toLowerCase()}`}
+                                permissions={permissions}
+                                isAllChecked={isAllChecked}
+                                isIndeterminate={isIndeterminate}
+                                checkedState={checkedState}
+                                onToggleGroup={handleToggleGroup}
+                                onTogglePermission={handleTogglePermission}
+                            />
+                        )}
                     </fieldset>
                 );
             })}
@@ -121,5 +130,79 @@ export const RolePermissionGroups = ({
                 <p className="text-sm text-destructive">{errors.permissions}</p>
             ) : null}
         </div>
+    );
+};
+
+type PermissionSectionProps = {
+    title: string;
+    description?: string;
+    permissions: { id: number; name: string; description: string | null }[];
+    checkedState: Set<string>;
+    isAllChecked: (permissions: { name: string }[]) => boolean;
+    isIndeterminate: (permissions: { name: string }[]) => boolean;
+    onToggleGroup: (permissions: { name: string }[]) => void;
+    onTogglePermission: (name: string, checked: boolean) => void;
+};
+
+const PermissionSection = ({
+    title,
+    description,
+    permissions,
+    checkedState,
+    isAllChecked,
+    isIndeterminate,
+    onToggleGroup,
+    onTogglePermission,
+}: PermissionSectionProps) => {
+    if (permissions.length === 0) {
+        return null;
+    }
+
+    return (
+        <section className="space-y-3">
+            <div className="space-y-1 border-b border-border pb-2">
+                <p className="text-sm font-medium text-foreground">{title}</p>
+                {description ? (
+                    <p className="text-xs text-muted-foreground">
+                        {description}
+                    </p>
+                ) : null}
+                <label className="mt-2 inline-flex items-center gap-2 text-sm text-foreground">
+                    <Checkbox
+                        checked={isAllChecked(permissions)}
+                        indeterminate={isIndeterminate(permissions)}
+                        onCheckedChange={() => onToggleGroup(permissions)}
+                    />
+                    <span>Seleccionar todos</span>
+                </label>
+            </div>
+
+            <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2 md:grid-cols-3">
+                {permissions.map((permission) => (
+                    <label
+                        key={permission.id}
+                        className="flex items-start gap-2 text-sm text-foreground"
+                    >
+                        <Checkbox
+                            name="permissions[]"
+                            value={permission.name}
+                            checked={checkedState.has(permission.name)}
+                            onCheckedChange={(checked) =>
+                                onTogglePermission(permission.name, checked)
+                            }
+                            className="mt-0.5"
+                        />
+                        <span>
+                            <span className="font-medium">
+                                {permissionLabel(permission)}
+                            </span>
+                            <span className="block text-xs text-muted-foreground">
+                                {permission.name}
+                            </span>
+                        </span>
+                    </label>
+                ))}
+            </div>
+        </section>
     );
 };

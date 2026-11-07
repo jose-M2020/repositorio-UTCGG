@@ -4,6 +4,7 @@ import { Toaster, toast } from 'sonner';
 
 type FlashToasterProps = {
     initialStatus?: string | null;
+    initialError?: string | null;
 };
 
 const showStatusToast = (status: unknown) => {
@@ -14,14 +15,27 @@ const showStatusToast = (status: unknown) => {
     toast.success(status);
 };
 
-export const FlashToaster = ({ initialStatus }: FlashToasterProps) => {
+const showErrorToast = (error: unknown) => {
+    if (typeof error !== 'string' || error === '') {
+        return;
+    }
+
+    toast.error(error);
+};
+
+export const FlashToaster = ({
+    initialStatus,
+    initialError,
+}: FlashToasterProps) => {
     useEffect(() => {
         showStatusToast(initialStatus);
+        showErrorToast(initialError);
 
         return router.on('success', (event) => {
             showStatusToast(event.detail.page.props.flash?.status);
+            showErrorToast(event.detail.page.props.flash?.error);
         });
-    }, [initialStatus]);
+    }, [initialStatus, initialError]);
 
     return (
         <Toaster

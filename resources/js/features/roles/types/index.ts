@@ -8,6 +8,8 @@ export type RoleListItem = {
     id: number;
     name: string;
     permissions_count: number;
+    users_count: number;
+    can_delete: boolean;
     permissions: RolePermission[];
 };
 

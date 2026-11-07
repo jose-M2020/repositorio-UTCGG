@@ -36,6 +36,9 @@ export const RolesTable = ({ roles }: RolesTableProps) => {
                                 Rol
                             </th>
                             <th className="px-4 py-3 text-left font-medium">
+                                Usuarios
+                            </th>
+                            <th className="px-4 py-3 text-left font-medium">
                                 Permisos
                             </th>
                             <th className="px-4 py-3 text-right font-medium">
@@ -49,6 +52,7 @@ export const RolesTable = ({ roles }: RolesTableProps) => {
                                 <td className="px-4 py-3 font-medium">
                                     {role.name}
                                 </td>
+                                <td className="px-4 py-3">{role.users_count}</td>
                                 <td className="px-4 py-3">
                                     {role.permissions_count}
                                 </td>
@@ -67,17 +71,32 @@ export const RolesTable = ({ roles }: RolesTableProps) => {
                                                 Editar
                                             </Button>
                                         </Link>
-                                        <Form {...destroy.form(role.id)}>
-                                            {({ processing }) => (
-                                                <Button
-                                                    type="submit"
-                                                    variant="destructive"
-                                                    disabled={processing}
-                                                >
-                                                    Eliminar
-                                                </Button>
-                                            )}
-                                        </Form>
+                                        {role.can_delete ? (
+                                            <Form {...destroy.form(role.id)}>
+                                                {({ processing }) => (
+                                                    <Button
+                                                        type="submit"
+                                                        variant="destructive"
+                                                        disabled={processing}
+                                                    >
+                                                        Eliminar
+                                                    </Button>
+                                                )}
+                                            </Form>
+                                        ) : (
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                disabled
+                                                title={
+                                                    role.users_count > 0
+                                                        ? `Asignado a ${role.users_count} usuario(s). Reasigna antes de eliminar.`
+                                                        : 'Rol del sistema: no se puede eliminar.'
+                                                }
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

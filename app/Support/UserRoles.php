@@ -38,6 +38,40 @@ final class UserRoles
         return self::labels()[$role] ?? $role;
     }
 
+    /**
+     * Roles sembrados del sistema: no se eliminan.
+     *
+     * @return list<string>
+     */
+    public static function systemRoles(): array
+    {
+        return [
+            self::ADMIN,
+            self::DIRECTOR,
+            self::DIRECTOR_CARRERA,
+            self::DOCENTE,
+            self::ALUMNO,
+        ];
+    }
+
+    public static function isSystem(string $role): bool
+    {
+        return in_array($role, self::systemRoles(), true);
+    }
+
+    public static function canDelete(Role $role): bool
+    {
+        if (self::isSystem($role->name)) {
+            return false;
+        }
+
+        if (array_key_exists('users_count', $role->getAttributes())) {
+            return (int) $role->users_count === 0;
+        }
+
+        return ! $role->users()->exists();
+    }
+
     public static function assignPermissionName(string $role): string
     {
         return RoleAssignPermissionSync::permissionName($role);

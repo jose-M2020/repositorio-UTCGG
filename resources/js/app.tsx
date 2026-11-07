@@ -50,11 +50,15 @@ void createInertiaApp({
         ),
     setup({ el, App, props }) {
         const initialStatus = props.initialPage.props.flash?.status;
+        const initialError = props.initialPage.props.flash?.error;
 
         createRoot(el).render(
             <>
                 <App {...props} />
-                <FlashToaster initialStatus={initialStatus} />
+                <FlashToaster
+                    initialStatus={initialStatus}
+                    initialError={initialError}
+                />
             </>,
         );
     },

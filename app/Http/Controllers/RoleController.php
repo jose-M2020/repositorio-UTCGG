@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Support\RoleAssignPermissionSync;
+use App\Support\UserRoles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -30,9 +31,24 @@ class RoleController extends Controller implements HasMiddleware
     {
         $roles = Role::query()
             ->with('permissions:id,name,description')
-            ->withCount('permissions')
+            ->withCount(['permissions', 'users'])
             ->orderBy('name')
-            ->paginate(10);
+            ->paginate(10)
+            ->through(fn (Role $role): array => [
+                'id' => $role->id,
+                'name' => $role->name,
+                'permissions_count' => $role->permissions_count,
+                'users_count' => $role->users_count,
+                'can_delete' => UserRoles::canDelete($role),
+                'permissions' => $role->permissions
+                    ->map(fn (Permission $permission) => [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'description' => $permission->description,
+                    ])
+                    ->values()
+                    ->all(),
+            ]);
 
         return Inertia::render('roles/index', [
             'roles' => $roles,
@@ -123,6 +139,21 @@ class RoleController extends Controller implements HasMiddleware
 
     public function destroy(Role $role): RedirectResponse
     {
+        if (UserRoles::isSystem($role->name)) {
+            return redirect()
+                ->route('roles.index')
+                ->with('error', 'No se puede eliminar un rol del sistema.');
+        }
+
+        if ($role->users()->exists()) {
+            return redirect()
+                ->route('roles.index')
+                ->with(
+                    'error',
+                    'No se puede eliminar el rol porque tiene usuarios asignados. Reasigna esos usuarios primero.',
+                );
+        }
+
         $roleName = $role->name;
         $role->delete();
         RoleAssignPermissionSync::deleteFor($roleName);

@@ -99,7 +99,7 @@ class RoleManagementTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_delete_role(): void
+    public function test_admin_can_delete_unused_custom_role(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole('admin');
@@ -114,6 +114,41 @@ class RoleManagementTest extends TestCase
         $this->assertDatabaseMissing('permissions', [
             'name' => RoleAssignPermissionSync::permissionName('borrar'),
         ]);
+    }
+
+    public function test_admin_cannot_delete_role_assigned_to_users(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $role = Role::query()->create(['name' => 'coordinador', 'guard_name' => 'web']);
+        RoleAssignPermissionSync::ensureFor('coordinador');
+
+        $user = User::factory()->create();
+        $user->assignRole('coordinador');
+
+        $response = $this->actingAs($admin)->delete(route('roles.destroy', $role));
+
+        $response->assertRedirect(route('roles.index'));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('roles', ['id' => $role->id]);
+        $this->assertDatabaseHas('permissions', [
+            'name' => RoleAssignPermissionSync::permissionName('coordinador'),
+        ]);
+    }
+
+    public function test_admin_cannot_delete_system_role(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $role = Role::query()->where('name', 'alumno')->firstOrFail();
+
+        $response = $this->actingAs($admin)->delete(route('roles.destroy', $role));
+
+        $response->assertRedirect(route('roles.index'));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => 'alumno']);
     }
 
     public function test_assign_permission_is_seeded_for_existing_roles(): void
