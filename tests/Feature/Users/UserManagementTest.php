@@ -203,6 +203,33 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
 
+    public function test_admin_can_filter_users_by_multiple_roles(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $alumno = User::factory()->create(['nombre' => 'AlumnoFiltro']);
+        $alumno->assignRole(UserRoles::ALUMNO);
+
+        $docente = User::factory()->create(['nombre' => 'DocenteFiltro']);
+        $docente->assignRole(UserRoles::DOCENTE);
+
+        $director = User::factory()->create(['nombre' => 'DirectorFiltro']);
+        $director->assignRole(UserRoles::DIRECTOR);
+
+        $this->actingAs($admin)
+            ->get(route('usuarios.index', [
+                'rol' => [UserRoles::ALUMNO, UserRoles::DOCENTE],
+            ]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('users/index')
+                ->where('filters.rol', [UserRoles::ALUMNO, UserRoles::DOCENTE])
+                ->has('users.data', 2)
+                ->where('users.data.0.nombre', 'DocenteFiltro')
+                ->where('users.data.1.nombre', 'AlumnoFiltro'));
+    }
+
     public function test_director_carrera_only_lists_users_from_same_career(): void
     {
         $ticCareerId = Catalog::query()

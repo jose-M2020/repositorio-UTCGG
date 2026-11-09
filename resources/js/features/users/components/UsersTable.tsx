@@ -38,8 +38,8 @@ const buildColumnFilters = (filters: UsersFilters, canFilterCareer: boolean): Co
     next.push({ id: "carrera", value: filters.carrera });
   }
 
-  if (filters.rol && filters.rol !== "all") {
-    next.push({ id: "rol", value: [filters.rol] });
+  if (filters.rol.length > 0) {
+    next.push({ id: "rol", value: filters.rol });
   }
 
   if (isUsersDateFilterActive(toDateFilterValue(filters))) {
@@ -51,7 +51,7 @@ const buildColumnFilters = (filters: UsersFilters, canFilterCareer: boolean): Co
 
 const visitUsersIndex = (params: {
   query: string;
-  rol: string;
+  rol: string[];
   carrera: string[];
   fecha: string;
   rango_fecha: string[];
@@ -61,7 +61,7 @@ const visitUsersIndex = (params: {
     index.url({
       query: {
         query: params.query || undefined,
-        rol: params.rol && params.rol !== "all" ? params.rol : undefined,
+        rol: params.rol.length > 0 ? params.rol : undefined,
         carrera: params.carrera.length > 0 ? params.carrera : undefined,
         fecha: params.fecha || undefined,
         rango_fecha:
@@ -131,7 +131,7 @@ export const UsersTable = ({
     const carrera = Array.isArray(carreraFilter?.value)
       ? (carreraFilter.value as string[])
       : [];
-    const rolValues = Array.isArray(rolFilter?.value) ? (rolFilter.value as string[]) : [];
+    const rol = Array.isArray(rolFilter?.value) ? (rolFilter.value as string[]) : [];
     const dateValue =
       dateFilter?.value && typeof dateFilter.value === "object"
         ? (dateFilter.value as UsersDateFilterValue)
@@ -139,7 +139,7 @@ export const UsersTable = ({
 
     return {
       carrera: canFilterCareer ? carrera : [],
-      rol: rolValues[0] ?? "all",
+      rol,
       fecha: dateValue.fecha ?? "",
       rango_fecha: dateValue.rango_fecha?.length === 2 ? dateValue.rango_fecha : ["", ""],
     };

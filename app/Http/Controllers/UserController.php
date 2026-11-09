@@ -35,6 +35,10 @@ class UserController extends Controller implements HasMiddleware
     {
         $authUser = $request->user();
         $carreras = array_values(array_filter((array) $request->input('carrera', [])));
+        $roles = array_values(array_filter(
+            (array) $request->input('rol', []),
+            fn ($role): bool => is_string($role) && $role !== '' && $role !== 'all',
+        ));
         $dateRange = array_values((array) $request->input('rango_fecha', ['', '']));
         $fecha = $request->string('fecha')->toString();
         $hasDateRange = ($dateRange[0] ?? '') !== '' && ($dateRange[1] ?? '') !== '';
@@ -62,10 +66,7 @@ class UserController extends Controller implements HasMiddleware
                 'careerCatalog',
                 fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
             ))
-            ->when(
-                $request->filled('rol') && $request->string('rol')->toString() !== 'all',
-                fn ($query) => $query->role($request->string('rol')->toString()),
-            )
+            ->when($roles !== [], fn ($query) => $query->role($roles))
             ->when($hasDateRange, fn ($query) => $query->whereBetween('created_at', [$dateRange[0], $dateRange[1]]))
             ->when(! $hasDateRange && $fecha !== '', function ($query) use ($fecha): void {
                 if ($fecha === 'hoy') {
@@ -111,7 +112,7 @@ class UserController extends Controller implements HasMiddleware
             'filters' => [
                 'query' => $request->string('query')->toString(),
                 'carrera' => $carreras,
-                'rol' => $request->string('rol')->toString() ?: 'all',
+                'rol' => $roles,
                 'fecha' => $fecha,
                 'rango_fecha' => $dateRange,
             ],
