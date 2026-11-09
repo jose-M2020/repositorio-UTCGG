@@ -1,65 +1,110 @@
+import { useState, type ReactNode } from 'react';
+import { cn } from '@/shared/lib/cn';
+import { RepositoryPublicPreview } from './RepositoryPublicPreview';
+import { RepositorySettingsSection } from './RepositorySettingsSection';
 import type { Repository } from '../types';
+
+const REPOSITORY_DETAIL_SECTIONS = {
+    PREVIEW: 'preview',
+    FILES: 'files',
+    SETTINGS: 'settings',
+} as const;
+
+type RepositoryDetailSection =
+    (typeof REPOSITORY_DETAIL_SECTIONS)[keyof typeof REPOSITORY_DETAIL_SECTIONS];
+
+const SECTION_ITEMS = [
+    {
+        id: REPOSITORY_DETAIL_SECTIONS.PREVIEW,
+        label: 'Vista previa',
+    },
+    {
+        id: REPOSITORY_DETAIL_SECTIONS.FILES,
+        label: 'Archivos',
+    },
+    {
+        id: REPOSITORY_DETAIL_SECTIONS.SETTINGS,
+        label: 'Configuración',
+    },
+] as const;
 
 type RepositoryDetailsProps = {
     repositorio: Repository;
+    previewFilesPanel: ReactNode;
+    manageFilesPanel: ReactNode;
 };
 
-export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
+export const RepositoryDetails = ({
+    repositorio,
+    previewFilesPanel,
+    manageFilesPanel,
+}: RepositoryDetailsProps) => {
+    const [section, setSection] = useState<RepositoryDetailSection>(
+        REPOSITORY_DETAIL_SECTIONS.PREVIEW,
+    );
+
     return (
-        <div className="space-y-4">
-            <div>
-                <h2 className="text-2xl font-semibold">{repositorio.nombre_rep}</h2>
-                <p className="mt-2 text-slate-600 dark:text-slate-400">
-                    {repositorio.descripcion}
-                </p>
+        <div className="space-y-6">
+            <div
+                role="tablist"
+                aria-label="Secciones del repositorio"
+                className="flex flex-wrap gap-2 border-b border-border pb-3"
+            >
+                {SECTION_ITEMS.map((item) => {
+                    const isActive = section === item.id;
+
+                    return (
+                        <button
+                            key={item.id}
+                            type="button"
+                            role="tab"
+                            id={`repo-tab-${item.id}`}
+                            aria-selected={isActive}
+                            aria-controls={`repo-panel-${item.id}`}
+                            tabIndex={isActive ? 0 : -1}
+                            onClick={() => setSection(item.id)}
+                            className={cn(
+                                'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
+                                isActive
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                            )}
+                        >
+                            {item.label}
+                        </button>
+                    );
+                })}
             </div>
 
-            <dl className="grid gap-3 sm:grid-cols-2">
-                <div>
-                    <dt className="text-sm text-slate-500">Carrera</dt>
-                    <dd className="font-medium">{repositorio.carrera}</dd>
-                </div>
-                <div>
-                    <dt className="text-sm text-slate-500">Tipo</dt>
-                    <dd className="font-medium">{repositorio.tipo_proyecto}</dd>
-                </div>
-                <div>
-                    <dt className="text-sm text-slate-500">Nivel</dt>
-                    <dd className="font-medium">{repositorio.nivel_proyecto}</dd>
-                </div>
-                <div>
-                    <dt className="text-sm text-slate-500">Empresa</dt>
-                    <dd className="font-medium">{repositorio.empresa}</dd>
-                </div>
-                <div>
-                    <dt className="text-sm text-slate-500">Generación</dt>
-                    <dd className="font-medium">{repositorio.generacion}</dd>
-                </div>
-                <div>
-                    <dt className="text-sm text-slate-500">Visibilidad</dt>
-                    <dd className="font-medium">
-                        {repositorio.publico ? 'Público' : 'Privado'}
-                    </dd>
-                </div>
-            </dl>
-
-            <div>
-                <p className="text-sm text-slate-500">Palabras clave</p>
-                <p className="font-medium">{repositorio.palabras_clave}</p>
+            <div
+                role="tabpanel"
+                id={`repo-panel-${REPOSITORY_DETAIL_SECTIONS.PREVIEW}`}
+                aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.PREVIEW}`}
+                hidden={section !== REPOSITORY_DETAIL_SECTIONS.PREVIEW}
+            >
+                <RepositoryPublicPreview
+                    repositorio={repositorio}
+                    filesPanel={previewFilesPanel}
+                />
             </div>
 
-            {repositorio.users.length > 0 ? (
-                <div>
-                    <p className="mb-2 text-sm text-slate-500">Miembros</p>
-                    <ul className="space-y-1 text-sm">
-                        {repositorio.users.map((user) => (
-                            <li key={user.id}>
-                                {user.nombre} {user.apellido} ({user.email})
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ) : null}
+            <div
+                role="tabpanel"
+                id={`repo-panel-${REPOSITORY_DETAIL_SECTIONS.FILES}`}
+                aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.FILES}`}
+                hidden={section !== REPOSITORY_DETAIL_SECTIONS.FILES}
+            >
+                {manageFilesPanel}
+            </div>
+
+            <div
+                role="tabpanel"
+                id={`repo-panel-${REPOSITORY_DETAIL_SECTIONS.SETTINGS}`}
+                aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.SETTINGS}`}
+                hidden={section !== REPOSITORY_DETAIL_SECTIONS.SETTINGS}
+            >
+                <RepositorySettingsSection repositorio={repositorio} />
+            </div>
         </div>
     );
 };

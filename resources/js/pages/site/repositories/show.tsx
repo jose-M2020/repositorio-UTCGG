@@ -18,15 +18,15 @@ const RepositoriesShowPage = ({ repositorio, related }: PageProps) => {
             <RepositoryShowContainer
                 repositorio={repositorio}
                 related={related}
+                filesPanel={
+                    <RepositoryFilesPanel
+                        slug={repositorio.slug}
+                        files={repositorio.files}
+                        imagenes={repositorio.imagenes}
+                        imagenUrls={repositorio.imagen_urls}
+                    />
+                }
             />
-            <div className="mx-auto w-full max-w-4xl px-4 pb-8">
-                <RepositoryFilesPanel
-                    slug={repositorio.slug}
-                    files={repositorio.files}
-                    imagenes={repositorio.imagenes}
-                    imagenUrls={repositorio.imagen_urls}
-                />
-            </div>
         </>
     );
 };

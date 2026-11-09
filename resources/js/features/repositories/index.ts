@@ -1,3 +1,5 @@
+export { RepositoryPublicDetails } from './components/RepositoryPublicDetails';
+export { RepositoryPublicPreview } from './components/RepositoryPublicPreview';
 export { RepositoriesIndexContainer } from './containers/RepositoriesIndexContainer';
 export { RepositoriesMineContainer } from './containers/RepositoriesMineContainer';
 export { RepositoryCreateContainer } from './containers/RepositoryCreateContainer';
