@@ -1,0 +1,107 @@
+import { useState } from "react";
+import { Filter } from "lucide-react";
+import type { Column, RowData, Table } from "@tanstack/react-table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
+import { cn } from "@/shared/lib";
+import { ListFilterDropdown } from "./filters/ListFilterDropdown";
+import { TreeFilterDropdown } from "./filters/TreeFilterDropdown";
+import { flattenFilterItems } from "./filters/treeFilterUtils";
+import { CompoundFilterDropdown } from "./filters/CompoundFilterDropdown";
+import type { CompoundColumnFilterValue } from "./types";
+type DataTableHeaderFiltersProps<TData extends RowData> = {
+  table: Table<TData>;
+  column: Column<TData, unknown>;
+};
+
+export const DataTableHeaderFilters = <TData extends RowData>({ table, column }: DataTableHeaderFiltersProps<TData>) => {
+  const [treeMenuOpen, setTreeMenuOpen] = useState(false);
+  const [treeFilterKey, setTreeFilterKey] = useState(0);
+  const filter = column.columnDef.meta?.filter;
+
+  if (!filter?.items?.length && !filter?.search && !filter?.dropdown) return null;
+
+  const columnLabel = typeof column.columnDef.header === "string" ? column.columnDef.header : column.id;
+  const isTreeFilter = filter.mode === "tree" && Boolean(filter.items?.length);
+  const isCompoundFilter = Boolean(filter.search) && !filter.dropdown;
+  const filterValue = column.getFilterValue();
+  const selectedValues = Array.isArray(filterValue) ? (filterValue as string[]) : [];
+  const setFilterValue = (values: string[] | null) => column.setFilterValue(values?.length ? values : undefined);
+  const filterContext = { table, column, selectedValues, setFilterValue };
+  const compoundValue: CompoundColumnFilterValue = typeof filterValue === "object" && filterValue !== null && "search" in filterValue && "values" in filterValue
+    ? {
+        search: typeof filterValue.search === "string" ? filterValue.search : "",
+        values: Array.isArray(filterValue.values) ? filterValue.values.filter((value): value is string => typeof value === "string") : [],
+      }
+    : { search: "", values: [] };
+  const isFilterActive = isCompoundFilter
+    ? Boolean(compoundValue.search.trim()) || compoundValue.values.length > 0
+    : typeof filter.active === "function"
+    ? filter.active(filterContext)
+    : typeof filter.active === "boolean"
+      ? filter.active
+      : selectedValues.length > 0;
+  const handleTreeMenuOpenChange = (open: boolean) => {
+    if (!open) setTreeFilterKey((key) => key + 1);
+    setTreeMenuOpen(open);
+  };
+
+  const filterContent = filter.dropdown
+    ? typeof filter.dropdown === "function"
+      // when a ReactNode is passed, it will be rendered as is
+      ? filter.dropdown(filterContext)
+      : filter.dropdown
+    : isCompoundFilter && filter.search
+      ? (
+          <CompoundFilterDropdown
+            search={filter.search}
+            items={flattenFilterItems(filter.items ?? [])}
+            label={filter.label}
+            multiple={filter.multiple}
+            value={compoundValue}
+            onChange={(value) => column.setFilterValue(value.search.trim() || value.values.length > 0 ? value : undefined)}
+          />
+        )
+    : isTreeFilter
+      ? (
+          <TreeFilterDropdown
+            key={treeFilterKey}
+            filters={filter.items ?? []}
+            appliedValues={selectedValues}
+            defaultExpanded={filter.treeDefaultExpanded ?? true}
+            filterMultiple={filter.multiple}
+            onApply={(values) => {
+              setFilterValue(values.length ? values : null);
+              handleTreeMenuOpenChange(false);
+            }}
+          />
+        )
+      : (
+          <ListFilterDropdown
+            items={flattenFilterItems(filter.items ?? [])}
+            selectedValues={selectedValues}
+            filterMultiple={filter.multiple}
+            columnTitle={columnLabel}
+            onChange={setFilterValue}
+          />
+        );
+
+  return (
+    <DropdownMenu open={isTreeFilter ? treeMenuOpen : undefined} onOpenChange={isTreeFilter ? handleTreeMenuOpenChange : undefined}>
+      <DropdownMenuTrigger>
+        <button
+          type="button"
+          className={cn(
+            "inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-transparent hover:bg-gray-200/60 focus:outline-none focus:ring-2 focus:ring-primary/40",
+            isFilterActive ? "text-primary" : "text-gray-500",
+          )}
+          aria-label={`Filtrar ${columnLabel}`}
+        >
+          <Filter className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className={cn(isTreeFilter ? "w-auto p-0" : "w-72")} onCloseAutoFocus={isTreeFilter ? (event) => event.preventDefault() : undefined}>
+        {filterContent}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
