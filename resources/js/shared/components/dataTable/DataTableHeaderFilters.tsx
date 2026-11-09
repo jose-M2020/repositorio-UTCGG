@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Filter } from "lucide-react";
-import type { Column, RowData, Table } from "@tanstack/react-table";
+import type { Column, ReactTable, RowData } from "@tanstack/react-table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/shared/components/ui/dropdown-menu";
 import { cn } from "@/shared/lib";
 import { ListFilterDropdown } from "./filters/ListFilterDropdown";
@@ -8,9 +8,11 @@ import { TreeFilterDropdown } from "./filters/TreeFilterDropdown";
 import { flattenFilterItems } from "./filters/treeFilterUtils";
 import { CompoundFilterDropdown } from "./filters/CompoundFilterDropdown";
 import type { CompoundColumnFilterValue } from "./types";
+import type { DataTableFeatures } from "./features";
+
 type DataTableHeaderFiltersProps<TData extends RowData> = {
-  table: Table<TData>;
-  column: Column<TData, unknown>;
+  table: ReactTable<DataTableFeatures, TData>;
+  column: Column<DataTableFeatures, TData, unknown>;
 };
 
 export const DataTableHeaderFilters = <TData extends RowData>({ table, column }: DataTableHeaderFiltersProps<TData>) => {
@@ -87,19 +89,21 @@ export const DataTableHeaderFilters = <TData extends RowData>({ table, column }:
 
   return (
     <DropdownMenu open={isTreeFilter ? treeMenuOpen : undefined} onOpenChange={isTreeFilter ? handleTreeMenuOpenChange : undefined}>
-      <DropdownMenuTrigger>
-        <button
-          type="button"
-          className={cn(
-            "inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-transparent hover:bg-gray-200/60 focus:outline-none focus:ring-2 focus:ring-primary/40",
-            isFilterActive ? "text-primary" : "text-gray-500",
-          )}
-          aria-label={`Filtrar ${columnLabel}`}
-        >
-          <Filter className="h-4 w-4" aria-hidden="true" />
-        </button>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            className={cn(
+              "inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-transparent hover:bg-gray-200/60 focus:outline-none focus:ring-2 focus:ring-primary/40",
+              isFilterActive ? "text-primary" : "text-gray-500",
+            )}
+            aria-label={`Filtrar ${columnLabel}`}
+          />
+        }
+      >
+        <Filter className="h-4 w-4" aria-hidden="true" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className={cn(isTreeFilter ? "w-auto p-0" : "w-72")} onCloseAutoFocus={isTreeFilter ? (event) => event.preventDefault() : undefined}>
+      <DropdownMenuContent align="end" className={cn(isTreeFilter ? "w-auto p-0" : "w-72")}>
         {filterContent}
       </DropdownMenuContent>
     </DropdownMenu>

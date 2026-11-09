@@ -1,11 +1,28 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { flexRender, type RowData, type Table } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
+import type { Column, ReactTable, RowData } from "@tanstack/react-table";
 import { TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { cn } from "@/shared/lib";
+import type { DataTableFeatures } from "./features";
 import { DataTableHeaderFilters } from "./DataTableHeaderFilters";
 
 type DataTableHeaderProps<TData extends RowData> = {
-  table: Table<TData>;
+  table: ReactTable<DataTableFeatures, TData>;
+};
+
+const getPinnedColumnStyle = <TData extends RowData>(
+  pinned: "start" | "end" | false,
+  column: Column<DataTableFeatures, TData, unknown>,
+) => {
+  if (pinned === "start") {
+    return { insetInlineStart: column.getStart("start") };
+  }
+
+  if (pinned === "end") {
+    return { insetInlineEnd: column.getAfter("end") };
+  }
+
+  return undefined;
 };
 
 export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeaderProps<TData>) => (
@@ -27,15 +44,19 @@ export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeade
                 pinned
                   ? cn(
                       "sticky z-20 bg-gray-100",
-                      pinned === "right" ? "right-0 border-l border-gray-200 shadow-[-8px_0_12px_-12px_rgba(0,0,0,0.25)]" : "left-0 border-r border-gray-200 shadow-[8px_0_12px_-12px_rgba(0,0,0,0.25)]",
+                      pinned === "end"
+                        ? "border-s border-gray-200 shadow-[-8px_0_12px_-12px_rgba(0,0,0,0.25)]"
+                        : "border-e border-gray-200 shadow-[8px_0_12px_-12px_rgba(0,0,0,0.25)]",
                     )
                   : null,
               )}
-              style={pinned === "left" ? { left: column.getStart("left") } : pinned === "right" ? { right: column.getAfter("right") } : undefined}
+              style={getPinnedColumnStyle(pinned, column)}
             >
               {header.isPlaceholder ? null : (
                 <div className="flex items-center gap-2">
-                  <span>{flexRender(column.columnDef.header, header.getContext())}</span>
+                  <span>
+                    {flexRender(column.columnDef.header, header.getContext())}
+                  </span>
 
                   {column.getCanSort() ? (
                     <button
@@ -47,7 +68,13 @@ export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeade
                       aria-label="Ordenar"
                       onClick={column.getToggleSortingHandler()}
                     >
-                      {sorted === "asc" ? <ArrowUp className="h-4 w-4" aria-hidden="true" /> : sorted === "desc" ? <ArrowDown className="h-4 w-4" aria-hidden="true" /> : <ArrowUp className="h-4 w-4 opacity-60" aria-hidden="true" />}
+                      {sorted === "asc" ? (
+                        <ArrowUp className="h-4 w-4" aria-hidden="true" />
+                      ) : sorted === "desc" ? (
+                        <ArrowDown className="h-4 w-4" aria-hidden="true" />
+                      ) : (
+                        <ArrowUp className="h-4 w-4 opacity-60" aria-hidden="true" />
+                      )}
                     </button>
                   ) : null}
 

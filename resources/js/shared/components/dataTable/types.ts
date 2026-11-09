@@ -1,4 +1,4 @@
-import type { Column, ColumnDef, Row, RowData, Table, TableOptions } from "@tanstack/react-table";
+import type { ColumnDef, ReactTable, Row, RowData, TableFeatures, TableOptions } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 
 export interface ColumnFilterItem<TValue extends string = string> {
@@ -20,22 +20,33 @@ export interface CompoundColumnFilterValue {
   values: string[];
 }
 
-export interface ColumnFilterDropdownContext<TData extends RowData> {
-  table: Table<TData>;
-  column: Column<TData, unknown>;
+export interface ColumnFilterDropdownContext {
+  table: unknown;
+  column: unknown;
   selectedValues: string[];
   setFilterValue: (values: string[] | null) => void;
 }
 
-export interface ColumnFilterConfig<TData extends RowData> {
+export interface ColumnFilterConfig<TData extends RowData = RowData> {
   items?: ColumnFilterItem[];
   mode?: ColumnFilterMode;
   multiple?: boolean;
   label?: string;
   search?: ColumnFilterSearchConfig;
-  dropdown?: ReactNode | ((context: ColumnFilterDropdownContext<TData>) => ReactNode);
-  active?: boolean | ((context: ColumnFilterDropdownContext<TData>) => boolean);
+  dropdown?: ReactNode | ((context: ColumnFilterDropdownContext) => ReactNode);
+  active?: boolean | ((context: ColumnFilterDropdownContext) => boolean);
   treeDefaultExpanded?: boolean;
+}
+
+export interface DataTableColumnMeta<TData extends RowData> {
+  headerClassName?: string;
+  cellClassName?: string;
+  filter?: ColumnFilterConfig<TData>;
+  renderGroupHeader?: (params: {
+    groupKey: string;
+    records: TData[];
+    isExpanded: boolean;
+  }) => ReactNode;
 }
 
 export interface DataTablePaginationOptions {
@@ -43,27 +54,13 @@ export interface DataTablePaginationOptions {
   hideOnSinglePage?: boolean;
 }
 
-export type DataTableProps<TData extends RowData> = {
-  columns: ColumnDef<TData, unknown>[];
+export type DataTableProps<TFeatures extends TableFeatures, TData extends RowData> = {
+  columns: ColumnDef<TFeatures, TData, any>[];
   data: TData[];
-  tableOptions?: Omit<TableOptions<TData>, "columns" | "data" | "getCoreRowModel">;
+  tableOptions?: Omit<TableOptions<TFeatures, TData>, "columns" | "data" | "features">;
   emptyText?: string;
   loading?: boolean;
   pagination?: false | DataTablePaginationOptions;
-  toolbar?: (table: Table<TData>) => ReactNode;
-  renderSubComponent?: (props: { row: Row<TData> }) => ReactNode;
+  toolbar?: (table: ReactTable<TFeatures, TData>) => ReactNode;
+  renderSubComponent?: (props: { row: Row<TFeatures, TData> }) => ReactNode;
 };
-
-declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    headerClassName?: string;
-    cellClassName?: string;
-    filter?: ColumnFilterConfig<TData>;
-    renderGroupHeader?: (params: {
-      groupKey: string;
-      records: TData[];
-      isExpanded: boolean;
-    }) => ReactNode;
-  }
-}

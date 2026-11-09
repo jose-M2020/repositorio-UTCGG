@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import type { ColumnDef, RowData } from "@tanstack/react-table";
 import { cn } from "@/shared/lib";
+import type { DataTableFeatures } from "./features";
 
 type CreateExpandColumnOptions = {
   id?: string;
@@ -12,7 +13,7 @@ export const createExpandColumn = <TData extends RowData>({
   id = "expand",
   size = 44,
   cellClassName,
-}: CreateExpandColumnOptions = {}): ColumnDef<TData, unknown> => ({
+}: CreateExpandColumnOptions = {}): ColumnDef<DataTableFeatures, TData, unknown> => ({
   id,
   size,
   enableSorting: false,

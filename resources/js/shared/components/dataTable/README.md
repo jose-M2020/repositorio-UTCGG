@@ -6,14 +6,12 @@ grouping, and paginating client-side data.
 ## When to use it
 
 Use `DataTable` when the component receives the complete dataset to process
-locally. If the API controls pagination and filters, use
-[`ServerDataTable`](../serverDataTable/README.md).
+locally.
 
 ## Basic usage
 
 ```tsx
-import type { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/dataTable";
+import { DataTable, createDataTableColumnHelper } from "@/shared/components/dataTable";
 
 type User = {
   id: string;
@@ -21,17 +19,17 @@ type User = {
   region: string;
 };
 
-const columns: ColumnDef<User, unknown>[] = [
-  {
-    accessorKey: "name",
+const columnHelper = createDataTableColumnHelper<User>();
+
+const columns = columnHelper.columns([
+  columnHelper.accessor("name", {
     header: "Name",
     enableSorting: true,
-  },
-  {
-    accessorKey: "region",
+  }),
+  columnHelper.accessor("region", {
     header: "Region",
-  },
-];
+  }),
+]);
 
 type UsersTableProps = {
   users: User[];
@@ -60,7 +58,7 @@ export const UsersTable = ({ users, loading = false }: UsersTableProps) => (
 | `pagination` | Configures page sizes and visibility, or accepts `false` to hide it. |
 | `toolbar` | Render prop that receives the table instance. |
 | `renderSubComponent` | Optional content rendered below an expanded row. |
-| `tableOptions` | Additional TanStack Table options, except `columns`, `data`, and `getCoreRowModel`. |
+| `tableOptions` | Additional TanStack Table v9 options, except `columns`, `data`, and `features`. |
 
 Pagination uses page sizes of `10`, `20`, and `50` by default and is hidden
 when there is only one page.
@@ -70,19 +68,23 @@ when there is only one page.
 Use row expanding to render custom detail content below a row.
 
 ```tsx
-import { DataTable, createExpandColumn } from "@/components/dataTable";
+import {
+  DataTable,
+  createDataTableColumnHelper,
+  createExpandColumn,
+} from "@/shared/components/dataTable";
 
-const columns: ColumnDef<User, unknown>[] = [
+const columnHelper = createDataTableColumnHelper<User>();
+
+const columns = columnHelper.columns([
   createExpandColumn<User>(),
-  {
-    accessorKey: "name",
+  columnHelper.accessor("name", {
     header: "Name",
-  },
-  {
-    accessorKey: "region",
+  }),
+  columnHelper.accessor("region", {
     header: "Region",
-  },
-];
+  }),
+]);
 
 <DataTable<User>
   columns={columns}
@@ -114,9 +116,8 @@ stable because it identifies the value in `columnFilters`.
 ### List
 
 ```tsx
-const regionColumn: ColumnDef<User, unknown> = {
+const regionColumn = columnHelper.accessor("region", {
   id: "region",
-  accessorKey: "region",
   header: "Region",
   enableColumnFilter: true,
   filterFn: (row, _columnId, values: string[]) =>
@@ -130,7 +131,7 @@ const regionColumn: ColumnDef<User, unknown> = {
       multiple: true,
     },
   },
-};
+});
 ```
 
 ### Tree
@@ -208,7 +209,7 @@ controlled through `tableOptions.state.globalFilter`.
 import {
   DataTable,
   DataTableGlobalSearch,
-} from "@/components/dataTable";
+} from "@/shared/components/dataTable";
 
 <DataTable
   columns={columns}
@@ -232,3 +233,9 @@ import {
 
 Configure all other capabilities through the TanStack Table API in `columns`
 and `tableOptions`.
+
+## TanStack Table v9 notes
+
+- `DataTable` uses `useTable` with an explicit `features` object.
+- Exported `DataTableFeatures` is the feature type for advanced integrations.
+- Use `createDataTableColumnHelper()` to keep column definitions fully typed.

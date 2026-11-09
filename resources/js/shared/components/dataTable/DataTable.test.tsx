@@ -1,8 +1,8 @@
-import type { ColumnDef, PaginationState } from "@tanstack/react-table";
+import type { PaginationState } from "@tanstack/react-table";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { DataTable } from "./index";
+import { createDataTableColumnHelper, DataTable } from "./index";
 import { createExpandColumn } from "./createExpandColumn";
 
 type Row = {
@@ -17,11 +17,12 @@ const sampleRows: Row[] = [
   { id: "3", name: "Carmen", region: "norte" },
 ];
 
-const nameColumn = (): ColumnDef<Row, unknown> => ({ id: "name", accessorKey: "name", header: "Nombre" });
+const columnHelper = createDataTableColumnHelper<Row>();
 
-const regionFilterColumn = (): ColumnDef<Row, unknown> => ({
+const nameColumn = () => columnHelper.accessor("name", { id: "name", header: "Nombre" });
+
+const regionFilterColumn = () => columnHelper.accessor("region", {
   id: "region",
-  accessorKey: "region",
   header: "Región",
   enableColumnFilter: true,
   filterFn: (row, _columnId, filterValue: string[]) => filterValue.includes(row.original.region),
@@ -74,7 +75,7 @@ describe("DataTable", () => {
       // Given
       const user = userEvent.setup();
       const rows = Array.from({ length: 15 }, (_, index) => ({ id: String(index + 1), name: `Usuario ${index + 1}`, region: "norte" }));
-      render(<DataTable<Row> columns={[nameColumn()]} data={rows} pagination={{ pageSizeOptions: [10, 20], hideOnSinglePage: false }} tableOptions={{ initialState: { pagination: { pageSize: 10 } } }} />);
+      render(<DataTable<Row> columns={[nameColumn()]} data={rows} pagination={{ pageSizeOptions: [10, 20], hideOnSinglePage: false }} tableOptions={{ initialState: { pagination: { pageIndex: 0, pageSize: 10 } } }} />);
 
       // When
       await user.click(screen.getByRole("button", { name: /página siguiente/i }));
@@ -89,7 +90,7 @@ describe("DataTable", () => {
       // Given
       const user = userEvent.setup();
       render(<DataTable<Row> columns={[{ ...nameColumn(), enableSorting: true }]} data={[{ id: "1", name: "Zeta", region: "x" }, { id: "2", name: "Alpha", region: "x" }]} pagination={false} />);
-      const bodyRows = () => screen.getAllByRole("row").filter((row) => row.querySelector("td"));
+      const bodyRows = () => screen.getAllByRole("row").filter((row: HTMLElement) => row.querySelector("td"));
 
       // When
       await user.click(screen.getByRole("button", { name: /ordenar/i }));
@@ -215,7 +216,7 @@ describe("DataTable", () => {
           pagination={false}
           renderSubComponent={({ row }) => <div>Detalle controlado de {row.original.name}</div>}
           tableOptions={{
-            getRowId: (row) => row.id,
+            getRowId: (row: Row) => row.id,
             getRowCanExpand: () => true,
             state: { expanded: { "1": true } },
             onExpandedChange,

@@ -1,10 +1,11 @@
 import { Search, X } from "lucide-react";
-import type { RowData, Table } from "@tanstack/react-table";
+import type { ReactTable, RowData } from "@tanstack/react-table";
 import { Input } from "@/shared/components/ui/input";
 import { cn } from "@/shared/lib";
+import type { DataTableFeatures } from "./features";
 
 type DataTableGlobalSearchProps<TData extends RowData> = {
-  table: Table<TData>;
+  table: ReactTable<DataTableFeatures, TData>;
   placeholder?: string;
   ariaLabel?: string;
   className?: string;
@@ -16,7 +17,7 @@ export const DataTableGlobalSearch = <TData extends RowData>({
   ariaLabel = "Buscar en la tabla",
   className,
 }: DataTableGlobalSearchProps<TData>) => {
-  const value = String(table.getState().globalFilter ?? "");
+  const value = String(table.state.globalFilter ?? "");
 
   return (
     <div className={cn("relative", className)}>

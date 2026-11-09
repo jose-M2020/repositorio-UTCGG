@@ -1,17 +1,18 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { RowData, Table } from "@tanstack/react-table";
+import type { ReactTable, RowData } from "@tanstack/react-table";
 import { Button } from "@/shared/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib";
+import type { DataTableFeatures } from "./features";
 
 type DataTablePaginationProps<TData extends RowData> = {
-  table: Table<TData>;
+  table: ReactTable<DataTableFeatures, TData>;
   pageSizeOptions: readonly number[];
   hideOnSinglePage?: boolean;
 };
 
 export const DataTablePagination = <TData extends RowData>({ table, pageSizeOptions, hideOnSinglePage }: DataTablePaginationProps<TData>) => {
-  const { pageIndex, pageSize } = table.getState().pagination;
+  const { pageIndex, pageSize } = table.state.pagination;
   const pageCount = table.getPageCount();
   const totalPages = pageCount < 0 ? null : Math.max(1, pageCount);
   const total = table.options.manualPagination ? Math.max(0, table.options.rowCount ?? 0) : table.getFilteredRowModel().rows.length;

@@ -1,5 +1,5 @@
 import { Search, X } from "lucide-react";
-import { DropdownMenuLabel, DropdownMenuSeparator } from "@/shared/components/ui/dropdown-menu";
+import { DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator } from "@/shared/components/ui/dropdown-menu";
 import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import type { ColumnFilterItem, ColumnFilterSearchConfig, CompoundColumnFilterValue } from "../types";
@@ -47,7 +47,11 @@ export const CompoundFilterDropdown = ({ search, items = [], label, multiple, va
       {items.length > 0 ? (
         <>
           <DropdownMenuSeparator />
-          {label ? <DropdownMenuLabel>{label}</DropdownMenuLabel> : null}
+          {label ? (
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{label}</DropdownMenuLabel>
+            </DropdownMenuGroup>
+          ) : null}
           <ListFilterDropdown
             items={items}
             selectedValues={value.values}
