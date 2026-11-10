@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import { show } from '@/actions/App/Http/Controllers/RepositorioController';
-import { RepositoryFilesPanel } from '../../shared/components/RepositoryFilesPanel';
 import type { Repository, RepositoryListItem } from '../../shared/types';
 import { RepositoryPublicDetails } from './RepositoryPublicDetails';
 
@@ -13,20 +12,11 @@ export const RepositoryPublicView = ({
     repositorio,
     related = [],
 }: RepositoryPublicViewProps) => {
-    const publicFiles = repositorio.files.filter((file) => file.is_public);
-
     return (
         <div className="space-y-8">
             <section className="rounded-xl border border-border bg-card p-6">
                 <RepositoryPublicDetails repositorio={repositorio} />
             </section>
-
-            <RepositoryFilesPanel
-                slug={repositorio.slug}
-                files={publicFiles}
-                imagenes={repositorio.imagenes}
-                imagenUrls={repositorio.imagen_urls}
-            />
 
             {related.length > 0 ? (
                 <section className="space-y-3">

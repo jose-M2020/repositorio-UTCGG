@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { RepositoryPublicView } from '../../public/components/RepositoryPublicView';
-import { RepositoryFilesPanel } from '../../shared/components/RepositoryFilesPanel';
 import type { Repository } from '../../shared/types';
+import { RepositoryFilesPanel } from './RepositoryFilesPanel';
 import { RepositorySettingsSection } from './RepositorySettingsSection';
 
 const REPOSITORY_DETAIL_SECTIONS = {
@@ -91,7 +91,6 @@ export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
                     files={repositorio.files}
                     imagenes={repositorio.imagenes}
                     imagenUrls={repositorio.imagen_urls}
-                    canManage
                 />
             </div>
 

@@ -7,14 +7,13 @@ import {
     update,
 } from '@/actions/App/Http/Controllers/FileController';
 import { Button } from '@/shared/components/ui';
-import type { RepositoryFileItem } from '../types';
+import type { RepositoryFileItem } from '../../shared/types';
 
 type RepositoryFilesPanelProps = {
     slug: string;
     files: RepositoryFileItem[];
     imagenes: string[];
     imagenUrls?: string[];
-    canManage?: boolean;
 };
 
 export const RepositoryFilesPanel = ({
@@ -22,7 +21,6 @@ export const RepositoryFilesPanel = ({
     files,
     imagenes,
     imagenUrls = [],
-    canManage = false,
 }: RepositoryFilesPanelProps) => {
     const pdfFiles = files.filter((file) => file.file_type === 'pdf' && file.url);
 
@@ -30,11 +28,9 @@ export const RepositoryFilesPanel = ({
         <section className="space-y-6 rounded-xl border border-border bg-card p-6">
             <header className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-primary">Archivos</h2>
-                {canManage ? (
-                    <Link href={create.url(slug)}>
-                        <Button type="button">Subir archivos</Button>
-                    </Link>
-                ) : null}
+                <Link href={create.url(slug)}>
+                    <Button type="button">Subir archivos</Button>
+                </Link>
             </header>
 
             {pdfFiles.length > 0 ? (
@@ -84,40 +80,29 @@ export const RepositoryFilesPanel = ({
                                         Descargar
                                     </Button>
                                 </a>
-                                {canManage ? (
-                                    <>
-                                        <Form
-                                            {...update.form([slug, file.id])}
+                                <Form {...update.form([slug, file.id])}>
+                                    <input
+                                        type="hidden"
+                                        name="is_public"
+                                        value={file.is_public ? 0 : 1}
+                                    />
+                                    <Button type="submit" variant="ghost">
+                                        {file.is_public
+                                            ? 'Hacer privado'
+                                            : 'Hacer público'}
+                                    </Button>
+                                </Form>
+                                <Form {...destroy.form([slug, file.id])}>
+                                    {({ processing }) => (
+                                        <Button
+                                            type="submit"
+                                            variant="destructive"
+                                            disabled={processing}
                                         >
-                                            <input
-                                                type="hidden"
-                                                name="is_public"
-                                                value={file.is_public ? 0 : 1}
-                                            />
-                                            <Button
-                                                type="submit"
-                                                variant="ghost"
-                                            >
-                                                {file.is_public
-                                                    ? 'Hacer privado'
-                                                    : 'Hacer público'}
-                                            </Button>
-                                        </Form>
-                                        <Form
-                                            {...destroy.form([slug, file.id])}
-                                        >
-                                            {({ processing }) => (
-                                                <Button
-                                                    type="submit"
-                                                    variant="destructive"
-                                                    disabled={processing}
-                                                >
-                                                    Eliminar
-                                                </Button>
-                                            )}
-                                        </Form>
-                                    </>
-                                ) : null}
+                                            Eliminar
+                                        </Button>
+                                    )}
+                                </Form>
                             </div>
                         </li>
                     ))}
@@ -143,27 +128,22 @@ export const RepositoryFilesPanel = ({
                                     alt=""
                                     className="h-48 w-full object-cover"
                                 />
-                                {canManage ? (
-                                    <div className="flex justify-end p-2">
-                                        <Form
-                                            {...destroyImage.form([
-                                                slug,
-                                                index,
-                                            ])}
-                                        >
-                                            {({ processing }) => (
-                                                <Button
-                                                    type="submit"
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    disabled={processing}
-                                                >
-                                                    Quitar
-                                                </Button>
-                                            )}
-                                        </Form>
-                                    </div>
-                                ) : null}
+                                <div className="flex justify-end p-2">
+                                    <Form
+                                        {...destroyImage.form([slug, index])}
+                                    >
+                                        {({ processing }) => (
+                                            <Button
+                                                type="submit"
+                                                variant="destructive"
+                                                size="sm"
+                                                disabled={processing}
+                                            >
+                                                Quitar
+                                            </Button>
+                                        )}
+                                    </Form>
+                                </div>
                             </li>
                         ))}
                     </ul>
