@@ -21,7 +21,7 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
         $response->assertInertia(fn (Assert $page) => $page
-            ->component('home')
+            ->component('public/home')
             ->has('latest', 2)
             ->has('featured', 2)
             ->where('latest', fn ($latest) => collect($latest)->pluck('nombre_rep')->doesntContain('Privado'))
@@ -33,6 +33,6 @@ class HomePageTest extends TestCase
         $response = $this->get(route('about'));
 
         $response->assertOk();
-        $response->assertInertia(fn (Assert $page) => $page->component('about'));
+        $response->assertInertia(fn (Assert $page) => $page->component('public/about'));
     }
 }

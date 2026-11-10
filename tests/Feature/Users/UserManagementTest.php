@@ -223,7 +223,7 @@ class UserManagementTest extends TestCase
             ]))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('users/index')
+                ->component('panel/users/index')
                 ->where('filters.rol', [UserRoles::ALUMNO, UserRoles::DOCENTE])
                 ->has('users.data', 2)
                 ->where('users.data.0.nombre', 'DocenteFiltro')
@@ -262,7 +262,7 @@ class UserManagementTest extends TestCase
             ->get(route('usuarios.index'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('users/index')
+                ->component('panel/users/index')
                 ->has('users.data', 2)
                 ->where('users.data.0.carrera', 'TIC')
                 ->where('users.data.1.carrera', 'TIC')

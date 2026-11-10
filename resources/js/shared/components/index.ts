@@ -1,11 +1,11 @@
-export { Button, buttonVariants, Checkbox, Input } from './ui';export { AppNavLink } from './AppNavLink';
+export { Button, buttonVariants, Checkbox, Input } from './ui';
+export { AppNavLink } from './AppNavLink';
 export { AppBrand } from './AppBrand';
 export { AppSidebar } from './sidebar/AppSidebar';
 export { NavMain } from './sidebar/nav-main';
 export { NavUser } from './sidebar/nav-user';
 export { FlashToaster } from './FlashToaster';
+export { PublicFooter } from './PublicFooter';
 export { PublicHeader } from './PublicHeader';
-export { SiteFooter } from './SiteFooter';
-export { SiteHeader } from './SiteHeader';
 export { SurfaceNavLink } from './SurfaceNavLink';
 export { UserSearchPicker, type SearchableUser } from './UserSearchPicker';

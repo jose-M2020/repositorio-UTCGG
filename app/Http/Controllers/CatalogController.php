@@ -38,7 +38,7 @@ class CatalogController extends Controller implements HasMiddleware
             ->withQueryString()
             ->through(fn (Catalog $catalog): array => $this->serializeCatalog($catalog));
 
-        return Inertia::render('catalogs/index', [
+        return Inertia::render('panel/catalogs/index', [
             'catalogs' => $catalogs,
             'filters' => [
                 'type' => $type ?: 'all',
@@ -49,7 +49,7 @@ class CatalogController extends Controller implements HasMiddleware
 
     public function create(): Response
     {
-        return Inertia::render('catalogs/create', [
+        return Inertia::render('panel/catalogs/create', [
             'catalogTypes' => $this->catalogTypes(),
         ]);
     }
@@ -65,7 +65,7 @@ class CatalogController extends Controller implements HasMiddleware
 
     public function show(Catalog $catalog): Response
     {
-        return Inertia::render('catalogs/show', [
+        return Inertia::render('panel/catalogs/show', [
             'catalog' => $this->serializeCatalog($catalog),
             'catalogTypes' => $this->catalogTypes(),
         ]);
@@ -73,7 +73,7 @@ class CatalogController extends Controller implements HasMiddleware
 
     public function edit(Catalog $catalog): Response
     {
-        return Inertia::render('catalogs/edit', [
+        return Inertia::render('panel/catalogs/edit', [
             'catalog' => $this->serializeCatalog($catalog),
             'catalogTypes' => $this->catalogTypes(),
         ]);

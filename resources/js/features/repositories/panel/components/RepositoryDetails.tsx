@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { cn } from '@/shared/lib/cn';
-import { RepositoryPublicPreview } from './RepositoryPublicPreview';
+import { RepositoryPublicView } from '../../public/components/RepositoryPublicView';
+import { RepositoryFilesPanel } from '../../shared/components/RepositoryFilesPanel';
+import type { Repository } from '../../shared/types';
 import { RepositorySettingsSection } from './RepositorySettingsSection';
-import type { Repository } from '../types';
 
 const REPOSITORY_DETAIL_SECTIONS = {
     PREVIEW: 'preview',
@@ -30,15 +31,9 @@ const SECTION_ITEMS = [
 
 type RepositoryDetailsProps = {
     repositorio: Repository;
-    previewFilesPanel: ReactNode;
-    manageFilesPanel: ReactNode;
 };
 
-export const RepositoryDetails = ({
-    repositorio,
-    previewFilesPanel,
-    manageFilesPanel,
-}: RepositoryDetailsProps) => {
+export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
     const [section, setSection] = useState<RepositoryDetailSection>(
         REPOSITORY_DETAIL_SECTIONS.PREVIEW,
     );
@@ -82,10 +77,7 @@ export const RepositoryDetails = ({
                 aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.PREVIEW}`}
                 hidden={section !== REPOSITORY_DETAIL_SECTIONS.PREVIEW}
             >
-                <RepositoryPublicPreview
-                    repositorio={repositorio}
-                    filesPanel={previewFilesPanel}
-                />
+                <RepositoryPublicView repositorio={repositorio} />
             </div>
 
             <div
@@ -94,7 +86,13 @@ export const RepositoryDetails = ({
                 aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.FILES}`}
                 hidden={section !== REPOSITORY_DETAIL_SECTIONS.FILES}
             >
-                {manageFilesPanel}
+                <RepositoryFilesPanel
+                    slug={repositorio.slug}
+                    files={repositorio.files}
+                    imagenes={repositorio.imagenes}
+                    imagenUrls={repositorio.imagen_urls}
+                    canManage
+                />
             </div>
 
             <div

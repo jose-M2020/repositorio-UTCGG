@@ -1,14 +1,18 @@
-export { RepositoryPublicDetails } from './components/RepositoryPublicDetails';
-export { RepositoryPublicPreview } from './components/RepositoryPublicPreview';
-export { RepositoriesIndexContainer } from './containers/RepositoriesIndexContainer';
-export { RepositoriesMineContainer } from './containers/RepositoriesMineContainer';
-export { RepositoryCreateContainer } from './containers/RepositoryCreateContainer';
-export { RepositoryEditContainer } from './containers/RepositoryEditContainer';
-export { RepositoryManageContainer } from './containers/RepositoryManageContainer';
-export { RepositoryShowContainer } from './containers/RepositoryShowContainer';
+export {
+    RepositoryPublicDetails,
+    RepositoryPublicView,
+    RepositoriesIndexContainer,
+    RepositoryShowContainer,
+} from './public';
+export {
+    RepositoriesMineContainer,
+    RepositoryCreateContainer,
+    RepositoryEditContainer,
+    RepositoryManageContainer,
+} from './panel';
 export type {
     PaginatedRepositories,
     Repository,
     RepositoryFilters,
     RepositoryListItem,
-} from './types';
+} from './shared';

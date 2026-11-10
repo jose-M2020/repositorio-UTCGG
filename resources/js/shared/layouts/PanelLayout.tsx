@@ -9,11 +9,11 @@ import {
 } from '@/shared/components/ui/sidebar';
 import { TooltipProvider } from '@/shared/components/ui/tooltip';
 
-type AuthenticatedLayoutProps = {
+type PanelLayoutProps = {
     children: ReactNode;
 };
 
-export const AuthenticatedLayout = ({ children }: AuthenticatedLayoutProps) => {
+export const PanelLayout = ({ children }: PanelLayoutProps) => {
     const { sidebarOpen } = usePage().props;
 
     return (

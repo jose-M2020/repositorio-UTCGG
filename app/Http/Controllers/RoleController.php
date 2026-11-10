@@ -50,14 +50,14 @@ class RoleController extends Controller implements HasMiddleware
                     ->all(),
             ]);
 
-        return Inertia::render('roles/index', [
+        return Inertia::render('panel/roles/index', [
             'roles' => $roles,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('roles/create', [
+        return Inertia::render('panel/roles/create', [
             'permissionGroups' => $this->permissionGroups(),
         ]);
     }
@@ -83,7 +83,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         $role->load('permissions:id,name,description');
 
-        return Inertia::render('roles/show', [
+        return Inertia::render('panel/roles/show', [
             'role' => [
                 'id' => $role->id,
                 'name' => $role->name,
@@ -103,7 +103,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         $role->load('permissions:id,name');
 
-        return Inertia::render('roles/edit', [
+        return Inertia::render('panel/roles/edit', [
             'role' => [
                 'id' => $role->id,
                 'name' => $role->name,

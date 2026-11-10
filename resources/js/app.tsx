@@ -3,7 +3,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { ComponentType, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { FlashToaster } from '@/shared/components';
-import { AuthenticatedLayout, PublicLayout } from '@/shared/layouts';
+import { PanelLayout, PublicLayout } from '@/shared/layouts';
 
 type InertiaReactComponent = ComponentType<any> & {
     layout?:
@@ -17,24 +17,15 @@ type PageLayout = ComponentType<{ children: ReactNode }>;
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-const PAGE_LAYOUTS: Record<string, PageLayout> = {
-    home: PublicLayout,
-    about: PublicLayout,
-    'repositories/index': PublicLayout,
-    'repositories/show': PublicLayout,
-};
-
-const SECTION_LAYOUTS: Record<string, PageLayout> = {
-    repositories: AuthenticatedLayout,
-    files: AuthenticatedLayout,
-    users: AuthenticatedLayout,
-    roles: AuthenticatedLayout,
+const SURFACE_LAYOUTS: Record<string, PageLayout> = {
+    public: PublicLayout,
+    panel: PanelLayout,
 };
 
 const resolveLayout = (name: string): PageLayout | null => {
-    const section = name.split('/')[0] ?? '';
+    const surface = name.split('/')[0] ?? '';
 
-    return PAGE_LAYOUTS[name] ?? SECTION_LAYOUTS[section] ?? null;
+    return SURFACE_LAYOUTS[surface] ?? null;
 };
 
 void createInertiaApp({

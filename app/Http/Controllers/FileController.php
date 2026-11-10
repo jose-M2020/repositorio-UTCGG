@@ -33,7 +33,7 @@ class FileController extends Controller implements HasMiddleware
 
     public function create(Repositorio $repositorio): Response
     {
-        return Inertia::render('files/create', [
+        return Inertia::render('panel/files/create', [
             'repositorio' => [
                 'id' => $repositorio->id,
                 'nombre_rep' => $repositorio->nombre_rep,

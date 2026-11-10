@@ -1,20 +1,17 @@
 import { Link } from '@inertiajs/react';
-import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button } from '@/shared/components/ui';
-import { RepositoryPublicPreview } from '../components/RepositoryPublicPreview';
-import type { Repository, RepositoryListItem } from '../types';
+import type { Repository, RepositoryListItem } from '../../shared/types';
+import { RepositoryPublicView } from '../components/RepositoryPublicView';
 
 type RepositoryShowContainerProps = {
     repositorio: Repository;
     related: RepositoryListItem[];
-    filesPanel?: ReactNode;
 };
 
 export const RepositoryShowContainer = ({
     repositorio,
     related,
-    filesPanel,
 }: RepositoryShowContainerProps) => {
     return (
         <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8">
@@ -26,10 +23,9 @@ export const RepositoryShowContainer = ({
                 </Link>
             </div>
 
-            <RepositoryPublicPreview
+            <RepositoryPublicView
                 repositorio={repositorio}
                 related={related}
-                filesPanel={filesPanel}
             />
         </main>
     );

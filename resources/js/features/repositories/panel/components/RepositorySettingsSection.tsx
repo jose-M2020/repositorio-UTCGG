@@ -14,7 +14,7 @@ import {
     type SearchableUser,
 } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
-import type { Repository } from '../types';
+import type { Repository } from '../../shared/types';
 
 type RepositorySettingsSectionProps = {
     repositorio: Repository;

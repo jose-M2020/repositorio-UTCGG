@@ -1,2 +1,2 @@
-export { AuthenticatedLayout } from './AuthenticatedLayout';
+export { PanelLayout } from './PanelLayout';
 export { PublicLayout } from './PublicLayout';

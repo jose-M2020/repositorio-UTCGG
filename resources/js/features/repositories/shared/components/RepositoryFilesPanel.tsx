@@ -7,11 +7,11 @@ import {
     update,
 } from '@/actions/App/Http/Controllers/FileController';
 import { Button } from '@/shared/components/ui';
-import type { RepositoryFile } from '../types';
+import type { RepositoryFileItem } from '../types';
 
 type RepositoryFilesPanelProps = {
     slug: string;
-    files: RepositoryFile[];
+    files: RepositoryFileItem[];
     imagenes: string[];
     imagenUrls?: string[];
     canManage?: boolean;

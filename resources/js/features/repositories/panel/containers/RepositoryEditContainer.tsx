@@ -5,8 +5,8 @@ import {
 } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import { RepositoryFormFields } from '../components/RepositoryFormFields';
-import type { Repository } from '../types';
+import { RepositoryFormFields } from '../../shared/components/RepositoryFormFields';
+import type { Repository } from '../../shared/types';
 
 type RepositoryEditContainerProps = {
     repositorio: Repository;

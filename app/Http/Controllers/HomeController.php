@@ -45,7 +45,7 @@ class HomeController extends Controller
             ->values()
             ->all();
 
-        return Inertia::render('home', [
+        return Inertia::render('public/home', [
             'latest' => $latest,
             'featured' => $featured,
             'homeCareers' => Catalog::homeCareers(),
@@ -54,6 +54,6 @@ class HomeController extends Controller
 
     public function about(): Response
     {
-        return Inertia::render('about');
+        return Inertia::render('public/about');
     }
 }

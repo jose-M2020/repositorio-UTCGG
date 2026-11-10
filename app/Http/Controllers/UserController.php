@@ -107,7 +107,7 @@ class UserController extends Controller implements HasMiddleware
                 ])->values()->all(),
             ]);
 
-        return Inertia::render('users/index', [
+        return Inertia::render('panel/users/index', [
             'users' => $users,
             'filters' => [
                 'query' => $request->string('query')->toString(),
@@ -126,7 +126,7 @@ class UserController extends Controller implements HasMiddleware
     {
         $authUser = auth()->user();
 
-        return Inertia::render('users/create', [
+        return Inertia::render('panel/users/create', [
             'roles' => UserRoles::assignableOptionsFor($authUser),
             'careers' => CatalogData::careers(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
@@ -156,7 +156,7 @@ class UserController extends Controller implements HasMiddleware
             ->orderByDesc('repositorios.created_at')
             ->get(['repositorios.id', 'nombre_rep', 'slug', 'publico']);
 
-        return Inertia::render('users/show', [
+        return Inertia::render('panel/users/show', [
             'user' => [
                 'id' => $user->id,
                 'nombre' => $user->nombre,
@@ -204,7 +204,7 @@ class UserController extends Controller implements HasMiddleware
         $authUser = auth()->user();
         $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
-        return Inertia::render('users/edit', [
+        return Inertia::render('panel/users/edit', [
             'user' => [
                 'id' => $user->id,
                 'nombre' => $user->nombre,

@@ -1,4 +1,4 @@
-import type { Repository } from '../types';
+import type { Repository } from '../../shared/types';
 
 type RepositoryPublicDetailsProps = {
     repositorio: Repository;

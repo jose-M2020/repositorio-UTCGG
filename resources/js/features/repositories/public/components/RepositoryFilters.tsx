@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import type { RepositoryFilters as RepositoryFiltersType } from '../types';
+import type { RepositoryFilters as RepositoryFiltersType } from '../../shared/types';
 
 type RepositoryFiltersProps = {
     filters: RepositoryFiltersType;

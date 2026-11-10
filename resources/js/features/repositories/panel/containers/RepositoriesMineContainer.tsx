@@ -4,8 +4,8 @@ import {
     showByUser,
 } from '@/actions/App/Http/Controllers/RepositorioController';
 import { Button } from '@/shared/components/ui';
-import { RepositoriesList } from '../components/RepositoriesList';
-import type { PaginatedRepositories } from '../types';
+import { RepositoriesList } from '../../shared/components/RepositoriesList';
+import type { PaginatedRepositories } from '../../shared/types';
 
 type RepositoriesMineContainerProps = {
     repositorios: PaginatedRepositories;

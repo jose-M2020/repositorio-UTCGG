@@ -4,7 +4,6 @@ export {
     buttonVariants,
     Input,
     PublicHeader,
-    SiteHeader,
     AppSidebar,
 } from './components';
-export { AuthenticatedLayout, PublicLayout } from './layouts';
+export { PanelLayout, PublicLayout } from './layouts';

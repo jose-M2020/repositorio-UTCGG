@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { about, index as home } from '@/actions/App/Http/Controllers/HomeController';
 
-export const SiteFooter = () => {
+export const PublicFooter = () => {
     const year = new Date().getFullYear();
 
     return (

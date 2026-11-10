@@ -109,7 +109,7 @@ class RepositorioController extends Controller implements HasMiddleware
                 ];
             });
 
-        return Inertia::render('repositories/index', [
+        return Inertia::render('public/repositories/index', [
             'repositorios' => $repositorios,
             'filters' => [
                 'query' => $search,
@@ -129,7 +129,7 @@ class RepositorioController extends Controller implements HasMiddleware
 
     public function create(): Response
     {
-        return Inertia::render('repositories/create', [
+        return Inertia::render('panel/repositories/create', [
             'catalog' => [
                 'careers' => CatalogData::careers(),
                 'types' => CatalogData::projectTypes(),
@@ -201,7 +201,7 @@ class RepositorioController extends Controller implements HasMiddleware
             ->values()
             ->all();
 
-        return Inertia::render('repositories/show', [
+        return Inertia::render('public/repositories/show', [
             'repositorio' => $this->serializeRepository($repositorio),
             'related' => $related,
         ]);
@@ -215,7 +215,7 @@ class RepositorioController extends Controller implements HasMiddleware
             ? Repositorio::query()->latest()->paginate(15)
             : $user->repositories()->latest()->paginate(15);
 
-        return Inertia::render('repositories/mine', [
+        return Inertia::render('panel/repositories/mine', [
             'repositorios' => $repositorios,
         ]);
     }
@@ -224,14 +224,14 @@ class RepositorioController extends Controller implements HasMiddleware
     {
         $repositorio->load(['users:id,nombre,apellido,email', 'files']);
 
-        return Inertia::render('repositories/manage', [
+        return Inertia::render('panel/repositories/manage', [
             'repositorio' => $this->serializeRepository($repositorio),
         ]);
     }
 
     public function edit(Repositorio $repositorio): Response
     {
-        return Inertia::render('repositories/edit', [
+        return Inertia::render('panel/repositories/edit', [
             'repositorio' => [
                 ...$this->serializeRepository($repositorio),
                 'visibilidad' => $repositorio->publico ? 'publico' : 'privado',

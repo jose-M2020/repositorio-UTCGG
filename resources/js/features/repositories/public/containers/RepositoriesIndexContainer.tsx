@@ -1,10 +1,10 @@
 import type { RepositoryCatalog } from '@/shared/data/catalog';
-import { RepositoriesList } from '../components/RepositoriesList';
-import { RepositoryFilters } from '../components/RepositoryFilters';
+import { RepositoriesList } from '../../shared/components/RepositoriesList';
 import type {
     PaginatedRepositories,
     RepositoryFilters as RepositoryFiltersType,
-} from '../types';
+} from '../../shared/types';
+import { RepositoryFilters } from '../components/RepositoryFilters';
 
 type RepositoriesIndexContainerProps = {
     repositorios: PaginatedRepositories;

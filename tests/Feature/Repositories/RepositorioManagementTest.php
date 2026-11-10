@@ -32,7 +32,7 @@ class RepositorioManagementTest extends TestCase
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
-            ->component('repositories/index')
+            ->component('public/repositories/index')
             ->has('repositorios.data', 1)
             ->where('repositorios.data.0.nombre_rep', 'Publico'));
     }
@@ -78,7 +78,7 @@ class RepositorioManagementTest extends TestCase
             ->get(route('repositorios.create'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->component('repositories/create')
+                ->component('panel/repositories/create')
                 ->has('catalog'));
     }
 

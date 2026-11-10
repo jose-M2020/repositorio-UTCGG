@@ -1,18 +1,13 @@
 import { usePage } from '@inertiajs/react';
-import type { ReactNode } from 'react';
+import type { Repository } from '../../shared/types';
 import { RepositoryDetails } from '../components/RepositoryDetails';
-import type { Repository } from '../types';
 
 type RepositoryManageContainerProps = {
     repositorio: Repository;
-    previewFilesPanel: ReactNode;
-    manageFilesPanel: ReactNode;
 };
 
 export const RepositoryManageContainer = ({
     repositorio,
-    previewFilesPanel,
-    manageFilesPanel,
 }: RepositoryManageContainerProps) => {
     const { flash } = usePage().props;
 
@@ -33,11 +28,7 @@ export const RepositoryManageContainer = ({
                 </p>
             ) : null}
 
-            <RepositoryDetails
-                repositorio={repositorio}
-                previewFilesPanel={previewFilesPanel}
-                manageFilesPanel={manageFilesPanel}
-            />
+            <RepositoryDetails repositorio={repositorio} />
         </main>
     );
 };
