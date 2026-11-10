@@ -45,6 +45,17 @@ export const UsersIndexContainer = ({
           {flash.status}
         </p>
       ) : null}
+      
+      {!careerPolicy.can_select_career && careerPolicy.locked_career_label && (
+        <div className="mb-4 flex flex-wrap items-center justify-end gap-3">
+          <p className="text-sm text-muted-foreground">
+            Carrera:{" "}
+            <span className="font-medium text-foreground">
+              {careerPolicy.locked_career_label}
+            </span>
+          </p>
+        </div>
+      )}
 
       <UsersTable
         users={users}

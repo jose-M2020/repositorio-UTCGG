@@ -60,7 +60,10 @@ export const CompoundFilterDropdown = ({
             placeholder={search.placeholder}
             value={pendingSearch}
             onChange={(event) => setPendingSearch(event.target.value)}
-            onKeyDown={(event) => event.stopPropagation()}
+            onKeyDown={(event) => {
+              event.stopPropagation();
+              if (event.key === "Enter") handleApply();
+            }}
             className="h-9 pr-9 pl-9"
             aria-label={search.ariaLabel}
           />

@@ -25,12 +25,30 @@ export const createUsersColumns = ({
   columnHelper.accessor((row) => `${row.nombre} ${row.apellido}`.trim(), {
     id: "nombre",
     header: "Nombre",
-    enableSorting: true,
+    enableColumnFilter: true,
     cell: ({ row }) => `${row.original.nombre} ${row.original.apellido}`.trim(),
+    meta: {
+      filter: {
+        search: {
+          placeholder: "Buscar nombre...",
+          ariaLabel: "Buscar por nombre",
+          clearAriaLabel: "Limpiar búsqueda de nombre",
+        },
+      },
+    },
   }),
   columnHelper.accessor("email", {
     header: "Correo",
-    enableSorting: true,
+    enableColumnFilter: true,
+    meta: {
+      filter: {
+        search: {
+          placeholder: "Buscar correo...",
+          ariaLabel: "Buscar por correo",
+          clearAriaLabel: "Limpiar búsqueda de correo",
+        },
+      },
+    },
   }),
   columnHelper.accessor("carrera", {
     header: "Carrera",

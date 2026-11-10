@@ -203,6 +203,39 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
 
+    public function test_admin_can_filter_users_by_nombre_and_email(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $match = User::factory()->create([
+            'nombre' => 'Carla',
+            'apellido' => 'Ruiz',
+            'email' => 'carla.ruiz@example.com',
+        ]);
+        $match->assignRole(UserRoles::ALUMNO);
+
+        $other = User::factory()->create([
+            'nombre' => 'Pedro',
+            'apellido' => 'Lopez',
+            'email' => 'pedro.lopez@example.com',
+        ]);
+        $other->assignRole(UserRoles::ALUMNO);
+
+        $this->actingAs($admin)
+            ->get(route('usuarios.index', [
+                'nombre' => 'Carla',
+                'email' => 'carla.ruiz',
+            ]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->where('filters.nombre', 'Carla')
+                ->where('filters.email', 'carla.ruiz')
+                ->has('users.data', 1)
+                ->where('users.data.0.email', 'carla.ruiz@example.com'));
+    }
+
     public function test_admin_can_filter_users_by_multiple_roles(): void
     {
         $admin = User::factory()->create();

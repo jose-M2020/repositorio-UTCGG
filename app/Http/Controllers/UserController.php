@@ -34,6 +34,8 @@ class UserController extends Controller implements HasMiddleware
     public function index(Request $request): Response
     {
         $authUser = $request->user();
+        $nombre = $request->string('nombre')->toString();
+        $email = $request->string('email')->toString();
         $carreras = array_values(array_filter((array) $request->input('carrera', [])));
         $roles = array_values(array_filter(
             (array) $request->input('rol', []),
@@ -55,13 +57,13 @@ class UserController extends Controller implements HasMiddleware
                 UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
                 fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
             )
-            ->when($request->string('query')->toString(), function ($query, string $search): void {
-                $query->where(function ($inner) use ($search): void {
-                    $inner->where('nombre', 'like', "%{$search}%")
-                        ->orWhere('apellido', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
+            ->when($nombre !== '', function ($query) use ($nombre): void {
+                $query->where(function ($inner) use ($nombre): void {
+                    $inner->where('nombre', 'like', "%{$nombre}%")
+                        ->orWhere('apellido', 'like', "%{$nombre}%");
                 });
             })
+            ->when($email !== '', fn ($query) => $query->where('email', 'like', "%{$email}%"))
             ->when($carreras !== [], fn ($query) => $query->whereHas(
                 'careerCatalog',
                 fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
@@ -110,7 +112,8 @@ class UserController extends Controller implements HasMiddleware
         return Inertia::render('panel/users/index', [
             'users' => $users,
             'filters' => [
-                'query' => $request->string('query')->toString(),
+                'nombre' => $nombre,
+                'email' => $email,
                 'carrera' => $carreras,
                 'rol' => $roles,
                 'fecha' => $fecha,

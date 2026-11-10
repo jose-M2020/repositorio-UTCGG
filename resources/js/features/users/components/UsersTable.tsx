@@ -2,7 +2,10 @@ import { router } from "@inertiajs/react";
 import type { ColumnFiltersState, PaginationState, Updater } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { index } from "@/actions/App/Http/Controllers/UserController";
-import { DataTable, DataTableGlobalSearch } from "@/shared/components/dataTable";
+import {
+  DataTable,
+  type CompoundColumnFilterValue,
+} from "@/shared/components/dataTable";
 import { createUsersColumns } from "../columns";
 import type {
   CareerFormPolicy,
@@ -31,8 +34,35 @@ const toDateFilterValue = (filters: UsersFilters): UsersDateFilterValue => ({
   rango_fecha: filters.rango_fecha.length === 2 ? filters.rango_fecha : ["", ""],
 });
 
-const buildColumnFilters = (filters: UsersFilters, canFilterCareer: boolean): ColumnFiltersState => {
+const toSearchFilterValue = (search: string): CompoundColumnFilterValue | undefined => {
+  const trimmed = search.trim();
+  return trimmed ? { search: trimmed, values: [] } : undefined;
+};
+
+const readSearchFilterValue = (filterValue: unknown): string => {
+  if (
+    typeof filterValue === "object" &&
+    filterValue !== null &&
+    "search" in filterValue &&
+    typeof filterValue.search === "string"
+  ) {
+    return filterValue.search;
+  }
+
+  return "";
+};
+
+const buildColumnFilters = (
+  filters: UsersFilters,
+  canFilterCareer: boolean,
+): ColumnFiltersState => {
   const next: ColumnFiltersState = [];
+
+  const nombreFilter = toSearchFilterValue(filters.nombre);
+  if (nombreFilter) next.push({ id: "nombre", value: nombreFilter });
+
+  const emailFilter = toSearchFilterValue(filters.email);
+  if (emailFilter) next.push({ id: "email", value: emailFilter });
 
   if (canFilterCareer && filters.carrera.length > 0) {
     next.push({ id: "carrera", value: filters.carrera });
@@ -50,7 +80,8 @@ const buildColumnFilters = (filters: UsersFilters, canFilterCareer: boolean): Co
 };
 
 const visitUsersIndex = (params: {
-  query: string;
+  nombre: string;
+  email: string;
   rol: string[];
   carrera: string[];
   fecha: string;
@@ -60,7 +91,8 @@ const visitUsersIndex = (params: {
   router.get(
     index.url({
       query: {
-        query: params.query || undefined,
+        nombre: params.nombre.trim() || undefined,
+        email: params.email.trim() || undefined,
         rol: params.rol.length > 0 ? params.rol : undefined,
         carrera: params.carrera.length > 0 ? params.carrera : undefined,
         fecha: params.fecha || undefined,
@@ -88,7 +120,6 @@ export const UsersTable = ({
   careerPolicy,
 }: UsersTableProps) => {
   const canFilterCareer = careerPolicy.can_select_career;
-  const [globalFilter, setGlobalFilter] = useState(filters.query);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() =>
     buildColumnFilters(filters, canFilterCareer),
   );
@@ -98,7 +129,6 @@ export const UsersTable = ({
   });
 
   useEffect(() => {
-    setGlobalFilter(filters.query);
     setColumnFilters(buildColumnFilters(filters, canFilterCareer));
     setPagination({
       pageIndex: Math.max(0, users.current_page - 1),
@@ -106,24 +136,9 @@ export const UsersTable = ({
     });
   }, [filters, users.current_page, users.per_page, canFilterCareer]);
 
-  useEffect(() => {
-    if (globalFilter === filters.query) return;
-
-    const timeoutId = window.setTimeout(() => {
-      visitUsersIndex({
-        query: globalFilter,
-        rol: filters.rol,
-        carrera: filters.carrera,
-        fecha: filters.fecha,
-        rango_fecha: filters.rango_fecha,
-        page: 1,
-      });
-    }, 350);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [globalFilter, filters]);
-
   const readFiltersFromColumnState = (nextColumnFilters: ColumnFiltersState) => {
+    const nombreFilter = nextColumnFilters.find((filter) => filter.id === "nombre");
+    const emailFilter = nextColumnFilters.find((filter) => filter.id === "email");
     const carreraFilter = nextColumnFilters.find((filter) => filter.id === "carrera");
     const rolFilter = nextColumnFilters.find((filter) => filter.id === "rol");
     const dateFilter = nextColumnFilters.find((filter) => filter.id === "created_at");
@@ -138,6 +153,8 @@ export const UsersTable = ({
         : { fecha: "", rango_fecha: ["", ""] };
 
     return {
+      nombre: readSearchFilterValue(nombreFilter?.value),
+      email: readSearchFilterValue(emailFilter?.value),
       carrera: canFilterCareer ? carrera : [],
       rol,
       fecha: dateValue.fecha ?? "",
@@ -151,7 +168,6 @@ export const UsersTable = ({
 
     const next = readFiltersFromColumnState(nextColumnFilters);
     visitUsersIndex({
-      query: globalFilter,
       ...next,
       page: 1,
     });
@@ -163,7 +179,6 @@ export const UsersTable = ({
 
     const next = readFiltersFromColumnState(columnFilters);
     visitUsersIndex({
-      query: globalFilter,
       ...next,
       page: nextPagination.pageIndex + 1,
     });
@@ -184,22 +199,6 @@ export const UsersTable = ({
         pageSizeOptions: [users.per_page],
         hideOnSinglePage: false,
       }}
-      toolbar={(table) => (
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <DataTableGlobalSearch
-            table={table}
-            placeholder="Buscar usuario..."
-            ariaLabel="Buscar usuarios"
-            className="w-full max-w-sm"
-          />
-          {!canFilterCareer && careerPolicy.locked_career_label ? (
-            <p className="text-sm text-muted-foreground">
-              Carrera:{" "}
-              <span className="font-medium text-foreground">{careerPolicy.locked_career_label}</span>
-            </p>
-          ) : null}
-        </div>
-      )}
       tableOptions={{
         getRowId: (row) => String(row.id),
         manualFiltering: true,
@@ -208,11 +207,9 @@ export const UsersTable = ({
         pageCount: users.last_page,
         rowCount: users.total,
         state: {
-          globalFilter,
           columnFilters,
           pagination,
         },
-        onGlobalFilterChange: setGlobalFilter,
         onColumnFiltersChange: handleColumnFiltersChange,
         onPaginationChange: handlePaginationChange,
       }}

@@ -35,7 +35,8 @@ export type UserDetails = {
 };
 
 export type UsersFilters = {
-    query: string;
+    nombre: string;
+    email: string;
     carrera: string[];
     rol: string[];
     fecha: string;
