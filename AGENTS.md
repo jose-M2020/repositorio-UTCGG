@@ -88,6 +88,12 @@ pnpm test:e2e:ui   # E2E with UI mode
 
 ## Conventions
 
+### Language
+- **Non-visual code must be English** (values, keys, identifiers, query params, comments)
+- **Display copy may be localized** (labels, placeholders, button text, aria-labels)
+- Example: `{ value: "today", label: "Hoy" }` — never `{ value: "hoy", label: "Hoy" }`
+- See `.cursor/rules/english-identifiers.mdc`
+
 ### Component Structure
 - Follow container/presentational pattern when appropriate
 - Use shadcn/ui base components, extend with composition

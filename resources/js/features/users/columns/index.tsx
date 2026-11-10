@@ -2,12 +2,14 @@ import { Form, Link } from "@inertiajs/react";
 import { destroy, edit, show } from "@/actions/App/Http/Controllers/UserController";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { Button } from "@/shared/components/ui";
-import {
-  isUsersDateFilterActive,
-  UsersDateFilter,
-  type UsersDateFilterValue,
-} from "../components/UsersDateFilter";
 import type { RoleOption, UserListItem } from "../types";
+
+const USERS_DATE_FILTER_PRESETS = [
+  { value: "today", label: "Hoy" },
+  { value: "week", label: "Esta Semana" },
+  { value: "month", label: "Este mes" },
+  { value: "year", label: "Este año" },
+] as const;
 
 type CreateUsersColumnsOptions = {
   roles: RoleOption[];
@@ -93,29 +95,11 @@ export const createUsersColumns = ({
     enableColumnFilter: true,
     meta: {
       filter: {
-        dropdown: ({ column }) => {
-          const typedColumn = column as {
-            getFilterValue: () => unknown;
-            setFilterValue: (value: unknown) => void;
-          };
-          const filterValue = typedColumn.getFilterValue();
-          const value: UsersDateFilterValue =
-            filterValue && typeof filterValue === "object"
-              ? (filterValue as UsersDateFilterValue)
-              : { fecha: "", rango_fecha: ["", ""] };
-
-          return (
-            <UsersDateFilter
-              value={value}
-              onChange={(next) => typedColumn.setFilterValue(next ?? undefined)}
-            />
-          );
-        },
-        active: ({ column }) => {
-          const typedColumn = column as { getFilterValue: () => unknown };
-          return isUsersDateFilterActive(
-            typedColumn.getFilterValue() as UsersDateFilterValue | undefined,
-          );
+        mode: "date",
+        date: {
+          presets: USERS_DATE_FILTER_PRESETS,
+          modes: ["single", "range"],
+          defaultMode: "single",
         },
       },
     },

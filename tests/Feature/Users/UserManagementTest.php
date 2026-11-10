@@ -203,6 +203,35 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
 
+    public function test_admin_can_filter_users_by_date_range(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $inRange = User::factory()->create([
+            'nombre' => 'EnRango',
+            'created_at' => '2024-05-10 12:00:00',
+        ]);
+        $inRange->assignRole(UserRoles::ALUMNO);
+
+        $outOfRange = User::factory()->create([
+            'nombre' => 'FueraRango',
+            'created_at' => '2024-06-01 12:00:00',
+        ]);
+        $outOfRange->assignRole(UserRoles::ALUMNO);
+
+        $this->actingAs($admin)
+            ->get(route('usuarios.index', [
+                'rango_fecha' => ['2024-05-01', '2024-05-31'],
+            ]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->where('filters.rango_fecha', ['2024-05-01', '2024-05-31'])
+                ->has('users.data', 1)
+                ->where('users.data.0.nombre', 'EnRango'));
+    }
+
     public function test_admin_can_filter_users_by_nombre_and_email(): void
     {
         $admin = User::factory()->create();

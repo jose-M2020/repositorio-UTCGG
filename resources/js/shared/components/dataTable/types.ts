@@ -7,7 +7,7 @@ export interface ColumnFilterItem<TValue extends string = string> {
   children?: ColumnFilterItem<TValue>[];
 }
 
-export type ColumnFilterMode = "default" | "tree";
+export type ColumnFilterMode = "default" | "tree" | "date";
 
 export interface ColumnFilterSearchConfig {
   placeholder: string;
@@ -19,6 +19,38 @@ export interface CompoundColumnFilterValue {
   search: string;
   values: string[];
 }
+
+export type DateColumnFilterMode = "single" | "range";
+
+export type DateColumnFilterPreset = {
+  value: string;
+  label: string;
+};
+
+/** Shared date filter value — map to API params in the feature table. */
+export type DateColumnFilterValue = {
+  preset: string;
+  from: string;
+  to: string;
+};
+
+export type ColumnFilterDateConfig = {
+  presets?: readonly DateColumnFilterPreset[];
+  /** Calendar modes to offer. Defaults to `["single", "range"]`. */
+  modes?: readonly DateColumnFilterMode[];
+  defaultMode?: DateColumnFilterMode;
+  numberOfMonths?: number;
+  captionLayout?: "label" | "dropdown" | "dropdown-months" | "dropdown-years";
+  labels?: {
+    title?: string;
+    calendar?: string;
+    single?: string;
+    range?: string;
+    noPreset?: string;
+    apply?: string;
+    reset?: string;
+  };
+};
 
 export interface ColumnFilterDropdownContext {
   table: unknown;
@@ -33,6 +65,7 @@ export interface ColumnFilterConfig<TData extends RowData = RowData> {
   multiple?: boolean;
   label?: string;
   search?: ColumnFilterSearchConfig;
+  date?: ColumnFilterDateConfig;
   dropdown?: ReactNode | ((context: ColumnFilterDropdownContext) => ReactNode);
   active?: boolean | ((context: ColumnFilterDropdownContext) => boolean);
   treeDefaultExpanded?: boolean;

@@ -74,26 +74,26 @@ class UserController extends Controller implements HasMiddleware
                     ->whereDate('created_at', '<=', $dateRange[1]);
             })
             ->when(! $hasDateRange && $fecha !== '', function ($query) use ($fecha): void {
-                if ($fecha === 'hoy') {
+                if ($fecha === 'today') {
                     $query->whereDate('created_at', now()->toDateString());
 
                     return;
                 }
 
-                if ($fecha === 'semana') {
+                if ($fecha === 'week') {
                     $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
 
                     return;
                 }
 
-                if ($fecha === 'mes') {
+                if ($fecha === 'month') {
                     $query->whereMonth('created_at', now()->month)
                         ->whereYear('created_at', now()->year);
 
                     return;
                 }
 
-                if ($fecha === 'año') {
+                if ($fecha === 'year') {
                     $query->whereYear('created_at', now()->year);
                 }
             })

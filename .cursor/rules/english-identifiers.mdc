@@ -1,0 +1,48 @@
+---
+description: Non-visual identifiers must be English; UI display text may use product locale
+alwaysApply: true
+---
+
+# English identifiers, localized display
+
+## Rule
+
+**Everything that is not shown visually to the end user must be in English.**
+
+Display-facing copy (labels, placeholders, button text, empty states, toast messages, `aria-label`) may use the product locale (Spanish in this app).
+
+## Must be English
+
+- Option / enum / preset `value` keys
+- Variable, function, type, and file names
+- Object keys and API/query param names in new code
+- Route names, permission names, feature flags
+- Test names and commit messages
+- Comments and code documentation
+
+## May be localized (display only)
+
+- `label`, `text`, `placeholder`, `title`, `description`
+- Visible button / menu / toast copy
+- User-facing `aria-label` / `aria-labelledby` text
+
+## Examples
+
+```tsx
+// ✅ value English, label localized
+{ value: "today", label: "Hoy" }
+{ value: "week", label: "Esta Semana" }
+
+// ❌ value in Spanish
+{ value: "hoy", label: "Hoy" }
+```
+
+```ts
+// ✅ non-visual keys in English
+filters: { date: "today", date_range: ["2024-01-01", "2024-01-31"] }
+
+// ❌ non-visual keys in Spanish
+filters: { fecha: "hoy", rango_fecha: ["2024-01-01", "2024-01-31"] }
+```
+
+When touching legacy Spanish non-visual names (`fecha`, `rol`, DB columns, etc.), prefer migrating to English in the same change when practical; do not introduce new Spanish identifiers.

@@ -11,6 +11,11 @@ import { ListFilterDropdown } from "./filters/ListFilterDropdown";
 import { TreeFilterDropdown } from "./filters/TreeFilterDropdown";
 import { flattenFilterItems } from "./filters/treeFilterUtils";
 import { CompoundFilterDropdown } from "./filters/CompoundFilterDropdown";
+import { DateFilterDropdown } from "./filters/DateFilterDropdown";
+import {
+  isDateColumnFilterActive,
+  parseDateColumnFilterValue,
+} from "./filters/dateFilterUtils";
 import type { CompoundColumnFilterValue } from "./types";
 import type { DataTableFeatures } from "./features";
 
@@ -27,13 +32,28 @@ export const DataTableHeaderFilters = <TData extends RowData>({
   const [filterDraftKey, setFilterDraftKey] = useState(0);
   const filter = column.columnDef.meta?.filter;
 
-  if (!filter?.items?.length && !filter?.search && !filter?.dropdown) return null;
+  if (
+    !filter?.items?.length &&
+    !filter?.search &&
+    !filter?.date &&
+    filter?.mode !== "date" &&
+    !filter?.dropdown
+  ) {
+    return null;
+  }
 
   const columnLabel =
     typeof column.columnDef.header === "string" ? column.columnDef.header : column.id;
   const isTreeFilter = filter.mode === "tree" && Boolean(filter.items?.length);
-  const isCompoundFilter = Boolean(filter.search) && !filter.dropdown;
-  const isBatchFilter = isTreeFilter || isCompoundFilter || Boolean(filter.items?.length);
+  const isDateFilter = !filter.dropdown && (filter.mode === "date" || Boolean(filter.date));
+  const isCompoundFilter = Boolean(filter.search) && !filter.dropdown && !isDateFilter;
+  const isCustomDropdown = Boolean(filter.dropdown);
+  const isBatchFilter =
+    isTreeFilter ||
+    isCompoundFilter ||
+    isDateFilter ||
+    isCustomDropdown ||
+    Boolean(filter.items?.length);
   const filterValue = column.getFilterValue();
   const selectedValues = Array.isArray(filterValue) ? (filterValue as string[]) : [];
   const setFilterValue = (values: string[] | null) =>
@@ -54,13 +74,16 @@ export const DataTableHeaderFilters = <TData extends RowData>({
             : [],
         }
       : { search: "", values: [] };
-  const isFilterActive = isCompoundFilter
-    ? Boolean(compoundValue.search.trim()) || compoundValue.values.length > 0
-    : typeof filter.active === "function"
-      ? filter.active(filterContext)
-      : typeof filter.active === "boolean"
-        ? filter.active
-        : selectedValues.length > 0;
+  const dateValue = parseDateColumnFilterValue(filterValue);
+  const isFilterActive = isDateFilter
+    ? isDateColumnFilterActive(dateValue)
+    : isCompoundFilter
+      ? Boolean(compoundValue.search.trim()) || compoundValue.values.length > 0
+      : typeof filter.active === "function"
+        ? filter.active(filterContext)
+        : typeof filter.active === "boolean"
+          ? filter.active
+          : selectedValues.length > 0;
 
   const handleMenuOpenChange = (open: boolean) => {
     if (!open) setFilterDraftKey((key) => key + 1);
@@ -73,21 +96,22 @@ export const DataTableHeaderFilters = <TData extends RowData>({
   };
 
   const filterContent = filter.dropdown
-    ? typeof filter.dropdown === "function"
-      ? filter.dropdown(filterContext)
-      : filter.dropdown
-    : isCompoundFilter && filter.search
+    ? (
+        <div key={filterDraftKey}>
+          {typeof filter.dropdown === "function"
+            ? filter.dropdown(filterContext)
+            : filter.dropdown}
+        </div>
+      )
+    : isDateFilter
       ? (
-          <CompoundFilterDropdown
+          <DateFilterDropdown
             key={filterDraftKey}
-            search={filter.search}
-            items={flattenFilterItems(filter.items ?? [])}
-            label={filter.label}
-            multiple={filter.multiple}
-            value={compoundValue}
+            config={filter.date}
+            appliedValue={dateValue}
             onApply={(nextValue) => {
               column.setFilterValue(
-                nextValue.search.trim() || nextValue.values.length > 0
+                nextValue && isDateColumnFilterActive(nextValue)
                   ? nextValue
                   : undefined,
               );
@@ -95,27 +119,46 @@ export const DataTableHeaderFilters = <TData extends RowData>({
             }}
           />
         )
-      : isTreeFilter
+      : isCompoundFilter && filter.search
         ? (
-            <TreeFilterDropdown
+            <CompoundFilterDropdown
               key={filterDraftKey}
-              filters={filter.items ?? []}
-              appliedValues={selectedValues}
-              defaultExpanded={filter.treeDefaultExpanded ?? true}
-              filterMultiple={filter.multiple}
-              onApply={handleApplyValues}
+              search={filter.search}
+              items={flattenFilterItems(filter.items ?? [])}
+              label={filter.label}
+              multiple={filter.multiple}
+              value={compoundValue}
+              onApply={(nextValue) => {
+                column.setFilterValue(
+                  nextValue.search.trim() || nextValue.values.length > 0
+                    ? nextValue
+                    : undefined,
+                );
+                handleMenuOpenChange(false);
+              }}
             />
           )
-        : (
-            <ListFilterDropdown
-              key={filterDraftKey}
-              items={flattenFilterItems(filter.items ?? [])}
-              appliedValues={selectedValues}
-              filterMultiple={filter.multiple}
-              columnTitle={columnLabel}
-              onApply={handleApplyValues}
-            />
-          );
+        : isTreeFilter
+          ? (
+              <TreeFilterDropdown
+                key={filterDraftKey}
+                filters={filter.items ?? []}
+                appliedValues={selectedValues}
+                defaultExpanded={filter.treeDefaultExpanded ?? true}
+                filterMultiple={filter.multiple}
+                onApply={handleApplyValues}
+              />
+            )
+          : (
+              <ListFilterDropdown
+                key={filterDraftKey}
+                items={flattenFilterItems(filter.items ?? [])}
+                appliedValues={selectedValues}
+                filterMultiple={filter.multiple}
+                columnTitle={columnLabel}
+                onApply={handleApplyValues}
+              />
+            );
 
   return (
     <DropdownMenu
@@ -138,7 +181,7 @@ export const DataTableHeaderFilters = <TData extends RowData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className={cn(isBatchFilter || isTreeFilter ? "w-auto p-0" : "w-72")}
+        className={cn(isBatchFilter ? "w-auto p-0" : "w-72")}
       >
         {filterContent}
       </DropdownMenuContent>

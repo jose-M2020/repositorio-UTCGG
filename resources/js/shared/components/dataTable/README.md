@@ -181,6 +181,34 @@ meta: {
 }
 ```
 
+### Date
+
+Use `mode: "date"` (or provide `date`) for a shared calendar filter. The column
+filter value shape is `{ preset, from, to }` (`yyyy-MM-dd` for dates). Map it to
+your API params in the feature table.
+
+```tsx
+meta: {
+  filter: {
+    mode: "date",
+    date: {
+      presets: [
+        { value: "today", label: "Hoy" },
+        { value: "week", label: "Esta Semana" },
+        { value: "month", label: "Este mes" },
+        { value: "year", label: "Este año" },
+      ],
+      modes: ["single", "range"],
+      defaultMode: "single",
+      numberOfMonths: 1,
+    },
+  },
+}
+```
+
+Omit `presets` for calendar-only. Pass `modes: ["range"]` for range-only.
+Labels are overridable through `date.labels`.
+
 ### Custom content
 
 `dropdown` receives the table, column, and helpers for reading or updating the

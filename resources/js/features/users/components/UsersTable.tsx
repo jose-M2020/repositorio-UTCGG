@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { index } from "@/actions/App/Http/Controllers/UserController";
 import {
   DataTable,
+  isDateColumnFilterActive,
+  parseDateColumnFilterValue,
   type CompoundColumnFilterValue,
+  type DateColumnFilterValue,
 } from "@/shared/components/dataTable";
 import { createUsersColumns } from "../columns";
 import type {
@@ -13,10 +16,6 @@ import type {
   RoleOption,
   UsersFilters,
 } from "../types";
-import {
-  isUsersDateFilterActive,
-  type UsersDateFilterValue,
-} from "./UsersDateFilter";
 
 type UsersTableProps = {
   users: PaginatedUsers;
@@ -29,9 +28,10 @@ type UsersTableProps = {
 const resolveUpdater = <T,>(updater: Updater<T>, previous: T): T =>
   typeof updater === "function" ? (updater as (old: T) => T)(previous) : updater;
 
-const toDateFilterValue = (filters: UsersFilters): UsersDateFilterValue => ({
-  fecha: filters.fecha,
-  rango_fecha: filters.rango_fecha.length === 2 ? filters.rango_fecha : ["", ""],
+const toDateFilterValue = (filters: UsersFilters): DateColumnFilterValue => ({
+  preset: filters.fecha,
+  from: filters.rango_fecha[0] ?? "",
+  to: filters.rango_fecha[1] ?? "",
 });
 
 const toSearchFilterValue = (search: string): CompoundColumnFilterValue | undefined => {
@@ -72,8 +72,9 @@ const buildColumnFilters = (
     next.push({ id: "rol", value: filters.rol });
   }
 
-  if (isUsersDateFilterActive(toDateFilterValue(filters))) {
-    next.push({ id: "created_at", value: toDateFilterValue(filters) });
+  const dateFilter = toDateFilterValue(filters);
+  if (isDateColumnFilterActive(dateFilter)) {
+    next.push({ id: "created_at", value: dateFilter });
   }
 
   return next;
@@ -142,23 +143,20 @@ export const UsersTable = ({
     const carreraFilter = nextColumnFilters.find((filter) => filter.id === "carrera");
     const rolFilter = nextColumnFilters.find((filter) => filter.id === "rol");
     const dateFilter = nextColumnFilters.find((filter) => filter.id === "created_at");
+    const dateValue = parseDateColumnFilterValue(dateFilter?.value);
 
     const carrera = Array.isArray(carreraFilter?.value)
       ? (carreraFilter.value as string[])
       : [];
     const rol = Array.isArray(rolFilter?.value) ? (rolFilter.value as string[]) : [];
-    const dateValue =
-      dateFilter?.value && typeof dateFilter.value === "object"
-        ? (dateFilter.value as UsersDateFilterValue)
-        : { fecha: "", rango_fecha: ["", ""] };
 
     return {
       nombre: readSearchFilterValue(nombreFilter?.value),
       email: readSearchFilterValue(emailFilter?.value),
       carrera: canFilterCareer ? carrera : [],
       rol,
-      fecha: dateValue.fecha ?? "",
-      rango_fecha: dateValue.rango_fecha?.length === 2 ? dateValue.rango_fecha : ["", ""],
+      fecha: dateValue.preset,
+      rango_fecha: [dateValue.from, dateValue.to],
     };
   };
 

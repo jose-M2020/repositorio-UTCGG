@@ -2,8 +2,14 @@ export { DataTable, createDataTableColumnHelper, type DataTableProps } from "./D
 export { DataTableGlobalSearch } from "./DataTableGlobalSearch";
 export { createExpandColumn } from "./createExpandColumn";
 export { features, type DataTableFeatures } from "./features";
+export {
+  EMPTY_DATE_COLUMN_FILTER_VALUE,
+  isDateColumnFilterActive,
+  parseDateColumnFilterValue,
+} from "./filters/dateFilterUtils";
 export type {
   ColumnFilterConfig,
+  ColumnFilterDateConfig,
   ColumnFilterDropdownContext,
   ColumnFilterItem,
   ColumnFilterMode,
@@ -11,4 +17,7 @@ export type {
   CompoundColumnFilterValue,
   DataTableColumnMeta,
   DataTablePaginationOptions,
+  DateColumnFilterMode,
+  DateColumnFilterPreset,
+  DateColumnFilterValue,
 } from "./types";
