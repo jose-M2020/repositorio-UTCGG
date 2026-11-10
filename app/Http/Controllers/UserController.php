@@ -69,7 +69,10 @@ class UserController extends Controller implements HasMiddleware
                 fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
             ))
             ->when($roles !== [], fn ($query) => $query->role($roles))
-            ->when($hasDateRange, fn ($query) => $query->whereBetween('created_at', [$dateRange[0], $dateRange[1]]))
+            ->when($hasDateRange, function ($query) use ($dateRange): void {
+                $query->whereDate('created_at', '>=', $dateRange[0])
+                    ->whereDate('created_at', '<=', $dateRange[1]);
+            })
             ->when(! $hasDateRange && $fecha !== '', function ($query) use ($fecha): void {
                 if ($fecha === 'hoy') {
                     $query->whereDate('created_at', now()->toDateString());
