@@ -47,6 +47,8 @@ export type ColumnFilterDateConfig = {
     single?: string;
     range?: string;
     noPreset?: string;
+    pickDate?: string;
+    pickRange?: string;
     apply?: string;
     reset?: string;
   };

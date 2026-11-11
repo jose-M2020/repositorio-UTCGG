@@ -98,8 +98,7 @@ export const createUsersColumns = ({
         mode: "date",
         date: {
           presets: USERS_DATE_FILTER_PRESETS,
-          modes: ["single", "range"],
-          defaultMode: "single",
+          modes: ["range"],
         },
       },
     },

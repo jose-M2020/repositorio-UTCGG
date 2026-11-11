@@ -209,6 +209,9 @@ meta: {
 Omit `presets` for calendar-only. Pass `modes: ["range"]` for range-only.
 Labels are overridable through `date.labels`.
 
+The UI uses shadcn Date Picker / Range Picker composition
+(`Popover` + `Calendar`), not an always-visible calendar.
+
 ### Custom content
 
 `dropdown` receives the table, column, and helpers for reading or updating the
