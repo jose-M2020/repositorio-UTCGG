@@ -34,6 +34,32 @@ export type DateColumnFilterValue = {
   to: string;
 };
 
+/**
+ * Calendar day constraints. Date strings use `yyyy-MM-dd`.
+ * Multiple rules are combined (any match disables the day).
+ */
+export type DateColumnFilterDisabledDates = {
+  /** Disable every day after today. */
+  future?: boolean;
+  /** Disable every day before today. */
+  past?: boolean;
+  /** Disable every day before this date (exclusive). */
+  before?: string | Date;
+  /** Disable every day after this date (exclusive). */
+  after?: string | Date;
+  /** Disable specific calendar days. */
+  dates?: readonly (string | Date)[];
+  /** Disable an inclusive continuous range. */
+  range?: {
+    from: string | Date;
+    to: string | Date;
+  };
+  /** Disable weekdays (`0` Sunday … `6` Saturday). */
+  daysOfWeek?: readonly number[];
+  /** Custom predicate — return `true` to disable. */
+  match?: (date: Date) => boolean;
+};
+
 export type ColumnFilterDateConfig = {
   presets?: readonly DateColumnFilterPreset[];
   /** Calendar modes to offer. Defaults to `["single", "range"]`. */
@@ -41,6 +67,25 @@ export type ColumnFilterDateConfig = {
   defaultMode?: DateColumnFilterMode;
   numberOfMonths?: number;
   captionLayout?: "label" | "dropdown" | "dropdown-months" | "dropdown-years";
+  /** Disable calendar days (future, past, specific dates, weekdays, etc.). */
+  disabledDates?: DateColumnFilterDisabledDates;
+  /**
+   * Optional custom resolver from preset key to concrete date value.
+   * Return null when preset is unknown.
+   */
+  resolvePresetToValue?: (
+    presetValue: string,
+    now: Date,
+  ) => DateColumnFilterValue | null;
+  /**
+   * Optional custom matcher from date value to preset key.
+   * Return null when no preset matches.
+   */
+  resolvePresetFromValue?: (
+    value: DateColumnFilterValue,
+    presets: readonly DateColumnFilterPreset[],
+    now: Date,
+  ) => string | null;
   labels?: {
     title?: string;
     calendar?: string;

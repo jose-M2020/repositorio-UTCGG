@@ -13,11 +13,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
 } from "@/shared/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib";
 import type {
   ColumnFilterDateConfig,
@@ -29,6 +24,7 @@ import {
   formatDateFilterValue,
   isDateColumnFilterActive,
   resolveDatePickerMode,
+  resolveDisabledDateMatchers,
   toRangeDateSelection,
   toSingleDateSelection,
 } from "./dateFilterUtils";
@@ -54,7 +50,19 @@ const DEFAULT_LABELS = {
 } as const;
 
 const formatDisplayDate = (date: Date) =>
-  format(date, "PPP", { locale: dateFnsEs });
+  format(date, "d MMM yyyy", { locale: dateFnsEs });
+
+const formatDisplayRange = (from: Date, to: Date) => {
+  if (from.getFullYear() === to.getFullYear()) {
+    if (from.getMonth() === to.getMonth()) {
+      return `${format(from, "d", { locale: dateFnsEs })} - ${format(to, "d MMM yyyy", { locale: dateFnsEs })}`;
+    }
+
+    return `${format(from, "d MMM", { locale: dateFnsEs })} - ${format(to, "d MMM yyyy", { locale: dateFnsEs })}`;
+  }
+
+  return `${formatDisplayDate(from)} - ${formatDisplayDate(to)}`;
+};
 
 export const DateFilterDropdown = ({
   config,
@@ -68,6 +76,11 @@ export const DateFilterDropdown = ({
   const numberOfMonths = config?.numberOfMonths ?? 2;
   const captionLayout = config?.captionLayout ?? "dropdown";
   const showModeToggle = modes.length > 1;
+  const disabledMatchers = resolveDisabledDateMatchers(
+    config?.disabledDates,
+    new Date(),
+  );
+  const disabled = disabledMatchers.length > 0 ? disabledMatchers : undefined;
 
   // Draft stays local so Aplicar/Restablecer can defer the request.
   const [pendingPreset, setPendingPreset] = useState(appliedValue.preset);
@@ -80,28 +93,42 @@ export const DateFilterDropdown = ({
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() =>
     toRangeDateSelection(appliedValue),
   );
-  const [singleOpen, setSingleOpen] = useState(false);
-  const [rangeOpen, setRangeOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState<Date>(
+    () =>
+      toSingleDateSelection(appliedValue) ??
+      toRangeDateSelection(appliedValue)?.from ??
+      new Date(),
+  );
 
   const hasPendingFilter =
     pendingPreset.trim() !== "" ||
     Boolean(singleDate) ||
     Boolean(dateRange?.from && dateRange?.to);
 
+  const closeCalendar = () => setCalendarOpen(false);
+
+  const openCalendar = () => {
+    setVisibleMonth(
+      pickerMode === "single"
+        ? (singleDate ?? new Date())
+        : (dateRange?.from ?? new Date()),
+    );
+    setCalendarOpen(true);
+  };
+
   const handlePresetChange = (preset: string) => {
     setPendingPreset(preset);
     setSingleDate(undefined);
     setDateRange(undefined);
-    setSingleOpen(false);
-    setRangeOpen(false);
+    closeCalendar();
   };
 
   const handlePickerModeChange = (mode: DateColumnFilterMode) => {
     if (!modes.includes(mode)) return;
     setPickerMode(mode);
     setPendingPreset("");
-    setSingleOpen(false);
-    setRangeOpen(false);
+    closeCalendar();
     if (mode === "single") {
       setDateRange(undefined);
       return;
@@ -113,28 +140,21 @@ export const DateFilterDropdown = ({
     setPendingPreset("");
     setSingleDate(date);
     setDateRange(undefined);
-    if (date) setSingleOpen(false);
+    if (date) closeCalendar();
   };
 
   const handleRangeSelect = (range: DateRange | undefined) => {
     setPendingPreset("");
     setSingleDate(undefined);
-
-    const previousRange = dateRange;
     setDateRange(range);
+  };
 
-    if (!range?.from || !range.to) return;
-
-    // DayPicker's first click sets `{ from, to }` to the same day; keep the
-    // popover open until the user picks the end date (second click).
-    const isFirstClick =
-      !previousRange?.from &&
-      !previousRange?.to &&
-      range.from.getTime() === range.to.getTime();
-
-    if (isFirstClick) return;
-
-    setRangeOpen(false);
+  const handleToggleCalendar = () => {
+    if (calendarOpen) {
+      closeCalendar();
+      return;
+    }
+    openCalendar();
   };
 
   const handleReset = () => {
@@ -142,8 +162,7 @@ export const DateFilterDropdown = ({
     setSingleDate(undefined);
     setDateRange(undefined);
     setPickerMode(defaultMode);
-    setSingleOpen(false);
-    setRangeOpen(false);
+    closeCalendar();
     onApply(null);
   };
 
@@ -178,9 +197,28 @@ export const DateFilterDropdown = ({
     onApply(null);
   };
 
+  const triggerLabel =
+    pickerMode === "single"
+      ? singleDate
+        ? formatDisplayDate(singleDate)
+        : labels.pickDate
+      : dateRange?.from
+        ? dateRange.to
+          ? formatDisplayRange(dateRange.from, dateRange.to)
+          : formatDisplayDate(dateRange.from)
+        : labels.pickRange;
+
+  const isTriggerEmpty =
+    pickerMode === "single" ? !singleDate : !dateRange?.from;
+
   return (
     <div
-      className="w-80 space-y-3 p-2"
+      className={cn(
+        "space-y-3 p-2",
+        calendarOpen
+          ? "w-fit min-w-72 max-w-[calc(100vw-2rem)]"
+          : "w-72",
+      )}
       onPointerDown={(event) => event.stopPropagation()}
     >
       {presets.length > 0 ? (
@@ -239,72 +277,42 @@ export const DateFilterDropdown = ({
             </div>
           ) : null}
 
-          <div className="px-1.5">
-            {pickerMode === "single" ? (
-              <Popover
-                modal={false}
-                open={singleOpen}
-                onOpenChange={setSingleOpen}
-              >
-                <PopoverTrigger
-                  render={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      data-empty={!singleDate}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !singleDate && "text-muted-foreground",
-                      )}
-                      aria-label={labels.pickDate}
-                    />
-                  }
-                >
-                  <CalendarIcon className="size-4" aria-hidden="true" />
-                  {singleDate ? formatDisplayDate(singleDate) : labels.pickDate}
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-auto p-0">
+          <div className="space-y-2 px-1.5">
+            <Button
+              type="button"
+              variant="outline"
+              data-empty={isTriggerEmpty}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                isTriggerEmpty && "text-muted-foreground",
+              )}
+              aria-label={
+                pickerMode === "single" ? labels.pickDate : labels.pickRange
+              }
+              aria-expanded={calendarOpen}
+              onClick={handleToggleCalendar}
+            >
+              <CalendarIcon
+                className="size-4 shrink-0"
+                aria-hidden="true"
+              />
+              <span className="truncate">{triggerLabel}</span>
+            </Button>
+
+            {calendarOpen ? (
+              <div className="w-fit max-w-full space-y-2 overflow-x-auto rounded-lg border bg-background p-2">
+                {pickerMode === "single" ? (
                   <Calendar
                     mode="single"
                     locale={es}
                     selected={singleDate}
                     onSelect={handleSingleSelect}
                     captionLayout={captionLayout}
-                    defaultMonth={singleDate}
+                    month={visibleMonth}
+                    onMonthChange={setVisibleMonth}
+                    disabled={disabled}
                   />
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <Popover modal={false} open={rangeOpen} onOpenChange={setRangeOpen}>
-                <PopoverTrigger
-                  render={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      data-empty={!dateRange?.from}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !dateRange?.from && "text-muted-foreground",
-                      )}
-                      aria-label={labels.pickRange}
-                    />
-                  }
-                >
-                  <CalendarIcon className="size-4" aria-hidden="true" />
-                  {dateRange?.from ? (
-                    dateRange.to ? (
-                      <>
-                        {formatDisplayDate(dateRange.from)} -{" "}
-                        {formatDisplayDate(dateRange.to)}
-                      </>
-                    ) : (
-                      formatDisplayDate(dateRange.from)
-                    )
-                  ) : (
-                    labels.pickRange
-                  )}
-                </PopoverTrigger>
-                <PopoverContent align="start" className="w-auto p-0">
+                ) : (
                   <Calendar
                     mode="range"
                     locale={es}
@@ -312,11 +320,13 @@ export const DateFilterDropdown = ({
                     onSelect={handleRangeSelect}
                     captionLayout={captionLayout}
                     numberOfMonths={numberOfMonths}
-                    defaultMonth={dateRange?.from}
+                    month={visibleMonth}
+                    onMonthChange={setVisibleMonth}
+                    disabled={disabled}
                   />
-                </PopoverContent>
-              </Popover>
-            )}
+                )}
+              </div>
+            ) : null}
           </div>
           <DropdownMenuSeparator />
         </>

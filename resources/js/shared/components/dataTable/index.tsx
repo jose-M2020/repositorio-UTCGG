@@ -6,6 +6,7 @@ export {
   EMPTY_DATE_COLUMN_FILTER_VALUE,
   isDateColumnFilterActive,
   parseDateColumnFilterValue,
+  resolveDisabledDateMatchers,
 } from "./filters/dateFilterUtils";
 export type {
   ColumnFilterConfig,
@@ -17,6 +18,7 @@ export type {
   CompoundColumnFilterValue,
   DataTableColumnMeta,
   DataTablePaginationOptions,
+  DateColumnFilterDisabledDates,
   DateColumnFilterMode,
   DateColumnFilterPreset,
   DateColumnFilterValue,

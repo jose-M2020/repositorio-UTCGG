@@ -1,6 +1,10 @@
-import { format } from "date-fns";
-import type { DateRange } from "react-day-picker";
-import type { DateColumnFilterMode, DateColumnFilterValue } from "../types";
+import { format, startOfDay } from "date-fns";
+import type { DateRange, Matcher } from "react-day-picker";
+import type {
+  DateColumnFilterDisabledDates,
+  DateColumnFilterMode,
+  DateColumnFilterValue,
+} from "../types";
 
 export const EMPTY_DATE_COLUMN_FILTER_VALUE: DateColumnFilterValue = {
   preset: "",
@@ -15,6 +19,61 @@ export const parseDateFilterValue = (value: string): Date | undefined => {
   const [year, month, day] = value.split("-").map(Number);
   if (!year || !month || !day) return undefined;
   return new Date(year, month - 1, day);
+};
+
+const toCalendarDate = (value: string | Date): Date | undefined => {
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return undefined;
+    return startOfDay(value);
+  }
+
+  return parseDateFilterValue(value);
+};
+
+/** Build DayPicker `disabled` matchers from the shared date-filter config. */
+export const resolveDisabledDateMatchers = (
+  config: DateColumnFilterDisabledDates | undefined,
+  now: Date = new Date(),
+): Matcher[] => {
+  if (!config) return [];
+
+  const matchers: Matcher[] = [];
+  const today = startOfDay(now);
+
+  if (config.future) matchers.push({ after: today });
+  if (config.past) matchers.push({ before: today });
+
+  if (config.before) {
+    const before = toCalendarDate(config.before);
+    if (before) matchers.push({ before });
+  }
+
+  if (config.after) {
+    const after = toCalendarDate(config.after);
+    if (after) matchers.push({ after });
+  }
+
+  if (config.dates?.length) {
+    const dates = config.dates
+      .map((date) => toCalendarDate(date))
+      .filter((date): date is Date => Boolean(date));
+    if (dates.length === 1) matchers.push(dates[0]);
+    if (dates.length > 1) matchers.push(dates);
+  }
+
+  if (config.range) {
+    const from = toCalendarDate(config.range.from);
+    const to = toCalendarDate(config.range.to);
+    if (from && to) matchers.push({ from, to });
+  }
+
+  if (config.daysOfWeek?.length) {
+    matchers.push({ dayOfWeek: [...config.daysOfWeek] });
+  }
+
+  if (config.match) matchers.push(config.match);
+
+  return matchers;
 };
 
 export const isDateColumnFilterActive = (

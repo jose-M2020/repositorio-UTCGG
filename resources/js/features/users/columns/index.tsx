@@ -99,6 +99,9 @@ export const createUsersColumns = ({
         date: {
           presets: USERS_DATE_FILTER_PRESETS,
           modes: ["range"],
+          disabledDates: {
+            future: true,
+          },
         },
       },
     },

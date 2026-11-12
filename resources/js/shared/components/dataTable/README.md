@@ -201,6 +201,16 @@ meta: {
       modes: ["single", "range"],
       defaultMode: "single",
       numberOfMonths: 1,
+      disabledDates: {
+        future: true, // after today
+        // past: true,
+        // before: "2024-01-01",
+        // after: "2025-12-31",
+        // dates: ["2024-12-25", new Date(2024, 0, 1)],
+        // range: { from: "2024-06-01", to: "2024-06-15" },
+        // daysOfWeek: [0, 6], // Sunday & Saturday
+        // match: (date) => date.getDate() === 13,
+      },
     },
   },
 }
@@ -209,8 +219,14 @@ meta: {
 Omit `presets` for calendar-only. Pass `modes: ["range"]` for range-only.
 Labels are overridable through `date.labels`.
 
-The UI uses shadcn Date Picker / Range Picker composition
-(`Popover` + `Calendar`), not an always-visible calendar.
+The UI uses presets plus a date/range picker trigger. The calendar expands
+**inside** the filter menu (not a nested Popover), so selecting days does not
+close or reposition the panel. Selecting a preset clears the calendar draft and
+picking a date/range clears the preset. Apply the draft with **Aplicar**.
+
+Use `disabledDates` to grey out unselectable days (`future`, `past`,
+`before`/`after`, specific `dates`, inclusive `range`, `daysOfWeek`, or a custom
+`match` predicate). Multiple rules are combined.
 
 ### Custom content
 
