@@ -69,23 +69,6 @@ export type ColumnFilterDateConfig = {
   captionLayout?: "label" | "dropdown" | "dropdown-months" | "dropdown-years";
   /** Disable calendar days (future, past, specific dates, weekdays, etc.). */
   disabledDates?: DateColumnFilterDisabledDates;
-  /**
-   * Optional custom resolver from preset key to concrete date value.
-   * Return null when preset is unknown.
-   */
-  resolvePresetToValue?: (
-    presetValue: string,
-    now: Date,
-  ) => DateColumnFilterValue | null;
-  /**
-   * Optional custom matcher from date value to preset key.
-   * Return null when no preset matches.
-   */
-  resolvePresetFromValue?: (
-    value: DateColumnFilterValue,
-    presets: readonly DateColumnFilterPreset[],
-    now: Date,
-  ) => string | null;
   labels?: {
     title?: string;
     calendar?: string;

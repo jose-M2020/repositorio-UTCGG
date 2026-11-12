@@ -1,4 +1,5 @@
 import { Form, Link } from "@inertiajs/react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { destroy, edit, show } from "@/actions/App/Http/Controllers/UserController";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { Button } from "@/shared/components/ui";
@@ -108,30 +109,48 @@ export const createUsersColumns = ({
   }),
   columnHelper.display({
     id: "actions",
-    header: "Acciones",
+    header: "",
     meta: {
-      headerClassName: "text-right",
+      headerClassName: "w-28 text-right",
       cellClassName: "text-right",
     },
     cell: ({ row }) => {
       const user = row.original;
+      const userName = `${user.nombre} ${user.apellido}`.trim();
 
       return (
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-1">
           <Link href={show.url(user.id)}>
-            <Button type="button" variant="ghost">
-              Ver
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`Ver ${userName}`}
+            >
+              <Eye aria-hidden="true" />
             </Button>
           </Link>
           <Link href={edit.url(user.id)}>
-            <Button type="button" variant="outline">
-              Editar
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label={`Editar ${userName}`}
+            >
+              <Pencil aria-hidden="true" />
             </Button>
           </Link>
           <Form {...destroy.form(user.id)}>
             {({ processing }) => (
-              <Button type="submit" variant="destructive" disabled={processing}>
-                Eliminar
+              <Button
+                type="submit"
+                variant="ghost"
+                size="icon-sm"
+                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                disabled={processing}
+                aria-label={`Eliminar ${userName}`}
+              >
+                <Trash2 aria-hidden="true" />
               </Button>
             )}
           </Form>

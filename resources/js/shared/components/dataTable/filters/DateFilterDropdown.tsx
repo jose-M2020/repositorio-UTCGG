@@ -49,8 +49,7 @@ const DEFAULT_LABELS = {
   reset: "Restablecer",
 } as const;
 
-const formatDisplayDate = (date: Date) =>
-  format(date, "d MMM yyyy", { locale: dateFnsEs });
+const formatDisplayDate = (date: Date) => format(date, "d MMM yyyy", { locale: dateFnsEs });
 
 const formatDisplayRange = (from: Date, to: Date) => {
   if (from.getFullYear() === to.getFullYear()) {
@@ -76,23 +75,14 @@ export const DateFilterDropdown = ({
   const numberOfMonths = config?.numberOfMonths ?? 2;
   const captionLayout = config?.captionLayout ?? "dropdown";
   const showModeToggle = modes.length > 1;
-  const disabledMatchers = resolveDisabledDateMatchers(
-    config?.disabledDates,
-    new Date(),
-  );
+  const disabledMatchers = resolveDisabledDateMatchers(config?.disabledDates, new Date());
   const disabled = disabledMatchers.length > 0 ? disabledMatchers : undefined;
 
   // Draft stays local so Aplicar/Restablecer can defer the request.
   const [pendingPreset, setPendingPreset] = useState(appliedValue.preset);
-  const [pickerMode, setPickerMode] = useState<DateColumnFilterMode>(() =>
-    resolveDatePickerMode(appliedValue, modes, defaultMode),
-  );
-  const [singleDate, setSingleDate] = useState<Date | undefined>(() =>
-    toSingleDateSelection(appliedValue),
-  );
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(() =>
-    toRangeDateSelection(appliedValue),
-  );
+  const [pickerMode, setPickerMode] = useState<DateColumnFilterMode>(() => resolveDatePickerMode(appliedValue, modes, defaultMode));
+  const [singleDate, setSingleDate] = useState<Date | undefined>(() => toSingleDateSelection(appliedValue));
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => toRangeDateSelection(appliedValue));
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState<Date>(
     () =>
@@ -109,10 +99,9 @@ export const DateFilterDropdown = ({
   const closeCalendar = () => setCalendarOpen(false);
 
   const openCalendar = () => {
-    setVisibleMonth(
-      pickerMode === "single"
-        ? (singleDate ?? new Date())
-        : (dateRange?.from ?? new Date()),
+    setVisibleMonth( pickerMode === "single"
+      ? (singleDate ?? new Date())
+      : (dateRange?.from ?? new Date()),
     );
     setCalendarOpen(true);
   };
@@ -281,7 +270,6 @@ export const DateFilterDropdown = ({
             <Button
               type="button"
               variant="outline"
-              data-empty={isTriggerEmpty}
               className={cn(
                 "w-full justify-start text-left font-normal",
                 isTriggerEmpty && "text-muted-foreground",

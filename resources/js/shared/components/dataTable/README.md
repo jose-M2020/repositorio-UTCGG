@@ -219,14 +219,13 @@ meta: {
 Omit `presets` for calendar-only. Pass `modes: ["range"]` for range-only.
 Labels are overridable through `date.labels`.
 
-The UI uses presets plus a date/range picker trigger. The calendar expands
-**inside** the filter menu (not a nested Popover), so selecting days does not
-close or reposition the panel. Selecting a preset clears the calendar draft and
-picking a date/range clears the preset. Apply the draft with **Aplicar**.
+The calendar expands inside the filter menu. Selecting a preset clears the
+calendar draft and picking a date/range clears the preset. Apply with
+**Aplicar**.
 
-Use `disabledDates` to grey out unselectable days (`future`, `past`,
-`before`/`after`, specific `dates`, inclusive `range`, `daysOfWeek`, or a custom
-`match` predicate). Multiple rules are combined.
+`disabledDates` greys out unselectable days. Supported keys: `future`, `past`,
+`before`, `after`, `dates`, `range`, `daysOfWeek`, `match`. Multiple rules are
+combined.
 
 ### Custom content
 
