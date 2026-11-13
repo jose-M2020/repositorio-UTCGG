@@ -1,10 +1,10 @@
-import type { RoleDetails as RoleDetailsType } from '../types';
+﻿import type { RoleDetails as RoleDetailsType } from '../types';
 import {
     groupPermissionsByModule,
     moduleLabel,
     partitionPermissions,
     permissionLabel,
-} from '../lib/permissionDisplay';
+} from '../utils/permissionDisplay';
 
 type RoleDetailsProps = {
     role: RoleDetailsType;
@@ -94,3 +94,4 @@ const RoleDetailsSection = ({ title, permissions }: RoleDetailsSectionProps) => 
         </div>
     );
 };
+

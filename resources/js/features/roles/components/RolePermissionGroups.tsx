@@ -1,11 +1,11 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import type { PermissionGroups, RoleFormErrors } from '../types';
 import {
     moduleLabel,
     partitionPermissions,
     permissionLabel,
-} from '../lib/permissionDisplay';
+} from '../utils/permissionDisplay';
 
 type RolePermissionGroupsProps = {
     permissionGroups: PermissionGroups;
@@ -206,3 +206,4 @@ const PermissionSection = ({
         </section>
     );
 };
+

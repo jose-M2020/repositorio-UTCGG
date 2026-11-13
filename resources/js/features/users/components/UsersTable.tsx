@@ -1,9 +1,9 @@
 import type { ColumnFiltersState, PaginationState, Updater } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/shared/components/dataTable";
+import { resolveUpdater } from "@/shared/lib";
 import { visitUsersIndex } from "../api/visitUsersIndex";
 import { createUsersColumns } from "../columns";
-import { resolveUpdater } from "../utils/resolveUpdater";
 import {
   buildColumnFilters,
   readFiltersFromColumnState,
