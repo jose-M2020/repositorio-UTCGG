@@ -1,10 +1,11 @@
-﻿import { Form, Link } from "@inertiajs/react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+﻿import { Link } from "@inertiajs/react";
+import { Eye, Pencil } from "lucide-react";
 import {
   destroy,
   edit,
   show,
 } from "@/actions/App/Http/Controllers/RoleController";
+import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { Button } from "@/shared/components/ui";
 import type { RoleListItem } from "../types";
@@ -34,10 +35,11 @@ export const createRolesColumns = () => [
     cell: ({ row }) => {
       const role = row.original;
       const roleName = role.name.trim();
-
-      const deleteTitle = role.users_count > 0
-        ? `Asignado a ${role.users_count} usuario(s). Reasigna antes de eliminar.`
-        : "Rol del sistema: no se puede eliminar.";
+      const disabledReason = role.can_delete
+        ? undefined
+        : role.users_count > 0
+          ? `Asignado a ${role.users_count} usuario(s). Reasigna antes de eliminar.`
+          : "Rol del sistema: no se puede eliminar.";
 
       return (
         <div className="flex justify-end gap-1">
@@ -61,35 +63,11 @@ export const createRolesColumns = () => [
               <Pencil aria-hidden="true" />
             </Button>
           </Link>
-
-          {role.can_delete ? (
-            <Form {...destroy.form(role.id)}>
-              {({ processing }) => (
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  disabled={processing}
-                  aria-label={`Eliminar ${roleName}`}
-                >
-                  <Trash2 aria-hidden="true" />
-                </Button>
-              )}
-            </Form>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="text-destructive"
-              disabled
-              title={deleteTitle}
-              aria-label={`No se puede eliminar ${roleName}`}
-            >
-              <Trash2 aria-hidden="true" />
-            </Button>
-          )}
+          <ConfirmDeleteButton
+            form={destroy.form(role.id)}
+            itemLabel={roleName}
+            disabledReason={disabledReason}
+          />
         </div>
       );
     },

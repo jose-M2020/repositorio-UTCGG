@@ -1,10 +1,11 @@
-﻿import { Form, Link } from "@inertiajs/react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+﻿import { Link } from "@inertiajs/react";
+import { Eye, Pencil } from "lucide-react";
 import {
   destroy,
   edit,
   show,
 } from "@/actions/App/Http/Controllers/CatalogController";
+import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { Button } from "@/shared/components/ui";
 import type { CatalogItem, CatalogTypesMap } from "../types";
@@ -76,20 +77,10 @@ export const createCatalogsColumns = ({
               <Pencil aria-hidden="true" />
             </Button>
           </Link>
-          <Form {...destroy.form(catalog.id)}>
-            {({ processing }) => (
-              <Button
-                type="submit"
-                variant="ghost"
-                size="icon-sm"
-                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                disabled={processing}
-                aria-label={`Eliminar ${catalogName}`}
-              >
-                <Trash2 aria-hidden="true" />
-              </Button>
-            )}
-          </Form>
+          <ConfirmDeleteButton
+            form={destroy.form(catalog.id)}
+            itemLabel={catalogName}
+          />
         </div>
       );
     },

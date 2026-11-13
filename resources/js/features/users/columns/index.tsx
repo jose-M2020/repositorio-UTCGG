@@ -1,6 +1,7 @@
-import { Form, Link } from "@inertiajs/react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+﻿import { Link } from "@inertiajs/react";
+import { Eye, Pencil } from "lucide-react";
 import { destroy, edit, show } from "@/actions/App/Http/Controllers/UserController";
+import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { Button } from "@/shared/components/ui";
 import type { RoleOption, UserListItem } from "../types";
@@ -140,20 +141,10 @@ export const createUsersColumns = ({
               <Pencil aria-hidden="true" />
             </Button>
           </Link>
-          <Form {...destroy.form(user.id)}>
-            {({ processing }) => (
-              <Button
-                type="submit"
-                variant="ghost"
-                size="icon-sm"
-                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                disabled={processing}
-                aria-label={`Eliminar ${userName}`}
-              >
-                <Trash2 aria-hidden="true" />
-              </Button>
-            )}
-          </Form>
+          <ConfirmDeleteButton
+            form={destroy.form(user.id)}
+            itemLabel={userName}
+          />
         </div>
       );
     },

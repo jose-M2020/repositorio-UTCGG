@@ -13,6 +13,7 @@ import {
     UserSearchPicker,
     type SearchableUser,
 } from '@/shared/components';
+import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
 import { Button } from '@/shared/components/ui';
 import type { Repository } from '../../shared/types';
 
@@ -177,24 +178,15 @@ export const RepositorySettingsSection = ({
                             <span>
                                 {user.nombre} {user.apellido} ({user.email})
                             </span>
-                            <Form
-                                {...destroyMember.form([
+                            <ConfirmDeleteButton
+                                form={destroyMember.form([
                                     repositorio.slug,
                                     user.id,
                                 ])}
-                            >
-                                {({ processing }) => (
-                                    <Button
-                                        type="submit"
-                                        variant="destructive"
-                                        size="sm"
-                                        disabled={processing}
-                                        aria-label={`Quitar a ${user.nombre} ${user.apellido}`}
-                                    >
-                                        Quitar
-                                    </Button>
-                                )}
-                            </Form>
+                                itemLabel={`${user.nombre} ${user.apellido}`}
+                                triggerLabel="Quitar"
+                                triggerSize="sm"
+                            />
                         </li>
                     ))}
                 </ul>
@@ -210,18 +202,11 @@ export const RepositorySettingsSection = ({
                         repositorio y su contenido asociado.
                     </p>
                 </div>
-                <Form {...destroyRepo.form(repositorio.slug)}>
-                    {({ processing }) => (
-                        <Button
-                            type="submit"
-                            variant="destructive"
-                            disabled={processing}
-                            aria-label="Eliminar repositorio"
-                        >
-                            {processing ? 'Eliminando...' : 'Eliminar'}
-                        </Button>
-                    )}
-                </Form>
+                <ConfirmDeleteButton
+                    form={destroyRepo.form(repositorio.slug)}
+                    itemLabel={repositorio.nombre_rep}
+                    triggerLabel="Eliminar"
+                />
             </section>
         </div>
     );
