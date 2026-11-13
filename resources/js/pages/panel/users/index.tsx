@@ -11,6 +11,7 @@ type UsersIndexPageProps = {
     users: PaginatedUsers;
     filters: UsersFilters;
     roles: RoleOption[];
+    assignableRoles: RoleOption[];
     careers: Record<string, string>;
     careerPolicy: CareerFormPolicy;
 };
@@ -19,6 +20,7 @@ const UsersIndexPage = ({
     users,
     filters,
     roles,
+    assignableRoles,
     careers,
     careerPolicy,
 }: UsersIndexPageProps) => {
@@ -29,6 +31,7 @@ const UsersIndexPage = ({
                 users={users}
                 filters={filters}
                 roles={roles}
+                assignableRoles={assignableRoles}
                 careers={careers}
                 careerPolicy={careerPolicy}
             />

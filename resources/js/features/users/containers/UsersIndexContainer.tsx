@@ -13,6 +13,7 @@ type UsersIndexContainerProps = {
   users: PaginatedUsers;
   filters: UsersFilters;
   roles: RoleOption[];
+  assignableRoles: RoleOption[];
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
 };
@@ -21,6 +22,7 @@ export const UsersIndexContainer = ({
   users,
   filters,
   roles,
+  assignableRoles,
   careers,
   careerPolicy,
 }: UsersIndexContainerProps) => {
@@ -61,6 +63,7 @@ export const UsersIndexContainer = ({
         users={users}
         filters={filters}
         roles={roles}
+        assignableRoles={assignableRoles}
         careersOptions={careers}
         careerPolicy={careerPolicy}
       />

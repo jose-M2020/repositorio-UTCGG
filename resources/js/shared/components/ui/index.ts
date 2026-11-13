@@ -37,6 +37,17 @@ export {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from './dropdown-menu';
+export {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogPortal,
+    DialogTitle,
+    DialogTrigger,
+} from './dialog';
 export { Input } from './input';
 export { Separator } from './separator';
 export {

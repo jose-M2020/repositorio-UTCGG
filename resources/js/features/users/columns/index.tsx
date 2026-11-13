@@ -1,6 +1,6 @@
 ﻿import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { UserRowActions } from "../components/UserRowActions";
-import type { RoleOption, UserListItem } from "../types";
+import type { CareerFormPolicy, RoleOption, UserListItem } from "../types";
 
 const USERS_DATE_FILTER_PRESETS = [
   { value: "today", label: "Hoy" },
@@ -11,16 +11,20 @@ const USERS_DATE_FILTER_PRESETS = [
 
 type CreateUsersColumnsOptions = {
   roles: RoleOption[];
+  assignableRoles: RoleOption[];
   careersOptions: Record<string, string>;
   canFilterCareer: boolean;
+  careerPolicy: CareerFormPolicy;
 };
 
 const columnHelper = createDataTableColumnHelper<UserListItem>();
 
 export const createUsersColumns = ({
   roles,
+  assignableRoles,
   careersOptions,
   canFilterCareer,
+  careerPolicy,
 }: CreateUsersColumnsOptions) => [
   columnHelper.accessor((row) => `${row.nombre} ${row.apellido}`.trim(), {
     id: "nombre",
@@ -124,6 +128,13 @@ export const createUsersColumns = ({
       headerClassName: "text-right",
       cellClassName: "max-w-none overflow-visible text-right",
     },
-    cell: ({ row }) => <UserRowActions user={row.original} />,
+    cell: ({ row }) => (
+      <UserRowActions
+        user={row.original}
+        roles={assignableRoles}
+        careers={careersOptions}
+        careerPolicy={careerPolicy}
+      />
+    ),
   }),
 ];

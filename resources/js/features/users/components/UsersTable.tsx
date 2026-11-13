@@ -19,6 +19,7 @@ type UsersTableProps = {
   users: PaginatedUsers;
   filters: UsersFilters;
   roles: RoleOption[];
+  assignableRoles: RoleOption[];
   careersOptions: Record<string, string>;
   careerPolicy: CareerFormPolicy;
 };
@@ -27,6 +28,7 @@ export const UsersTable = ({
   users,
   filters,
   roles,
+  assignableRoles,
   careersOptions,
   careerPolicy,
 }: UsersTableProps) => {
@@ -69,8 +71,10 @@ export const UsersTable = ({
 
   const columns = createUsersColumns({
     roles,
+    assignableRoles,
     careersOptions,
     canFilterCareer,
+    careerPolicy,
   });
 
   return (

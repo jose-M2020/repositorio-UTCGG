@@ -123,6 +123,7 @@ class UserController extends Controller implements HasMiddleware
                 'rango_fecha' => $dateRange,
             ],
             'roles' => UserRoles::filterOptions(),
+            'assignableRoles' => UserRoles::assignableOptionsFor($authUser),
             'careers' => CatalogData::careers(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
         ]);
