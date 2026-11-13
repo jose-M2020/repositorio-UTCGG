@@ -1,4 +1,4 @@
-﻿import type { ComponentProps } from "react";
+﻿import { useState, type ComponentProps } from "react";
 import { Form } from "@inertiajs/react";
 import { Trash2 } from "lucide-react";
 import {
@@ -41,11 +41,30 @@ export const ConfirmDeleteButton = ({
   triggerLabel,
   triggerVariant = triggerLabel ? "destructive" : "ghost",
   triggerSize = triggerLabel ? "default" : "icon-sm",
-  open,
+  open: openProp,
   onOpenChange,
   hideTrigger = false,
 }: ConfirmDeleteButtonProps) => {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : uncontrolledOpen;
   const ariaLabel = `Eliminar ${itemLabel}`;
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
+  };
+
+  const { onSuccess: formOnSuccess, ...formRest } = form;
+
+  const handleSuccess: NonNullable<ComponentProps<typeof Form>["onSuccess"]> = (
+    page,
+  ) => {
+    handleOpenChange(false);
+    formOnSuccess?.(page);
+  };
 
   const dialog = (
     <AlertDialogContent size="sm">
@@ -60,7 +79,7 @@ export const ConfirmDeleteButton = ({
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-        <Form {...form}>
+        <Form {...formRest} onSuccess={handleSuccess}>
           {({ processing }) => (
             <AlertDialogAction
               type="submit"
@@ -77,7 +96,7 @@ export const ConfirmDeleteButton = ({
 
   if (hideTrigger) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={open} onOpenChange={handleOpenChange}>
         {dialog}
       </AlertDialog>
     );
@@ -108,7 +127,7 @@ export const ConfirmDeleteButton = ({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger
         render={
           <Button

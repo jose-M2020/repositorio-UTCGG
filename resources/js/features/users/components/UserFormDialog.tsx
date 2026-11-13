@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
+import { useState, type ReactElement, type ReactNode } from "react";
 import { Form } from "@inertiajs/react";
 import { store, update } from "@/actions/App/Http/Controllers/UserController";
 import {
@@ -36,6 +36,7 @@ type UserFormDialogProps = UserFormDialogBaseProps &
 
 export const UserFormDialog = (props: UserFormDialogProps) => {
   const { roles, careers, careerPolicy, trigger, triggerContent, mode } = props;
+  const [open, setOpen] = useState(false);
   const isEdit = mode === "edit";
   const user = isEdit ? props.user : null;
   const userName = user
@@ -55,8 +56,12 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
 
   const formProps = isEdit && user ? update.form(user.id) : store.form();
 
+  const handleSuccess = () => {
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={trigger}>{triggerContent}</DialogTrigger>
 
       <DialogContent className="sm:max-w-2xl">
@@ -71,7 +76,11 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...formProps} className="space-y-6">
+        <Form
+          {...formProps}
+          className="space-y-6"
+          onSuccess={handleSuccess}
+        >
           {({ errors, processing }) => (
             <>
               <UserFormFields

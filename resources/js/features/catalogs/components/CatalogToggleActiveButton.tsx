@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Form } from "@inertiajs/react";
 import { Power, PowerOff } from "lucide-react";
 import { toggleActive } from "@/actions/App/Http/Controllers/CatalogController";
@@ -23,13 +24,18 @@ type CatalogToggleActiveButtonProps = {
 export const CatalogToggleActiveButton = ({
   catalog,
 }: CatalogToggleActiveButtonProps) => {
+  const [open, setOpen] = useState(false);
   const catalogName = catalog.name.trim();
   const willActivate = !catalog.is_active;
   const actionLabel = willActivate ? "Activar" : "Desactivar";
   const Icon = willActivate ? Power : PowerOff;
 
+  const handleSuccess = () => {
+    setOpen(false);
+  };
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
           <Button
@@ -66,7 +72,7 @@ export const CatalogToggleActiveButton = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Form {...toggleActive.form(catalog.id)}>
+          <Form {...toggleActive.form(catalog.id)} onSuccess={handleSuccess}>
             {({ processing }) => (
               <AlertDialogAction type="submit" disabled={processing}>
                 {processing ? "Guardando..." : actionLabel}
