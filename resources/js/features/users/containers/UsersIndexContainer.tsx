@@ -1,6 +1,6 @@
-import { Link, usePage } from "@inertiajs/react";
-import { create } from "@/actions/App/Http/Controllers/UserController";
+import { usePage } from "@inertiajs/react";
 import { Button } from "@/shared/components/ui";
+import { UserFormDialog } from "../components/UserFormDialog";
 import { UsersTable } from "../components/UsersTable";
 import type {
   CareerFormPolicy,
@@ -37,9 +37,14 @@ export const UsersIndexContainer = ({
             Usuarios totales: <b>{users.total}</b>
           </p>
         </div>
-        <Link href={create.url()}>
-          <Button type="button">Nuevo</Button>
-        </Link>
+        <UserFormDialog
+          mode="create"
+          roles={assignableRoles}
+          careers={careers}
+          careerPolicy={careerPolicy}
+          trigger={<Button type="button" />}
+          triggerContent="Nuevo"
+        />
       </header>
 
       {flash.status ? (
@@ -47,8 +52,8 @@ export const UsersIndexContainer = ({
           {flash.status}
         </p>
       ) : null}
-      
-      {!careerPolicy.can_select_career && careerPolicy.locked_career_label && (
+
+      {!careerPolicy.can_select_career && careerPolicy.locked_career_label ? (
         <div className="mb-4 flex flex-wrap items-center justify-end gap-3">
           <p className="text-sm text-muted-foreground">
             Carrera:{" "}
@@ -57,7 +62,7 @@ export const UsersIndexContainer = ({
             </span>
           </p>
         </div>
-      )}
+      ) : null}
 
       <UsersTable
         users={users}

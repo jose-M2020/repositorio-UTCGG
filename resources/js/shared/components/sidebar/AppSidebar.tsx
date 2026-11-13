@@ -13,10 +13,7 @@ import {
 } from '@/actions/App/Http/Controllers/RepositorioController';
 import { index as catalogs } from '@/actions/App/Http/Controllers/CatalogController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
-import {
-    create as createUser,
-    index as users,
-} from '@/actions/App/Http/Controllers/UserController';
+import { index as users } from '@/actions/App/Http/Controllers/UserController';
 import { NavMain, type NavMainItem } from '@/shared/components/sidebar/nav-main';
 import { NavUser } from '@/shared/components/sidebar/nav-user';
 import {
@@ -87,14 +84,6 @@ const useNavMainItems = (): NavMainItem[] => {
                   {
                       title: 'Usuarios',
                       url: users.url(),
-                  },
-              ]
-            : []),
-        ...(auth.abilities['users.create']
-            ? [
-                  {
-                      title: 'Nuevo usuario',
-                      url: createUser.url(),
                   },
               ]
             : []),

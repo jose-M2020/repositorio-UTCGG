@@ -132,17 +132,37 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
-            ->from(route('usuarios.create'))
+            ->from(route('usuarios.index'))
             ->post(route('usuarios.store'), []);
 
-        $response->assertRedirect(route('usuarios.create'));
+        $response->assertRedirect(route('usuarios.index'));
         $response->assertSessionHasErrors([
             'nombre',
             'apellido',
             'email',
             'password',
-            'carrera',
             'rol',
+        ]);
+    }
+
+    public function test_admin_can_create_admin_without_career(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $response = $this->actingAs($admin)->post(route('usuarios.store'), [
+            'nombre' => 'Root',
+            'apellido' => 'User',
+            'email' => 'root@example.com',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+            'rol' => UserRoles::ADMIN,
+        ]);
+
+        $response->assertRedirect(route('usuarios.index'));
+        $this->assertDatabaseHas('users', [
+            'email' => 'root@example.com',
+            'career_catalog_id' => null,
         ]);
     }
 
@@ -188,7 +208,7 @@ class UserManagementTest extends TestCase
         $director->assignRole(UserRoles::DIRECTOR_CARRERA);
 
         $response = $this->actingAs($director)
-            ->from(route('usuarios.create'))
+            ->from(route('usuarios.index'))
             ->post(route('usuarios.store'), [
                 'nombre' => 'Hack',
                 'apellido' => 'Attempt',
@@ -198,7 +218,7 @@ class UserManagementTest extends TestCase
                 'rol' => UserRoles::ADMIN,
             ]);
 
-        $response->assertRedirect(route('usuarios.create'));
+        $response->assertRedirect(route('usuarios.index'));
         $response->assertSessionHasErrors(['rol']);
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
@@ -338,7 +358,15 @@ class UserManagementTest extends TestCase
         $docente->assignRole(UserRoles::DOCENTE);
 
         $this->actingAs($docente)
-            ->get(route('usuarios.create'))
+            ->post(route('usuarios.store'), [
+                'nombre' => 'Ana',
+                'apellido' => 'Lopez',
+                'email' => 'ana@example.com',
+                'carrera' => 'TIC',
+                'password' => 'Password123!',
+                'password_confirmation' => 'Password123!',
+                'rol' => UserRoles::ALUMNO,
+            ])
             ->assertForbidden();
     }
 }

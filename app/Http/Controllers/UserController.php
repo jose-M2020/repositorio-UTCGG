@@ -24,8 +24,8 @@ class UserController extends Controller implements HasMiddleware
         return [
             'auth',
             new Middleware('can:usuarios.index', only: ['index']),
-            new Middleware('can:usuarios.create', only: ['create', 'store']),
-            new Middleware('can:usuarios.edit', only: ['edit', 'update']),
+            new Middleware('can:usuarios.create', only: ['store']),
+            new Middleware('can:usuarios.edit', only: ['update']),
             new Middleware('can:usuarios.destroy', only: ['destroy']),
             new Middleware('can:usuarios.search', only: ['search']),
         ];
@@ -129,17 +129,6 @@ class UserController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function create(): Response
-    {
-        $authUser = auth()->user();
-
-        return Inertia::render('panel/users/create', [
-            'roles' => UserRoles::assignableOptionsFor($authUser),
-            'careers' => CatalogData::careers(),
-            'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
-        ]);
-    }
-
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $data = $request->safe()->except(['rol', 'carrera']);
@@ -204,28 +193,6 @@ class UserController extends Controller implements HasMiddleware
         return response()->json($users);
     }
 
-    public function edit(User $user): Response
-    {
-        $this->ensureCanManage($user);
-
-        $authUser = auth()->user();
-        $user->load(['roles:id,name', 'careerCatalog:id,code']);
-
-        return Inertia::render('panel/users/edit', [
-            'user' => [
-                'id' => $user->id,
-                'nombre' => $user->nombre,
-                'apellido' => $user->apellido,
-                'email' => $user->email,
-                'carrera' => $user->careerCatalog?->code,
-                'rol' => $user->getRoleNames()->first(),
-            ],
-            'roles' => UserRoles::assignableOptionsFor($authUser),
-            'careers' => CatalogData::careers(),
-            'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
-        ]);
-    }
-
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $this->ensureCanManage($user);
@@ -263,6 +230,12 @@ class UserController extends Controller implements HasMiddleware
 
     private function resolveCareerCatalogId(StoreUserRequest|UpdateUserRequest $request): ?int
     {
+        $role = $request->string('rol')->toString();
+
+        if (! UserRoles::requiresCareer($role)) {
+            return null;
+        }
+
         $authUser = $request->user();
 
         if (UserRoles::isCareerScoped($authUser)) {

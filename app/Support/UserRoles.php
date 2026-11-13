@@ -77,6 +77,25 @@ final class UserRoles
         return RoleAssignPermissionSync::permissionName($role);
     }
 
+    /**
+     * Roles that must be tied to a career catalog.
+     *
+     * @return list<string>
+     */
+    public static function rolesRequiringCareer(): array
+    {
+        return [
+            self::DIRECTOR_CARRERA,
+            self::DOCENTE,
+            self::ALUMNO,
+        ];
+    }
+
+    public static function requiresCareer(string $role): bool
+    {
+        return in_array($role, self::rolesRequiringCareer(), true);
+    }
+
     public static function canSelectCareer(?User $user): bool
     {
         return $user?->can(self::CAREER_ANY) ?? false;
@@ -115,7 +134,7 @@ final class UserRoles
     }
 
     /**
-     * @return list<array{value: string, label: string}>
+     * @return list<array{value: string, label: string, requires_career: bool}>
      */
     public static function assignableOptionsFor(?User $authUser): array
     {
@@ -123,6 +142,7 @@ final class UserRoles
             fn (string $role): array => [
                 'value' => $role,
                 'label' => self::label($role),
+                'requires_career' => self::requiresCareer($role),
             ],
             self::assignableBy($authUser),
         );

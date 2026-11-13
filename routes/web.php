@@ -13,6 +13,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/acerca', [HomeController::class, 'about'])->name('about');
 
 Route::resource('usuarios', UserController::class)
+    ->except(['create', 'edit'])
     ->parameters(['usuarios' => 'user']);
 
 Route::middleware('auth')->group(function (): void {

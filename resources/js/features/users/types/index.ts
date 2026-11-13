@@ -61,6 +61,7 @@ export type UserFormErrors = Record<string, string>;
 export type RoleOption = {
     value: string;
     label: string;
+    requires_career?: boolean;
 };
 
 export type CareerFormPolicy = {

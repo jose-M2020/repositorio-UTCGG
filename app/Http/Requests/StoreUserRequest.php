@@ -19,10 +19,21 @@ class StoreUserRequest extends FormRequest
     {
         $authUser = $this->user();
         $authUser?->loadMissing('careerCatalog:id,code');
+        $role = $this->string('rol')->toString();
 
-        if (! UserRoles::canSelectCareer($authUser) && $authUser?->careerCatalog?->code) {
+        if (
+            UserRoles::requiresCareer($role)
+            && ! UserRoles::canSelectCareer($authUser)
+            && $authUser?->careerCatalog?->code
+        ) {
             $this->merge([
                 'carrera' => $authUser->careerCatalog->code,
+            ]);
+        }
+
+        if ($role !== '' && ! UserRoles::requiresCareer($role)) {
+            $this->merge([
+                'carrera' => null,
             ]);
         }
     }
@@ -34,8 +45,9 @@ class StoreUserRequest extends FormRequest
     {
         $authUser = $this->user();
         $assignableRoles = UserRoles::assignableBy($authUser);
-        $careerRequired = UserRoles::canSelectCareer($authUser)
-            || UserRoles::isCareerScoped($authUser);
+        $role = $this->string('rol')->toString();
+        $careerRequired = UserRoles::requiresCareer($role)
+            && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
         return [
             'nombre' => ['required', 'string', 'max:255'],

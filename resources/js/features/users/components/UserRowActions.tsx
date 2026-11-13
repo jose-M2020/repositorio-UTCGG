@@ -1,9 +1,9 @@
 import { Link } from "@inertiajs/react";
-import { Eye } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 import { destroy, show } from "@/actions/App/Http/Controllers/UserController";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { Button } from "@/shared/components/ui";
-import { UserEditDialog } from "./UserEditDialog";
+import { UserFormDialog } from "./UserFormDialog";
 import type { CareerFormPolicy, RoleOption, UserListItem } from "../types";
 
 type UserRowActionsProps = {
@@ -33,11 +33,21 @@ export const UserRowActions = ({
           <Eye aria-hidden="true" />
         </Button>
       </Link>
-      <UserEditDialog
+      <UserFormDialog
+        mode="edit"
         user={user}
         roles={roles}
         careers={careers}
         careerPolicy={careerPolicy}
+        trigger={
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            aria-label={`Editar ${userName}`}
+          />
+        }
+        triggerContent={<Pencil aria-hidden="true" />}
       />
       <ConfirmDeleteButton
         form={destroy.form(user.id)}
