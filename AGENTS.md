@@ -37,6 +37,7 @@ Use these skills for detailed patterns on-demand:
 | `zod-4` | New API (z.email(), z.uuid()) | [SKILL.md](skills/zod-4/SKILL.md) |
 | `commit` | Conventional commits | [SKILL.md](skills/commit/SKILL.md) |
 | `ui` | UI patterns, component placement, forms | [SKILL.md](skills/ui/SKILL.md) |
+| `web-design-guidelines` | UI/UX audits and component design standards | [SKILL.md](skills/web-design-guidelines/SKILL.md) |
 
 ### Auto-invoke Skills
 
@@ -58,6 +59,8 @@ When performing these actions, ALWAYS invoke the corresponding skill FIRST:
 | Creating a git commit | `commit` |
 | Creating UI components | `ui` |
 | Working with forms | `ui` |
+| Reviewing UI, accessibility, or UX | `web-design-guidelines` |
+| Designing or implementing data tables | `web-design-guidelines` |
 
 ---
 
