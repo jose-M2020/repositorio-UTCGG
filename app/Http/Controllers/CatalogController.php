@@ -18,9 +18,9 @@ class CatalogController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:catalogos.index', only: ['index', 'show']),
-            new Middleware('can:catalogos.create', only: ['create', 'store']),
-            new Middleware('can:catalogos.edit', only: ['edit', 'update']),
+            new Middleware('can:catalogos.index', only: ['index']),
+            new Middleware('can:catalogos.create', only: ['store']),
+            new Middleware('can:catalogos.edit', only: ['update', 'toggleActive']),
             new Middleware('can:catalogos.destroy', only: ['destroy']),
         ];
     }
@@ -47,36 +47,16 @@ class CatalogController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function create(): Response
-    {
-        return Inertia::render('panel/catalogs/create', [
-            'catalogTypes' => $this->catalogTypes(),
-        ]);
-    }
-
     public function store(StoreCatalogRequest $request): RedirectResponse
     {
-        Catalog::query()->create($this->validatedPayload($request));
+        Catalog::query()->create([
+            ...$this->validatedPayload($request),
+            'is_active' => true,
+        ]);
 
         return redirect()
             ->route('catalogos.index')
             ->with('status', 'Catalogo creado exitosamente.');
-    }
-
-    public function show(Catalog $catalog): Response
-    {
-        return Inertia::render('panel/catalogs/show', [
-            'catalog' => $this->serializeCatalog($catalog),
-            'catalogTypes' => $this->catalogTypes(),
-        ]);
-    }
-
-    public function edit(Catalog $catalog): Response
-    {
-        return Inertia::render('panel/catalogs/edit', [
-            'catalog' => $this->serializeCatalog($catalog),
-            'catalogTypes' => $this->catalogTypes(),
-        ]);
     }
 
     public function update(UpdateCatalogRequest $request, Catalog $catalog): RedirectResponse
@@ -86,6 +66,21 @@ class CatalogController extends Controller implements HasMiddleware
         return redirect()
             ->route('catalogos.index')
             ->with('status', 'Catalogo actualizado exitosamente.');
+    }
+
+    public function toggleActive(Catalog $catalog): RedirectResponse
+    {
+        $catalog->update([
+            'is_active' => ! $catalog->is_active,
+        ]);
+
+        $message = $catalog->is_active
+            ? 'Catalogo activado exitosamente.'
+            : 'Catalogo desactivado exitosamente.';
+
+        return redirect()
+            ->route('catalogos.index')
+            ->with('status', $message);
     }
 
     public function destroy(Catalog $catalog): RedirectResponse
@@ -151,7 +146,6 @@ class CatalogController extends Controller implements HasMiddleware
             'code' => trim((string) $validated['code']),
             'name' => trim((string) $validated['name']),
             'sort_order' => (int) $validated['sort_order'],
-            'is_active' => (bool) $validated['is_active'],
             'meta' => $meta,
         ];
     }

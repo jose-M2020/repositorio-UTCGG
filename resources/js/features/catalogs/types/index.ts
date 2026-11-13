@@ -21,7 +21,6 @@ export type CatalogFormValues = {
     code: string;
     name: string;
     sort_order: number;
-    is_active: boolean;
     meta: CatalogMeta;
 };
 

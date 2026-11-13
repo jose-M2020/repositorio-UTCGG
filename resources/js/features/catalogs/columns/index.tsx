@@ -1,13 +1,6 @@
-﻿import { Link } from "@inertiajs/react";
-import { Eye, Pencil } from "lucide-react";
-import {
-  destroy,
-  edit,
-  show,
-} from "@/actions/App/Http/Controllers/CatalogController";
-import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
-import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { Button } from "@/shared/components/ui";
+﻿import { createDataTableColumnHelper } from "@/shared/components/dataTable";
+import { CatalogRowActions } from "../components/CatalogRowActions";
+import { CatalogStatusBadge } from "../components/CatalogStatusBadge";
 import type { CatalogItem, CatalogTypesMap } from "../types";
 
 type CreateCatalogsColumnsOptions = {
@@ -48,9 +41,9 @@ export const createCatalogsColumns = ({
   }),
   columnHelper.accessor("is_active", {
     header: "Estado",
-    size: 100,
-    minSize: 88,
-    cell: ({ getValue }) => (getValue() ? "Activo" : "Inactivo"),
+    size: 110,
+    minSize: 96,
+    cell: ({ getValue }) => <CatalogStatusBadge isActive={getValue()} />,
   }),
   columnHelper.display({
     id: "actions",
@@ -62,38 +55,11 @@ export const createCatalogsColumns = ({
       headerClassName: "text-right",
       cellClassName: "max-w-none overflow-visible text-right",
     },
-    cell: ({ row }) => {
-      const catalog = row.original;
-      const catalogName = catalog.name.trim();
-
-      return (
-        <div className="flex justify-end gap-1">
-          <Link href={show.url(catalog.id)}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              aria-label={`Ver ${catalogName}`}
-            >
-              <Eye aria-hidden="true" />
-            </Button>
-          </Link>
-          <Link href={edit.url(catalog.id)}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              aria-label={`Editar ${catalogName}`}
-            >
-              <Pencil aria-hidden="true" />
-            </Button>
-          </Link>
-          <ConfirmDeleteButton
-            form={destroy.form(catalog.id)}
-            itemLabel={catalogName}
-          />
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <CatalogRowActions
+        catalog={row.original}
+        catalogTypes={catalogTypes}
+      />
+    ),
   }),
 ];

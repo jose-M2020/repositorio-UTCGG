@@ -1,8 +1,12 @@
-﻿import { Link, usePage } from "@inertiajs/react";
-import { create } from "@/actions/App/Http/Controllers/CatalogController";
+﻿import { usePage } from "@inertiajs/react";
 import { Button } from "@/shared/components/ui";
+import { CatalogFormDialog } from "../components/CatalogFormDialog";
 import { CatalogsTable } from "../components/CatalogsTable";
-import type { CatalogFilters, CatalogTypesMap, PaginatedCatalogs } from "../types";
+import type {
+  CatalogFilters,
+  CatalogTypesMap,
+  PaginatedCatalogs,
+} from "../types";
 
 type CatalogsIndexContainerProps = {
   catalogs: PaginatedCatalogs;
@@ -28,9 +32,12 @@ export const CatalogsIndexContainer = ({
             Administra areas, tipos de proyecto y grados academicos.
           </p>
         </div>
-        <Link href={create.url()}>
-          <Button type="button">Nuevo catalogo</Button>
-        </Link>
+        <CatalogFormDialog
+          mode="create"
+          catalogTypes={catalogTypes}
+          trigger={<Button type="button" />}
+          triggerContent="Nuevo catalogo"
+        />
       </header>
 
       {flash.status ? (

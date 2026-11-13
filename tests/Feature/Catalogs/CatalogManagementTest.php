@@ -49,7 +49,6 @@ class CatalogManagementTest extends TestCase
             'code' => 'Tesis',
             'name' => 'Tesis',
             'sort_order' => 40,
-            'is_active' => true,
         ]);
 
         $response->assertRedirect(route('catalogos.index'));
@@ -57,6 +56,7 @@ class CatalogManagementTest extends TestCase
             'type' => Catalog::TYPE_PROJECT,
             'code' => 'Tesis',
             'name' => 'Tesis',
+            'is_active' => true,
         ]);
     }
 
@@ -72,7 +72,6 @@ class CatalogManagementTest extends TestCase
             'code' => $catalog->code,
             'name' => 'Carrera actualizada',
             'sort_order' => 5,
-            'is_active' => true,
             'meta_image' => '/img/carrerasBG/NEW.jpg',
             'meta_show_on_home' => true,
         ]);
@@ -83,6 +82,27 @@ class CatalogManagementTest extends TestCase
             'name' => 'Carrera actualizada',
             'sort_order' => 5,
         ]);
+    }
+
+    public function test_admin_can_toggle_catalog_active_status(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $catalog = Catalog::query()->where('type', Catalog::TYPE_PROJECT)->firstOrFail();
+        $this->assertTrue($catalog->is_active);
+
+        $response = $this->actingAs($admin)
+            ->patch(route('catalogos.toggle-active', $catalog));
+
+        $response->assertRedirect(route('catalogos.index'));
+        $this->assertFalse($catalog->fresh()?->is_active);
+
+        $this->actingAs($admin)
+            ->patch(route('catalogos.toggle-active', $catalog))
+            ->assertRedirect(route('catalogos.index'));
+
+        $this->assertTrue($catalog->fresh()?->is_active);
     }
 
     public function test_admin_can_delete_catalog_item(): void

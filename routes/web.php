@@ -23,7 +23,10 @@ Route::middleware('auth')->group(function (): void {
 
 Route::resource('roles', RoleController::class);
 Route::resource('catalogos', CatalogController::class)
+    ->except(['create', 'edit', 'show'])
     ->parameters(['catalogos' => 'catalog']);
+Route::patch('catalogos/{catalog}/active', [CatalogController::class, 'toggleActive'])
+    ->name('catalogos.toggle-active');
 
 Route::get('repositorios', [RepositorioController::class, 'index'])
     ->name('repositorios.index');

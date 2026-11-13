@@ -35,7 +35,6 @@ class UpdateCatalogRequest extends FormRequest
             ],
             'name' => ['required', 'string', 'max:255'],
             'sort_order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['required', 'boolean'],
             'meta_image' => [
                 'nullable',
                 'string',
