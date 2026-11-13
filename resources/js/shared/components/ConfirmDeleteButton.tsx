@@ -28,6 +28,10 @@ type ConfirmDeleteButtonProps = {
   triggerLabel?: string;
   triggerVariant?: ComponentProps<typeof Button>["variant"];
   triggerSize?: ComponentProps<typeof Button>["size"];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** When true, caller owns the trigger (e.g. overflow menu item). */
+  hideTrigger?: boolean;
 };
 
 export const ConfirmDeleteButton = ({
@@ -37,8 +41,47 @@ export const ConfirmDeleteButton = ({
   triggerLabel,
   triggerVariant = triggerLabel ? "destructive" : "ghost",
   triggerSize = triggerLabel ? "default" : "icon-sm",
+  open,
+  onOpenChange,
+  hideTrigger = false,
 }: ConfirmDeleteButtonProps) => {
   const ariaLabel = `Eliminar ${itemLabel}`;
+
+  const dialog = (
+    <AlertDialogContent size="sm">
+      <AlertDialogHeader>
+        <AlertDialogMedia className="bg-destructive/10 text-destructive">
+          <Trash2 aria-hidden="true" />
+        </AlertDialogMedia>
+        <AlertDialogTitle>¿Eliminar {itemLabel}?</AlertDialogTitle>
+        <AlertDialogDescription>
+          Esta acción no se puede deshacer. Se eliminará permanentemente.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+        <Form {...form}>
+          {({ processing }) => (
+            <AlertDialogAction
+              type="submit"
+              variant="destructive"
+              disabled={processing}
+            >
+              Eliminar
+            </AlertDialogAction>
+          )}
+        </Form>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  );
+
+  if (hideTrigger) {
+    return (
+      <AlertDialog open={open} onOpenChange={onOpenChange}>
+        {dialog}
+      </AlertDialog>
+    );
+  }
 
   if (disabledReason) {
     return (
@@ -50,19 +93,11 @@ export const ConfirmDeleteButton = ({
                 type="button"
                 variant={triggerVariant}
                 size={triggerSize}
-                className={
-                  triggerLabel
-                    ? undefined
-                    : "text-destructive"
-                }
+                className={triggerLabel ? undefined : "text-destructive"}
                 disabled
                 aria-label={`No se puede eliminar ${itemLabel}. ${disabledReason}`}
               >
-                {triggerLabel ? (
-                  triggerLabel
-                ) : (
-                  <Trash2 aria-hidden="true" />
-                )}
+                {triggerLabel ? triggerLabel : <Trash2 aria-hidden="true" />}
               </Button>
             </span>
           }
@@ -73,7 +108,7 @@ export const ConfirmDeleteButton = ({
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger
         render={
           <Button
@@ -91,31 +126,7 @@ export const ConfirmDeleteButton = ({
       >
         {triggerLabel ? triggerLabel : <Trash2 aria-hidden="true" />}
       </AlertDialogTrigger>
-      <AlertDialogContent size="sm">
-        <AlertDialogHeader>
-          <AlertDialogMedia className="bg-destructive/10 text-destructive">
-            <Trash2 aria-hidden="true" />
-          </AlertDialogMedia>
-          <AlertDialogTitle>¿Eliminar {itemLabel}?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Esta acción no se puede deshacer. Se eliminará permanentemente.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Form {...form}>
-            {({ processing }) => (
-              <AlertDialogAction
-                type="submit"
-                variant="destructive"
-                disabled={processing}
-              >
-                Eliminar
-              </AlertDialogAction>
-            )}
-          </Form>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+      {dialog}
     </AlertDialog>
   );
 };

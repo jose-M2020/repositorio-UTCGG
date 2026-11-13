@@ -4,16 +4,16 @@ import { DataTable } from "@/shared/components/dataTable";
 import { resolveUpdater } from "@/shared/lib";
 import { visitUsersIndex } from "../api/visitUsersIndex";
 import { createUsersColumns } from "../columns";
-import {
-  buildColumnFilters,
-  readFiltersFromColumnState,
-} from "../utils/usersTableFilters";
 import type {
   CareerFormPolicy,
   PaginatedUsers,
   RoleOption,
   UsersFilters,
 } from "../types";
+import {
+  buildColumnFilters,
+  readFiltersFromColumnState,
+} from "../utils/usersTableFilters";
 
 type UsersTableProps = {
   users: PaginatedUsers;
