@@ -50,11 +50,16 @@ export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeade
                     )
                   : null,
               )}
-              style={getPinnedColumnStyle(pinned, column)}
+              style={{
+                ...getPinnedColumnStyle(pinned, column),
+                width: header.getSize(),
+                minWidth: column.columnDef.minSize,
+                maxWidth: column.columnDef.maxSize,
+              }}
             >
               {header.isPlaceholder ? null : (
                 <div className="flex items-center gap-2">
-                  <span>
+                  <span className="truncate">
                     {flexRender(column.columnDef.header, header.getContext())}
                   </span>
 

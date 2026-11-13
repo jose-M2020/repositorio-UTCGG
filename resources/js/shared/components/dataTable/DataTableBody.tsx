@@ -41,6 +41,7 @@ const DataCells = <TData extends RowData>({ row }: { row: Row<DataTableFeatures,
       <TableCell
         key={cell.id}
         className={cn(
+          "max-w-0 truncate",
           meta?.cellClassName,
           pinned
             ? cn(
@@ -51,7 +52,12 @@ const DataCells = <TData extends RowData>({ row }: { row: Row<DataTableFeatures,
               )
             : null,
         )}
-        style={getPinnedColumnStyle(pinned, cell)}
+        style={{
+          ...getPinnedColumnStyle(pinned, cell),
+          width: column.getSize(),
+          minWidth: column.columnDef.minSize,
+          maxWidth: column.columnDef.maxSize,
+        }}
       >
         {flexRender(column.columnDef.cell, cell.getContext())}
       </TableCell>

@@ -26,10 +26,18 @@ export const DataTable = <TData extends RowData>({
   toolbar,
   renderSubComponent,
 }: DataTableProps<TData>) => {
+  const { defaultColumn: tableDefaultColumn, ...restTableOptions } = tableOptions ?? {};
+
   const table = useTable({
     features,
-    defaultColumn: { enableSorting: false },
-    ...tableOptions,
+    // Fallback sizes only; set `size` per column for proportional table-fixed widths.
+    defaultColumn: {
+      enableSorting: false,
+      size: 160,
+      minSize: 96,
+      ...tableDefaultColumn,
+    },
+    ...restTableOptions,
     columns,
     data,
   });
@@ -39,7 +47,7 @@ export const DataTable = <TData extends RowData>({
   return (
     <div className="relative w-full">
       {toolbar?.(table)}
-      <Table>
+      <Table className="table-fixed">
         <DataTableHeader table={table} />
         <DataTableBody
           table={table}

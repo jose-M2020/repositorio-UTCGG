@@ -29,6 +29,8 @@ export const createUsersColumns = ({
   columnHelper.accessor((row) => `${row.nombre} ${row.apellido}`.trim(), {
     id: "nombre",
     header: "Nombre",
+    size: 220,
+    minSize: 160,
     enableColumnFilter: true,
     cell: ({ row }) => `${row.original.nombre} ${row.original.apellido}`.trim(),
     meta: {
@@ -43,6 +45,8 @@ export const createUsersColumns = ({
   }),
   columnHelper.accessor("email", {
     header: "Correo",
+    size: 240,
+    minSize: 180,
     enableColumnFilter: true,
     meta: {
       filter: {
@@ -56,6 +60,8 @@ export const createUsersColumns = ({
   }),
   columnHelper.accessor("carrera", {
     header: "Carrera",
+    size: 200,
+    minSize: 140,
     cell: ({ getValue }) => getValue() ?? "—",
     enableColumnFilter: canFilterCareer,
     meta: canFilterCareer
@@ -73,6 +79,8 @@ export const createUsersColumns = ({
   columnHelper.accessor((row) => row.roles.map((role) => role.name).join(", "), {
     id: "rol",
     header: "Rol",
+    size: 120,
+    minSize: 96,
     cell: ({ getValue }) => getValue() || "—",
     enableColumnFilter: true,
     meta: {
@@ -87,6 +95,8 @@ export const createUsersColumns = ({
   }),
   columnHelper.accessor("created_at", {
     header: "Fecha",
+    size: 120,
+    minSize: 104,
     cell: ({ getValue }) => {
       const value = getValue();
       if (!value) return "—";
@@ -111,9 +121,12 @@ export const createUsersColumns = ({
   columnHelper.display({
     id: "actions",
     header: "",
+    size: 120,
+    minSize: 120,
+    maxSize: 120,
     meta: {
-      headerClassName: "w-28 text-right",
-      cellClassName: "text-right",
+      headerClassName: "text-right",
+      cellClassName: "max-w-none overflow-visible text-right",
     },
     cell: ({ row }) => {
       const user = row.original;

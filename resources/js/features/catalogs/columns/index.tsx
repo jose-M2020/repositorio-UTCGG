@@ -21,6 +21,8 @@ export const createCatalogsColumns = ({
 }: CreateCatalogsColumnsOptions) => [
   columnHelper.accessor("type", {
     header: "Tipo",
+    size: 160,
+    minSize: 120,
     cell: ({ getValue }) => catalogTypes[getValue()],
     enableColumnFilter: true,
     meta: {
@@ -34,22 +36,31 @@ export const createCatalogsColumns = ({
   }),
   columnHelper.accessor("code", {
     header: "Codigo",
+    size: 110,
+    minSize: 88,
     cell: ({ getValue }) => getValue(),
   }),
   columnHelper.accessor("name", {
     header: "Nombre",
+    size: 280,
+    minSize: 180,
     cell: ({ getValue }) => getValue(),
   }),
   columnHelper.accessor("is_active", {
     header: "Estado",
+    size: 100,
+    minSize: 88,
     cell: ({ getValue }) => (getValue() ? "Activo" : "Inactivo"),
   }),
   columnHelper.display({
     id: "actions",
     header: "",
+    size: 120,
+    minSize: 120,
+    maxSize: 120,
     meta: {
-      headerClassName: "w-28 text-right",
-      cellClassName: "text-right",
+      headerClassName: "text-right",
+      cellClassName: "max-w-none overflow-visible text-right",
     },
     cell: ({ row }) => {
       const catalog = row.original;
