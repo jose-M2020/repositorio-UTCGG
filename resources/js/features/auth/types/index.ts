@@ -9,6 +9,8 @@ export type AuthFieldProps = {
     required?: boolean;
     autoComplete?: string;
     maxLength?: number;
+    defaultValue?: string;
+    readOnly?: boolean;
 };
 
 export type AuthUser = {

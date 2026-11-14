@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\UserAccountStatus;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -44,11 +45,15 @@ class LoginRequest extends FormRequest
 
         $user = Auth::user();
 
-        if ($user && ! $user->is_active) {
+        if ($user && ! $user->status->canLogin()) {
             Auth::logout();
 
+            $message = $user->status === UserAccountStatus::PendingActivation
+                ? 'Tu cuenta aún no está activada. Revisa tu correo para establecer la contraseña.'
+                : 'Tu cuenta está desactivada. Contacta al administrador.';
+
             throw ValidationException::withMessages([
-                'email' => 'Tu cuenta está desactivada. Contacta al administrador.',
+                'email' => $message,
             ]);
         }
 

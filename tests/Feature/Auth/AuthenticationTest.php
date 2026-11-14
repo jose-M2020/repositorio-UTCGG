@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Enums\UserAccountStatus;
 use App\Models\User;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -80,6 +81,27 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('login'));
         $response->assertSessionHasErrors(['email']);
         $this->assertGuest();
+    }
+
+    public function test_pending_activation_user_cannot_login(): void
+    {
+        User::factory()->pendingActivation()->create([
+            'email' => 'pending@example.com',
+            'password' => 'Password123!',
+        ]);
+
+        $response = $this->from(route('login'))->post(route('login'), [
+            'email' => 'pending@example.com',
+            'password' => 'Password123!',
+        ]);
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors(['email']);
+        $this->assertGuest();
+        $this->assertSame(
+            UserAccountStatus::PendingActivation,
+            User::query()->where('email', 'pending@example.com')->first()?->status,
+        );
     }
 
     public function test_login_is_rate_limited_after_repeated_failures(): void

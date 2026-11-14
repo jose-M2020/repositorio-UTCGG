@@ -31,7 +31,7 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
             <div>
                 <dt className="text-sm text-slate-500">Estado</dt>
                 <dd className="font-medium">
-                    <UserStatusBadge isActive={user.is_active} />
+                    <UserStatusBadge status={user.status} />
                 </dd>
             </div>
             <div>

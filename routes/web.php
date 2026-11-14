@@ -19,6 +19,8 @@ Route::patch('usuarios/{user}/role', [UserController::class, 'updateRole'])
     ->name('usuarios.update-role');
 Route::patch('usuarios/{user}/active', [UserController::class, 'toggleActive'])
     ->name('usuarios.toggle-active');
+Route::post('usuarios/{user}/password-link', [UserController::class, 'sendPasswordLink'])
+    ->name('usuarios.password-link');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('api/usuarios/{repositorio?}', [UserController::class, 'search'])

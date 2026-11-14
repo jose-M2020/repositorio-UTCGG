@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserAccountStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -20,14 +21,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $apellido
  * @property string $email
  * @property Carbon|null $email_verified_at
- * @property string $password
+ * @property string|null $password
  * @property int|null $career_catalog_id
- * @property bool $is_active
+ * @property UserAccountStatus $status
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['nombre', 'apellido', 'email', 'password', 'career_catalog_id', 'is_active'])]
+#[Fillable(['nombre', 'apellido', 'email', 'password', 'career_catalog_id', 'status'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -38,7 +39,7 @@ class User extends Authenticatable
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'is_active' => true,
+        'status' => UserAccountStatus::Active->value,
     ];
 
     /**
@@ -51,7 +52,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_active' => 'boolean',
+            'status' => UserAccountStatus::class,
         ];
     }
 

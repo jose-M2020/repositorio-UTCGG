@@ -96,8 +96,8 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? <p>Actualiza los datos de <strong>{userName}</strong>.</p>
-              : "Completa los datos para registrar una cuenta."}
+              ? `Actualiza los datos de ${userName}. El rol se cambia en una acción aparte.`
+              : "Registra nombre, correo y rol. El usuario recibirá un enlace para activar la cuenta y elegir su contraseña."}
           </DialogDescription>
         </DialogHeader>
 
@@ -115,8 +115,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
                 careerPolicy={careerPolicy}
                 defaults={defaultValues}
                 includeRole={!isEdit}
-                includePassword={!isEdit}
-                requirePassword={!isEdit}
+                includePassword={false}
               />
               <DialogFooter>
                 <DialogClose render={<Button type="button" variant="outline" />}>
@@ -127,7 +126,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
                     ? "Guardando..."
                     : isEdit
                       ? "Actualizar"
-                      : "Guardar"}
+                      : "Registrar"}
                 </Button>
               </DialogFooter>
             </>

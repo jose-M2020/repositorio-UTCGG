@@ -1,0 +1,159 @@
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+export const set = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: set.url(args, options),
+    method: 'get',
+})
+
+set.definition = {
+    methods: ["get","head"],
+    url: '/set-password/{token}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+set.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { token: args }
+    }
+
+    
+    if (Array.isArray(args)) {
+        args = {
+                    token: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        token: args.token,
+                }
+
+    return set.definition.url
+            .replace('{token}', parsedArgs.token.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+set.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: set.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+set.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: set.url(args, options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+    const setForm = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: set.url(args, options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+        setForm.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: set.url(args, options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\Auth\SetPasswordController::set
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:19
+ * @route '/set-password/{token}'
+ */
+        setForm.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: set.url(args, {
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    set.form = setForm
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::store
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:28
+ * @route '/set-password'
+ */
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/set-password',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::store
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:28
+ * @route '/set-password'
+ */
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Auth\SetPasswordController::store
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:28
+ * @route '/set-password'
+ */
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+    /**
+* @see \App\Http\Controllers\Auth\SetPasswordController::store
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:28
+ * @route '/set-password'
+ */
+    const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: store.url(options),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\Auth\SetPasswordController::store
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:28
+ * @route '/set-password'
+ */
+        storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: store.url(options),
+            method: 'post',
+        })
+    
+    store.form = storeForm
+const password = {
+    set: Object.assign(set, set),
+store: Object.assign(store, store),
+}
+
+export default password

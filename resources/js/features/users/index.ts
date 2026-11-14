@@ -5,6 +5,7 @@ export type {
   PaginatedUsers,
   RoleOption,
   RolePermissionPreview,
+  UserAccountStatus,
   UserDetails,
   UserFormValues,
   UserRepositorySummary,

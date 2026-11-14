@@ -2,12 +2,16 @@
 
 namespace Tests\Feature\Users;
 
+use App\Enums\SetPasswordPurpose;
+use App\Enums\UserAccountStatus;
 use App\Models\Catalog;
 use App\Models\User;
+use App\Notifications\SetPasswordNotification;
 use App\Support\UserRoles;
 use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -50,8 +54,10 @@ class UserManagementTest extends TestCase
             ->assertOk();
     }
 
-    public function test_admin_can_create_user(): void
+    public function test_admin_can_create_user_pending_activation_without_password(): void
     {
+        Notification::fake();
+
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
@@ -60,8 +66,6 @@ class UserManagementTest extends TestCase
             'apellido' => 'Lopez',
             'email' => 'ana@example.com',
             'carrera' => 'TIC',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
             'rol' => UserRoles::ALUMNO,
         ]);
 
@@ -75,10 +79,18 @@ class UserManagementTest extends TestCase
             'nombre' => 'Ana',
             'apellido' => 'Lopez',
             'career_catalog_id' => $ticCareerId,
+            'status' => UserAccountStatus::PendingActivation->value,
+            'password' => null,
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();
         $this->assertTrue($created?->hasRole(UserRoles::ALUMNO));
+
+        Notification::assertSentTo(
+            $created,
+            SetPasswordNotification::class,
+            fn (SetPasswordNotification $notification): bool => $notification->purpose === SetPasswordPurpose::Activation,
+        );
     }
 
     public function test_admin_can_update_user_profile_without_changing_role(): void
@@ -213,16 +225,16 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $user = User::factory()->create([
-            'is_active' => true,
+            'status' => UserAccountStatus::Active,
         ]);
 
         $deactivate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
         $deactivate->assertRedirect(route('usuarios.index'));
-        $this->assertFalse($user->fresh()?->is_active);
+        $this->assertSame(UserAccountStatus::Inactive, $user->fresh()?->status);
 
         $activate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
         $activate->assertRedirect(route('usuarios.index'));
-        $this->assertTrue($user->fresh()?->is_active);
+        $this->assertSame(UserAccountStatus::Active, $user->fresh()?->status);
     }
 
     public function test_admin_cannot_deactivate_own_account(): void
@@ -236,7 +248,61 @@ class UserManagementTest extends TestCase
 
         $response->assertRedirect(route('usuarios.index'));
         $response->assertSessionHasErrors(['user']);
-        $this->assertTrue($admin->fresh()?->is_active);
+        $this->assertSame(UserAccountStatus::Active, $admin->fresh()?->status);
+    }
+
+    public function test_admin_cannot_toggle_pending_activation_user(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $user = User::factory()->pendingActivation()->create();
+
+        $response = $this->actingAs($admin)
+            ->from(route('usuarios.index'))
+            ->patch(route('usuarios.toggle-active', $user));
+
+        $response->assertRedirect(route('usuarios.index'));
+        $response->assertSessionHasErrors(['user']);
+        $this->assertSame(UserAccountStatus::PendingActivation, $user->fresh()?->status);
+    }
+
+    public function test_admin_can_send_password_reset_link(): void
+    {
+        Notification::fake();
+
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('usuarios.password-link', $user));
+
+        $response->assertRedirect(route('usuarios.index'));
+        Notification::assertSentTo(
+            $user,
+            SetPasswordNotification::class,
+            fn (SetPasswordNotification $notification): bool => $notification->purpose === SetPasswordPurpose::Reset,
+        );
+    }
+
+    public function test_admin_can_resend_activation_link(): void
+    {
+        Notification::fake();
+
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $user = User::factory()->pendingActivation()->create();
+
+        $response = $this->actingAs($admin)->post(route('usuarios.password-link', $user));
+
+        $response->assertRedirect(route('usuarios.index'));
+        Notification::assertSentTo(
+            $user,
+            SetPasswordNotification::class,
+            fn (SetPasswordNotification $notification): bool => $notification->purpose === SetPasswordPurpose::Activation,
+        );
     }
 
     public function test_admin_can_delete_user(): void
@@ -266,13 +332,14 @@ class UserManagementTest extends TestCase
             'nombre',
             'apellido',
             'email',
-            'password',
             'rol',
         ]);
     }
 
     public function test_admin_can_create_admin_without_career(): void
     {
+        Notification::fake();
+
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
@@ -280,8 +347,6 @@ class UserManagementTest extends TestCase
             'nombre' => 'Root',
             'apellido' => 'User',
             'email' => 'root@example.com',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
             'rol' => UserRoles::ADMIN,
         ]);
 
@@ -289,6 +354,7 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'root@example.com',
             'career_catalog_id' => null,
+            'status' => UserAccountStatus::PendingActivation->value,
         ]);
     }
 
@@ -304,13 +370,13 @@ class UserManagementTest extends TestCase
         ]);
         $director->assignRole(UserRoles::DIRECTOR_CARRERA);
 
+        Notification::fake();
+
         $response = $this->actingAs($director)->post(route('usuarios.store'), [
             'nombre' => 'Luis',
             'apellido' => 'Perez',
             'email' => 'luis@example.com',
             'carrera' => 'ER',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
             'rol' => UserRoles::ALUMNO,
         ]);
 
@@ -339,8 +405,6 @@ class UserManagementTest extends TestCase
                 'nombre' => 'Hack',
                 'apellido' => 'Attempt',
                 'email' => 'hack@example.com',
-                'password' => 'Password123!',
-                'password_confirmation' => 'Password123!',
                 'rol' => UserRoles::ADMIN,
             ]);
 
@@ -489,8 +553,6 @@ class UserManagementTest extends TestCase
                 'apellido' => 'Lopez',
                 'email' => 'ana@example.com',
                 'carrera' => 'TIC',
-                'password' => 'Password123!',
-                'password_confirmation' => 'Password123!',
                 'rol' => UserRoles::ALUMNO,
             ])
             ->assertForbidden();

@@ -1,10 +1,15 @@
+export type UserAccountStatus =
+    | "pending_activation"
+    | "active"
+    | "inactive";
+
 export type UserListItem = {
     id: number;
     nombre: string;
     apellido: string;
     email: string;
     carrera: string | null;
-    is_active: boolean;
+    status: UserAccountStatus;
     created_at: string;
     roles: Array<{ id: number; name: string }>;
 };
@@ -31,7 +36,7 @@ export type UserDetails = {
     apellido: string;
     email: string;
     carrera: string | null;
-    is_active: boolean;
+    status: UserAccountStatus;
     roles: string[];
     created_at: string | null;
 };

@@ -113,11 +113,11 @@ export const createUsersColumns = ({
       },
     },
   }),
-  columnHelper.accessor("is_active", {
+  columnHelper.accessor("status", {
     header: "Estado",
-    size: 110,
-    minSize: 96,
-    cell: ({ getValue }) => <UserStatusBadge isActive={getValue()} />,
+    size: 120,
+    minSize: 104,
+    cell: ({ getValue }) => <UserStatusBadge status={getValue()} />,
   }),
   columnHelper.accessor("created_at", {
     header: "Fecha",

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserAccountStatus;
 use App\Models\Catalog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -39,7 +40,7 @@ class UserFactory extends Factory
                     ->where('code', $careerCode)
                     ->value('id')
                 : null,
-            'is_active' => true,
+            'status' => UserAccountStatus::Active,
             'remember_token' => Str::random(10),
         ];
     }
@@ -57,7 +58,15 @@ class UserFactory extends Factory
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_active' => false,
+            'status' => UserAccountStatus::Inactive,
+        ]);
+    }
+
+    public function pendingActivation(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'password' => null,
+            'status' => UserAccountStatus::PendingActivation,
         ]);
     }
 }

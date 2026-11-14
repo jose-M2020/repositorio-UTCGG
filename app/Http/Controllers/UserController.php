@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SetPasswordPurpose;
+use App\Enums\UserAccountStatus;
 use App\Http\Requests\ChangeUserRoleRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Catalog as CatalogModel;
 use App\Models\User;
 use App\Support\Catalog as CatalogData;
+use App\Support\UserPasswordSetup;
 use App\Support\UserRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -29,7 +33,7 @@ class UserController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:usuarios.index', only: ['index']),
             new Middleware('can:usuarios.create', only: ['store']),
-            new Middleware('can:usuarios.edit', only: ['update', 'updateRole', 'toggleActive']),
+            new Middleware('can:usuarios.edit', only: ['update', 'updateRole', 'toggleActive', 'sendPasswordLink']),
             new Middleware('can:usuarios.destroy', only: ['destroy']),
             new Middleware('can:usuarios.search', only: ['search']),
         ];
@@ -101,7 +105,7 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'is_active', 'created_at'])
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'status', 'created_at'])
             ->withQueryString()
             ->through(fn (User $user): array => [
                 'id' => $user->id,
@@ -109,7 +113,7 @@ class UserController extends Controller implements HasMiddleware
                 'apellido' => $user->apellido,
                 'email' => $user->email,
                 'carrera' => $user->careerCatalog?->code,
-                'is_active' => $user->is_active,
+                'status' => $user->status->value,
                 'created_at' => (string) $user->created_at,
                 'roles' => $user->roles->map(fn (Role $role) => [
                     'id' => $role->id,
@@ -139,13 +143,21 @@ class UserController extends Controller implements HasMiddleware
     {
         $data = $request->safe()->except(['rol', 'carrera']);
         $data['career_catalog_id'] = $this->resolveCareerCatalogId($request);
+        $data['password'] = null;
+        $data['status'] = UserAccountStatus::PendingActivation;
 
         $user = User::query()->create($data);
         $user->assignRole($request->string('rol')->toString());
 
+        $linkStatus = UserPasswordSetup::send($user, SetPasswordPurpose::Activation);
+
+        $message = $linkStatus === Password::RESET_LINK_SENT
+            ? 'Usuario registrado. Se envió el enlace de activación.'
+            : 'Usuario registrado, pero no se pudo enviar el enlace de activación.';
+
         return redirect()
             ->route('usuarios.index')
-            ->with('status', 'Usuario registrado exitosamente.');
+            ->with('status', $message);
     }
 
     public function show(User $user): Response
@@ -165,7 +177,7 @@ class UserController extends Controller implements HasMiddleware
                 'apellido' => $user->apellido,
                 'email' => $user->email,
                 'carrera' => $user->careerCatalog?->code,
-                'is_active' => $user->is_active,
+                'status' => $user->status->value,
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
             ],
@@ -248,17 +260,58 @@ class UserController extends Controller implements HasMiddleware
             ]);
         }
 
+        if (! $user->status->canToggleActive()) {
+            throw ValidationException::withMessages([
+                'user' => 'La cuenta aún está pendiente de activación.',
+            ]);
+        }
+
+        $nextStatus = $user->status === UserAccountStatus::Active
+            ? UserAccountStatus::Inactive
+            : UserAccountStatus::Active;
+
         $user->update([
-            'is_active' => ! $user->is_active,
+            'status' => $nextStatus,
         ]);
 
-        if (! $user->is_active) {
+        if ($nextStatus === UserAccountStatus::Inactive) {
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
 
-        $message = $user->is_active
+        $message = $nextStatus === UserAccountStatus::Active
             ? 'Usuario activado exitosamente.'
             : 'Usuario desactivado exitosamente.';
+
+        return redirect()
+            ->route('usuarios.index')
+            ->with('status', $message);
+    }
+
+    public function sendPasswordLink(User $user): RedirectResponse
+    {
+        $this->ensureCanManage($user);
+
+        if ($user->is(auth()->user())) {
+            throw ValidationException::withMessages([
+                'user' => 'No puedes restablecer tu propia contraseña desde aquí.',
+            ]);
+        }
+
+        $purpose = $user->status === UserAccountStatus::PendingActivation
+            ? SetPasswordPurpose::Activation
+            : SetPasswordPurpose::Reset;
+
+        $linkStatus = UserPasswordSetup::send($user, $purpose);
+
+        if ($linkStatus !== Password::RESET_LINK_SENT) {
+            throw ValidationException::withMessages([
+                'user' => 'No se pudo enviar el enlace. Intenta de nuevo en un momento.',
+            ]);
+        }
+
+        $message = $purpose === SetPasswordPurpose::Activation
+            ? 'Enlace de activación reenviado.'
+            : 'Enlace para restablecer contraseña enviado.';
 
         return redirect()
             ->route('usuarios.index')
@@ -347,6 +400,10 @@ class UserController extends Controller implements HasMiddleware
             ->value('id');
     }
 
+    /**
+     * Abort with 403 when a career-scoped manager tries to act on a user
+     * outside their career. Global managers (CAREER_ANY) are not restricted.
+     */
     private function ensureCanManage(User $user): void
     {
         $authUser = auth()->user();
@@ -356,8 +413,7 @@ class UserController extends Controller implements HasMiddleware
         }
 
         abort_unless(
-            $authUser?->career_catalog_id
-                && $user->career_catalog_id === $authUser->career_catalog_id,
+            ($authUser?->career_catalog_id && $user->career_catalog_id) === $authUser->career_catalog_id,
             403,
         );
     }

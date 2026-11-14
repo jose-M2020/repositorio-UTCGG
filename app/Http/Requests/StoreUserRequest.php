@@ -6,7 +6,6 @@ use App\Models\Catalog;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class StoreUserRequest extends FormRequest
 {
@@ -53,7 +52,6 @@ class StoreUserRequest extends FormRequest
             'nombre' => ['required', 'string', 'max:255'],
             'apellido' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Password::defaults()],
             'carrera' => [
                 $careerRequired ? 'required' : 'nullable',
                 'string',

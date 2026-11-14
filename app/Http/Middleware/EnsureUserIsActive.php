@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserAccountStatus;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,11 @@ class EnsureUserIsActive
     {
         $user = $request->user();
 
-        if ($user && ! $user->is_active) {
+        if ($user && ! $user->status->canLogin()) {
+            $message = $user->status === UserAccountStatus::PendingActivation
+                ? 'Tu cuenta aún no está activada. Revisa tu correo para establecer la contraseña.'
+                : 'Tu cuenta está desactivada. Contacta al administrador.';
+
             Auth::logout();
 
             $request->session()->invalidate();
@@ -25,7 +30,7 @@ class EnsureUserIsActive
             return redirect()
                 ->route('login')
                 ->withErrors([
-                    'email' => 'Tu cuenta está desactivada. Contacta al administrador.',
+                    'email' => $message,
                 ]);
         }
 
