@@ -17,6 +17,8 @@ Route::resource('usuarios', UserController::class)
     ->parameters(['usuarios' => 'user']);
 Route::patch('usuarios/{user}/role', [UserController::class, 'updateRole'])
     ->name('usuarios.update-role');
+Route::patch('usuarios/{user}/active', [UserController::class, 'toggleActive'])
+    ->name('usuarios.toggle-active');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('api/usuarios/{repositorio?}', [UserController::class, 'search'])

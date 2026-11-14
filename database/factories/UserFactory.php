@@ -39,6 +39,7 @@ class UserFactory extends Factory
                     ->where('code', $careerCode)
                     ->value('id')
                 : null,
+            'is_active' => true,
             'remember_token' => Str::random(10),
         ];
     }
@@ -50,6 +51,13 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
         ]);
     }
 }

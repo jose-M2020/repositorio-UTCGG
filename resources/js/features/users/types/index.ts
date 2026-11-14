@@ -4,6 +4,7 @@ export type UserListItem = {
     apellido: string;
     email: string;
     carrera: string | null;
+    is_active: boolean;
     created_at: string;
     roles: Array<{ id: number; name: string }>;
 };
@@ -30,6 +31,7 @@ export type UserDetails = {
     apellido: string;
     email: string;
     carrera: string | null;
+    is_active: boolean;
     roles: string[];
     created_at: string | null;
 };

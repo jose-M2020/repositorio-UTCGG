@@ -2,6 +2,7 @@
 import { show } from "@/actions/App/Http/Controllers/UserController";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { UserRowActions } from "../components/UserRowActions";
+import { UserStatusBadge } from "../components/UserStatusBadge";
 import type {
   CareerFormPolicy,
   RoleOption,
@@ -111,6 +112,12 @@ export const createUsersColumns = ({
         })),
       },
     },
+  }),
+  columnHelper.accessor("is_active", {
+    header: "Estado",
+    size: 110,
+    minSize: 96,
+    cell: ({ getValue }) => <UserStatusBadge isActive={getValue()} />,
   }),
   columnHelper.accessor("created_at", {
     header: "Fecha",

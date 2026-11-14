@@ -1,3 +1,4 @@
+import { UserStatusBadge } from './UserStatusBadge';
 import type { UserDetails as UserDetailsType } from '../types';
 
 type UserDetailsProps = {
@@ -25,6 +26,12 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
                 <dt className="text-sm text-slate-500">Roles</dt>
                 <dd className="font-medium">
                     {user.roles.length > 0 ? user.roles.join(', ') : '—'}
+                </dd>
+            </div>
+            <div>
+                <dt className="text-sm text-slate-500">Estado</dt>
+                <dd className="font-medium">
+                    <UserStatusBadge isActive={user.is_active} />
                 </dd>
             </div>
             <div>

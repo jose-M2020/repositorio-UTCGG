@@ -14,6 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -27,7 +29,7 @@ class UserController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:usuarios.index', only: ['index']),
             new Middleware('can:usuarios.create', only: ['store']),
-            new Middleware('can:usuarios.edit', only: ['update', 'updateRole']),
+            new Middleware('can:usuarios.edit', only: ['update', 'updateRole', 'toggleActive']),
             new Middleware('can:usuarios.destroy', only: ['destroy']),
             new Middleware('can:usuarios.search', only: ['search']),
         ];
@@ -99,7 +101,7 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'created_at'])
+            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'is_active', 'created_at'])
             ->withQueryString()
             ->through(fn (User $user): array => [
                 'id' => $user->id,
@@ -107,6 +109,7 @@ class UserController extends Controller implements HasMiddleware
                 'apellido' => $user->apellido,
                 'email' => $user->email,
                 'carrera' => $user->careerCatalog?->code,
+                'is_active' => $user->is_active,
                 'created_at' => (string) $user->created_at,
                 'roles' => $user->roles->map(fn (Role $role) => [
                     'id' => $role->id,
@@ -162,6 +165,7 @@ class UserController extends Controller implements HasMiddleware
                 'apellido' => $user->apellido,
                 'email' => $user->email,
                 'carrera' => $user->careerCatalog?->code,
+                'is_active' => $user->is_active,
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
             ],
@@ -232,6 +236,33 @@ class UserController extends Controller implements HasMiddleware
         return redirect()
             ->route('usuarios.index')
             ->with('status', 'Rol actualizado exitosamente.');
+    }
+
+    public function toggleActive(User $user): RedirectResponse
+    {
+        $this->ensureCanManage($user);
+
+        if ($user->is(auth()->user())) {
+            throw ValidationException::withMessages([
+                'user' => 'No puedes desactivar tu propia cuenta.',
+            ]);
+        }
+
+        $user->update([
+            'is_active' => ! $user->is_active,
+        ]);
+
+        if (! $user->is_active) {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        }
+
+        $message = $user->is_active
+            ? 'Usuario activado exitosamente.'
+            : 'Usuario desactivado exitosamente.';
+
+        return redirect()
+            ->route('usuarios.index')
+            ->with('status', $message);
     }
 
     public function destroy(User $user): RedirectResponse

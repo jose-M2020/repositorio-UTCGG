@@ -65,6 +65,23 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_inactive_user_cannot_login(): void
+    {
+        User::factory()->inactive()->create([
+            'email' => 'inactive@example.com',
+            'password' => 'Password123!',
+        ]);
+
+        $response = $this->from(route('login'))->post(route('login'), [
+            'email' => 'inactive@example.com',
+            'password' => 'Password123!',
+        ]);
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors(['email']);
+        $this->assertGuest();
+    }
+
     public function test_login_is_rate_limited_after_repeated_failures(): void
     {
         User::factory()->create([

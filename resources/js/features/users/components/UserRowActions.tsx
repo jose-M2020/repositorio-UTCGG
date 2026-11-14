@@ -1,5 +1,13 @@
-import { Link } from "@inertiajs/react";
-import { Eye, MoreHorizontal, Pencil, Shield, Trash2 } from "lucide-react";
+import { Link, usePage } from "@inertiajs/react";
+import {
+  Eye,
+  MoreHorizontal,
+  Pencil,
+  Power,
+  PowerOff,
+  Shield,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { destroy, show } from "@/actions/App/Http/Controllers/UserController";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
@@ -13,6 +21,7 @@ import {
 } from "@/shared/components/ui";
 import { UserChangeRoleDialog } from "./UserChangeRoleDialog";
 import { UserFormDialog } from "./UserFormDialog";
+import { UserToggleActiveDialog } from "./UserToggleActiveDialog";
 import type {
   CareerFormPolicy,
   RoleOption,
@@ -35,10 +44,15 @@ export const UserRowActions = ({
   careers,
   careerPolicy,
 }: UserRowActionsProps) => {
+  const { auth } = usePage().props;
   const [editOpen, setEditOpen] = useState(false);
   const [roleOpen, setRoleOpen] = useState(false);
+  const [toggleActiveOpen, setToggleActiveOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const userName = `${user.nombre} ${user.apellido}`.trim();
+  const willActivate = !user.is_active;
+  const ToggleIcon = willActivate ? Power : PowerOff;
+  const isSelf = auth.user?.id === user.id;
 
   return (
     <>
@@ -68,6 +82,16 @@ export const UserRowActions = ({
             <Shield aria-hidden="true" />
             Cambiar rol
           </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={isSelf}
+            onClick={() => {
+              if (isSelf) return;
+              setToggleActiveOpen(true);
+            }}
+          >
+            <ToggleIcon aria-hidden="true" />
+            {willActivate ? "Activar" : "Desactivar"}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             variant="destructive"
@@ -96,6 +120,11 @@ export const UserRowActions = ({
         open={roleOpen}
         onOpenChange={setRoleOpen}
         hideTrigger
+      />
+      <UserToggleActiveDialog
+        user={user}
+        open={toggleActiveOpen}
+        onOpenChange={setToggleActiveOpen}
       />
       <ConfirmDeleteButton
         form={destroy.form(user.id)}

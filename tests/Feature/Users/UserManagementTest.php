@@ -207,6 +207,38 @@ class UserManagementTest extends TestCase
                 ->has('assignableRoles'));
     }
 
+    public function test_admin_can_deactivate_and_activate_user(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $user = User::factory()->create([
+            'is_active' => true,
+        ]);
+
+        $deactivate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
+        $deactivate->assertRedirect(route('usuarios.index'));
+        $this->assertFalse($user->fresh()?->is_active);
+
+        $activate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
+        $activate->assertRedirect(route('usuarios.index'));
+        $this->assertTrue($user->fresh()?->is_active);
+    }
+
+    public function test_admin_cannot_deactivate_own_account(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $response = $this->actingAs($admin)
+            ->from(route('usuarios.index'))
+            ->patch(route('usuarios.toggle-active', $admin));
+
+        $response->assertRedirect(route('usuarios.index'));
+        $response->assertSessionHasErrors(['user']);
+        $this->assertTrue($admin->fresh()?->is_active);
+    }
+
     public function test_admin_can_delete_user(): void
     {
         $admin = User::factory()->create();
