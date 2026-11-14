@@ -115,7 +115,6 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
                 careerPolicy={careerPolicy}
                 defaults={defaultValues}
                 includeRole={!isEdit}
-                includePassword={false}
               />
               <DialogFooter>
                 <DialogClose render={<Button type="button" variant="outline" />}>

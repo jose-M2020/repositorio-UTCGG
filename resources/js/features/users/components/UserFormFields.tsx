@@ -20,8 +20,6 @@ type UserFormFieldsProps = {
     role?: string | null;
   };
   includeRole?: boolean;
-  includePassword?: boolean;
-  requirePassword?: boolean;
 };
 
 export const UserFormFields = ({
@@ -31,8 +29,6 @@ export const UserFormFields = ({
   careerPolicy,
   defaults,
   includeRole = true,
-  includePassword = false,
-  requirePassword = false,
 }: UserFormFieldsProps) => {
   const [selectedRole, setSelectedRole] = useState(defaults?.role ?? "");
 
@@ -48,26 +44,25 @@ export const UserFormFields = ({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-1">
-        <label
-          htmlFor="first_name"
-          className="text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Nombre(s)
-        </label>
-        <Input
-          id="first_name"
-          name="first_name"
-          required
-          defaultValue={defaults?.first_name}
-          aria-invalid={Boolean(errors.first_name)}
-        />
-        {errors.first_name ? (
-          <p className="text-sm text-red-600">{errors.first_name}</p>
-        ) : null}
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1">
+          <label
+            htmlFor="first_name"
+            className="text-sm font-medium text-slate-700 dark:text-slate-300"
+          >
+            Nombre(s)
+          </label>
+          <Input
+            id="first_name"
+            name="first_name"
+            required
+            defaultValue={defaults?.first_name}
+            aria-invalid={Boolean(errors.first_name)}
+          />
+          {errors.first_name ? (
+            <p className="text-sm text-red-600">{errors.first_name}</p>
+          ) : null}
+        </div>
         <div className="space-y-1">
           <label
             htmlFor="last_name"
@@ -86,7 +81,9 @@ export const UserFormFields = ({
             <p className="text-sm text-red-600">{errors.last_name}</p>
           ) : null}
         </div>
+      </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <label
             htmlFor="second_last_name"
@@ -104,130 +101,91 @@ export const UserFormFields = ({
             <p className="text-sm text-red-600">{errors.second_last_name}</p>
           ) : null}
         </div>
-      </div>
-
-      <div className="space-y-1">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Correo
-        </label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          required
-          defaultValue={defaults?.email}
-          aria-invalid={Boolean(errors.email)}
-        />
-        {errors.email ? (
-          <p className="text-sm text-red-600">{errors.email}</p>
-        ) : null}
-      </div>
-
-      {includeRole ? (
         <div className="space-y-1">
           <label
-            htmlFor="role"
+            htmlFor="email"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
-            Rol
+            Correo
           </label>
-          <select
-            id="role"
-            name="role"
+          <Input
+            id="email"
+            name="email"
+            type="email"
             required
-            value={selectedRole}
-            onChange={handleRoleChange}
-            className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-            aria-invalid={Boolean(errors.role)}
-          >
-            <option value="" disabled>
-              Selecciona un rol
-            </option>
-            {roles.map((role) => (
-              <option key={role.value} value={role.value}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-          {errors.role ? (
-            <p className="text-sm text-red-600">{errors.role}</p>
+            defaultValue={defaults?.email}
+            aria-invalid={Boolean(errors.email)}
+          />
+          {errors.email ? (
+            <p className="text-sm text-red-600">{errors.email}</p>
           ) : null}
         </div>
-      ) : null}
+      </div>
 
-      {showCareerField ? (
-        <div className="space-y-1">
-          <label
-            htmlFor="career"
-            className="text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Carrera
-          </label>
-          <select
-            id="career"
-            name="career"
-            required
-            defaultValue={defaults?.career ?? ""}
-            className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-            aria-invalid={Boolean(errors.career)}
-          >
-            <option value="" disabled>
-              Selecciona una carrera
-            </option>
-            {Object.entries(careers).map(([code, label]) => (
-              <option key={code} value={code}>
-                {code} — {label}
-              </option>
-            ))}
-          </select>
-          {errors.career ? (
-            <p className="text-sm text-red-600">{errors.career}</p>
-          ) : null}
-        </div>
-      ) : null}
-
-      {includePassword ? (
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
+        {includeRole ? (
           <div className="space-y-1">
             <label
-              htmlFor="password"
+              htmlFor="role"
               className="text-sm font-medium text-slate-700 dark:text-slate-300"
             >
-              {requirePassword ? "Contraseña" : "Contraseña (opcional)"}
+              Rol
             </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required={requirePassword}
-              autoComplete="new-password"
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <p className="text-sm text-red-600">{errors.password}</p>
+            <select
+              id="role"
+              name="role"
+              required
+              value={selectedRole}
+              onChange={handleRoleChange}
+              className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+              aria-invalid={Boolean(errors.role)}
+            >
+              <option value="" disabled>
+                Selecciona un rol
+              </option>
+              {roles.map((role) => (
+                <option key={role.value} value={role.value}>
+                  {role.label}
+                </option>
+              ))}
+            </select>
+            {errors.role ? (
+              <p className="text-sm text-red-600">{errors.role}</p>
             ) : null}
           </div>
+        ) : null}
 
+        {showCareerField ? (
           <div className="space-y-1">
             <label
-              htmlFor="password_confirmation"
+              htmlFor="career"
               className="text-sm font-medium text-slate-700 dark:text-slate-300"
             >
-              Confirmar contraseña
+              Carrera
             </label>
-            <Input
-              id="password_confirmation"
-              name="password_confirmation"
-              type="password"
-              required={requirePassword}
-              autoComplete="new-password"
-            />
+            <select
+              id="career"
+              name="career"
+              required
+              defaultValue={defaults?.career ?? ""}
+              className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+              aria-invalid={Boolean(errors.career)}
+            >
+              <option value="" disabled>
+                Selecciona una carrera
+              </option>
+              {Object.entries(careers).map(([code, label]) => (
+                <option key={code} value={code}>
+                  {code} — {label}
+                </option>
+              ))}
+            </select>
+            {errors.career ? (
+              <p className="text-sm text-red-600">{errors.career}</p>
+            ) : null}
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };
