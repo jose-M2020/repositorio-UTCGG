@@ -8,6 +8,7 @@ import type {
   CareerFormPolicy,
   PaginatedUsers,
   RoleOption,
+  RolePermissionPreview,
   UsersFilters,
 } from "../types";
 import {
@@ -20,6 +21,7 @@ type UsersTableProps = {
   filters: UsersFilters;
   roles: RoleOption[];
   assignableRoles: RoleOption[];
+  rolePermissions: Record<string, RolePermissionPreview[]>;
   careersOptions: Record<string, string>;
   careerPolicy: CareerFormPolicy;
 };
@@ -29,6 +31,7 @@ export const UsersTable = ({
   filters,
   roles,
   assignableRoles,
+  rolePermissions,
   careersOptions,
   careerPolicy,
 }: UsersTableProps) => {
@@ -72,6 +75,7 @@ export const UsersTable = ({
   const columns = createUsersColumns({
     roles,
     assignableRoles,
+    rolePermissions,
     careersOptions,
     canFilterCareer,
     careerPolicy,

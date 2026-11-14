@@ -64,6 +64,11 @@ export type RoleOption = {
     requires_career?: boolean;
 };
 
+export type RolePermissionPreview = {
+    name: string;
+    description: string | null;
+};
+
 export type CareerFormPolicy = {
     can_select_career: boolean;
     locked_career: string | null;

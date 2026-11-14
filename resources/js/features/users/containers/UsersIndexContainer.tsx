@@ -6,6 +6,7 @@ import type {
   CareerFormPolicy,
   PaginatedUsers,
   RoleOption,
+  RolePermissionPreview,
   UsersFilters,
 } from "../types";
 
@@ -14,6 +15,7 @@ type UsersIndexContainerProps = {
   filters: UsersFilters;
   roles: RoleOption[];
   assignableRoles: RoleOption[];
+  rolePermissions: Record<string, RolePermissionPreview[]>;
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
 };
@@ -23,6 +25,7 @@ export const UsersIndexContainer = ({
   filters,
   roles,
   assignableRoles,
+  rolePermissions,
   careers,
   careerPolicy,
 }: UsersIndexContainerProps) => {
@@ -69,6 +72,7 @@ export const UsersIndexContainer = ({
         filters={filters}
         roles={roles}
         assignableRoles={assignableRoles}
+        rolePermissions={rolePermissions}
         careersOptions={careers}
         careerPolicy={careerPolicy}
       />

@@ -1,6 +1,13 @@
-﻿import { createDataTableColumnHelper } from "@/shared/components/dataTable";
+﻿import { Link } from "@inertiajs/react";
+import { show } from "@/actions/App/Http/Controllers/UserController";
+import { createDataTableColumnHelper } from "@/shared/components/dataTable";
 import { UserRowActions } from "../components/UserRowActions";
-import type { CareerFormPolicy, RoleOption, UserListItem } from "../types";
+import type {
+  CareerFormPolicy,
+  RoleOption,
+  RolePermissionPreview,
+  UserListItem,
+} from "../types";
 
 const USERS_DATE_FILTER_PRESETS = [
   { value: "today", label: "Hoy" },
@@ -12,6 +19,7 @@ const USERS_DATE_FILTER_PRESETS = [
 type CreateUsersColumnsOptions = {
   roles: RoleOption[];
   assignableRoles: RoleOption[];
+  rolePermissions: Record<string, RolePermissionPreview[]>;
   careersOptions: Record<string, string>;
   canFilterCareer: boolean;
   careerPolicy: CareerFormPolicy;
@@ -22,6 +30,7 @@ const columnHelper = createDataTableColumnHelper<UserListItem>();
 export const createUsersColumns = ({
   roles,
   assignableRoles,
+  rolePermissions,
   careersOptions,
   canFilterCareer,
   careerPolicy,
@@ -32,7 +41,17 @@ export const createUsersColumns = ({
     size: 220,
     minSize: 160,
     enableColumnFilter: true,
-    cell: ({ row }) => `${row.original.nombre} ${row.original.apellido}`.trim(),
+    cell: ({ row }) => {
+      const fullName = `${row.original.nombre} ${row.original.apellido}`.trim();
+      return (
+        <Link
+          href={show.url(row.original.id)}
+          className="font-medium text-foreground underline-offset-4 hover:underline"
+        >
+          {fullName}
+        </Link>
+      );
+    },
     meta: {
       filter: {
         search: {
@@ -121,9 +140,9 @@ export const createUsersColumns = ({
   columnHelper.display({
     id: "actions",
     header: "",
-    size: 120,
-    minSize: 120,
-    maxSize: 120,
+    size: 56,
+    minSize: 56,
+    maxSize: 56,
     meta: {
       headerClassName: "text-right",
       cellClassName: "max-w-none overflow-visible text-right",
@@ -132,6 +151,7 @@ export const createUsersColumns = ({
       <UserRowActions
         user={row.original}
         roles={assignableRoles}
+        rolePermissions={rolePermissions}
         careers={careersOptions}
         careerPolicy={careerPolicy}
       />

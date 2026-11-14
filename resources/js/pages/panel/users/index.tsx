@@ -4,6 +4,7 @@ import {
     type CareerFormPolicy,
     type PaginatedUsers,
     type RoleOption,
+    type RolePermissionPreview,
     type UsersFilters,
 } from '@/features/users';
 
@@ -12,6 +13,7 @@ type UsersIndexPageProps = {
     filters: UsersFilters;
     roles: RoleOption[];
     assignableRoles: RoleOption[];
+    rolePermissions: Record<string, RolePermissionPreview[]>;
     careers: Record<string, string>;
     careerPolicy: CareerFormPolicy;
 };
@@ -21,6 +23,7 @@ const UsersIndexPage = ({
     filters,
     roles,
     assignableRoles,
+    rolePermissions,
     careers,
     careerPolicy,
 }: UsersIndexPageProps) => {
@@ -32,6 +35,7 @@ const UsersIndexPage = ({
                 filters={filters}
                 roles={roles}
                 assignableRoles={assignableRoles}
+                rolePermissions={rolePermissions}
                 careers={careers}
                 careerPolicy={careerPolicy}
             />

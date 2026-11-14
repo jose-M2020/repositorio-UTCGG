@@ -81,13 +81,19 @@ class UserManagementTest extends TestCase
         $this->assertTrue($created?->hasRole(UserRoles::ALUMNO));
     }
 
-    public function test_admin_can_update_user(): void
+    public function test_admin_can_update_user_profile_without_changing_role(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
         $user = User::factory()->create([
             'email' => 'old@example.com',
+            'career_catalog_id' => $ticCareerId,
         ]);
         $user->assignRole(UserRoles::ALUMNO);
 
@@ -96,7 +102,6 @@ class UserManagementTest extends TestCase
             'apellido' => 'Actualizada',
             'email' => 'new@example.com',
             'carrera' => 'ER',
-            'rol' => UserRoles::DOCENTE,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -110,7 +115,96 @@ class UserManagementTest extends TestCase
             'apellido' => 'Actualizada',
             'career_catalog_id' => $erCareerId,
         ]);
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::ALUMNO));
+    }
+
+    public function test_admin_can_change_user_role_and_keeps_existing_career(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
+        $user = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $user->assignRole(UserRoles::ALUMNO);
+
+        $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
+            'rol' => UserRoles::DOCENTE,
+        ]);
+
+        $response->assertRedirect(route('usuarios.index'));
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::DOCENTE));
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'career_catalog_id' => $ticCareerId,
+        ]);
+    }
+
+    public function test_admin_change_role_to_admin_clears_career(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
+        $user = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $user->assignRole(UserRoles::ALUMNO);
+
+        $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
+            'rol' => UserRoles::ADMIN,
+        ]);
+
+        $response->assertRedirect(route('usuarios.index'));
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'career_catalog_id' => null,
+        ]);
+    }
+
+    public function test_admin_cannot_assign_career_role_without_existing_career(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $user = User::factory()->create([
+            'career_catalog_id' => null,
+        ]);
+        $user->assignRole(UserRoles::ADMIN);
+
+        $response = $this->actingAs($admin)
+            ->from(route('usuarios.index'))
+            ->patch(route('usuarios.update-role', $user), [
+                'rol' => UserRoles::ALUMNO,
+            ]);
+
+        $response->assertRedirect(route('usuarios.index'));
+        $response->assertSessionHasErrors(['rol']);
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
+    }
+
+    public function test_users_index_includes_role_permissions_preview(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $this->actingAs($admin)
+            ->get(route('usuarios.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->has('rolePermissions.'.UserRoles::ALUMNO)
+                ->has('assignableRoles'));
     }
 
     public function test_admin_can_delete_user(): void

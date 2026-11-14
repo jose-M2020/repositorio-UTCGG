@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -20,7 +19,10 @@ class UpdateUserRequest extends FormRequest
     {
         $authUser = $this->user();
         $authUser?->loadMissing('careerCatalog:id,code');
-        $role = $this->string('rol')->toString();
+
+        /** @var User $user */
+        $user = $this->route('user');
+        $role = (string) ($user->getRoleNames()->first() ?? '');
 
         if (
             UserRoles::requiresCareer($role)
@@ -47,8 +49,7 @@ class UpdateUserRequest extends FormRequest
         /** @var User $user */
         $user = $this->route('user');
         $authUser = $this->user();
-        $assignableRoles = UserRoles::assignableBy($authUser);
-        $role = $this->string('rol')->toString();
+        $role = (string) ($user->getRoleNames()->first() ?? '');
         $careerRequired = UserRoles::requiresCareer($role)
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
@@ -62,7 +63,6 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'password' => ['nullable', 'confirmed', Password::defaults()],
             'carrera' => [
                 $careerRequired ? 'required' : 'nullable',
                 'string',
@@ -71,17 +71,6 @@ class UpdateUserRequest extends FormRequest
                     ->where('type', Catalog::TYPE_CAREER)
                     ->where('is_active', true)),
             ],
-            'rol' => ['required', 'string', Rule::in($assignableRoles)],
-        ];
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'rol.in' => 'No tienes permiso para asignar ese rol.',
         ];
     }
 }

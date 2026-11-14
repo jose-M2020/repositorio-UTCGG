@@ -15,6 +15,8 @@ Route::get('/acerca', [HomeController::class, 'about'])->name('about');
 Route::resource('usuarios', UserController::class)
     ->except(['create', 'edit'])
     ->parameters(['usuarios' => 'user']);
+Route::patch('usuarios/{user}/role', [UserController::class, 'updateRole'])
+    ->name('usuarios.update-role');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('api/usuarios/{repositorio?}', [UserController::class, 'search'])

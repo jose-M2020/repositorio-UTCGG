@@ -18,7 +18,9 @@ type UserFormFieldsProps = {
     carrera?: string;
     rol?: string | null;
   };
-  requirePassword: boolean;
+  includeRole?: boolean;
+  includePassword?: boolean;
+  requirePassword?: boolean;
 };
 
 export const UserFormFields = ({
@@ -27,11 +29,14 @@ export const UserFormFields = ({
   careers,
   careerPolicy,
   defaults,
-  requirePassword,
+  includeRole = true,
+  includePassword = false,
+  requirePassword = false,
 }: UserFormFieldsProps) => {
   const [selectedRole, setSelectedRole] = useState(defaults?.rol ?? "");
 
-  const selectedRoleOption = roles.find((role) => role.value === selectedRole);
+  const effectiveRole = includeRole ? selectedRole : (defaults?.rol ?? "");
+  const selectedRoleOption = roles.find((role) => role.value === effectiveRole);
   const showCareerField =
     careerPolicy.can_select_career &&
     Boolean(selectedRoleOption?.requires_career);
@@ -102,35 +107,37 @@ export const UserFormFields = ({
         ) : null}
       </div>
 
-      <div className="space-y-1">
-        <label
-          htmlFor="rol"
-          className="text-sm font-medium text-slate-700 dark:text-slate-300"
-        >
-          Rol
-        </label>
-        <select
-          id="rol"
-          name="rol"
-          required
-          value={selectedRole}
-          onChange={handleRoleChange}
-          className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-          aria-invalid={Boolean(errors.rol)}
-        >
-          <option value="" disabled>
-            Selecciona un rol
-          </option>
-          {roles.map((role) => (
-            <option key={role.value} value={role.value}>
-              {role.label}
+      {includeRole ? (
+        <div className="space-y-1">
+          <label
+            htmlFor="rol"
+            className="text-sm font-medium text-slate-700 dark:text-slate-300"
+          >
+            Rol
+          </label>
+          <select
+            id="rol"
+            name="rol"
+            required
+            value={selectedRole}
+            onChange={handleRoleChange}
+            className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+            aria-invalid={Boolean(errors.rol)}
+          >
+            <option value="" disabled>
+              Selecciona un rol
             </option>
-          ))}
-        </select>
-        {errors.rol ? (
-          <p className="text-sm text-red-600">{errors.rol}</p>
-        ) : null}
-      </div>
+            {roles.map((role) => (
+              <option key={role.value} value={role.value}>
+                {role.label}
+              </option>
+            ))}
+          </select>
+          {errors.rol ? (
+            <p className="text-sm text-red-600">{errors.rol}</p>
+          ) : null}
+        </div>
+      ) : null}
 
       {showCareerField ? (
         <div className="space-y-1">
@@ -163,43 +170,45 @@ export const UserFormFields = ({
         </div>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-1">
-          <label
-            htmlFor="password"
-            className="text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            {requirePassword ? "Contraseña" : "Contraseña (opcional)"}
-          </label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            required={requirePassword}
-            autoComplete="new-password"
-            aria-invalid={Boolean(errors.password)}
-          />
-          {errors.password ? (
-            <p className="text-sm text-red-600">{errors.password}</p>
-          ) : null}
-        </div>
+      {includePassword ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-slate-700 dark:text-slate-300"
+            >
+              {requirePassword ? "Contraseña" : "Contraseña (opcional)"}
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required={requirePassword}
+              autoComplete="new-password"
+              aria-invalid={Boolean(errors.password)}
+            />
+            {errors.password ? (
+              <p className="text-sm text-red-600">{errors.password}</p>
+            ) : null}
+          </div>
 
-        <div className="space-y-1">
-          <label
-            htmlFor="password_confirmation"
-            className="text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Confirmar contraseña
-          </label>
-          <Input
-            id="password_confirmation"
-            name="password_confirmation"
-            type="password"
-            required={requirePassword}
-            autoComplete="new-password"
-          />
+          <div className="space-y-1">
+            <label
+              htmlFor="password_confirmation"
+              className="text-sm font-medium text-slate-700 dark:text-slate-300"
+            >
+              Confirmar contraseña
+            </label>
+            <Input
+              id="password_confirmation"
+              name="password_confirmation"
+              type="password"
+              required={requirePassword}
+              autoComplete="new-password"
+            />
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 };

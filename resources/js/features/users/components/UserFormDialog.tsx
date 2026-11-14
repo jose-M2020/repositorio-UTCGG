@@ -24,8 +24,12 @@ type UserFormDialogBaseProps = {
   roles: RoleOption[];
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
-  trigger: ReactElement;
-  triggerContent: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** When true, caller owns the trigger (e.g. overflow menu item). */
+  hideTrigger?: boolean;
+  trigger?: ReactElement;
+  triggerContent?: ReactNode;
 };
 
 type UserFormDialogProps = UserFormDialogBaseProps &
@@ -35,8 +39,20 @@ type UserFormDialogProps = UserFormDialogBaseProps &
   );
 
 export const UserFormDialog = (props: UserFormDialogProps) => {
-  const { roles, careers, careerPolicy, trigger, triggerContent, mode } = props;
-  const [open, setOpen] = useState(false);
+  const {
+    roles,
+    careers,
+    careerPolicy,
+    trigger,
+    triggerContent,
+    mode,
+    open: openProp,
+    onOpenChange,
+    hideTrigger = false,
+  } = props;
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? openProp : uncontrolledOpen;
   const isEdit = mode === "edit";
   const user = isEdit ? props.user : null;
   const userName = user
@@ -56,13 +72,22 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
 
   const formProps = isEdit && user ? update.form(user.id) : store.form();
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
+  };
+
   const handleSuccess = () => {
-    setOpen(false);
+    handleOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={trigger}>{triggerContent}</DialogTrigger>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {!hideTrigger && trigger ? (
+        <DialogTrigger render={trigger}>{triggerContent}</DialogTrigger>
+      ) : null}
 
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
@@ -71,7 +96,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? `Actualiza los datos de ${userName}.`
+              ? <p>Actualiza los datos de <strong>{userName}</strong>.</p>
               : "Completa los datos para registrar una cuenta."}
           </DialogDescription>
         </DialogHeader>
@@ -89,6 +114,8 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
                 careers={careers}
                 careerPolicy={careerPolicy}
                 defaults={defaultValues}
+                includeRole={!isEdit}
+                includePassword={!isEdit}
                 requirePassword={!isEdit}
               />
               <DialogFooter>

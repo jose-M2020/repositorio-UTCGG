@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeUserRoleRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Catalog as CatalogModel;
@@ -15,6 +16,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller implements HasMiddleware
@@ -25,7 +27,7 @@ class UserController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:usuarios.index', only: ['index']),
             new Middleware('can:usuarios.create', only: ['store']),
-            new Middleware('can:usuarios.edit', only: ['update']),
+            new Middleware('can:usuarios.edit', only: ['update', 'updateRole']),
             new Middleware('can:usuarios.destroy', only: ['destroy']),
             new Middleware('can:usuarios.search', only: ['search']),
         ];
@@ -124,6 +126,7 @@ class UserController extends Controller implements HasMiddleware
             ],
             'roles' => UserRoles::filterOptions(),
             'assignableRoles' => UserRoles::assignableOptionsFor($authUser),
+            'rolePermissions' => $this->permissionsByAssignableRole($authUser),
             'careers' => CatalogData::careers(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
         ]);
@@ -197,24 +200,38 @@ class UserController extends Controller implements HasMiddleware
     {
         $this->ensureCanManage($user);
 
-        $data = $request->safe()->except(['rol', 'password', 'carrera']);
-
-        if ($request->filled('password')) {
-            $data['password'] = $request->string('password')->toString();
-        }
-
-        $data['career_catalog_id'] = $this->resolveCareerCatalogId($request);
+        $currentRole = (string) ($user->getRoleNames()->first() ?? '');
+        $data = $request->safe()->except(['carrera']);
+        $data['career_catalog_id'] = $this->resolveCareerCatalogIdForRole($request, $currentRole);
 
         $user->update($data);
-
-        $role = $request->string('rol')->toString();
-        if ($user->getRoleNames()->first() !== $role) {
-            $user->syncRoles([$role]);
-        }
 
         return redirect()
             ->route('usuarios.index')
             ->with('status', 'Usuario actualizado exitosamente.');
+    }
+
+    public function updateRole(ChangeUserRoleRequest $request, User $user): RedirectResponse
+    {
+        $this->ensureCanManage($user);
+
+        $role = $request->string('rol')->toString();
+        $authUser = $request->user();
+        $careerCatalogId = null;
+
+        if (UserRoles::requiresCareer($role)) {
+            $careerCatalogId = $user->career_catalog_id
+                ?? (UserRoles::isCareerScoped($authUser) ? $authUser?->career_catalog_id : null);
+        }
+
+        $user->syncRoles([$role]);
+        $user->update([
+            'career_catalog_id' => $careerCatalogId,
+        ]);
+
+        return redirect()
+            ->route('usuarios.index')
+            ->with('status', 'Rol actualizado exitosamente.');
     }
 
     public function destroy(User $user): RedirectResponse
@@ -228,10 +245,18 @@ class UserController extends Controller implements HasMiddleware
             ->with('status', 'Usuario eliminado exitosamente.');
     }
 
-    private function resolveCareerCatalogId(StoreUserRequest|UpdateUserRequest $request): ?int
+    private function resolveCareerCatalogId(StoreUserRequest $request): ?int
     {
-        $role = $request->string('rol')->toString();
+        return $this->resolveCareerCatalogIdForRole(
+            $request,
+            $request->string('rol')->toString(),
+        );
+    }
 
+    private function resolveCareerCatalogIdForRole(
+        StoreUserRequest|UpdateUserRequest $request,
+        string $role,
+    ): ?int {
         if (! UserRoles::requiresCareer($role)) {
             return null;
         }
@@ -249,6 +274,38 @@ class UserController extends Controller implements HasMiddleware
         }
 
         return $this->careerCatalogId($code);
+    }
+
+    /**
+     * @return array<string, list<array{name: string, description: string|null}>>
+     */
+    private function permissionsByAssignableRole(?User $authUser): array
+    {
+        $roleNames = UserRoles::assignableBy($authUser);
+
+        if ($roleNames === []) {
+            return [];
+        }
+
+        $roles = Role::query()
+            ->whereIn('name', $roleNames)
+            ->with('permissions:id,name,description')
+            ->get(['id', 'name']);
+
+        $map = [];
+
+        foreach ($roles as $role) {
+            $map[$role->name] = $role->permissions
+                ->sortBy('name')
+                ->values()
+                ->map(fn (Permission $permission): array => [
+                    'name' => $permission->name,
+                    'description' => $permission->description,
+                ])
+                ->all();
+        }
+
+        return $map;
     }
 
     private function careerCatalogId(string $code): ?int

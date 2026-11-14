@@ -4,6 +4,7 @@ export type {
   CareerFormPolicy,
   PaginatedUsers,
   RoleOption,
+  RolePermissionPreview,
   UserDetails,
   UserFormValues,
   UserRepositorySummary,
