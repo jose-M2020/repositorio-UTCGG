@@ -1,3 +1,5 @@
+import { Link } from '@inertiajs/react';
+import { create as forgotPassword } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import { Button } from '@/shared/components/ui';
 import type { AuthFormErrors } from '../types';
 import { AuthField } from './AuthField';
@@ -30,7 +32,13 @@ export const LoginForm = ({ errors, processing }: LoginFormProps) => {
                 error={errors.password}
             />
 
-            <div className="flex justify-end pt-2">
+            <div className="flex items-center justify-between gap-3 pt-2">
+                <Link
+                    href={forgotPassword.url()}
+                    className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                >
+                    ¿Olvidaste tu contraseña?
+                </Link>
                 <Button type="submit" disabled={processing}>
                     {processing ? 'Ingresando...' : 'Entrar'}
                 </Button>

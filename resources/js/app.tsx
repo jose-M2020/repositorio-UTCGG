@@ -19,6 +19,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 const SURFACE_LAYOUTS: Record<string, PageLayout> = {
     public: PublicLayout,
+    auth: PublicLayout,
     panel: PanelLayout,
 };
 

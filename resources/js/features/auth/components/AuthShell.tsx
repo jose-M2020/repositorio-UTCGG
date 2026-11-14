@@ -16,19 +16,19 @@ export const AuthShell = ({
     const hasHeader = Boolean(title || description);
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10 dark:bg-slate-950">
+        <main className="flex flex-1 items-center justify-center bg-muted/40 px-4 py-10">
             <section
-                className={`w-full ${maxWidthClassName} rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900`}
+                className={`w-full ${maxWidthClassName} rounded-xl border border-border bg-background p-6 shadow-sm`}
             >
                 {hasHeader ? (
                     <header className="mb-6 space-y-1">
                         {title ? (
-                            <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                            <h1 className="text-2xl font-semibold text-foreground">
                                 {title}
                             </h1>
                         ) : null}
                         {description ? (
-                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                            <div className="text-sm text-muted-foreground">
                                 {description}
                             </div>
                         ) : null}

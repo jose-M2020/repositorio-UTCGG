@@ -104,7 +104,7 @@ export const SetPasswordContainer = ({
             ) : (
                 <AuthShell
                     title="Este enlace es inválido o ha expirado"
-                    description="Solicita un nuevo enlace a un administrador e inténtalo de nuevo."
+                    description="Solicita un nuevo enlace e inténtalo de nuevo."
                 >
                     <SetPasswordInvalidActions />
                 </AuthShell>

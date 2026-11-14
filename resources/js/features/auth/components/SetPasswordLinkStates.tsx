@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { create as forgotPassword } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import { Button, buttonVariants } from '@/shared/components/ui';
 
 export const SetPasswordVerifyingState = () => {
@@ -24,9 +25,15 @@ export const SetPasswordVerifyingState = () => {
 
 export const SetPasswordInvalidActions = () => {
     return (
-        <div className="flex justify-end">
-            <Link href={login.url()} className={buttonVariants()}>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+            <Link
+                href={login.url()}
+                className={buttonVariants({ variant: 'outline' })}
+            >
                 Ir al inicio de sesión
+            </Link>
+            <Link href={forgotPassword.url()} className={buttonVariants()}>
+                Solicitar nuevo enlace
             </Link>
         </div>
     );
