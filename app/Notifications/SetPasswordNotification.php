@@ -3,15 +3,21 @@
 namespace App\Notifications;
 
 use App\Enums\SetPasswordPurpose;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SetPasswordNotification extends Notification
+class SetPasswordNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct(
         public string $token,
         public SetPasswordPurpose $purpose,
-    ) {}
+    ) {
+        $this->afterCommit();
+    }
 
     /**
      * @return list<string>

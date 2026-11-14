@@ -6,6 +6,7 @@ export type VisitUsersIndexParams = {
   email: string;
   rol: string[];
   carrera: string[];
+  status: string[];
   fecha: string;
   rango_fecha: string[];
   page: number;
@@ -20,6 +21,7 @@ export const visitUsersIndex = (params: VisitUsersIndexParams) => {
         email: params.email.trim() || undefined,
         rol: params.rol.length > 0 ? params.rol : undefined,
         carrera: params.carrera.length > 0 ? params.carrera : undefined,
+        status: params.status.length > 0 ? params.status : undefined,
         fecha: params.fecha || undefined,
         rango_fecha:
           params.rango_fecha[0] && params.rango_fecha[1]

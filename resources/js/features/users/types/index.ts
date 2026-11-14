@@ -46,6 +46,7 @@ export type UsersFilters = {
     email: string;
     carrera: string[];
     rol: string[];
+    status: string[];
     fecha: string;
     rango_fecha: string[];
 };

@@ -118,6 +118,17 @@ export const createUsersColumns = ({
     size: 120,
     minSize: 104,
     cell: ({ getValue }) => <UserStatusBadge status={getValue()} />,
+    enableColumnFilter: true,
+    meta: {
+      filter: {
+        multiple: true,
+        items: [
+          { text: "Activo", value: "active" },
+          { text: "Pendiente", value: "pending_activation" },
+          { text: "Inactivo", value: "inactive" },
+        ],
+      },
+    },
   }),
   columnHelper.accessor("created_at", {
     header: "Fecha",

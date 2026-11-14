@@ -502,6 +502,34 @@ class UserManagementTest extends TestCase
                 ->where('users.data.1.nombre', 'AlumnoFiltro'));
     }
 
+    public function test_admin_can_filter_users_by_status(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $pending = User::factory()->pendingActivation()->create([
+            'nombre' => 'PendienteFiltro',
+        ]);
+        $pending->assignRole(UserRoles::ALUMNO);
+
+        $inactive = User::factory()->inactive()->create([
+            'nombre' => 'InactivoFiltro',
+        ]);
+        $inactive->assignRole(UserRoles::ALUMNO);
+
+        $this->actingAs($admin)
+            ->get(route('usuarios.index', [
+                'status' => [UserAccountStatus::PendingActivation->value],
+            ]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->where('filters.status', [UserAccountStatus::PendingActivation->value])
+                ->has('users.data', 1)
+                ->where('users.data.0.nombre', 'PendienteFiltro')
+                ->where('users.data.0.status', UserAccountStatus::PendingActivation->value));
+    }
+
     public function test_director_carrera_only_lists_users_from_same_career(): void
     {
         $ticCareerId = Catalog::query()

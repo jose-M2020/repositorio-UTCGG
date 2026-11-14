@@ -56,6 +56,10 @@ export const buildColumnFilters = (
     next.push({ id: "rol", value: filters.rol });
   }
 
+  if (filters.status.length > 0) {
+    next.push({ id: "status", value: filters.status });
+  }
+
   const dateFilter = toDateFilterValue(filters);
   if (isDateColumnFilterActive(dateFilter)) {
     next.push({ id: "created_at", value: dateFilter });
@@ -72,6 +76,7 @@ export const readFiltersFromColumnState = (
   const emailFilter = nextColumnFilters.find((filter) => filter.id === "email");
   const carreraFilter = nextColumnFilters.find((filter) => filter.id === "carrera");
   const rolFilter = nextColumnFilters.find((filter) => filter.id === "rol");
+  const statusFilter = nextColumnFilters.find((filter) => filter.id === "status");
   const dateFilter = nextColumnFilters.find((filter) => filter.id === "created_at");
   const dateValue = parseDateColumnFilterValue(dateFilter?.value);
 
@@ -81,12 +86,16 @@ export const readFiltersFromColumnState = (
   const rol = Array.isArray(rolFilter?.value)
     ? (rolFilter.value as string[])
     : [];
+  const status = Array.isArray(statusFilter?.value)
+    ? (statusFilter.value as string[])
+    : [];
 
   return {
     nombre: readSearchFilterValue(nombreFilter?.value),
     email: readSearchFilterValue(emailFilter?.value),
     carrera: canFilterCareer ? carrera : [],
     rol,
+    status,
     fecha: dateValue.preset,
     rango_fecha: [dateValue.from, dateValue.to],
   };

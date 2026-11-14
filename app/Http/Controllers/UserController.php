@@ -49,6 +49,11 @@ class UserController extends Controller implements HasMiddleware
             (array) $request->input('rol', []),
             fn ($role): bool => is_string($role) && $role !== '' && $role !== 'all',
         ));
+        $allowedStatuses = array_column(UserAccountStatus::cases(), 'value');
+        $statuses = array_values(array_filter(
+            (array) $request->input('status', []),
+            fn ($status): bool => is_string($status) && in_array($status, $allowedStatuses, true),
+        ));
         $dateRange = array_values((array) $request->input('rango_fecha', ['', '']));
         $fecha = $request->string('fecha')->toString();
         $hasDateRange = ($dateRange[0] ?? '') !== '' && ($dateRange[1] ?? '') !== '';
@@ -77,6 +82,7 @@ class UserController extends Controller implements HasMiddleware
                 fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
             ))
             ->when($roles !== [], fn ($query) => $query->role($roles))
+            ->when($statuses !== [], fn ($query) => $query->whereIn('status', $statuses))
             ->when($hasDateRange, function ($query) use ($dateRange): void {
                 $query->whereDate('created_at', '>=', $dateRange[0])
                     ->whereDate('created_at', '<=', $dateRange[1]);
@@ -128,6 +134,7 @@ class UserController extends Controller implements HasMiddleware
                 'email' => $email,
                 'carrera' => $carreras,
                 'rol' => $roles,
+                'status' => $statuses,
                 'fecha' => $fecha,
                 'rango_fecha' => $dateRange,
             ],
@@ -152,8 +159,8 @@ class UserController extends Controller implements HasMiddleware
         $linkStatus = UserPasswordSetup::send($user, SetPasswordPurpose::Activation);
 
         $message = $linkStatus === Password::RESET_LINK_SENT
-            ? 'Usuario registrado. Se envió el enlace de activación.'
-            : 'Usuario registrado, pero no se pudo enviar el enlace de activación.';
+            ? 'Usuario registrado. El enlace de activación se enviará en breve.'
+            : 'Usuario registrado, pero no se pudo encolar el enlace de activación. Usa “Reenviar activación”.';
 
         return redirect()
             ->route('usuarios.index')
@@ -305,13 +312,13 @@ class UserController extends Controller implements HasMiddleware
 
         if ($linkStatus !== Password::RESET_LINK_SENT) {
             throw ValidationException::withMessages([
-                'user' => 'No se pudo enviar el enlace. Intenta de nuevo en un momento.',
+                'user' => 'No se pudo encolar el enlace. Intenta de nuevo en un momento.',
             ]);
         }
 
         $message = $purpose === SetPasswordPurpose::Activation
-            ? 'Enlace de activación reenviado.'
-            : 'Enlace para restablecer contraseña enviado.';
+            ? 'Enlace de activación encolado. Se enviará en breve.'
+            : 'Enlace para restablecer contraseña encolado. Se enviará en breve.';
 
         return redirect()
             ->route('usuarios.index')
