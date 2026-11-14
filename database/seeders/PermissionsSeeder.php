@@ -12,18 +12,18 @@ use Spatie\Permission\PermissionRegistrar;
 class PermissionsSeeder extends Seeder
 {
     /**
-     * Seed roles and permissions from the legacy application.
+     * Seed roles and permissions.
      */
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $permissions = [
-            ['name' => 'usuarios.index', 'description' => 'Ver usuarios'],
-            ['name' => 'usuarios.create', 'description' => 'Crear usuario'],
-            ['name' => 'usuarios.edit', 'description' => 'Editar usuario'],
-            ['name' => 'usuarios.destroy', 'description' => 'Borrar usuario'],
-            ['name' => 'usuarios.search', 'description' => 'Buscar usuarios'],
+            ['name' => 'users.index', 'description' => 'Ver usuarios'],
+            ['name' => 'users.create', 'description' => 'Crear usuario'],
+            ['name' => 'users.edit', 'description' => 'Editar usuario'],
+            ['name' => 'users.destroy', 'description' => 'Borrar usuario'],
+            ['name' => 'users.search', 'description' => 'Buscar usuarios'],
             ['name' => UserRoles::CAREER_ANY, 'description' => 'Seleccionar cualquier carrera al registrar usuarios'],
             ['name' => 'roles.index', 'description' => 'Ver roles'],
             ['name' => 'roles.create', 'description' => 'Crear rol'],
@@ -52,23 +52,23 @@ class PermissionsSeeder extends Seeder
 
         Role::query()->firstOrCreate(['name' => UserRoles::ADMIN, 'guard_name' => 'web']);
         Role::query()->firstOrCreate(['name' => UserRoles::DIRECTOR, 'guard_name' => 'web']);
-        Role::query()->firstOrCreate(['name' => UserRoles::DIRECTOR_CARRERA, 'guard_name' => 'web']);
-        Role::query()->firstOrCreate(['name' => UserRoles::DOCENTE, 'guard_name' => 'web']);
-        Role::query()->firstOrCreate(['name' => UserRoles::ALUMNO, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::CAREER_DIRECTOR, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::TEACHER, 'guard_name' => 'web']);
+        Role::query()->firstOrCreate(['name' => UserRoles::STUDENT, 'guard_name' => 'web']);
 
         RoleAssignPermissionSync::syncAllExistingRoles();
 
         $director = Role::query()->where('name', UserRoles::DIRECTOR)->firstOrFail();
         $director->syncPermissions([
-            'usuarios.index',
-            'usuarios.create',
-            'usuarios.edit',
-            'usuarios.destroy',
-            'usuarios.search',
+            'users.index',
+            'users.create',
+            'users.edit',
+            'users.destroy',
+            'users.search',
             UserRoles::CAREER_ANY,
-            RoleAssignPermissionSync::permissionName(UserRoles::DIRECTOR_CARRERA),
-            RoleAssignPermissionSync::permissionName(UserRoles::DOCENTE),
-            RoleAssignPermissionSync::permissionName(UserRoles::ALUMNO),
+            RoleAssignPermissionSync::permissionName(UserRoles::CAREER_DIRECTOR),
+            RoleAssignPermissionSync::permissionName(UserRoles::TEACHER),
+            RoleAssignPermissionSync::permissionName(UserRoles::STUDENT),
             'repositorios.index',
             'repositorios.create',
             'repositorios.edit',
@@ -79,14 +79,14 @@ class PermissionsSeeder extends Seeder
             'archivos.destroy',
         ]);
 
-        $directorCarrera = Role::query()->where('name', UserRoles::DIRECTOR_CARRERA)->firstOrFail();
-        $directorCarrera->syncPermissions([
-            'usuarios.index',
-            'usuarios.create',
-            'usuarios.edit',
-            'usuarios.search',
-            RoleAssignPermissionSync::permissionName(UserRoles::DOCENTE),
-            RoleAssignPermissionSync::permissionName(UserRoles::ALUMNO),
+        $careerDirector = Role::query()->where('name', UserRoles::CAREER_DIRECTOR)->firstOrFail();
+        $careerDirector->syncPermissions([
+            'users.index',
+            'users.create',
+            'users.edit',
+            'users.search',
+            RoleAssignPermissionSync::permissionName(UserRoles::TEACHER),
+            RoleAssignPermissionSync::permissionName(UserRoles::STUDENT),
             'repositorios.index',
             'repositorios.create',
             'repositorios.edit',
@@ -97,9 +97,9 @@ class PermissionsSeeder extends Seeder
             'archivos.destroy',
         ]);
 
-        $docente = Role::query()->where('name', UserRoles::DOCENTE)->firstOrFail();
-        $docente->syncPermissions([
-            'usuarios.search',
+        $teacher = Role::query()->where('name', UserRoles::TEACHER)->firstOrFail();
+        $teacher->syncPermissions([
+            'users.search',
             'repositorios.index',
             'repositorios.create',
             'repositorios.edit',
@@ -110,9 +110,9 @@ class PermissionsSeeder extends Seeder
             'archivos.destroy',
         ]);
 
-        $alumno = Role::query()->where('name', UserRoles::ALUMNO)->firstOrFail();
-        $alumno->syncPermissions([
-            'usuarios.search',
+        $student = Role::query()->where('name', UserRoles::STUDENT)->firstOrFail();
+        $student->syncPermissions([
+            'users.search',
             'repositorios.index',
             'repositorios.create',
             'repositorios.edit',

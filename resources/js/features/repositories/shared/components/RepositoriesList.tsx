@@ -37,7 +37,7 @@ export const RepositoriesList = ({
                 {repositorios.data.map((repo) => {
                     const authorNames =
                         repo.users
-                            ?.map((user) => `${user.nombre} ${user.apellido}`)
+                            ?.map((user) => `${user.first_name} ${user.last_name}`)
                             .join(', ') ?? '';
 
                     return (

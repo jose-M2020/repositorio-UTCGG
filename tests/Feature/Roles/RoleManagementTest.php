@@ -30,7 +30,7 @@ class RoleManagementTest extends TestCase
     public function test_user_without_permission_cannot_view_roles_index(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('alumno');
+        $user->assignRole('student');
 
         $this->actingAs($user)
             ->get(route('roles.index'))
@@ -54,14 +54,14 @@ class RoleManagementTest extends TestCase
 
         $response = $this->actingAs($admin)->post(route('roles.store'), [
             'name' => 'coordinador',
-            'permissions' => ['usuarios.index', 'roles.index'],
+            'permissions' => ['users.index', 'roles.index'],
         ]);
 
         $response->assertRedirect(route('roles.index'));
 
         $role = Role::query()->where('name', 'coordinador')->first();
         $this->assertNotNull($role);
-        $this->assertTrue($role->hasPermissionTo('usuarios.index'));
+        $this->assertTrue($role->hasPermissionTo('users.index'));
         $this->assertTrue($role->hasPermissionTo('roles.index'));
         $this->assertDatabaseHas('permissions', [
             'name' => RoleAssignPermissionSync::permissionName('coordinador'),
@@ -76,7 +76,7 @@ class RoleManagementTest extends TestCase
 
         $role = Role::query()->create(['name' => 'temporal', 'guard_name' => 'web']);
         RoleAssignPermissionSync::ensureFor('temporal');
-        $role->syncPermissions(['usuarios.index']);
+        $role->syncPermissions(['users.index']);
 
         $response = $this->actingAs($admin)->put(route('roles.update', $role), [
             'name' => 'temporal-editado',
@@ -89,7 +89,7 @@ class RoleManagementTest extends TestCase
             'name' => 'temporal-editado',
         ]);
         $this->assertTrue($role->fresh()?->hasPermissionTo('roles.index'));
-        $this->assertFalse($role->fresh()?->hasPermissionTo('usuarios.index'));
+        $this->assertFalse($role->fresh()?->hasPermissionTo('users.index'));
         $this->assertDatabaseMissing('permissions', [
             'name' => RoleAssignPermissionSync::permissionName('temporal'),
         ]);
@@ -142,18 +142,18 @@ class RoleManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin');
 
-        $role = Role::query()->where('name', 'alumno')->firstOrFail();
+        $role = Role::query()->where('name', 'student')->firstOrFail();
 
         $response = $this->actingAs($admin)->delete(route('roles.destroy', $role));
 
         $response->assertRedirect(route('roles.index'));
         $response->assertSessionHas('error');
-        $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => 'alumno']);
+        $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => 'student']);
     }
 
     public function test_assign_permission_is_seeded_for_existing_roles(): void
     {
-        foreach (['admin', 'director', 'director_carrera', 'docente', 'alumno'] as $role) {
+        foreach (['admin', 'director', 'career_director', 'teacher', 'student'] as $role) {
             $this->assertTrue(
                 Permission::query()
                     ->where('name', RoleAssignPermissionSync::permissionName($role))
@@ -162,12 +162,12 @@ class RoleManagementTest extends TestCase
         }
 
         $director = Role::query()->where('name', 'director')->firstOrFail();
-        $this->assertTrue($director->hasPermissionTo('usuarios.career.any'));
-        $this->assertTrue($director->hasPermissionTo(RoleAssignPermissionSync::permissionName('alumno')));
+        $this->assertTrue($director->hasPermissionTo('users.career.any'));
+        $this->assertTrue($director->hasPermissionTo(RoleAssignPermissionSync::permissionName('student')));
 
-        $directorCarrera = Role::query()->where('name', 'director_carrera')->firstOrFail();
-        $this->assertFalse($directorCarrera->hasPermissionTo('usuarios.career.any'));
-        $this->assertTrue($directorCarrera->hasPermissionTo(RoleAssignPermissionSync::permissionName('alumno')));
+        $directorCarrera = Role::query()->where('name', 'career_director')->firstOrFail();
+        $this->assertFalse($directorCarrera->hasPermissionTo('users.career.any'));
+        $this->assertTrue($directorCarrera->hasPermissionTo(RoleAssignPermissionSync::permissionName('student')));
         $this->assertFalse($directorCarrera->hasPermissionTo(RoleAssignPermissionSync::permissionName('admin')));
     }
 

@@ -40,7 +40,7 @@ class SetPasswordNotification extends Notification implements ShouldQueue
         if ($this->purpose === SetPasswordPurpose::Activation) {
             return (new MailMessage)
                 ->subject('Activa tu cuenta')
-                ->greeting('Hola '.$notifiable->nombre)
+                ->greeting('Hola '.$notifiable->first_name)
                 ->line('Se creó una cuenta para ti en el repositorio. Elige tu contraseña para activarla.')
                 ->action('Activar cuenta', $url)
                 ->line("Este enlace expira en {$expireMinutes} minutos.")
@@ -49,7 +49,7 @@ class SetPasswordNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Restablecer contraseña')
-            ->greeting('Hola '.$notifiable->nombre)
+            ->greeting('Hola '.$notifiable->first_name)
             ->line('Recibimos una solicitud para restablecer la contraseña de tu cuenta.')
             ->action('Restablecer contraseña', $url)
             ->line("Este enlace expira en {$expireMinutes} minutos.")

@@ -30,17 +30,17 @@ class UserManagementTest extends TestCase
 
     public function test_guest_is_redirected_from_users_index(): void
     {
-        $this->get(route('usuarios.index'))
+        $this->get(route('users.index'))
             ->assertRedirect(route('login'));
     }
 
     public function test_user_without_permission_cannot_view_users_index(): void
     {
         $user = User::factory()->create();
-        $user->assignRole(UserRoles::ALUMNO);
+        $user->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($user)
-            ->get(route('usuarios.index'))
+            ->get(route('users.index'))
             ->assertForbidden();
     }
 
@@ -50,7 +50,7 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index'))
+            ->get(route('users.index'))
             ->assertOk();
     }
 
@@ -61,30 +61,30 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $response = $this->actingAs($admin)->post(route('usuarios.store'), [
-            'nombre' => 'Ana',
-            'apellido' => 'Lopez',
+        $response = $this->actingAs($admin)->post(route('users.store'), [
+            'first_name' => 'Ana',
+            'last_name' => 'Lopez',
             'email' => 'ana@example.com',
             'career' => 'TIC',
-            'role' => UserRoles::ALUMNO,
+            'role' => UserRoles::STUDENT,
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $ticCareerId = Catalog::query()
             ->where('type', Catalog::TYPE_CAREER)
             ->where('code', 'TIC')
             ->value('id');
         $this->assertDatabaseHas('users', [
             'email' => 'ana@example.com',
-            'nombre' => 'Ana',
-            'apellido' => 'Lopez',
+            'first_name' => 'Ana',
+            'last_name' => 'Lopez',
             'career_catalog_id' => $ticCareerId,
             'status' => UserAccountStatus::PendingActivation->value,
             'password' => null,
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();
-        $this->assertTrue($created?->hasRole(UserRoles::ALUMNO));
+        $this->assertTrue($created?->hasRole(UserRoles::STUDENT));
 
         Notification::assertSentTo(
             $created,
@@ -107,16 +107,16 @@ class UserManagementTest extends TestCase
             'email' => 'old@example.com',
             'career_catalog_id' => $ticCareerId,
         ]);
-        $user->assignRole(UserRoles::ALUMNO);
+        $user->assignRole(UserRoles::STUDENT);
 
-        $response = $this->actingAs($admin)->put(route('usuarios.update', $user), [
-            'nombre' => 'Ana',
-            'apellido' => 'Actualizada',
+        $response = $this->actingAs($admin)->put(route('users.update', $user), [
+            'first_name' => 'Ana',
+            'last_name' => 'Actualizada',
             'email' => 'new@example.com',
             'career' => 'ER',
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $erCareerId = Catalog::query()
             ->where('type', Catalog::TYPE_CAREER)
             ->where('code', 'ER')
@@ -124,10 +124,10 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'email' => 'new@example.com',
-            'apellido' => 'Actualizada',
+            'last_name' => 'Actualizada',
             'career_catalog_id' => $erCareerId,
         ]);
-        $this->assertTrue($user->fresh()?->hasRole(UserRoles::ALUMNO));
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::STUDENT));
     }
 
     public function test_admin_can_change_user_role_and_keeps_existing_career(): void
@@ -143,14 +143,14 @@ class UserManagementTest extends TestCase
         $user = User::factory()->create([
             'career_catalog_id' => $ticCareerId,
         ]);
-        $user->assignRole(UserRoles::ALUMNO);
+        $user->assignRole(UserRoles::STUDENT);
 
-        $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
-            'role' => UserRoles::DOCENTE,
+        $response = $this->actingAs($admin)->patch(route('users.update-role', $user), [
+            'role' => UserRoles::TEACHER,
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
-        $this->assertTrue($user->fresh()?->hasRole(UserRoles::DOCENTE));
+        $response->assertRedirect(route('users.index'));
+        $this->assertTrue($user->fresh()?->hasRole(UserRoles::TEACHER));
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'career_catalog_id' => $ticCareerId,
@@ -170,13 +170,13 @@ class UserManagementTest extends TestCase
         $user = User::factory()->create([
             'career_catalog_id' => $ticCareerId,
         ]);
-        $user->assignRole(UserRoles::ALUMNO);
+        $user->assignRole(UserRoles::STUDENT);
 
-        $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
+        $response = $this->actingAs($admin)->patch(route('users.update-role', $user), [
             'role' => UserRoles::ADMIN,
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -195,12 +195,12 @@ class UserManagementTest extends TestCase
         $user->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
-            ->from(route('usuarios.index'))
-            ->patch(route('usuarios.update-role', $user), [
-                'role' => UserRoles::ALUMNO,
+            ->from(route('users.index'))
+            ->patch(route('users.update-role', $user), [
+                'role' => UserRoles::STUDENT,
             ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $response->assertSessionHasErrors(['role']);
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
     }
@@ -211,11 +211,11 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index'))
+            ->get(route('users.index'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->has('rolePermissions.'.UserRoles::ALUMNO)
+                ->has('rolePermissions.'.UserRoles::STUDENT)
                 ->has('assignableRoles'));
     }
 
@@ -228,12 +228,12 @@ class UserManagementTest extends TestCase
             'status' => UserAccountStatus::Active,
         ]);
 
-        $deactivate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
-        $deactivate->assertRedirect(route('usuarios.index'));
+        $deactivate = $this->actingAs($admin)->patch(route('users.toggle-active', $user));
+        $deactivate->assertRedirect(route('users.index'));
         $this->assertSame(UserAccountStatus::Inactive, $user->fresh()?->status);
 
-        $activate = $this->actingAs($admin)->patch(route('usuarios.toggle-active', $user));
-        $activate->assertRedirect(route('usuarios.index'));
+        $activate = $this->actingAs($admin)->patch(route('users.toggle-active', $user));
+        $activate->assertRedirect(route('users.index'));
         $this->assertSame(UserAccountStatus::Active, $user->fresh()?->status);
     }
 
@@ -243,10 +243,10 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
-            ->from(route('usuarios.index'))
-            ->patch(route('usuarios.toggle-active', $admin));
+            ->from(route('users.index'))
+            ->patch(route('users.toggle-active', $admin));
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $response->assertSessionHasErrors(['user']);
         $this->assertSame(UserAccountStatus::Active, $admin->fresh()?->status);
     }
@@ -259,10 +259,10 @@ class UserManagementTest extends TestCase
         $user = User::factory()->pendingActivation()->create();
 
         $response = $this->actingAs($admin)
-            ->from(route('usuarios.index'))
-            ->patch(route('usuarios.toggle-active', $user));
+            ->from(route('users.index'))
+            ->patch(route('users.toggle-active', $user));
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $response->assertSessionHasErrors(['user']);
         $this->assertSame(UserAccountStatus::PendingActivation, $user->fresh()?->status);
     }
@@ -276,9 +276,9 @@ class UserManagementTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->actingAs($admin)->post(route('usuarios.password-link', $user));
+        $response = $this->actingAs($admin)->post(route('users.password-link', $user));
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         Notification::assertSentTo(
             $user,
             SetPasswordNotification::class,
@@ -295,9 +295,9 @@ class UserManagementTest extends TestCase
 
         $user = User::factory()->pendingActivation()->create();
 
-        $response = $this->actingAs($admin)->post(route('usuarios.password-link', $user));
+        $response = $this->actingAs($admin)->post(route('users.password-link', $user));
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         Notification::assertSentTo(
             $user,
             SetPasswordNotification::class,
@@ -312,9 +312,9 @@ class UserManagementTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->actingAs($admin)->delete(route('usuarios.destroy', $user));
+        $response = $this->actingAs($admin)->delete(route('users.destroy', $user));
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
@@ -324,13 +324,13 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
-            ->from(route('usuarios.index'))
-            ->post(route('usuarios.store'), []);
+            ->from(route('users.index'))
+            ->post(route('users.store'), []);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $response->assertSessionHasErrors([
-            'nombre',
-            'apellido',
+            'first_name',
+            'last_name',
             'email',
             'role',
         ]);
@@ -343,14 +343,14 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $response = $this->actingAs($admin)->post(route('usuarios.store'), [
-            'nombre' => 'Root',
-            'apellido' => 'User',
+        $response = $this->actingAs($admin)->post(route('users.store'), [
+            'first_name' => 'Root',
+            'last_name' => 'User',
             'email' => 'root@example.com',
             'role' => UserRoles::ADMIN,
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $this->assertDatabaseHas('users', [
             'email' => 'root@example.com',
             'career_catalog_id' => null,
@@ -358,7 +358,7 @@ class UserManagementTest extends TestCase
         ]);
     }
 
-    public function test_director_carrera_forces_own_career_when_creating_user(): void
+    public function test_career_director_forces_own_career_when_creating_user(): void
     {
         $ticCareerId = Catalog::query()
             ->where('type', Catalog::TYPE_CAREER)
@@ -368,26 +368,26 @@ class UserManagementTest extends TestCase
         $director = User::factory()->create([
             'career_catalog_id' => $ticCareerId,
         ]);
-        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+        $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         Notification::fake();
 
-        $response = $this->actingAs($director)->post(route('usuarios.store'), [
-            'nombre' => 'Luis',
-            'apellido' => 'Perez',
+        $response = $this->actingAs($director)->post(route('users.store'), [
+            'first_name' => 'Luis',
+            'last_name' => 'Perez',
             'email' => 'luis@example.com',
             'career' => 'ER',
-            'role' => UserRoles::ALUMNO,
+            'role' => UserRoles::STUDENT,
         ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $this->assertDatabaseHas('users', [
             'email' => 'luis@example.com',
             'career_catalog_id' => $ticCareerId,
         ]);
     }
 
-    public function test_director_carrera_cannot_assign_admin_role(): void
+    public function test_career_director_cannot_assign_admin_role(): void
     {
         $ticCareerId = Catalog::query()
             ->where('type', Catalog::TYPE_CAREER)
@@ -397,18 +397,18 @@ class UserManagementTest extends TestCase
         $director = User::factory()->create([
             'career_catalog_id' => $ticCareerId,
         ]);
-        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+        $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         $response = $this->actingAs($director)
-            ->from(route('usuarios.index'))
-            ->post(route('usuarios.store'), [
-                'nombre' => 'Hack',
-                'apellido' => 'Attempt',
+            ->from(route('users.index'))
+            ->post(route('users.store'), [
+                'first_name' => 'Hack',
+                'last_name' => 'Attempt',
                 'email' => 'hack@example.com',
                 'role' => UserRoles::ADMIN,
             ]);
 
-        $response->assertRedirect(route('usuarios.index'));
+        $response->assertRedirect(route('users.index'));
         $response->assertSessionHasErrors(['role']);
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
@@ -419,19 +419,19 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $inRange = User::factory()->create([
-            'nombre' => 'EnRango',
+            'first_name' => 'EnRango',
             'created_at' => '2024-05-10 12:00:00',
         ]);
-        $inRange->assignRole(UserRoles::ALUMNO);
+        $inRange->assignRole(UserRoles::STUDENT);
 
         $outOfRange = User::factory()->create([
-            'nombre' => 'FueraRango',
+            'first_name' => 'FueraRango',
             'created_at' => '2024-06-01 12:00:00',
         ]);
-        $outOfRange->assignRole(UserRoles::ALUMNO);
+        $outOfRange->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index', [
+            ->get(route('users.index', [
                 'date_range' => ['2024-05-01', '2024-05-31'],
             ]))
             ->assertOk()
@@ -439,37 +439,37 @@ class UserManagementTest extends TestCase
                 ->component('panel/users/index')
                 ->where('filters.date_range', ['2024-05-01', '2024-05-31'])
                 ->has('users.data', 1)
-                ->where('users.data.0.nombre', 'EnRango'));
+                ->where('users.data.0.first_name', 'EnRango'));
     }
 
-    public function test_admin_can_filter_users_by_nombre_and_email(): void
+    public function test_admin_can_filter_users_by_name_and_email(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
         $match = User::factory()->create([
-            'nombre' => 'Carla',
-            'apellido' => 'Ruiz',
+            'first_name' => 'Carla',
+            'last_name' => 'Ruiz',
             'email' => 'carla.ruiz@example.com',
         ]);
-        $match->assignRole(UserRoles::ALUMNO);
+        $match->assignRole(UserRoles::STUDENT);
 
         $other = User::factory()->create([
-            'nombre' => 'Pedro',
-            'apellido' => 'Lopez',
+            'first_name' => 'Pedro',
+            'last_name' => 'Lopez',
             'email' => 'pedro.lopez@example.com',
         ]);
-        $other->assignRole(UserRoles::ALUMNO);
+        $other->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index', [
-                'nombre' => 'Carla',
+            ->get(route('users.index', [
+                'name' => 'Carla',
                 'email' => 'carla.ruiz',
             ]))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->where('filters.nombre', 'Carla')
+                ->where('filters.name', 'Carla')
                 ->where('filters.email', 'carla.ruiz')
                 ->has('users.data', 1)
                 ->where('users.data.0.email', 'carla.ruiz@example.com'));
@@ -480,26 +480,26 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $alumno = User::factory()->create(['nombre' => 'AlumnoFiltro']);
-        $alumno->assignRole(UserRoles::ALUMNO);
+        $alumno = User::factory()->create(['first_name' => 'AlumnoFiltro']);
+        $alumno->assignRole(UserRoles::STUDENT);
 
-        $docente = User::factory()->create(['nombre' => 'DocenteFiltro']);
-        $docente->assignRole(UserRoles::DOCENTE);
+        $docente = User::factory()->create(['first_name' => 'DocenteFiltro']);
+        $docente->assignRole(UserRoles::TEACHER);
 
-        $director = User::factory()->create(['nombre' => 'DirectorFiltro']);
+        $director = User::factory()->create(['first_name' => 'DirectorFiltro']);
         $director->assignRole(UserRoles::DIRECTOR);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index', [
-                'role' => [UserRoles::ALUMNO, UserRoles::DOCENTE],
+            ->get(route('users.index', [
+                'role' => [UserRoles::STUDENT, UserRoles::TEACHER],
             ]))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->where('filters.role', [UserRoles::ALUMNO, UserRoles::DOCENTE])
+                ->where('filters.role', [UserRoles::STUDENT, UserRoles::TEACHER])
                 ->has('users.data', 2)
-                ->where('users.data.0.nombre', 'DocenteFiltro')
-                ->where('users.data.1.nombre', 'AlumnoFiltro'));
+                ->where('users.data.0.first_name', 'DocenteFiltro')
+                ->where('users.data.1.first_name', 'AlumnoFiltro'));
     }
 
     public function test_admin_can_filter_users_by_status(): void
@@ -508,17 +508,17 @@ class UserManagementTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
 
         $pending = User::factory()->pendingActivation()->create([
-            'nombre' => 'PendienteFiltro',
+            'first_name' => 'PendienteFiltro',
         ]);
-        $pending->assignRole(UserRoles::ALUMNO);
+        $pending->assignRole(UserRoles::STUDENT);
 
         $inactive = User::factory()->inactive()->create([
-            'nombre' => 'InactivoFiltro',
+            'first_name' => 'InactivoFiltro',
         ]);
-        $inactive->assignRole(UserRoles::ALUMNO);
+        $inactive->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($admin)
-            ->get(route('usuarios.index', [
+            ->get(route('users.index', [
                 'status' => [UserAccountStatus::PendingActivation->value],
             ]))
             ->assertOk()
@@ -526,11 +526,11 @@ class UserManagementTest extends TestCase
                 ->component('panel/users/index')
                 ->where('filters.status', [UserAccountStatus::PendingActivation->value])
                 ->has('users.data', 1)
-                ->where('users.data.0.nombre', 'PendienteFiltro')
+                ->where('users.data.0.first_name', 'PendienteFiltro')
                 ->where('users.data.0.status', UserAccountStatus::PendingActivation->value));
     }
 
-    public function test_director_carrera_only_lists_users_from_same_career(): void
+    public function test_career_director_only_lists_users_from_same_career(): void
     {
         $ticCareerId = Catalog::query()
             ->where('type', Catalog::TYPE_CAREER)
@@ -544,22 +544,22 @@ class UserManagementTest extends TestCase
         $director = User::factory()->create([
             'career_catalog_id' => $ticCareerId,
         ]);
-        $director->assignRole(UserRoles::DIRECTOR_CARRERA);
+        $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         $sameCareer = User::factory()->create([
-            'nombre' => 'Misma',
+            'first_name' => 'Misma',
             'career_catalog_id' => $ticCareerId,
         ]);
-        $sameCareer->assignRole(UserRoles::ALUMNO);
+        $sameCareer->assignRole(UserRoles::STUDENT);
 
         $otherCareer = User::factory()->create([
-            'nombre' => 'Otra',
+            'first_name' => 'Otra',
             'career_catalog_id' => $erCareerId,
         ]);
-        $otherCareer->assignRole(UserRoles::ALUMNO);
+        $otherCareer->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($director)
-            ->get(route('usuarios.index'))
+            ->get(route('users.index'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
@@ -570,18 +570,18 @@ class UserManagementTest extends TestCase
                 ->where('careerPolicy.locked_career', 'TIC'));
     }
 
-    public function test_docente_cannot_create_users(): void
+    public function test_teacher_cannot_create_users(): void
     {
         $docente = User::factory()->create();
-        $docente->assignRole(UserRoles::DOCENTE);
+        $docente->assignRole(UserRoles::TEACHER);
 
         $this->actingAs($docente)
-            ->post(route('usuarios.store'), [
-                'nombre' => 'Ana',
-                'apellido' => 'Lopez',
+            ->post(route('users.store'), [
+                'first_name' => 'Ana',
+                'last_name' => 'Lopez',
                 'email' => 'ana@example.com',
                 'career' => 'TIC',
-                'role' => UserRoles::ALUMNO,
+                'role' => UserRoles::STUDENT,
             ])
             ->assertForbidden();
     }

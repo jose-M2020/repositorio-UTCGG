@@ -10,7 +10,7 @@ final class RoleAssignPermissionSync
 {
     public static function permissionName(string $roleName): string
     {
-        return 'usuarios.assign.'.$roleName;
+        return 'users.assign.'.$roleName;
     }
 
     public static function ensureFor(string $roleName): Permission

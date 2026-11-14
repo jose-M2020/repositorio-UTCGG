@@ -45,17 +45,17 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user
                     ? [
                         'id' => $user->id,
-                        'nombre' => $user->nombre,
-                        'apellido' => $user->apellido,
+                        'first_name' => $user->first_name,
+                        'last_name' => $user->last_name,
                         'email' => $user->email,
-                        'carrera' => $careerCode,
+                        'career' => $careerCode,
                         'roles' => $user->getRoleNames()->values()->all(),
                     ]
                     : null,
                 'abilities' => [
                     'repositories.create' => $user?->can('repositorios.create') ?? false,
-                    'users.view' => $user?->can('usuarios.index') ?? false,
-                    'users.create' => $user?->can('usuarios.create') ?? false,
+                    'users.view' => $user?->can('users.index') ?? false,
+                    'users.create' => $user?->can('users.create') ?? false,
                     'roles.view' => $user?->can('roles.index') ?? false,
                     'catalogs.view' => $user?->can('catalogos.index') ?? false,
                 ],

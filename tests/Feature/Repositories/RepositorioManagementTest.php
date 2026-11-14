@@ -48,7 +48,7 @@ class RepositorioManagementTest extends TestCase
     public function test_member_can_create_repository_and_becomes_member(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('docente');
+        $user->assignRole('teacher');
 
         $response = $this->actingAs($user)->post(route('repositorios.store'), [
             'nombre_rep' => 'Repo Test',
@@ -72,7 +72,7 @@ class RepositorioManagementTest extends TestCase
     public function test_user_with_permission_can_view_create_repository_page(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('docente');
+        $user->assignRole('teacher');
 
         $this->actingAs($user)
             ->get(route('repositorios.create'))
@@ -85,10 +85,10 @@ class RepositorioManagementTest extends TestCase
     public function test_non_member_cannot_manage_repository(): void
     {
         $owner = User::factory()->create();
-        $owner->assignRole('docente');
+        $owner->assignRole('teacher');
 
         $intruder = User::factory()->create();
-        $intruder->assignRole('docente');
+        $intruder->assignRole('teacher');
 
         $repo = Repositorio::factory()->private()->create();
         $repo->users()->attach($owner->id);
@@ -101,7 +101,7 @@ class RepositorioManagementTest extends TestCase
     public function test_member_can_add_and_remove_members(): void
     {
         $owner = User::factory()->create();
-        $owner->assignRole('docente');
+        $owner->assignRole('teacher');
 
         $member = User::factory()->create();
 

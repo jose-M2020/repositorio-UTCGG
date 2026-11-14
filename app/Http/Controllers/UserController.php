@@ -31,18 +31,18 @@ class UserController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:usuarios.index', only: ['index']),
-            new Middleware('can:usuarios.create', only: ['store']),
-            new Middleware('can:usuarios.edit', only: ['update', 'updateRole', 'toggleActive', 'sendPasswordLink']),
-            new Middleware('can:usuarios.destroy', only: ['destroy']),
-            new Middleware('can:usuarios.search', only: ['search']),
+            new Middleware('can:users.index', only: ['index']),
+            new Middleware('can:users.create', only: ['store']),
+            new Middleware('can:users.edit', only: ['update', 'updateRole', 'toggleActive', 'sendPasswordLink']),
+            new Middleware('can:users.destroy', only: ['destroy']),
+            new Middleware('can:users.search', only: ['search']),
         ];
     }
 
     public function index(Request $request): Response
     {
         $authUser = $request->user();
-        $nombre = $request->string('nombre')->toString();
+        $name = $request->string('name')->toString();
         $email = $request->string('email')->toString();
         $careers = array_values(array_filter((array) $request->input('career', [])));
         $roles = array_values(array_filter(
@@ -70,10 +70,10 @@ class UserController extends Controller implements HasMiddleware
                 UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
                 fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
             )
-            ->when($nombre !== '', function ($query) use ($nombre): void {
-                $query->where(function ($inner) use ($nombre): void {
-                    $inner->where('nombre', 'like', "%{$nombre}%")
-                        ->orWhere('apellido', 'like', "%{$nombre}%");
+            ->when($name !== '', function ($query) use ($name): void {
+                $query->where(function ($inner) use ($name): void {
+                    $inner->where('first_name', 'like', "%{$name}%")
+                        ->orWhere('last_name', 'like', "%{$name}%");
                 });
             })
             ->when($email !== '', fn ($query) => $query->where('email', 'like', "%{$email}%"))
@@ -111,12 +111,12 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'nombre', 'apellido', 'email', 'career_catalog_id', 'status', 'created_at'])
+            ->paginate(10, ['id', 'first_name', 'last_name', 'email', 'career_catalog_id', 'status', 'created_at'])
             ->withQueryString()
             ->through(fn (User $user): array => [
                 'id' => $user->id,
-                'nombre' => $user->nombre,
-                'apellido' => $user->apellido,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
                 'career' => $user->careerCatalog?->code,
                 'status' => $user->status->value,
@@ -130,7 +130,7 @@ class UserController extends Controller implements HasMiddleware
         return Inertia::render('panel/users/index', [
             'users' => $users,
             'filters' => [
-                'nombre' => $nombre,
+                'name' => $name,
                 'email' => $email,
                 'career' => $careers,
                 'role' => $roles,
@@ -150,15 +150,15 @@ class UserController extends Controller implements HasMiddleware
     {
         $result = $createUser->handle(
             $request->user(),
-            $request->string('nombre')->toString(),
-            $request->string('apellido')->toString(),
+            $request->string('first_name')->toString(),
+            $request->string('last_name')->toString(),
             $request->string('email')->toString(),
             $request->string('role')->toString(),
             $request->input('career'),
         );
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', $createUser->flashMessage($result['link_status']));
     }
 
@@ -175,8 +175,8 @@ class UserController extends Controller implements HasMiddleware
         return Inertia::render('panel/users/show', [
             'user' => [
                 'id' => $user->id,
-                'nombre' => $user->nombre,
-                'apellido' => $user->apellido,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
                 'career' => $user->careerCatalog?->code,
                 'status' => $user->status->value,
@@ -201,14 +201,14 @@ class UserController extends Controller implements HasMiddleware
             )
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($inner) use ($search): void {
-                    $inner->where('nombre', 'like', "%{$search}%")
-                        ->orWhere('apellido', 'like', "%{$search}%")
+                    $inner->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->role([UserRoles::ALUMNO, UserRoles::DOCENTE])
+            ->role([UserRoles::STUDENT, UserRoles::TEACHER])
             ->with('roles:id,name')
-            ->paginate(10, ['id', 'nombre', 'apellido', 'email'])
+            ->paginate(10, ['id', 'first_name', 'last_name', 'email'])
             ->withQueryString();
 
         return response()->json($users);
@@ -222,14 +222,14 @@ class UserController extends Controller implements HasMiddleware
         $updateUserProfile->handle(
             $request->user(),
             $user,
-            $request->string('nombre')->toString(),
-            $request->string('apellido')->toString(),
+            $request->string('first_name')->toString(),
+            $request->string('last_name')->toString(),
             $request->string('email')->toString(),
             $request->input('career'),
         );
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', 'Usuario actualizado exitosamente.');
     }
 
@@ -245,7 +245,7 @@ class UserController extends Controller implements HasMiddleware
         );
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', 'Rol actualizado exitosamente.');
     }
 
@@ -256,7 +256,7 @@ class UserController extends Controller implements HasMiddleware
         $result = $toggleUserActive->handle(request()->user(), $user);
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', $result['message']);
     }
 
@@ -267,7 +267,7 @@ class UserController extends Controller implements HasMiddleware
         $result = $sendUserPasswordLink->handle(request()->user(), $user);
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', $result['message']);
     }
 
@@ -280,7 +280,7 @@ class UserController extends Controller implements HasMiddleware
         $user->delete();
 
         return redirect()
-            ->route('usuarios.index')
+            ->route('users.index')
             ->with('status', 'Usuario eliminado exitosamente.');
     }
 

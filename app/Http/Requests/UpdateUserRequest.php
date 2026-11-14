@@ -12,7 +12,7 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('usuarios.edit') ?? false;
+        return $this->user()?->can('users.edit') ?? false;
     }
 
     protected function prepareForValidation(): void
@@ -54,8 +54,8 @@ class UpdateUserRequest extends FormRequest
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
         return [
-            'nombre' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',

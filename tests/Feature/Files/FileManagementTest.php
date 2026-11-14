@@ -36,7 +36,7 @@ class FileManagementTest extends TestCase
                 ->where('code', 'TIC')
                 ->value('id'),
         ]);
-        $user->assignRole('docente');
+        $user->assignRole('teacher');
 
         $repo = Repositorio::factory()->create();
         $repo->users()->attach($user->id);
@@ -64,7 +64,7 @@ class FileManagementTest extends TestCase
     public function test_member_can_toggle_file_visibility(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('docente');
+        $user->assignRole('teacher');
 
         $repo = Repositorio::factory()->create();
         $repo->users()->attach($user->id);
@@ -86,7 +86,7 @@ class FileManagementTest extends TestCase
     public function test_member_can_delete_file(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('docente');
+        $user->assignRole('teacher');
 
         $repo = Repositorio::factory()->create();
         $repo->users()->attach($user->id);
@@ -134,10 +134,10 @@ class FileManagementTest extends TestCase
     public function test_non_member_cannot_upload_files(): void
     {
         $owner = User::factory()->create();
-        $owner->assignRole('docente');
+        $owner->assignRole('teacher');
 
         $intruder = User::factory()->create();
-        $intruder->assignRole('docente');
+        $intruder->assignRole('teacher');
 
         $repo = Repositorio::factory()->create();
         $repo->users()->attach($owner->id);

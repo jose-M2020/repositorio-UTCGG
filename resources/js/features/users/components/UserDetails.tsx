@@ -11,7 +11,7 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
             <div>
                 <dt className="text-sm text-slate-500">Nombre</dt>
                 <dd className="font-medium">
-                    {user.nombre} {user.apellido}
+                    {user.first_name} {user.last_name}
                 </dd>
             </div>
             <div>

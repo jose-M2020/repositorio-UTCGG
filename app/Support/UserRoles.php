@@ -11,13 +11,13 @@ final class UserRoles
 
     public const DIRECTOR = 'director';
 
-    public const DIRECTOR_CARRERA = 'director_carrera';
+    public const CAREER_DIRECTOR = 'career_director';
 
-    public const DOCENTE = 'docente';
+    public const TEACHER = 'teacher';
 
-    public const ALUMNO = 'alumno';
+    public const STUDENT = 'student';
 
-    public const CAREER_ANY = 'usuarios.career.any';
+    public const CAREER_ANY = 'users.career.any';
 
     /**
      * @return array<string, string>
@@ -27,9 +27,9 @@ final class UserRoles
         return [
             self::ADMIN => 'Administrador',
             self::DIRECTOR => 'Director',
-            self::DIRECTOR_CARRERA => 'Director de carrera',
-            self::DOCENTE => 'Docente',
-            self::ALUMNO => 'Alumno',
+            self::CAREER_DIRECTOR => 'Director de carrera',
+            self::TEACHER => 'Docente',
+            self::STUDENT => 'Alumno',
         ];
     }
 
@@ -39,7 +39,7 @@ final class UserRoles
     }
 
     /**
-     * Roles sembrados del sistema: no se eliminan.
+     * System-seeded roles: cannot be deleted.
      *
      * @return list<string>
      */
@@ -48,9 +48,9 @@ final class UserRoles
         return [
             self::ADMIN,
             self::DIRECTOR,
-            self::DIRECTOR_CARRERA,
-            self::DOCENTE,
-            self::ALUMNO,
+            self::CAREER_DIRECTOR,
+            self::TEACHER,
+            self::STUDENT,
         ];
     }
 
@@ -85,9 +85,9 @@ final class UserRoles
     public static function rolesRequiringCareer(): array
     {
         return [
-            self::DIRECTOR_CARRERA,
-            self::DOCENTE,
-            self::ALUMNO,
+            self::CAREER_DIRECTOR,
+            self::TEACHER,
+            self::STUDENT,
         ];
     }
 
@@ -107,14 +107,14 @@ final class UserRoles
             return false;
         }
 
-        return $user->can('usuarios.index')
-            || $user->can('usuarios.create')
-            || $user->can('usuarios.edit')
-            || $user->can('usuarios.destroy');
+        return $user->can('users.index')
+            || $user->can('users.create')
+            || $user->can('users.edit')
+            || $user->can('users.destroy');
     }
 
     /**
-     * Roles que el usuario autenticado puede asignar al crear/editar usuarios.
+     * Roles the authenticated user may assign when creating/editing users.
      *
      * @return list<string>
      */

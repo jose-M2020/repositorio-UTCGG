@@ -176,14 +176,14 @@ export const RepositorySettingsSection = ({
                             className="flex items-center justify-between gap-3 py-3 text-sm"
                         >
                             <span>
-                                {user.nombre} {user.apellido} ({user.email})
+                                {user.first_name} {user.last_name} ({user.email})
                             </span>
                             <ConfirmDeleteButton
                                 form={destroyMember.form([
                                     repositorio.slug,
                                     user.id,
                                 ])}
-                                itemLabel={`${user.nombre} ${user.apellido}`}
+                                itemLabel={`${user.first_name} ${user.last_name}`}
                                 triggerLabel="Quitar"
                                 triggerSize="sm"
                             />

@@ -29,7 +29,7 @@ export const UserToggleActiveDialog = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
-  const userName = `${user.nombre} ${user.apellido}`.trim();
+  const userName = `${user.first_name} ${user.last_name}`.trim();
   const willActivate = user.status === "inactive";
   const actionLabel = willActivate ? "Activar" : "Desactivar";
   const Icon = willActivate ? Power : PowerOff;

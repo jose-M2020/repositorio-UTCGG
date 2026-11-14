@@ -2,7 +2,7 @@ import { router } from "@inertiajs/react";
 import { index } from "@/actions/App/Http/Controllers/UserController";
 
 export type VisitUsersIndexParams = {
-  nombre: string;
+  name: string;
   email: string;
   role: string[];
   career: string[];
@@ -17,7 +17,7 @@ export const visitUsersIndex = (params: VisitUsersIndexParams) => {
   router.get(
     index.url({
       query: {
-        nombre: params.nombre.trim() || undefined,
+        name: params.name.trim() || undefined,
         email: params.email.trim() || undefined,
         role: params.role.length > 0 ? params.role : undefined,
         career: params.career.length > 0 ? params.career : undefined,

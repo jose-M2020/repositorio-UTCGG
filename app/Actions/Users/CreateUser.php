@@ -19,15 +19,15 @@ final class CreateUser
      */
     public function handle(
         User $actor,
-        string $nombre,
-        string $apellido,
+        string $firstName,
+        string $lastName,
         string $email,
         string $role,
         ?string $careerCode,
     ): array {
         $user = User::query()->create([
-            'nombre' => $nombre,
-            'apellido' => $apellido,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'email' => $email,
             'password' => null,
             'status' => UserAccountStatus::PendingActivation,

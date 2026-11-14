@@ -42,8 +42,8 @@ export const buildColumnFilters = (
 ): ColumnFiltersState => {
   const next: ColumnFiltersState = [];
 
-  const nombreFilter = toSearchFilterValue(filters.nombre);
-  if (nombreFilter) next.push({ id: "nombre", value: nombreFilter });
+  const nameFilter = toSearchFilterValue(filters.name);
+  if (nameFilter) next.push({ id: "name", value: nameFilter });
 
   const emailFilter = toSearchFilterValue(filters.email);
   if (emailFilter) next.push({ id: "email", value: emailFilter });
@@ -72,7 +72,7 @@ export const readFiltersFromColumnState = (
   nextColumnFilters: ColumnFiltersState,
   canFilterCareer: boolean,
 ): Omit<VisitUsersIndexParams, "page"> => {
-  const nombreFilter = nextColumnFilters.find((filter) => filter.id === "nombre");
+  const nameFilter = nextColumnFilters.find((filter) => filter.id === "name");
   const emailFilter = nextColumnFilters.find((filter) => filter.id === "email");
   const careerFilter = nextColumnFilters.find((filter) => filter.id === "career");
   const roleFilter = nextColumnFilters.find((filter) => filter.id === "role");
@@ -91,7 +91,7 @@ export const readFiltersFromColumnState = (
     : [];
 
   return {
-    nombre: readSearchFilterValue(nombreFilter?.value),
+    name: readSearchFilterValue(nameFilter?.value),
     email: readSearchFilterValue(emailFilter?.value),
     career: canFilterCareer ? career : [],
     role,

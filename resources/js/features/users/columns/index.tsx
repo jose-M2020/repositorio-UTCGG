@@ -36,14 +36,14 @@ export const createUsersColumns = ({
   canFilterCareer,
   careerPolicy,
 }: CreateUsersColumnsOptions) => [
-  columnHelper.accessor((row) => `${row.nombre} ${row.apellido}`.trim(), {
-    id: "nombre",
+  columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`.trim(), {
+    id: "name",
     header: "Nombre",
     size: 220,
     minSize: 160,
     enableColumnFilter: true,
     cell: ({ row }) => {
-      const fullName = `${row.original.nombre} ${row.original.apellido}`.trim();
+      const fullName = `${row.original.first_name} ${row.original.last_name}`.trim();
       return (
         <Link
           href={show.url(row.original.id)}

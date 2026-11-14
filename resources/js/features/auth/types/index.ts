@@ -15,10 +15,10 @@ export type AuthFieldProps = {
 
 export type AuthUser = {
     id: number;
-    nombre: string;
-    apellido: string;
+    first_name: string;
+    last_name: string;
     email: string;
-    carrera?: string | null;
+    career?: string | null;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

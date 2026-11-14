@@ -38,8 +38,8 @@ export const RepositoryCreateContainer = ({
             ? [
                   {
                       id: currentUser.id,
-                      nombre: currentUser.nombre,
-                      apellido: currentUser.apellido,
+                      first_name: currentUser.first_name,
+                      last_name: currentUser.last_name,
                       email: currentUser.email,
                   },
               ]
@@ -258,9 +258,9 @@ export const RepositoryCreateContainer = ({
                                     name="carrera"
                                     required={step === 2}
                                     defaultValue={
-                                        currentUser?.carrera &&
-                                        currentUser.carrera in careerOptions
-                                            ? currentUser.carrera
+                                        currentUser?.career &&
+                                        currentUser.career in careerOptions
+                                            ? currentUser.career
                                             : ''
                                     }
                                     className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"

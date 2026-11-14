@@ -12,19 +12,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/acerca', [HomeController::class, 'about'])->name('about');
 
-Route::resource('usuarios', UserController::class)
-    ->except(['create', 'edit'])
-    ->parameters(['usuarios' => 'user']);
-Route::patch('usuarios/{user}/role', [UserController::class, 'updateRole'])
-    ->name('usuarios.update-role');
-Route::patch('usuarios/{user}/active', [UserController::class, 'toggleActive'])
-    ->name('usuarios.toggle-active');
-Route::post('usuarios/{user}/password-link', [UserController::class, 'sendPasswordLink'])
-    ->name('usuarios.password-link');
+Route::resource('users', UserController::class)
+    ->except(['create', 'edit']);
+Route::patch('users/{user}/role', [UserController::class, 'updateRole'])
+    ->name('users.update-role');
+Route::patch('users/{user}/active', [UserController::class, 'toggleActive'])
+    ->name('users.toggle-active');
+Route::post('users/{user}/password-link', [UserController::class, 'sendPasswordLink'])
+    ->name('users.password-link');
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('api/usuarios/{repositorio?}', [UserController::class, 'search'])
-        ->name('usuarios.get');
+    Route::get('api/users/{repositorio?}', [UserController::class, 'search'])
+        ->name('users.search');
 });
 
 Route::resource('roles', RoleController::class);

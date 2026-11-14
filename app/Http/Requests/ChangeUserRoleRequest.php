@@ -12,7 +12,7 @@ class ChangeUserRoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('usuarios.edit') ?? false;
+        return $this->user()?->can('users.edit') ?? false;
     }
 
     /**

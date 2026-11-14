@@ -14,8 +14,8 @@ final class UpdateUserProfile
     public function handle(
         User $actor,
         User $user,
-        string $nombre,
-        string $apellido,
+        string $firstName,
+        string $lastName,
         string $email,
         ?string $careerCode,
     ): User {
@@ -24,8 +24,8 @@ final class UpdateUserProfile
         $currentRole = (string) ($user->getRoleNames()->first() ?? '');
 
         $user->update([
-            'nombre' => $nombre,
-            'apellido' => $apellido,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'email' => $email,
             'career_catalog_id' => $this->resolveCareerCatalogId->handle(
                 $actor,

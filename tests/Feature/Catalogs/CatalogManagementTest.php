@@ -32,7 +32,7 @@ class CatalogManagementTest extends TestCase
     public function test_user_without_permission_cannot_view_catalogs_index(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('alumno');
+        $user->assignRole('student');
 
         $this->actingAs($user)
             ->get(route('catalogos.index'))

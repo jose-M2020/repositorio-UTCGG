@@ -56,14 +56,14 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
   const isEdit = mode === "edit";
   const user = isEdit ? props.user : null;
   const userName = user
-    ? `${user.nombre} ${user.apellido}`.trim()
+    ? `${user.first_name} ${user.last_name}`.trim()
     : "";
 
   const defaultValues: UserFormValues | undefined = user
     ? {
         id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email,
         career: user.career ?? "",
         role: user.roles[0]?.name ?? null,

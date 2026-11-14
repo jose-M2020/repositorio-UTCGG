@@ -52,7 +52,7 @@ export const UserChangeRoleDialog = ({
   const currentRole = user.roles[0]?.name ?? "";
   const [selectedRole, setSelectedRole] = useState(currentRole);
 
-  const userName = `${user.nombre} ${user.apellido}`.trim();
+  const userName = `${user.first_name} ${user.last_name}`.trim();
   const previewPermissions = rolePermissions[selectedRole] ?? [];
 
   useEffect(() => {

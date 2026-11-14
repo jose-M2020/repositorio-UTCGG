@@ -24,8 +24,8 @@ const getUserInitials = (user: AuthUser | null) => {
         return 'U';
     }
 
-    const first = user.nombre.trim().charAt(0);
-    const last = user.apellido.trim().charAt(0);
+    const first = user.first_name.trim().charAt(0);
+    const last = user.last_name.trim().charAt(0);
     const initials = `${first}${last}`.toUpperCase();
 
     return initials || user.email.charAt(0).toUpperCase() || 'U';
@@ -36,7 +36,7 @@ const getUserDisplayName = (user: AuthUser | null) => {
         return 'Usuario';
     }
 
-    return `${user.nombre} ${user.apellido}`.trim() || user.email;
+    return `${user.first_name} ${user.last_name}`.trim() || user.email;
 };
 
 export const NavUser = ({ user }: { user: AuthUser | null }) => {

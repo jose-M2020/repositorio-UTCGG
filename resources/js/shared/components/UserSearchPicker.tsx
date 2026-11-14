@@ -4,8 +4,8 @@ import { Button, Input } from '@/shared/components/ui';
 
 export type SearchableUser = {
     id: number;
-    nombre: string;
-    apellido: string;
+    first_name: string;
+    last_name: string;
     email: string;
     roles?: Array<{ name: string }>;
 };
@@ -138,7 +138,7 @@ export const UserSearchPicker = ({
                                 onClick={() => handleSelect(user)}
                             >
                                 <span className="font-medium text-foreground">
-                                    {user.nombre} {user.apellido}
+                                    {user.first_name} {user.last_name}
                                 </span>
                                 <span className="text-muted-foreground">
                                     {user.email}
@@ -171,7 +171,7 @@ export const UserSearchPicker = ({
                         >
                             <div>
                                 <p className="font-medium">
-                                    {user.nombre} {user.apellido}
+                                    {user.first_name} {user.last_name}
                                 </p>
                                 <p className="text-muted-foreground">
                                     {user.email}
@@ -182,7 +182,7 @@ export const UserSearchPicker = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleRemove(user.id)}
-                                aria-label={`Quitar a ${user.nombre}`}
+                                aria-label={`Quitar a ${user.first_name}`}
                             >
                                 Quitar
                             </Button>

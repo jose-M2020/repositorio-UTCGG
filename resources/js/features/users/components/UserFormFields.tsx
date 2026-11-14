@@ -12,8 +12,8 @@ type UserFormFieldsProps = {
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
   defaults?: {
-    nombre?: string;
-    apellido?: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
     career?: string;
     role?: string | null;
@@ -50,39 +50,39 @@ export const UserFormFields = ({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <label
-            htmlFor="nombre"
+            htmlFor="first_name"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
             Nombre
           </label>
           <Input
-            id="nombre"
-            name="nombre"
+            id="first_name"
+            name="first_name"
             required
-            defaultValue={defaults?.nombre}
-            aria-invalid={Boolean(errors.nombre)}
+            defaultValue={defaults?.first_name}
+            aria-invalid={Boolean(errors.first_name)}
           />
-          {errors.nombre ? (
-            <p className="text-sm text-red-600">{errors.nombre}</p>
+          {errors.first_name ? (
+            <p className="text-sm text-red-600">{errors.first_name}</p>
           ) : null}
         </div>
 
         <div className="space-y-1">
           <label
-            htmlFor="apellido"
+            htmlFor="last_name"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
             Apellido
           </label>
           <Input
-            id="apellido"
-            name="apellido"
+            id="last_name"
+            name="last_name"
             required
-            defaultValue={defaults?.apellido}
-            aria-invalid={Boolean(errors.apellido)}
+            defaultValue={defaults?.last_name}
+            aria-invalid={Boolean(errors.last_name)}
           />
-          {errors.apellido ? (
-            <p className="text-sm text-red-600">{errors.apellido}</p>
+          {errors.last_name ? (
+            <p className="text-sm text-red-600">{errors.last_name}</p>
           ) : null}
         </div>
       </div>

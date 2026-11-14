@@ -29,8 +29,8 @@ class UserFactory extends Factory
         $careerCode = fake()->optional()->randomElement(['TIC', 'ER', 'MM', 'MI', 'G', 'LI', 'PA', 'GCH', 'GDT']);
 
         return [
-            'nombre' => fake()->firstName(),
-            'apellido' => fake()->lastName(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

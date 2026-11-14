@@ -5,8 +5,8 @@ export type UserAccountStatus =
 
 export type UserListItem = {
     id: number;
-    nombre: string;
-    apellido: string;
+    first_name: string;
+    last_name: string;
     email: string;
     career: string | null;
     status: UserAccountStatus;
@@ -16,8 +16,8 @@ export type UserListItem = {
 
 export type UserFormValues = {
     id?: number;
-    nombre: string;
-    apellido: string;
+    first_name: string;
+    last_name: string;
     email: string;
     career: string;
     role: string | null;
@@ -32,8 +32,8 @@ export type UserRepositorySummary = {
 
 export type UserDetails = {
     id: number;
-    nombre: string;
-    apellido: string;
+    first_name: string;
+    last_name: string;
     email: string;
     career: string | null;
     status: UserAccountStatus;
@@ -42,7 +42,7 @@ export type UserDetails = {
 };
 
 export type UsersFilters = {
-    nombre: string;
+    name: string;
     email: string;
     career: string[];
     role: string[];

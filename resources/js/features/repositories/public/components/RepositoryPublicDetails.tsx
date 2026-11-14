@@ -54,7 +54,7 @@ export const RepositoryPublicDetails = ({
                     <ul className="space-y-1 text-sm">
                         {repositorio.users.map((user) => (
                             <li key={user.id}>
-                                {user.nombre} {user.apellido} ({user.email})
+                                {user.first_name} {user.last_name} ({user.email})
                             </li>
                         ))}
                     </ul>

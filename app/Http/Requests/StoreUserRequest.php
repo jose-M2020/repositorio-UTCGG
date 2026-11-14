@@ -11,7 +11,7 @@ class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('usuarios.create') ?? false;
+        return $this->user()?->can('users.create') ?? false;
     }
 
     protected function prepareForValidation(): void
@@ -49,8 +49,8 @@ class StoreUserRequest extends FormRequest
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
         return [
-            'nombre' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'career' => [
                 $careerRequired ? 'required' : 'nullable',
