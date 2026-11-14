@@ -14,7 +14,7 @@ type RepositoryEditContainerProps = {
 };
 
 export const RepositoryEditContainer = ({
-    repositorio,
+    repository,
     catalog,
 }: RepositoryEditContainerProps) => {
     return (
@@ -24,12 +24,12 @@ export const RepositoryEditContainer = ({
                     Editar repositorio
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    {repositorio.title}
+                    {repository.title}
                 </p>
             </header>
 
             <Form
-                {...update.form(repositorio.slug)}
+                {...update.form(repository.slug)}
                 className="space-y-6 rounded-xl border border-border bg-card p-6"
             >
                 {({ errors, processing }) => (
@@ -40,7 +40,7 @@ export const RepositoryEditContainer = ({
                             catalog={catalog}
                         />
                         <div className="flex justify-end gap-2">
-                            <Link href={showByUser.url(repositorio.slug)}>
+                            <Link href={showByUser.url(repository.slug)}>
                                 <Button type="button" variant="outline">
                                     Cancelar
                                 </Button>

@@ -10,12 +10,12 @@ type PageProps = {
     related: RepositoryListItem[];
 };
 
-const RepositoriesShowPage = ({ repositorio, related }: PageProps) => {
+const RepositoriesShowPage = ({ repository, related }: PageProps) => {
     return (
         <>
-            <Head title={repositorio.title} />
+            <Head title={repository.title} />
             <RepositoryShowContainer
-                repositorio={repository}
+                repository={repository}
                 related={related}
             />
         </>

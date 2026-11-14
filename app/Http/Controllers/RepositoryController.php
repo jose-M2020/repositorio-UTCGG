@@ -36,9 +36,9 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         $search = $request->string('query')->toString();
         $searchField = $request->string('search_field')->toString() ?: 'title';
-        $carreras = array_values(array_filter((array) $request->input('career', [])));
-        $tipos = array_values(array_filter((array) $request->input('tipo', [])));
-        $niveles = array_values(array_filter((array) $request->input('nivel', [])));
+        $careers = array_values(array_filter((array) $request->input('career', [])));
+        $projectTypes = array_values(array_filter((array) $request->input('project_type', [])));
+        $academicDegrees = array_values(array_filter((array) $request->input('academic_degree', [])));
         $years = array_values(array_filter((array) $request->input('year', [])));
 
         $repositories = Repository::query()
@@ -69,17 +69,17 @@ class RepositoryController extends Controller implements HasMiddleware
 
                 $query->where('title', 'like', "%{$search}%");
             })
-            ->when($carreras !== [], fn ($query) => $query->whereHas(
+            ->when($careers !== [], fn ($query) => $query->whereHas(
                 'careerCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $carreras),
+                fn ($catalogQuery) => $catalogQuery->whereIn('code', $careers),
             ))
-            ->when($tipos !== [], fn ($query) => $query->whereHas(
+            ->when($projectTypes !== [], fn ($query) => $query->whereHas(
                 'projectTypeCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $tipos),
+                fn ($catalogQuery) => $catalogQuery->whereIn('code', $projectTypes),
             ))
-            ->when($niveles !== [], fn ($query) => $query->whereHas(
+            ->when($academicDegrees !== [], fn ($query) => $query->whereHas(
                 'academicDegreeCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $niveles),
+                fn ($catalogQuery) => $catalogQuery->whereIn('code', $academicDegrees),
             ))
             ->when(
                 count($years) === 2 && $years[0] !== '' && $years[1] !== '',
@@ -116,9 +116,9 @@ class RepositoryController extends Controller implements HasMiddleware
             'filters' => [
                 'query' => $search,
                 'search_field' => $searchField,
-                'career' => $carreras,
-                'tipo' => $tipos,
-                'nivel' => $niveles,
+                'career' => $careers,
+                'project_type' => $projectTypes,
+                'academic_degree' => $academicDegrees,
                 'year' => $years,
             ],
             'catalog' => [

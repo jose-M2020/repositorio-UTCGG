@@ -56,7 +56,7 @@ class FileController extends Controller implements HasMiddleware
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $upload) {
                     $path = $upload->store(
-                        $this->basePath($repository).'/archivos',
+                        $this->basePath($repository).'/files',
                         's3',
                     );
 
@@ -170,8 +170,8 @@ class FileController extends Controller implements HasMiddleware
     {
         $userCareerCode = auth()->user()?->careerCatalog()->value('code');
         $repoCareerCode = $repository->careerCatalog()->value('code');
-        $carrera = $userCareerCode ?: $repoCareerCode ?: 'general';
+        $career = $userCareerCode ?: $repoCareerCode ?: 'general';
 
-        return 'files/'.$carrera.'/'.date('Y').'/repositorio-'.$repository->id;
+        return 'files/'.$career.'/'.date('Y').'/repository-'.$repository->id;
     }
 }

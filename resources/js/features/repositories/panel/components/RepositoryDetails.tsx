@@ -33,7 +33,7 @@ type RepositoryDetailsProps = {
     repository: Repository;
 };
 
-export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
+export const RepositoryDetails = ({ repository }: RepositoryDetailsProps) => {
     const [section, setSection] = useState<RepositoryDetailSection>(
         REPOSITORY_DETAIL_SECTIONS.PREVIEW,
     );
@@ -77,7 +77,7 @@ export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
                 aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.PREVIEW}`}
                 hidden={section !== REPOSITORY_DETAIL_SECTIONS.PREVIEW}
             >
-                <RepositoryPublicView repositorio={repository} />
+                <RepositoryPublicView repository={repository} />
             </div>
 
             <div
@@ -87,10 +87,10 @@ export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
                 hidden={section !== REPOSITORY_DETAIL_SECTIONS.FILES}
             >
                 <RepositoryFilesPanel
-                    slug={repositorio.slug}
-                    files={repositorio.files}
-                    imagenes={repositorio.images}
-                    imagenUrls={repositorio.imagen_urls}
+                    slug={repository.slug}
+                    files={repository.files}
+                    images={repository.images}
+                    imageUrls={repository.image_urls}
                 />
             </div>
 
@@ -100,7 +100,7 @@ export const RepositoryDetails = ({ repositorio }: RepositoryDetailsProps) => {
                 aria-labelledby={`repo-tab-${REPOSITORY_DETAIL_SECTIONS.SETTINGS}`}
                 hidden={section !== REPOSITORY_DETAIL_SECTIONS.SETTINGS}
             >
-                <RepositorySettingsSection repositorio={repository} />
+                <RepositorySettingsSection repository={repository} />
             </div>
         </div>
     );

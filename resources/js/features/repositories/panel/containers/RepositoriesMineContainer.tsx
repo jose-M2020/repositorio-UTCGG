@@ -12,7 +12,7 @@ type RepositoriesMineContainerProps = {
 };
 
 export const RepositoriesMineContainer = ({
-    repositorios,
+    repositories,
 }: RepositoriesMineContainerProps) => {
     const { flash } = usePage().props;
 
@@ -37,7 +37,7 @@ export const RepositoriesMineContainer = ({
             ) : null}
 
             <RepositoriesList
-                repositorios={repositorios}
+                repositories={repositories}
                 hrefForItem={(slug) => showByUser.url(slug)}
             />
         </main>

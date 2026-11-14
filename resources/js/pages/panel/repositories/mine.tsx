@@ -8,11 +8,11 @@ type PageProps = {
     repositories: PaginatedRepositories;
 };
 
-const RepositoriesMinePage = ({ repositorios }: PageProps) => {
+const RepositoriesMinePage = ({ repositories }: PageProps) => {
     return (
         <>
             <Head title="Mis repositorios" />
-            <RepositoriesMineContainer repositorios={repositorios} />
+            <RepositoriesMineContainer repositories={repositories} />
         </>
     );
 };

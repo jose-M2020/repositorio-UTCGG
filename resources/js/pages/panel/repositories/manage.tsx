@@ -8,11 +8,11 @@ type PageProps = {
     repository: Repository;
 };
 
-const RepositoriesManagePage = ({ repositorio }: PageProps) => {
+const RepositoriesManagePage = ({ repository }: PageProps) => {
     return (
         <>
-            <Head title={`Gestionar · ${repositorio.title}`} />
-            <RepositoryManageContainer repositorio={repository} />
+            <Head title={`Gestionar · ${repository.title}`} />
+            <RepositoryManageContainer repository={repository} />
         </>
     );
 };

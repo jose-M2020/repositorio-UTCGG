@@ -23,10 +23,10 @@ type RepositorySettingsSectionProps = {
 };
 
 export const RepositorySettingsSection = ({
-    repositorio,
+    repository,
 }: RepositorySettingsSectionProps) => {
     const [selected, setSelected] = useState<SearchableUser[]>([]);
-    const visibility = repositorio.is_public ? 'public' : 'private';
+    const visibility = repository.is_public ? 'public' : 'private';
 
     return (
         <div className="space-y-6">
@@ -41,60 +41,60 @@ export const RepositorySettingsSection = ({
                             público.
                         </p>
                     </div>
-                    <Link href={edit.url(repositorio.slug)}>
+                    <Link href={edit.url(repository.slug)}>
                         <Button type="button" variant="outline">
                             Editar datos
                         </Button>
                     </Link>
                 </div>
 
-                <Form {...update.form(repositorio.slug)} className="space-y-4">
+                <Form {...update.form(repository.slug)} className="space-y-4">
                     {({ processing, errors }) => (
                         <>
                             <input
                                 type="hidden"
                                 name="title"
-                                value={repositorio.title}
+                                value={repository.title}
                             />
                             <input
                                 type="hidden"
                                 name="description"
-                                value={repositorio.description}
+                                value={repository.description}
                             />
                             <input
                                 type="hidden"
                                 name="project_type"
-                                value={repositorio.project_type}
+                                value={repository.project_type}
                             />
                             <input
                                 type="hidden"
                                 name="academic_degree"
-                                value={repositorio.academic_degree}
+                                value={repository.academic_degree}
                             />
                             <input
                                 type="hidden"
                                 name="keywords"
-                                value={repositorio.keywords}
+                                value={repository.keywords}
                             />
                             <input
                                 type="hidden"
                                 name="career"
-                                value={repositorio.career}
+                                value={repository.career}
                             />
                             <input
                                 type="hidden"
                                 name="company"
-                                value={repositorio.empresa}
+                                value={repository.company}
                             />
                             <input
                                 type="hidden"
                                 name="external_advisor"
-                                value={repositorio.external_advisor ?? ''}
+                                value={repository.external_advisor ?? ''}
                             />
                             <input
                                 type="hidden"
                                 name="generation"
-                                value={repositorio.generation}
+                                value={repository.generation}
                             />
 
                             <div className="space-y-1">
@@ -143,7 +143,7 @@ export const RepositorySettingsSection = ({
                 </div>
 
                 <Form
-                    {...storeMember.form(repositorio.slug)}
+                    {...storeMember.form(repository.slug)}
                     className="space-y-4"
                 >
                     {({ errors, processing }) => (
@@ -171,7 +171,7 @@ export const RepositorySettingsSection = ({
                 </Form>
 
                 <ul className="divide-y divide-border">
-                    {repositorio.users.map((user) => (
+                    {repository.users.map((user) => (
                         <li
                             key={user.id}
                             className="flex items-center justify-between gap-3 py-3 text-sm"
@@ -181,7 +181,7 @@ export const RepositorySettingsSection = ({
                             </span>
                             <ConfirmDeleteButton
                                 form={destroyMember.form([
-                                    repositorio.slug,
+                                    repository.slug,
                                     user.id,
                                 ])}
                                 itemLabel={formatUserName(user)}
@@ -204,8 +204,8 @@ export const RepositorySettingsSection = ({
                     </p>
                 </div>
                 <ConfirmDeleteButton
-                    form={destroyRepo.form(repositorio.slug)}
-                    itemLabel={repositorio.title}
+                    form={destroyRepo.form(repository.slug)}
+                    itemLabel={repository.title}
                     triggerLabel="Eliminar"
                 />
             </section>

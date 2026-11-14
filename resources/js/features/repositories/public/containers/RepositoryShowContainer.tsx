@@ -10,7 +10,7 @@ type RepositoryShowContainerProps = {
 };
 
 export const RepositoryShowContainer = ({
-    repositorio,
+    repository,
     related,
 }: RepositoryShowContainerProps) => {
     return (
@@ -24,7 +24,7 @@ export const RepositoryShowContainer = ({
             </div>
 
             <RepositoryPublicView
-                repositorio={repository}
+                repository={repository}
                 related={related}
             />
         </main>

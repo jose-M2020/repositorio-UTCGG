@@ -13,7 +13,7 @@ type RepositoriesIndexContainerProps = {
 };
 
 export const RepositoriesIndexContainer = ({
-    repositorios,
+    repositories,
     filters,
     catalog,
 }: RepositoriesIndexContainerProps) => {
@@ -30,7 +30,7 @@ export const RepositoriesIndexContainer = ({
 
             <RepositoryFilters filters={filters} catalog={catalog}>
                 <RepositoriesList
-                    repositorios={repositorios}
+                    repositories={repositories}
                     filters={filters}
                 />
             </RepositoryFilters>

@@ -348,9 +348,9 @@ export const RepositoryCreateContainer = ({
                                     name="company"
                                     required={step === 3}
                                 />
-                                {errors.empresa ? (
+                                {errors.company ? (
                                     <p className="text-sm text-destructive">
-                                        {errors.empresa}
+                                        {errors.company}
                                     </p>
                                 ) : null}
                             </div>

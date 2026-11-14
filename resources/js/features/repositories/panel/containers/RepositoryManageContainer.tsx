@@ -7,7 +7,7 @@ type RepositoryManageContainerProps = {
 };
 
 export const RepositoryManageContainer = ({
-    repositorio,
+    repository,
 }: RepositoryManageContainerProps) => {
     const { flash } = usePage().props;
 
@@ -18,7 +18,7 @@ export const RepositoryManageContainer = ({
                     Gestionar repositorio
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    {repositorio.title}
+                    {repository.title}
                 </p>
             </header>
 
@@ -28,7 +28,7 @@ export const RepositoryManageContainer = ({
                 </p>
             ) : null}
 
-            <RepositoryDetails repositorio={repository} />
+            <RepositoryDetails repository={repository} />
         </main>
     );
 };

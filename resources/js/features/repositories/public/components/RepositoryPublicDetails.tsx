@@ -6,54 +6,54 @@ type RepositoryPublicDetailsProps = {
 };
 
 export const RepositoryPublicDetails = ({
-    repositorio,
+    repository,
 }: RepositoryPublicDetailsProps) => {
     return (
         <div className="space-y-4">
             <div>
-                <h2 className="text-2xl font-semibold">{repositorio.title}</h2>
-                <p className="mt-2 text-muted-foreground">{repositorio.description}</p>
+                <h2 className="text-2xl font-semibold">{repository.title}</h2>
+                <p className="mt-2 text-muted-foreground">{repository.description}</p>
             </div>
 
             <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
                     <dt className="text-sm text-muted-foreground">Carrera</dt>
-                    <dd className="font-medium">{repositorio.career}</dd>
+                    <dd className="font-medium">{repository.career}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Tipo</dt>
-                    <dd className="font-medium">{repositorio.project_type}</dd>
+                    <dd className="font-medium">{repository.project_type}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Nivel</dt>
-                    <dd className="font-medium">{repositorio.academic_degree}</dd>
+                    <dd className="font-medium">{repository.academic_degree}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Empresa</dt>
-                    <dd className="font-medium">{repositorio.empresa}</dd>
+                    <dd className="font-medium">{repository.company}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Generación</dt>
-                    <dd className="font-medium">{repositorio.generation}</dd>
+                    <dd className="font-medium">{repository.generation}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Visibilidad</dt>
                     <dd className="font-medium">
-                        {repositorio.is_public ? 'Público' : 'Privado'}
+                        {repository.is_public ? 'Público' : 'Privado'}
                     </dd>
                 </div>
             </dl>
 
             <div>
                 <p className="text-sm text-muted-foreground">Palabras clave</p>
-                <p className="font-medium">{repositorio.keywords}</p>
+                <p className="font-medium">{repository.keywords}</p>
             </div>
 
-            {repositorio.users.length > 0 ? (
+            {repository.users.length > 0 ? (
                 <div>
                     <p className="mb-2 text-sm text-muted-foreground">Miembros</p>
                     <ul className="space-y-1 text-sm">
-                        {repositorio.users.map((user) => (
+                        {repository.users.map((user) => (
                             <li key={user.id}>
                                 {formatUserName(user)} ({user.email})
                             </li>

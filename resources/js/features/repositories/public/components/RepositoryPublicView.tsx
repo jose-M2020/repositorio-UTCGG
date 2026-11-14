@@ -9,13 +9,13 @@ type RepositoryPublicViewProps = {
 };
 
 export const RepositoryPublicView = ({
-    repositorio,
+    repository,
     related = [],
 }: RepositoryPublicViewProps) => {
     return (
         <div className="space-y-8">
             <section className="rounded-xl border border-border bg-card p-6">
-                <RepositoryPublicDetails repositorio={repository} />
+                <RepositoryPublicDetails repository={repository} />
             </section>
 
             {related.length > 0 ? (

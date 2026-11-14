@@ -10,12 +10,12 @@ type PageProps = {
     catalog: RepositoryCatalog;
 };
 
-const RepositoriesEditPage = ({ repositorio, catalog }: PageProps) => {
+const RepositoriesEditPage = ({ repository, catalog }: PageProps) => {
     return (
         <>
             <Head title="Editar repositorio" />
             <RepositoryEditContainer
-                repositorio={repository}
+                repository={repository}
                 catalog={catalog}
             />
         </>

@@ -17,11 +17,11 @@ const formatLabel = (label: string) =>
         .replaceAll(/<[^>]+>/g, '');
 
 export const RepositoriesList = ({
-    repositorios,
+    repositories,
     filters,
     hrefForItem = (slug) => show.url(slug),
 }: RepositoriesListProps) => {
-    if (repositorios.data.length === 0) {
+    if (repositories.data.length === 0) {
         return (
             <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
                 No hay repositorios para mostrar.
@@ -35,7 +35,7 @@ export const RepositoriesList = ({
     return (
         <div className="space-y-4">
             <ul className="space-y-3">
-                {repositorios.data.map((repo) => {
+                {repositories.data.map((repo) => {
                     const authorNames =
                         repo.users
                             ?.map((user) => formatUserName(user))
@@ -96,7 +96,7 @@ export const RepositoriesList = ({
             </ul>
 
             <div className="flex flex-wrap gap-2">
-                {repositorios.links.map((link) => {
+                {repositories.links.map((link) => {
                     const label = formatLabel(link.label);
                     if (!link.url) {
                         return (

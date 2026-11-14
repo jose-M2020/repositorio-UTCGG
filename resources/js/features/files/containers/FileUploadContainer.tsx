@@ -14,20 +14,20 @@ type FileUploadContainerProps = {
 };
 
 export const FileUploadContainer = ({
-    repositorio,
+    repository,
 }: FileUploadContainerProps) => {
     const { data, setData, post, processing, errors } = useForm<{
-        archivos: File[];
-        imagenes: File[];
+        files: File[];
+        images: File[];
     }>({
-        archivos: [],
-        imagenes: [],
+        files: [],
+        images: [],
     });
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        post(store.url(repositorio.slug), {
+        post(store.url(repository.slug), {
             forceFormData: true,
         });
     };
@@ -37,7 +37,7 @@ export const FileUploadContainer = ({
             <header className="space-y-1">
                 <h1 className="text-2xl font-semibold">Subir archivos</h1>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Repositorio: {repositorio.title}
+                    Repositorio: {repository.title}
                 </p>
             </header>
 
@@ -52,9 +52,9 @@ export const FileUploadContainer = ({
                         'application/msword': ['.doc', '.docx'],
                         'application/zip': ['.zip', '.rar'],
                     }}
-                    files={data.archivos}
-                    error={errors.archivos}
-                    onFilesChange={(files) => setData('files', files)}
+                    files={data.files}
+                    error={errors.files}
+                    onFilesChange={(nextFiles) => setData('files', nextFiles)}
                 />
 
                 <FileDropzoneField
@@ -64,18 +64,18 @@ export const FileUploadContainer = ({
                     }}
                     files={data.images}
                     error={errors.images}
-                    onFilesChange={(files) => setData('images', files)}
+                    onFilesChange={(nextFiles) => setData('images', nextFiles)}
                 />
 
                 <div className="flex justify-end gap-2">
-                    <Link href={showByUser.url(repositorio.slug)}>
+                    <Link href={showByUser.url(repository.slug)}>
                         <Button type="button" variant="outline">
                             Cancelar
                         </Button>
                     </Link>
                     <Button
                         type="submit"
-                        disabled={processing || data.archivos.length === 0}
+                        disabled={processing || data.files.length === 0}
                     >
                         {processing ? 'Subiendo...' : 'Subir'}
                     </Button>

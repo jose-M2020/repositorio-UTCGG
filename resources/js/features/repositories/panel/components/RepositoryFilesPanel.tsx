@@ -13,15 +13,15 @@ import type { RepositoryFileItem } from "../../shared/types";
 type RepositoryFilesPanelProps = {
   slug: string;
   files: RepositoryFileItem[];
-  imagenes: string[];
-  imagenUrls?: string[];
+  images: string[];
+  imageUrls?: string[];
 };
 
 export const RepositoryFilesPanel = ({
   slug,
   files,
-  imagenes,
-  imagenUrls = [],
+  images,
+  imageUrls = [],
 }: RepositoryFilesPanelProps) => {
   const pdfFiles = files.filter((file) => file.file_type === "pdf" && file.url);
 
@@ -98,17 +98,17 @@ export const RepositoryFilesPanel = ({
         </ul>
       )}
 
-      {imagenes.length > 0 ? (
+      {images.length > 0 ? (
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-secondary">Imágenes</h3>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {imagenes.map((path, index) => (
+            {images.map((path, index) => (
               <li
                 key={`${path}-${index}`}
                 className="overflow-hidden rounded-lg border border-border"
               >
                 <img
-                  src={imagenUrls[index] || "/img/no-image.jpg"}
+                  src={imageUrls[index] || "/img/no-image.jpg"}
                   alt=""
                   className="h-48 w-full object-cover"
                 />

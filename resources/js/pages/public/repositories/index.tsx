@@ -13,7 +13,7 @@ type PageProps = {
 };
 
 const RepositoriesIndexPage = ({
-    repositorios,
+    repositories,
     filters,
     catalog,
 }: PageProps) => {
@@ -21,7 +21,7 @@ const RepositoriesIndexPage = ({
         <>
             <Head title="Repositorios" />
             <RepositoriesIndexContainer
-                repositorios={repositorios}
+                repositories={repositories}
                 filters={filters}
                 catalog={catalog}
             />

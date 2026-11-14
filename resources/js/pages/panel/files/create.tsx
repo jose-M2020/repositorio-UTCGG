@@ -8,11 +8,11 @@ type PageProps = {
     repository: RepositoryUploadTarget;
 };
 
-const FilesCreatePage = ({ repositorio }: PageProps) => {
+const FilesCreatePage = ({ repository }: PageProps) => {
     return (
         <>
             <Head title="Subir archivos" />
-            <FileUploadContainer repositorio={repository} />
+            <FileUploadContainer repository={repository} />
         </>
     );
 };

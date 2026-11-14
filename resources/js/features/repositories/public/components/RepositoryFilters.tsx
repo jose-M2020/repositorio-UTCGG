@@ -82,15 +82,15 @@ export const RepositoryFilters = ({
                     />
                     <CheckboxGroup
                         title="Tipo"
-                        name="tipo"
+                        name="project_type"
                         options={typeOptions}
-                        selected={filters.tipo}
+                        selected={filters.project_type}
                     />
                     <CheckboxGroup
                         title="Nivel"
-                        name="nivel"
+                        name="academic_degree"
                         options={levelOptions}
-                        selected={filters.nivel}
+                        selected={filters.academic_degree}
                     />
 
                     <fieldset className="space-y-2">
