@@ -7,8 +7,8 @@ export type PasswordRequirement = {
 export const PASSWORD_REQUIREMENTS: PasswordRequirement[] = [
     {
         id: 'minLength',
-        label: 'Al menos 12 caracteres',
-        test: (password) => password.length >= 12,
+        label: 'Al menos 8 caracteres',
+        test: (password) => password.length >= 8,
     },
     {
         id: 'mixedCase',

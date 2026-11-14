@@ -98,7 +98,7 @@ create.head = (args: { token: string | number } | [token: string | number ] | st
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Auth\SetPasswordController::store
- * @see app/Http/Controllers/Auth/SetPasswordController.php:39
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:41
  * @route '/set-password'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -113,7 +113,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\SetPasswordController::store
- * @see app/Http/Controllers/Auth/SetPasswordController.php:39
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:41
  * @route '/set-password'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\SetPasswordController::store
- * @see app/Http/Controllers/Auth/SetPasswordController.php:39
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:41
  * @route '/set-password'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -132,7 +132,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Auth\SetPasswordController::store
- * @see app/Http/Controllers/Auth/SetPasswordController.php:39
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:41
  * @route '/set-password'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -142,7 +142,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Auth\SetPasswordController::store
- * @see app/Http/Controllers/Auth/SetPasswordController.php:39
+ * @see app/Http/Controllers/Auth/SetPasswordController.php:41
  * @route '/set-password'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -30,6 +30,8 @@ class SetPasswordController extends Controller
                 fn (): string => UserPasswordSetup::isValidLink($email, $token)
                     ? 'valid'
                     : 'invalid',
+                // fn (): string => tap('valid', fn () => sleep(10)), // Simulate a slow link verification
+                // fn (): string => throw new \RuntimeException('failed to verify link'), // Simulate a failed link verification
                 'default',
                 true,
             ),

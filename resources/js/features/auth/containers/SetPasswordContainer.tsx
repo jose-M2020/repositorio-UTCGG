@@ -3,9 +3,9 @@ import { store } from '@/actions/App/Http/Controllers/Auth/SetPasswordController
 import { AuthShell } from '../components/AuthShell';
 import { SetPasswordForm } from '../components/SetPasswordForm';
 import {
-    SetPasswordInvalidState,
-    SetPasswordRetryState,
-    SetPasswordSuccessState,
+    SetPasswordInvalidActions,
+    SetPasswordRetryActions,
+    SetPasswordSuccessActions,
     SetPasswordVerifyingState,
 } from '../components/SetPasswordLinkStates';
 import {
@@ -33,49 +33,82 @@ export const SetPasswordContainer = ({
     const isActivation = resolvedPurpose === 'activation';
     const passwordWasSet = flash.status === PASSWORD_SET_STATUS;
 
-    const title = isActivation ? 'Activar cuenta' : 'Restablecer contraseña';
-    const description = passwordWasSet
-        ? isActivation
-            ? 'Tu cuenta ya está lista para usarse.'
-            : 'Tu contraseña ya fue actualizada.'
-        : isActivation
-          ? 'Elige tu contraseña para activar la cuenta.'
-          : 'Elige una nueva contraseña para tu cuenta.';
+    if (passwordWasSet) {
+        return (
+            <AuthShell
+                title={
+                    isActivation
+                        ? 'Cuenta activada correctamente'
+                        : 'Contraseña actualizada correctamente'
+                }
+                description="Ya puedes iniciar sesión con tu nueva contraseña."
+            >
+                <SetPasswordSuccessActions />
+            </AuthShell>
+        );
+    }
 
     return (
-        <AuthShell title={title} description={description}>
-            {passwordWasSet ? (
-                <SetPasswordSuccessState isActivation={isActivation} />
-            ) : (
-                <Deferred
-                    data="linkStatus"
-                    fallback={<SetPasswordVerifyingState />}
-                    rescue={({ reloading }) => (
-                        <SetPasswordRetryState reloading={reloading} />
-                    )}
+        <Deferred
+            data="linkStatus"
+            fallback={
+                <AuthShell>
+                    <SetPasswordVerifyingState />
+                </AuthShell>
+            }
+            rescue={({ reloading }) => (
+                <AuthShell
+                    title="No pudimos verificar el enlace"
+                    description="Hubo un problema de conexión o del servidor. Tu enlace puede seguir siendo válido."
                 >
-                    {linkStatus === 'valid' ? (
-                        <Form {...store.form()} className="space-y-4">
-                            {({ errors, processing }) => (
-                                <SetPasswordForm
-                                    email={email}
-                                    token={token}
-                                    purpose={resolvedPurpose}
-                                    errors={errors}
-                                    processing={processing}
-                                    submitLabel={
-                                        isActivation
-                                            ? 'Activar cuenta'
-                                            : 'Guardar contraseña'
-                                    }
-                                />
-                            )}
-                        </Form>
-                    ) : (
-                        <SetPasswordInvalidState />
-                    )}
-                </Deferred>
+                    <SetPasswordRetryActions reloading={reloading} />
+                </AuthShell>
             )}
-        </AuthShell>
+        >
+            {linkStatus === 'valid' ? (
+                <AuthShell
+                    title={
+                        isActivation
+                            ? 'Activar cuenta'
+                            : 'Restablecer contraseña'
+                    }
+                    description={
+                        <p>
+                            {isActivation
+                                ? 'Elige tu contraseña para activar la cuenta de '
+                                : 'Elige una nueva contraseña para '}
+                            <strong className="font-semibold text-slate-900 dark:text-slate-100">
+                                {email}
+                            </strong>
+                            .
+                        </p>
+                    }
+                >
+                    <Form {...store.form()} className="space-y-4">
+                        {({ errors, processing }) => (
+                            <SetPasswordForm
+                                email={email}
+                                token={token}
+                                purpose={resolvedPurpose}
+                                errors={errors}
+                                processing={processing}
+                                submitLabel={
+                                    isActivation
+                                        ? 'Activar cuenta'
+                                        : 'Guardar contraseña'
+                                }
+                            />
+                        )}
+                    </Form>
+                </AuthShell>
+            ) : (
+                <AuthShell
+                    title="Este enlace es inválido o ha expirado"
+                    description="Solicita un nuevo enlace a un administrador e inténtalo de nuevo."
+                >
+                    <SetPasswordInvalidActions />
+                </AuthShell>
+            )}
+        </Deferred>
     );
 };

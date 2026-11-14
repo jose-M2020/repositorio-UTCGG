@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/shared/components/ui';
-import { passwordMeetsRequirements } from '../utils/passwordRequirements';
 import type { AuthFormErrors, SetPasswordPurpose } from '../types';
+import { passwordMeetsRequirements } from '../utils/passwordRequirements';
 import { AuthField } from './AuthField';
 import { PasswordRequirements } from './PasswordRequirements';
 
@@ -37,19 +37,14 @@ export const SetPasswordForm = ({
     return (
         <div className="space-y-4">
             <input type="hidden" name="token" value={token} />
+            <input type="hidden" name="email" value={email} />
             <input type="hidden" name="purpose" value={purpose} />
 
-            <AuthField
-                id="email"
-                name="email"
-                label="Correo"
-                type="email"
-                required
-                autoComplete="username"
-                defaultValue={email}
-                readOnly
-                error={errors.email}
-            />
+            {errors.email ? (
+                <p className="text-sm text-destructive" role="alert">
+                    {errors.email}
+                </p>
+            ) : null}
 
             <div className="space-y-2">
                 <AuthField

@@ -1,104 +1,63 @@
 import { Link, router } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
 import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import { Button, buttonVariants } from '@/shared/components/ui';
 
 export const SetPasswordVerifyingState = () => {
     return (
         <div
-            className="space-y-2 py-4 text-center"
+            className="flex flex-col items-center justify-center gap-3 py-8"
             role="status"
             aria-live="polite"
+            aria-label="Verificando enlace"
         >
-            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+            <LoaderCircle
+                className="size-8 animate-spin text-slate-500 dark:text-slate-400"
+                aria-hidden="true"
+            />
+            <p className="text-sm text-slate-600 dark:text-slate-400">
                 Verificando enlace…
             </p>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-                Espera un momento mientras validamos tu enlace.
-            </p>
         </div>
     );
 };
 
-export const SetPasswordInvalidState = () => {
+export const SetPasswordInvalidActions = () => {
     return (
-        <div className="space-y-4" role="alert">
-            <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    Este enlace es inválido o ha expirado
-                </p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Solicita un nuevo enlace a un administrador e inténtalo de
-                    nuevo.
-                </p>
-            </div>
-            <div className="flex justify-end">
-                <Link href={login.url()} className={buttonVariants()}>
-                    Ir al inicio de sesión
-                </Link>
-            </div>
+        <div className="flex justify-end">
+            <Link href={login.url()} className={buttonVariants()}>
+                Ir al inicio de sesión
+            </Link>
         </div>
     );
 };
 
-type SetPasswordRetryStateProps = {
+type SetPasswordRetryActionsProps = {
     reloading?: boolean;
 };
 
-export const SetPasswordRetryState = ({
+export const SetPasswordRetryActions = ({
     reloading = false,
-}: SetPasswordRetryStateProps) => {
+}: SetPasswordRetryActionsProps) => {
     const handleRetry = () => {
         router.reload({ only: ['linkStatus'] });
     };
 
     return (
-        <div className="space-y-4" role="alert">
-            <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    No pudimos verificar el enlace
-                </p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Hubo un problema de conexión o del servidor. Tu enlace puede
-                    seguir siendo válido.
-                </p>
-            </div>
-            <div className="flex justify-end">
-                <Button
-                    type="button"
-                    onClick={handleRetry}
-                    disabled={reloading}
-                >
-                    {reloading ? 'Reintentando…' : 'Reintentar'}
-                </Button>
-            </div>
+        <div className="flex justify-end">
+            <Button type="button" onClick={handleRetry} disabled={reloading}>
+                {reloading ? 'Reintentando…' : 'Reintentar'}
+            </Button>
         </div>
     );
 };
 
-type SetPasswordSuccessStateProps = {
-    isActivation: boolean;
-};
-
-export const SetPasswordSuccessState = ({
-    isActivation,
-}: SetPasswordSuccessStateProps) => {
+export const SetPasswordSuccessActions = () => {
     return (
-        <div className="space-y-4" role="status" aria-live="polite">
-            <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {isActivation
-                        ? 'Cuenta activada correctamente'
-                        : 'Contraseña actualizada correctamente'}
-                </p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Ya puedes iniciar sesión con tu nueva contraseña.
-                </p>
-            </div>
-            <div className="flex justify-end">
-                <Link href={login.url()} className={buttonVariants()}>
-                    Ir al inicio de sesión
-                </Link>
-            </div>
+        <div className="flex justify-end">
+            <Link href={login.url()} className={buttonVariants()}>
+                Ir al inicio de sesión
+            </Link>
         </div>
     );
 };

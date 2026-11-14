@@ -1,7 +1,5 @@
+import { Input } from '@/shared/components/ui';
 import type { AuthFieldProps } from '../types';
-
-const inputClassName =
-    'w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-slate-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:disabled:bg-slate-900';
 
 export const AuthField = ({
     id,
@@ -21,11 +19,11 @@ export const AuthField = ({
         <div className="space-y-1">
             <label
                 htmlFor={id}
-                className="text-sm font-medium text-slate-700 dark:text-slate-300"
+                className="text-sm font-medium text-foreground"
             >
                 {label}
             </label>
-            <input
+            <Input
                 id={id}
                 name={name}
                 type={type}
@@ -38,12 +36,11 @@ export const AuthField = ({
                 onChange={onChange}
                 aria-invalid={Boolean(error)}
                 aria-describedby={error ? `${id}-error` : undefined}
-                className={inputClassName}
             />
             {error ? (
                 <p
                     id={`${id}-error`}
-                    className="text-sm text-red-600 dark:text-red-400"
+                    className="text-sm text-destructive"
                 >
                     {error}
                 </p>
