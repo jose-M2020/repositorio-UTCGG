@@ -1,5 +1,6 @@
 import { UserStatusBadge } from './UserStatusBadge';
 import type { UserDetails as UserDetailsType } from '../types';
+import { formatUserName } from '../utils/formatUserName';
 
 type UserDetailsProps = {
     user: UserDetailsType;
@@ -10,9 +11,7 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
         <dl className="grid gap-4 sm:grid-cols-2">
             <div>
                 <dt className="text-sm text-slate-500">Nombre</dt>
-                <dd className="font-medium">
-                    {user.first_name} {user.last_name}
-                </dd>
+                <dd className="font-medium">{formatUserName(user)}</dd>
             </div>
             <div>
                 <dt className="text-sm text-slate-500">Correo</dt>

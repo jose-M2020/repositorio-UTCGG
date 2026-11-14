@@ -31,6 +31,7 @@ import type {
   RolePermissionPreview,
   UserListItem,
 } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 type UserRowActionsProps = {
   user: UserListItem;
@@ -53,7 +54,7 @@ export const UserRowActions = ({
   const [toggleActiveOpen, setToggleActiveOpen] = useState(false);
   const [passwordLinkOpen, setPasswordLinkOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const userName = `${user.first_name} ${user.last_name}`.trim();
+  const userName = formatUserName(user);
   const isSelf = auth.user?.id === user.id;
   const isPending = user.status === "pending_activation";
   const willActivate = user.status === "inactive";

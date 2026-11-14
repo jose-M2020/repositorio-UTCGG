@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/ui";
 import type { UserListItem } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 type UserToggleActiveDialogProps = {
   user: UserListItem;
@@ -29,7 +30,7 @@ export const UserToggleActiveDialog = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
-  const userName = `${user.first_name} ${user.last_name}`.trim();
+  const userName = formatUserName(user);
   const willActivate = user.status === "inactive";
   const actionLabel = willActivate ? "Activar" : "Desactivar";
   const Icon = willActivate ? Power : PowerOff;

@@ -9,6 +9,7 @@ import type {
   RolePermissionPreview,
   UserListItem,
 } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 const USERS_DATE_FILTER_PRESETS = [
   { value: "today", label: "Hoy" },
@@ -36,14 +37,14 @@ export const createUsersColumns = ({
   canFilterCareer,
   careerPolicy,
 }: CreateUsersColumnsOptions) => [
-  columnHelper.accessor((row) => `${row.first_name} ${row.last_name}`.trim(), {
+  columnHelper.accessor((row) => formatUserName(row), {
     id: "name",
     header: "Nombre",
     size: 220,
     minSize: 160,
     enableColumnFilter: true,
     cell: ({ row }) => {
-      const fullName = `${row.original.first_name} ${row.original.last_name}`.trim();
+      const fullName = formatUserName(row.original);
       return (
         <Link
           href={show.url(row.original.id)}

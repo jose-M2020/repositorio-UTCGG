@@ -40,6 +40,7 @@ export const RepositoryCreateContainer = ({
                       id: currentUser.id,
                       first_name: currentUser.first_name,
                       last_name: currentUser.last_name,
+                      second_last_name: currentUser.second_last_name,
                       email: currentUser.email,
                   },
               ]

@@ -16,6 +16,7 @@ final class UpdateUserProfile
         User $user,
         string $firstName,
         string $lastName,
+        ?string $secondLastName,
         string $email,
         ?string $careerCode,
     ): User {
@@ -26,6 +27,7 @@ final class UpdateUserProfile
         $user->update([
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'second_last_name' => $secondLastName,
             'email' => $email,
             'career_catalog_id' => $this->resolveCareerCatalogId->handle(
                 $actor,

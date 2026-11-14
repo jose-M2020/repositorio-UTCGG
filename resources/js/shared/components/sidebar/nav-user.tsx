@@ -3,6 +3,7 @@ import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { destroy as logout } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import type { AuthUser } from '@/features/auth';
 import { Avatar, AvatarFallback } from '@/shared/components/ui/avatar';
+import { formatUserName } from '@/shared/lib';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,7 +37,7 @@ const getUserDisplayName = (user: AuthUser | null) => {
         return 'Usuario';
     }
 
-    return `${user.first_name} ${user.last_name}`.trim() || user.email;
+    return formatUserName(user) || user.email;
 };
 
 export const NavUser = ({ user }: { user: AuthUser | null }) => {

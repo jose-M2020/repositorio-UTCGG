@@ -1,11 +1,13 @@
 import { useEffect, useId, useState } from 'react';
 import { search } from '@/actions/App/Http/Controllers/UserController';
 import { Button, Input } from '@/shared/components/ui';
+import { formatUserName } from '@/shared/lib';
 
 export type SearchableUser = {
     id: number;
     first_name: string;
     last_name: string;
+    second_last_name?: string | null;
     email: string;
     roles?: Array<{ name: string }>;
 };
@@ -138,7 +140,7 @@ export const UserSearchPicker = ({
                                 onClick={() => handleSelect(user)}
                             >
                                 <span className="font-medium text-foreground">
-                                    {user.first_name} {user.last_name}
+                                    {formatUserName(user)}
                                 </span>
                                 <span className="text-muted-foreground">
                                     {user.email}
@@ -171,7 +173,7 @@ export const UserSearchPicker = ({
                         >
                             <div>
                                 <p className="font-medium">
-                                    {user.first_name} {user.last_name}
+                                    {formatUserName(user)}
                                 </p>
                                 <p className="text-muted-foreground">
                                     {user.email}

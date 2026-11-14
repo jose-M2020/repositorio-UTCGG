@@ -19,6 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $id
  * @property string $first_name
  * @property string $last_name
+ * @property string|null $second_last_name
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string|null $password
@@ -28,7 +29,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['first_name', 'last_name', 'email', 'password', 'career_catalog_id', 'status'])]
+#[Fillable(['first_name', 'last_name', 'second_last_name', 'email', 'password', 'career_catalog_id', 'status'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -54,6 +55,13 @@ class User extends Authenticatable
             'password' => 'hashed',
             'status' => UserAccountStatus::class,
         ];
+    }
+
+    public function fullName(): string
+    {
+        return collect([$this->first_name, $this->last_name, $this->second_last_name])
+            ->filter(fn (?string $part): bool => filled($part))
+            ->implode(' ');
     }
 
     public function repositories(): BelongsToMany

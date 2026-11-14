@@ -23,6 +23,7 @@ import type {
   RolePermissionPreview,
   UserListItem,
 } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 type UserChangeRoleDialogProps = {
   user: UserListItem;
@@ -52,7 +53,7 @@ export const UserChangeRoleDialog = ({
   const currentRole = user.roles[0]?.name ?? "";
   const [selectedRole, setSelectedRole] = useState(currentRole);
 
-  const userName = `${user.first_name} ${user.last_name}`.trim();
+  const userName = formatUserName(user);
   const previewPermissions = rolePermissions[selectedRole] ?? [];
 
   useEffect(() => {

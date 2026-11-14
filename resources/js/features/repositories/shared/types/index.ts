@@ -2,6 +2,7 @@ export type RepositoryMember = {
     id: number;
     first_name: string;
     last_name: string;
+    second_last_name?: string | null;
     email: string;
 };
 

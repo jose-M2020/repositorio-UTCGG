@@ -1,3 +1,4 @@
+import { formatUserName } from '@/shared/lib';
 import type { Repository } from '../../shared/types';
 
 type RepositoryPublicDetailsProps = {
@@ -54,7 +55,7 @@ export const RepositoryPublicDetails = ({
                     <ul className="space-y-1 text-sm">
                         {repositorio.users.map((user) => (
                             <li key={user.id}>
-                                {user.first_name} {user.last_name} ({user.email})
+                                {formatUserName(user)} ({user.email})
                             </li>
                         ))}
                     </ul>

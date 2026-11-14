@@ -73,7 +73,8 @@ class UserController extends Controller implements HasMiddleware
             ->when($name !== '', function ($query) use ($name): void {
                 $query->where(function ($inner) use ($name): void {
                     $inner->where('first_name', 'like', "%{$name}%")
-                        ->orWhere('last_name', 'like', "%{$name}%");
+                        ->orWhere('last_name', 'like', "%{$name}%")
+                        ->orWhere('second_last_name', 'like', "%{$name}%");
                 });
             })
             ->when($email !== '', fn ($query) => $query->where('email', 'like', "%{$email}%"))
@@ -111,12 +112,13 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'first_name', 'last_name', 'email', 'career_catalog_id', 'status', 'created_at'])
+            ->paginate(10, ['id', 'first_name', 'last_name', 'second_last_name', 'email', 'career_catalog_id', 'status', 'created_at'])
             ->withQueryString()
             ->through(fn (User $user): array => [
                 'id' => $user->id,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
+                'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
                 'career' => $user->careerCatalog?->code,
                 'status' => $user->status->value,
@@ -152,6 +154,7 @@ class UserController extends Controller implements HasMiddleware
             $request->user(),
             $request->string('first_name')->toString(),
             $request->string('last_name')->toString(),
+            $request->filled('second_last_name') ? $request->string('second_last_name')->toString() : null,
             $request->string('email')->toString(),
             $request->string('role')->toString(),
             $request->input('career'),
@@ -177,6 +180,7 @@ class UserController extends Controller implements HasMiddleware
                 'id' => $user->id,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
+                'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
                 'career' => $user->careerCatalog?->code,
                 'status' => $user->status->value,
@@ -203,12 +207,13 @@ class UserController extends Controller implements HasMiddleware
                 $query->where(function ($inner) use ($search): void {
                     $inner->where('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('second_last_name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
             ->role([UserRoles::STUDENT, UserRoles::TEACHER])
             ->with('roles:id,name')
-            ->paginate(10, ['id', 'first_name', 'last_name', 'email'])
+            ->paginate(10, ['id', 'first_name', 'last_name', 'second_last_name', 'email'])
             ->withQueryString();
 
         return response()->json($users);
@@ -224,6 +229,7 @@ class UserController extends Controller implements HasMiddleware
             $user,
             $request->string('first_name')->toString(),
             $request->string('last_name')->toString(),
+            $request->filled('second_last_name') ? $request->string('second_last_name')->toString() : null,
             $request->string('email')->toString(),
             $request->input('career'),
         );

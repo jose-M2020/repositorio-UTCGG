@@ -64,6 +64,7 @@ class UserManagementTest extends TestCase
         $response = $this->actingAs($admin)->post(route('users.store'), [
             'first_name' => 'Ana',
             'last_name' => 'Lopez',
+            'second_last_name' => 'Garcia',
             'email' => 'ana@example.com',
             'career' => 'TIC',
             'role' => UserRoles::STUDENT,
@@ -78,6 +79,7 @@ class UserManagementTest extends TestCase
             'email' => 'ana@example.com',
             'first_name' => 'Ana',
             'last_name' => 'Lopez',
+            'second_last_name' => 'Garcia',
             'career_catalog_id' => $ticCareerId,
             'status' => UserAccountStatus::PendingActivation->value,
             'password' => null,
@@ -112,6 +114,7 @@ class UserManagementTest extends TestCase
         $response = $this->actingAs($admin)->put(route('users.update', $user), [
             'first_name' => 'Ana',
             'last_name' => 'Actualizada',
+            'second_last_name' => 'Ruiz',
             'email' => 'new@example.com',
             'career' => 'ER',
         ]);
@@ -125,6 +128,7 @@ class UserManagementTest extends TestCase
             'id' => $user->id,
             'email' => 'new@example.com',
             'last_name' => 'Actualizada',
+            'second_last_name' => 'Ruiz',
             'career_catalog_id' => $erCareerId,
         ]);
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::STUDENT));

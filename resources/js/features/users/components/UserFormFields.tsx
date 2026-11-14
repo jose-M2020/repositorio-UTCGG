@@ -14,6 +14,7 @@ type UserFormFieldsProps = {
   defaults?: {
     first_name?: string;
     last_name?: string;
+    second_last_name?: string | null;
     email?: string;
     career?: string;
     role?: string | null;
@@ -47,32 +48,32 @@ export const UserFormFields = ({
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-1">
-          <label
-            htmlFor="first_name"
-            className="text-sm font-medium text-slate-700 dark:text-slate-300"
-          >
-            Nombre
-          </label>
-          <Input
-            id="first_name"
-            name="first_name"
-            required
-            defaultValue={defaults?.first_name}
-            aria-invalid={Boolean(errors.first_name)}
-          />
-          {errors.first_name ? (
-            <p className="text-sm text-red-600">{errors.first_name}</p>
-          ) : null}
-        </div>
+      <div className="space-y-1">
+        <label
+          htmlFor="first_name"
+          className="text-sm font-medium text-slate-700 dark:text-slate-300"
+        >
+          Nombre(s)
+        </label>
+        <Input
+          id="first_name"
+          name="first_name"
+          required
+          defaultValue={defaults?.first_name}
+          aria-invalid={Boolean(errors.first_name)}
+        />
+        {errors.first_name ? (
+          <p className="text-sm text-red-600">{errors.first_name}</p>
+        ) : null}
+      </div>
 
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <label
             htmlFor="last_name"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
-            Apellido
+            Apellido paterno
           </label>
           <Input
             id="last_name"
@@ -83,6 +84,24 @@ export const UserFormFields = ({
           />
           {errors.last_name ? (
             <p className="text-sm text-red-600">{errors.last_name}</p>
+          ) : null}
+        </div>
+
+        <div className="space-y-1">
+          <label
+            htmlFor="second_last_name"
+            className="text-sm font-medium text-slate-700 dark:text-slate-300"
+          >
+            Apellido materno
+          </label>
+          <Input
+            id="second_last_name"
+            name="second_last_name"
+            defaultValue={defaults?.second_last_name ?? ""}
+            aria-invalid={Boolean(errors.second_last_name)}
+          />
+          {errors.second_last_name ? (
+            <p className="text-sm text-red-600">{errors.second_last_name}</p>
           ) : null}
         </div>
       </div>

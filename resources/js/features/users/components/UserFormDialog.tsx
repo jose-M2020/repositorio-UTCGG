@@ -19,6 +19,7 @@ import type {
   UserFormValues,
   UserListItem,
 } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 type UserFormDialogBaseProps = {
   roles: RoleOption[];
@@ -55,15 +56,14 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
   const open = isControlled ? openProp : uncontrolledOpen;
   const isEdit = mode === "edit";
   const user = isEdit ? props.user : null;
-  const userName = user
-    ? `${user.first_name} ${user.last_name}`.trim()
-    : "";
+  const userName = user ? formatUserName(user) : "";
 
   const defaultValues: UserFormValues | undefined = user
     ? {
         id: user.id,
         first_name: user.first_name,
         last_name: user.last_name,
+        second_last_name: user.second_last_name ?? "",
         email: user.email,
         career: user.career ?? "",
         role: user.roles[0]?.name ?? null,

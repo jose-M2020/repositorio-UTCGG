@@ -42,7 +42,7 @@ class RepositorioController extends Controller implements HasMiddleware
         $years = array_values(array_filter((array) $request->input('year', [])));
 
         $repositorios = Repositorio::query()
-            ->with('users:id,first_name,last_name,email')
+            ->with('users:id,first_name,last_name,second_last_name,email')
             ->with([
                 'careerCatalog:id,code',
                 'projectTypeCatalog:id,code',
@@ -60,7 +60,8 @@ class RepositorioController extends Controller implements HasMiddleware
                 if ($searchField === 'author') {
                     $query->whereHas('users', function ($users) use ($search): void {
                         $users->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%");
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('second_last_name', 'like', "%{$search}%");
                     });
 
                     return;
@@ -104,6 +105,7 @@ class RepositorioController extends Controller implements HasMiddleware
                         'id' => $user->id,
                         'first_name' => $user->first_name,
                         'last_name' => $user->last_name,
+                        'second_last_name' => $user->second_last_name,
                         'email' => $user->email,
                     ])->values()->all(),
                 ];
@@ -150,7 +152,7 @@ class RepositorioController extends Controller implements HasMiddleware
             'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('nivel_proyecto')->toString()),
             'slug' => $this->uniqueSlug($request->string('nombre_rep')->toString()),
             'publico' => $request->string('visibilidad')->toString() === 'publico',
-            'created_by' => $user->first_name,
+            'created_by' => $user->fullName(),
         ]);
 
         $memberIds = User::query()
@@ -180,7 +182,7 @@ class RepositorioController extends Controller implements HasMiddleware
         }
 
         $repositorio->load([
-            'users:id,first_name,last_name,email',
+            'users:id,first_name,last_name,second_last_name,email',
             'files' => fn ($query) => $query->where('is_public', true),
         ]);
 
@@ -222,7 +224,7 @@ class RepositorioController extends Controller implements HasMiddleware
 
     public function showByUser(Repositorio $repositorio): Response
     {
-        $repositorio->load(['users:id,first_name,last_name,email', 'files']);
+        $repositorio->load(['users:id,first_name,last_name,second_last_name,email', 'files']);
 
         return Inertia::render('panel/repositories/manage', [
             'repositorio' => $this->serializeRepository($repositorio),
@@ -345,6 +347,7 @@ class RepositorioController extends Controller implements HasMiddleware
                     'id' => $user->id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
+                    'second_last_name' => $user->second_last_name,
                     'email' => $user->email,
                 ])->values()->all()
                 : [],

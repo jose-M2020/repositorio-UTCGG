@@ -21,6 +21,7 @@ final class CreateUser
         User $actor,
         string $firstName,
         string $lastName,
+        ?string $secondLastName,
         string $email,
         string $role,
         ?string $careerCode,
@@ -28,6 +29,7 @@ final class CreateUser
         $user = User::query()->create([
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'second_last_name' => $secondLastName,
             'email' => $email,
             'password' => null,
             'status' => UserAccountStatus::PendingActivation,

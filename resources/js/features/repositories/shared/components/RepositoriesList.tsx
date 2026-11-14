@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { show } from '@/actions/App/Http/Controllers/RepositorioController';
+import { formatUserName } from '@/shared/lib';
 import { highlightMatch } from '@/shared/lib/highlight';
 import type { PaginatedRepositories, RepositoryFilters } from '../types';
 
@@ -37,7 +38,7 @@ export const RepositoriesList = ({
                 {repositorios.data.map((repo) => {
                     const authorNames =
                         repo.users
-                            ?.map((user) => `${user.first_name} ${user.last_name}`)
+                            ?.map((user) => formatUserName(user))
                             .join(', ') ?? '';
 
                     return (

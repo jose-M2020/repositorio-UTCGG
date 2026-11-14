@@ -15,6 +15,7 @@ import {
 } from '@/shared/components';
 import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
 import { Button } from '@/shared/components/ui';
+import { formatUserName } from '@/shared/lib';
 import type { Repository } from '../../shared/types';
 
 type RepositorySettingsSectionProps = {
@@ -176,14 +177,14 @@ export const RepositorySettingsSection = ({
                             className="flex items-center justify-between gap-3 py-3 text-sm"
                         >
                             <span>
-                                {user.first_name} {user.last_name} ({user.email})
+                                {formatUserName(user)} ({user.email})
                             </span>
                             <ConfirmDeleteButton
                                 form={destroyMember.form([
                                     repositorio.slug,
                                     user.id,
                                 ])}
-                                itemLabel={`${user.first_name} ${user.last_name}`}
+                                itemLabel={formatUserName(user)}
                                 triggerLabel="Quitar"
                                 triggerSize="sm"
                             />

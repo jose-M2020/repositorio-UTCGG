@@ -7,6 +7,7 @@ export type UserListItem = {
     id: number;
     first_name: string;
     last_name: string;
+    second_last_name: string | null;
     email: string;
     career: string | null;
     status: UserAccountStatus;
@@ -18,6 +19,7 @@ export type UserFormValues = {
     id?: number;
     first_name: string;
     last_name: string;
+    second_last_name: string;
     email: string;
     career: string;
     role: string | null;
@@ -34,6 +36,7 @@ export type UserDetails = {
     id: number;
     first_name: string;
     last_name: string;
+    second_last_name: string | null;
     email: string;
     career: string | null;
     status: UserAccountStatus;

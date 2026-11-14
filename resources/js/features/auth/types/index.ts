@@ -17,6 +17,7 @@ export type AuthUser = {
     id: number;
     first_name: string;
     last_name: string;
+    second_last_name?: string | null;
     email: string;
     career?: string | null;
     email_verified_at: string | null;

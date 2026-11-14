@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/ui";
 import type { UserListItem } from "../types";
+import { formatUserName } from "../utils/formatUserName";
 
 type UserSendPasswordLinkDialogProps = {
   user: UserListItem;
@@ -29,7 +30,7 @@ export const UserSendPasswordLinkDialog = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
-  const userName = `${user.first_name} ${user.last_name}`.trim();
+  const userName = formatUserName(user);
   const isActivation = user.status === "pending_activation";
   const actionLabel = isActivation
     ? "Reenviar activación"
