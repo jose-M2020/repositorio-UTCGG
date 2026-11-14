@@ -21,7 +21,7 @@ export const CareersSection = ({ careers }: CareersSectionProps) => {
                         <Link
                             href={index.url({
                                 query: {
-                                    carrera: [career.code],
+                                    career: [career.code],
                                 },
                             })}
                             className="group relative block min-h-44 overflow-hidden rounded-xl"

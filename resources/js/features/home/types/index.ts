@@ -8,7 +8,7 @@ export type HomeRepository = {
     id: number;
     title: string;
     slug: string;
-    descripcion: string;
-    carrera: string;
+    description: string;
+    career: string;
     created_at: string;
 };

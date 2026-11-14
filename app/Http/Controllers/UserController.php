@@ -173,7 +173,7 @@ class UserController extends Controller implements HasMiddleware
 
         $repositories = $user->repositories()
             ->orderByDesc('repositories.created_at')
-            ->get(['repositories.id', 'title', 'slug', 'public']);
+            ->get(['repositories.id', 'title', 'slug', 'repositories.is_public']);
 
         return Inertia::render('panel/users/show', [
             'user' => [

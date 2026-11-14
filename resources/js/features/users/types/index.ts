@@ -29,7 +29,7 @@ export type UserRepositorySummary = {
     id: number;
     title: string;
     slug: string;
-    publico: boolean;
+    is_public: boolean;
 };
 
 export type UserDetails = {
