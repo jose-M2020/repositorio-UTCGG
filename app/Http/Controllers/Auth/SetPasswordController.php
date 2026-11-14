@@ -6,6 +6,7 @@ use App\Enums\UserAccountStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SetPasswordRequest;
 use App\Models\User;
+use App\Support\UserPasswordSetup;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,15 +19,29 @@ class SetPasswordController extends Controller
 {
     public function create(Request $request, string $token): Response
     {
+        $email = $request->string('email')->toString();
+        $purpose = $request->string('purpose')->toString() ?: 'reset';
+
         return Inertia::render('auth/set-password', [
             'token' => $token,
-            'email' => $request->string('email')->toString(),
-            'purpose' => $request->string('purpose')->toString() ?: 'reset',
+            'email' => $email,
+            'purpose' => $purpose,
+            'linkStatus' => Inertia::defer(
+                fn (): string => UserPasswordSetup::isValidLink($email, $token)
+                    ? 'valid'
+                    : 'invalid',
+                'default',
+                true,
+            ),
         ]);
     }
 
     public function store(SetPasswordRequest $request): RedirectResponse
     {
+        $token = $request->string('token')->toString();
+        $email = $request->string('email')->toString();
+        $purpose = $request->string('purpose')->toString() ?: 'reset';
+
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password): void {
@@ -44,14 +59,16 @@ class SetPasswordController extends Controller
             },
         );
 
+        $redirect = redirect()->route('password.set', [
+            'token' => $token,
+            'email' => $email,
+            'purpose' => $purpose,
+        ]);
+
         if ($status !== Password::PASSWORD_RESET) {
-            return back()->withErrors([
-                'email' => __($status),
-            ]);
+            return $redirect;
         }
 
-        return redirect()
-            ->route('login')
-            ->with('status', 'Contraseña establecida. Ya puedes iniciar sesión.');
+        return $redirect->with('status', 'password_set');
     }
 }

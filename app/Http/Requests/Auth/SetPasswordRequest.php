@@ -20,6 +20,7 @@ class SetPasswordRequest extends FormRequest
         return [
             'token' => ['required', 'string'],
             'email' => ['required', 'string', 'email'],
+            'purpose' => ['nullable', 'string', 'in:activation,reset'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }

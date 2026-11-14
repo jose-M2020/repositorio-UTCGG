@@ -13,7 +13,9 @@ export const AuthField = ({
     autoComplete,
     maxLength,
     defaultValue,
+    value,
     readOnly = false,
+    onChange,
 }: AuthFieldProps) => {
     return (
         <div className="space-y-1">
@@ -30,8 +32,10 @@ export const AuthField = ({
                 required={required}
                 autoComplete={autoComplete}
                 maxLength={maxLength}
-                defaultValue={defaultValue}
+                defaultValue={value === undefined ? defaultValue : undefined}
+                value={value}
                 readOnly={readOnly}
+                onChange={onChange}
                 aria-invalid={Boolean(error)}
                 aria-describedby={error ? `${id}-error` : undefined}
                 className={inputClassName}

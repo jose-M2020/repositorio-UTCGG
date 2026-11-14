@@ -18,4 +18,16 @@ final class UserPasswordSetup
             },
         );
     }
+
+    public static function isValidLink(string $email, string $token): bool
+    {
+        if ($email === '' || $token === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        $user = User::query()->where('email', $email)->first();
+
+        return $user !== null
+            && Password::broker()->tokenExists($user, $token);
+    }
 }

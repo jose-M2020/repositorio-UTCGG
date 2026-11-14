@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import { Button } from '@/shared/components/ui';
-import type { AuthFormErrors } from '../types';
+import { passwordMeetsRequirements } from '../utils/passwordRequirements';
+import type { AuthFormErrors, SetPasswordPurpose } from '../types';
 import { AuthField } from './AuthField';
+import { PasswordRequirements } from './PasswordRequirements';
 
 type SetPasswordFormProps = {
     email: string;
     token: string;
+    purpose: SetPasswordPurpose;
     errors: AuthFormErrors;
     processing: boolean;
     submitLabel: string;
@@ -13,13 +17,27 @@ type SetPasswordFormProps = {
 export const SetPasswordForm = ({
     email,
     token,
+    purpose,
     errors,
     processing,
     submitLabel,
 }: SetPasswordFormProps) => {
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+    const confirmationError =
+        passwordConfirmation.length > 0 && password !== passwordConfirmation
+            ? 'Las contraseñas no coinciden.'
+            : undefined;
+    const canSubmit =
+        passwordMeetsRequirements(password) &&
+        password === passwordConfirmation &&
+        passwordConfirmation.length > 0;
+
     return (
         <div className="space-y-4">
             <input type="hidden" name="token" value={token} />
+            <input type="hidden" name="purpose" value={purpose} />
 
             <AuthField
                 id="email"
@@ -33,15 +51,20 @@ export const SetPasswordForm = ({
                 error={errors.email}
             />
 
-            <AuthField
-                id="password"
-                name="password"
-                label="Contraseña"
-                type="password"
-                required
-                autoComplete="new-password"
-                error={errors.password}
-            />
+            <div className="space-y-2">
+                <AuthField
+                    id="password"
+                    name="password"
+                    label="Contraseña"
+                    type="password"
+                    required
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    error={errors.password}
+                />
+                <PasswordRequirements password={password} />
+            </div>
 
             <AuthField
                 id="password_confirmation"
@@ -50,10 +73,15 @@ export const SetPasswordForm = ({
                 type="password"
                 required
                 autoComplete="new-password"
+                value={passwordConfirmation}
+                onChange={(event) =>
+                    setPasswordConfirmation(event.target.value)
+                }
+                error={confirmationError}
             />
 
             <div className="flex justify-end pt-2">
-                <Button type="submit" disabled={processing}>
+                <Button type="submit" disabled={processing || !canSubmit}>
                     {processing ? 'Guardando...' : submitLabel}
                 </Button>
             </div>
