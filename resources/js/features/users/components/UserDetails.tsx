@@ -20,7 +20,7 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
             </div>
             <div>
                 <dt className="text-sm text-slate-500">Carrera</dt>
-                <dd className="font-medium">{user.carrera ?? '—'}</dd>
+                <dd className="font-medium">{user.career ?? '—'}</dd>
             </div>
             <div>
                 <dt className="text-sm text-slate-500">Roles</dt>

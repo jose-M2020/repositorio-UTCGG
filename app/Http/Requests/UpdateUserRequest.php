@@ -30,13 +30,13 @@ class UpdateUserRequest extends FormRequest
             && $authUser?->careerCatalog?->code
         ) {
             $this->merge([
-                'carrera' => $authUser->careerCatalog->code,
+                'career' => $authUser->careerCatalog->code,
             ]);
         }
 
         if ($role !== '' && ! UserRoles::requiresCareer($role)) {
             $this->merge([
-                'carrera' => null,
+                'career' => null,
             ]);
         }
     }
@@ -63,7 +63,7 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'carrera' => [
+            'career' => [
                 $careerRequired ? 'required' : 'nullable',
                 'string',
                 'max:20',

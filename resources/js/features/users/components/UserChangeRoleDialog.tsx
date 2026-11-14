@@ -108,12 +108,12 @@ export const UserChangeRoleDialog = ({
                   </label>
                   <select
                     id="change-role"
-                    name="rol"
+                    name="role"
                     required
                     value={selectedRole}
                     onChange={handleRoleChange}
                     className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-                    aria-invalid={Boolean(errors.rol)}
+                    aria-invalid={Boolean(errors.role)}
                   >
                     <option value="" disabled>
                       Selecciona un rol
@@ -124,8 +124,8 @@ export const UserChangeRoleDialog = ({
                       </option>
                     ))}
                   </select>
-                  {errors.rol ? (
-                    <p className="text-sm text-red-600">{errors.rol}</p>
+                  {errors.role ? (
+                    <p className="text-sm text-red-600">{errors.role}</p>
                   ) : null}
                 </div>
 

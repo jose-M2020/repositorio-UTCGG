@@ -78,7 +78,7 @@ export const createUsersColumns = ({
       },
     },
   }),
-  columnHelper.accessor("carrera", {
+  columnHelper.accessor("career", {
     header: "Carrera",
     size: 200,
     minSize: 140,
@@ -97,7 +97,7 @@ export const createUsersColumns = ({
       : undefined,
   }),
   columnHelper.accessor((row) => row.roles.map((role) => role.name).join(", "), {
-    id: "rol",
+    id: "role",
     header: "Rol",
     size: 120,
     minSize: 96,

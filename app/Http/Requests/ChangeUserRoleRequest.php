@@ -23,7 +23,7 @@ class ChangeUserRoleRequest extends FormRequest
         $assignableRoles = UserRoles::assignableBy($this->user());
 
         return [
-            'rol' => ['required', 'string', Rule::in($assignableRoles)],
+            'role' => ['required', 'string', Rule::in($assignableRoles)],
         ];
     }
 
@@ -38,7 +38,7 @@ class ChangeUserRoleRequest extends FormRequest
                     return;
                 }
 
-                $role = $this->string('rol')->toString();
+                $role = $this->string('role')->toString();
 
                 if (! UserRoles::requiresCareer($role)) {
                     return;
@@ -57,7 +57,7 @@ class ChangeUserRoleRequest extends FormRequest
                 }
 
                 $validator->errors()->add(
-                    'rol',
+                    'role',
                     'Asigna una carrera al usuario antes de darle este rol.',
                 );
             },
@@ -70,7 +70,7 @@ class ChangeUserRoleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'rol.in' => 'No tienes permiso para asignar ese rol.',
+            'role.in' => 'No tienes permiso para asignar ese rol.',
         ];
     }
 }

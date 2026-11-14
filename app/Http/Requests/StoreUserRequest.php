@@ -18,7 +18,7 @@ class StoreUserRequest extends FormRequest
     {
         $authUser = $this->user();
         $authUser?->loadMissing('careerCatalog:id,code');
-        $role = $this->string('rol')->toString();
+        $role = $this->string('role')->toString();
 
         if (
             UserRoles::requiresCareer($role)
@@ -26,13 +26,13 @@ class StoreUserRequest extends FormRequest
             && $authUser?->careerCatalog?->code
         ) {
             $this->merge([
-                'carrera' => $authUser->careerCatalog->code,
+                'career' => $authUser->careerCatalog->code,
             ]);
         }
 
         if ($role !== '' && ! UserRoles::requiresCareer($role)) {
             $this->merge([
-                'carrera' => null,
+                'career' => null,
             ]);
         }
     }
@@ -44,7 +44,7 @@ class StoreUserRequest extends FormRequest
     {
         $authUser = $this->user();
         $assignableRoles = UserRoles::assignableBy($authUser);
-        $role = $this->string('rol')->toString();
+        $role = $this->string('role')->toString();
         $careerRequired = UserRoles::requiresCareer($role)
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
@@ -52,7 +52,7 @@ class StoreUserRequest extends FormRequest
             'nombre' => ['required', 'string', 'max:255'],
             'apellido' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'carrera' => [
+            'career' => [
                 $careerRequired ? 'required' : 'nullable',
                 'string',
                 'max:20',
@@ -60,7 +60,7 @@ class StoreUserRequest extends FormRequest
                     ->where('type', Catalog::TYPE_CAREER)
                     ->where('is_active', true)),
             ],
-            'rol' => ['required', 'string', Rule::in($assignableRoles)],
+            'role' => ['required', 'string', Rule::in($assignableRoles)],
         ];
     }
 
@@ -70,7 +70,7 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'rol.in' => 'No tienes permiso para asignar ese rol.',
+            'role.in' => 'No tienes permiso para asignar ese rol.',
         ];
     }
 }

@@ -11,9 +11,9 @@ import type { UsersFilters } from "../types";
 const toDateFilterValue = (
   filters: UsersFilters,
 ): DateColumnFilterValue => ({
-  preset: filters.fecha,
-  from: filters.rango_fecha[0] ?? "",
-  to: filters.rango_fecha[1] ?? "",
+  preset: filters.date,
+  from: filters.date_range[0] ?? "",
+  to: filters.date_range[1] ?? "",
 });
 
 const toSearchFilterValue = (
@@ -48,12 +48,12 @@ export const buildColumnFilters = (
   const emailFilter = toSearchFilterValue(filters.email);
   if (emailFilter) next.push({ id: "email", value: emailFilter });
 
-  if (canFilterCareer && filters.carrera.length > 0) {
-    next.push({ id: "carrera", value: filters.carrera });
+  if (canFilterCareer && filters.career.length > 0) {
+    next.push({ id: "career", value: filters.career });
   }
 
-  if (filters.rol.length > 0) {
-    next.push({ id: "rol", value: filters.rol });
+  if (filters.role.length > 0) {
+    next.push({ id: "role", value: filters.role });
   }
 
   if (filters.status.length > 0) {
@@ -74,17 +74,17 @@ export const readFiltersFromColumnState = (
 ): Omit<VisitUsersIndexParams, "page"> => {
   const nombreFilter = nextColumnFilters.find((filter) => filter.id === "nombre");
   const emailFilter = nextColumnFilters.find((filter) => filter.id === "email");
-  const carreraFilter = nextColumnFilters.find((filter) => filter.id === "carrera");
-  const rolFilter = nextColumnFilters.find((filter) => filter.id === "rol");
+  const careerFilter = nextColumnFilters.find((filter) => filter.id === "career");
+  const roleFilter = nextColumnFilters.find((filter) => filter.id === "role");
   const statusFilter = nextColumnFilters.find((filter) => filter.id === "status");
   const dateFilter = nextColumnFilters.find((filter) => filter.id === "created_at");
   const dateValue = parseDateColumnFilterValue(dateFilter?.value);
 
-  const carrera = Array.isArray(carreraFilter?.value)
-    ? (carreraFilter.value as string[])
+  const career = Array.isArray(careerFilter?.value)
+    ? (careerFilter.value as string[])
     : [];
-  const rol = Array.isArray(rolFilter?.value)
-    ? (rolFilter.value as string[])
+  const role = Array.isArray(roleFilter?.value)
+    ? (roleFilter.value as string[])
     : [];
   const status = Array.isArray(statusFilter?.value)
     ? (statusFilter.value as string[])
@@ -93,10 +93,10 @@ export const readFiltersFromColumnState = (
   return {
     nombre: readSearchFilterValue(nombreFilter?.value),
     email: readSearchFilterValue(emailFilter?.value),
-    carrera: canFilterCareer ? carrera : [],
-    rol,
+    career: canFilterCareer ? career : [],
+    role,
     status,
-    fecha: dateValue.preset,
-    rango_fecha: [dateValue.from, dateValue.to],
+    date: dateValue.preset,
+    date_range: [dateValue.from, dateValue.to],
   };
 };

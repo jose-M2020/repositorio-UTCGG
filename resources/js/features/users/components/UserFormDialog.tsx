@@ -65,8 +65,8 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
         nombre: user.nombre,
         apellido: user.apellido,
         email: user.email,
-        carrera: user.carrera ?? "",
-        rol: user.roles[0]?.name ?? null,
+        career: user.career ?? "",
+        role: user.roles[0]?.name ?? null,
       }
     : undefined;
 

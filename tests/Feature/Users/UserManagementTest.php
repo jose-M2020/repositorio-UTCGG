@@ -65,8 +65,8 @@ class UserManagementTest extends TestCase
             'nombre' => 'Ana',
             'apellido' => 'Lopez',
             'email' => 'ana@example.com',
-            'carrera' => 'TIC',
-            'rol' => UserRoles::ALUMNO,
+            'career' => 'TIC',
+            'role' => UserRoles::ALUMNO,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -113,7 +113,7 @@ class UserManagementTest extends TestCase
             'nombre' => 'Ana',
             'apellido' => 'Actualizada',
             'email' => 'new@example.com',
-            'carrera' => 'ER',
+            'career' => 'ER',
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -146,7 +146,7 @@ class UserManagementTest extends TestCase
         $user->assignRole(UserRoles::ALUMNO);
 
         $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
-            'rol' => UserRoles::DOCENTE,
+            'role' => UserRoles::DOCENTE,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -173,7 +173,7 @@ class UserManagementTest extends TestCase
         $user->assignRole(UserRoles::ALUMNO);
 
         $response = $this->actingAs($admin)->patch(route('usuarios.update-role', $user), [
-            'rol' => UserRoles::ADMIN,
+            'role' => UserRoles::ADMIN,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -197,11 +197,11 @@ class UserManagementTest extends TestCase
         $response = $this->actingAs($admin)
             ->from(route('usuarios.index'))
             ->patch(route('usuarios.update-role', $user), [
-                'rol' => UserRoles::ALUMNO,
+                'role' => UserRoles::ALUMNO,
             ]);
 
         $response->assertRedirect(route('usuarios.index'));
-        $response->assertSessionHasErrors(['rol']);
+        $response->assertSessionHasErrors(['role']);
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
     }
 
@@ -332,7 +332,7 @@ class UserManagementTest extends TestCase
             'nombre',
             'apellido',
             'email',
-            'rol',
+            'role',
         ]);
     }
 
@@ -347,7 +347,7 @@ class UserManagementTest extends TestCase
             'nombre' => 'Root',
             'apellido' => 'User',
             'email' => 'root@example.com',
-            'rol' => UserRoles::ADMIN,
+            'role' => UserRoles::ADMIN,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -376,8 +376,8 @@ class UserManagementTest extends TestCase
             'nombre' => 'Luis',
             'apellido' => 'Perez',
             'email' => 'luis@example.com',
-            'carrera' => 'ER',
-            'rol' => UserRoles::ALUMNO,
+            'career' => 'ER',
+            'role' => UserRoles::ALUMNO,
         ]);
 
         $response->assertRedirect(route('usuarios.index'));
@@ -405,11 +405,11 @@ class UserManagementTest extends TestCase
                 'nombre' => 'Hack',
                 'apellido' => 'Attempt',
                 'email' => 'hack@example.com',
-                'rol' => UserRoles::ADMIN,
+                'role' => UserRoles::ADMIN,
             ]);
 
         $response->assertRedirect(route('usuarios.index'));
-        $response->assertSessionHasErrors(['rol']);
+        $response->assertSessionHasErrors(['role']);
         $this->assertDatabaseMissing('users', ['email' => 'hack@example.com']);
     }
 
@@ -432,12 +432,12 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('usuarios.index', [
-                'rango_fecha' => ['2024-05-01', '2024-05-31'],
+                'date_range' => ['2024-05-01', '2024-05-31'],
             ]))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->where('filters.rango_fecha', ['2024-05-01', '2024-05-31'])
+                ->where('filters.date_range', ['2024-05-01', '2024-05-31'])
                 ->has('users.data', 1)
                 ->where('users.data.0.nombre', 'EnRango'));
     }
@@ -491,12 +491,12 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('usuarios.index', [
-                'rol' => [UserRoles::ALUMNO, UserRoles::DOCENTE],
+                'role' => [UserRoles::ALUMNO, UserRoles::DOCENTE],
             ]))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->where('filters.rol', [UserRoles::ALUMNO, UserRoles::DOCENTE])
+                ->where('filters.role', [UserRoles::ALUMNO, UserRoles::DOCENTE])
                 ->has('users.data', 2)
                 ->where('users.data.0.nombre', 'DocenteFiltro')
                 ->where('users.data.1.nombre', 'AlumnoFiltro'));
@@ -564,8 +564,8 @@ class UserManagementTest extends TestCase
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
                 ->has('users.data', 2)
-                ->where('users.data.0.carrera', 'TIC')
-                ->where('users.data.1.carrera', 'TIC')
+                ->where('users.data.0.career', 'TIC')
+                ->where('users.data.1.career', 'TIC')
                 ->where('careerPolicy.can_select_career', false)
                 ->where('careerPolicy.locked_career', 'TIC'));
     }
@@ -580,8 +580,8 @@ class UserManagementTest extends TestCase
                 'nombre' => 'Ana',
                 'apellido' => 'Lopez',
                 'email' => 'ana@example.com',
-                'carrera' => 'TIC',
-                'rol' => UserRoles::ALUMNO,
+                'career' => 'TIC',
+                'role' => UserRoles::ALUMNO,
             ])
             ->assertForbidden();
     }

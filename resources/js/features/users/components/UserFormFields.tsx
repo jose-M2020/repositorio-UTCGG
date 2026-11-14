@@ -15,8 +15,8 @@ type UserFormFieldsProps = {
     nombre?: string;
     apellido?: string;
     email?: string;
-    carrera?: string;
-    rol?: string | null;
+    career?: string;
+    role?: string | null;
   };
   includeRole?: boolean;
   includePassword?: boolean;
@@ -33,9 +33,9 @@ export const UserFormFields = ({
   includePassword = false,
   requirePassword = false,
 }: UserFormFieldsProps) => {
-  const [selectedRole, setSelectedRole] = useState(defaults?.rol ?? "");
+  const [selectedRole, setSelectedRole] = useState(defaults?.role ?? "");
 
-  const effectiveRole = includeRole ? selectedRole : (defaults?.rol ?? "");
+  const effectiveRole = includeRole ? selectedRole : (defaults?.role ?? "");
   const selectedRoleOption = roles.find((role) => role.value === effectiveRole);
   const showCareerField =
     careerPolicy.can_select_career &&
@@ -110,19 +110,19 @@ export const UserFormFields = ({
       {includeRole ? (
         <div className="space-y-1">
           <label
-            htmlFor="rol"
+            htmlFor="role"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
             Rol
           </label>
           <select
-            id="rol"
-            name="rol"
+            id="role"
+            name="role"
             required
             value={selectedRole}
             onChange={handleRoleChange}
             className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-            aria-invalid={Boolean(errors.rol)}
+            aria-invalid={Boolean(errors.role)}
           >
             <option value="" disabled>
               Selecciona un rol
@@ -133,8 +133,8 @@ export const UserFormFields = ({
               </option>
             ))}
           </select>
-          {errors.rol ? (
-            <p className="text-sm text-red-600">{errors.rol}</p>
+          {errors.role ? (
+            <p className="text-sm text-red-600">{errors.role}</p>
           ) : null}
         </div>
       ) : null}
@@ -142,18 +142,18 @@ export const UserFormFields = ({
       {showCareerField ? (
         <div className="space-y-1">
           <label
-            htmlFor="carrera"
+            htmlFor="career"
             className="text-sm font-medium text-slate-700 dark:text-slate-300"
           >
             Carrera
           </label>
           <select
-            id="carrera"
-            name="carrera"
+            id="career"
+            name="career"
             required
-            defaultValue={defaults?.carrera ?? ""}
+            defaultValue={defaults?.career ?? ""}
             className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-            aria-invalid={Boolean(errors.carrera)}
+            aria-invalid={Boolean(errors.career)}
           >
             <option value="" disabled>
               Selecciona una carrera
@@ -164,8 +164,8 @@ export const UserFormFields = ({
               </option>
             ))}
           </select>
-          {errors.carrera ? (
-            <p className="text-sm text-red-600">{errors.carrera}</p>
+          {errors.career ? (
+            <p className="text-sm text-red-600">{errors.career}</p>
           ) : null}
         </div>
       ) : null}

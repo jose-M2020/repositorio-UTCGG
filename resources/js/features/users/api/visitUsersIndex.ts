@@ -4,11 +4,11 @@ import { index } from "@/actions/App/Http/Controllers/UserController";
 export type VisitUsersIndexParams = {
   nombre: string;
   email: string;
-  rol: string[];
-  carrera: string[];
+  role: string[];
+  career: string[];
   status: string[];
-  fecha: string;
-  rango_fecha: string[];
+  date: string;
+  date_range: string[];
   page: number;
 };
 
@@ -19,13 +19,13 @@ export const visitUsersIndex = (params: VisitUsersIndexParams) => {
       query: {
         nombre: params.nombre.trim() || undefined,
         email: params.email.trim() || undefined,
-        rol: params.rol.length > 0 ? params.rol : undefined,
-        carrera: params.carrera.length > 0 ? params.carrera : undefined,
+        role: params.role.length > 0 ? params.role : undefined,
+        career: params.career.length > 0 ? params.career : undefined,
         status: params.status.length > 0 ? params.status : undefined,
-        fecha: params.fecha || undefined,
-        rango_fecha:
-          params.rango_fecha[0] && params.rango_fecha[1]
-            ? params.rango_fecha
+        date: params.date || undefined,
+        date_range:
+          params.date_range[0] && params.date_range[1]
+            ? params.date_range
             : undefined,
         page: params.page > 1 ? params.page : undefined,
       },

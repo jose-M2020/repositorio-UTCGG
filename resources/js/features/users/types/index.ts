@@ -8,7 +8,7 @@ export type UserListItem = {
     nombre: string;
     apellido: string;
     email: string;
-    carrera: string | null;
+    career: string | null;
     status: UserAccountStatus;
     created_at: string;
     roles: Array<{ id: number; name: string }>;
@@ -19,8 +19,8 @@ export type UserFormValues = {
     nombre: string;
     apellido: string;
     email: string;
-    carrera: string;
-    rol: string | null;
+    career: string;
+    role: string | null;
 };
 
 export type UserRepositorySummary = {
@@ -35,7 +35,7 @@ export type UserDetails = {
     nombre: string;
     apellido: string;
     email: string;
-    carrera: string | null;
+    career: string | null;
     status: UserAccountStatus;
     roles: string[];
     created_at: string | null;
@@ -44,11 +44,11 @@ export type UserDetails = {
 export type UsersFilters = {
     nombre: string;
     email: string;
-    carrera: string[];
-    rol: string[];
+    career: string[];
+    role: string[];
     status: string[];
-    fecha: string;
-    rango_fecha: string[];
+    date: string;
+    date_range: string[];
 };
 
 export type PaginatedUsers = {
