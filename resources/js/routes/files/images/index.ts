@@ -2,27 +2,27 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\FileController::destroy
  * @see app/Http/Controllers/FileController.php:113
- * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
+ * @route '/account/repositories/{repository}/images/{index}'
  */
-export const destroy = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}',
+    url: '/account/repositories/{repository}/images/{index}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\FileController::destroy
  * @see app/Http/Controllers/FileController.php:113
- * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
+ * @route '/account/repositories/{repository}/images/{index}'
  */
-destroy.url = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions) => {
+destroy.url = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-                    repositorio: args[0],
+                    repository: args[0],
                     index: args[1],
                 }
     }
@@ -30,14 +30,14 @@ destroy.url = (args: { repositorio: string | { slug: string }, index: string | n
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        repositorio: typeof args.repositorio === 'object'
-                ? args.repositorio.slug
-                : args.repositorio,
+                        repository: typeof args.repository === 'object'
+                ? args.repository.slug
+                : args.repository,
                                 index: args.index,
                 }
 
     return destroy.definition.url
-            .replace('{repositorio}', parsedArgs.repositorio.toString())
+            .replace('{repository}', parsedArgs.repository.toString())
             .replace('{index}', parsedArgs.index.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -45,9 +45,9 @@ destroy.url = (args: { repositorio: string | { slug: string }, index: string | n
 /**
 * @see \App\Http\Controllers\FileController::destroy
  * @see app/Http/Controllers/FileController.php:113
- * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
+ * @route '/account/repositories/{repository}/images/{index}'
  */
-destroy.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -55,9 +55,9 @@ destroy.delete = (args: { repositorio: string | { slug: string }, index: string 
     /**
 * @see \App\Http\Controllers\FileController::destroy
  * @see app/Http/Controllers/FileController.php:113
- * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
+ * @route '/account/repositories/{repository}/images/{index}'
  */
-    const destroyForm = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -70,9 +70,9 @@ destroy.delete = (args: { repositorio: string | { slug: string }, index: string 
             /**
 * @see \App\Http\Controllers\FileController::destroy
  * @see app/Http/Controllers/FileController.php:113
- * @route '/mi-cuenta/repositorios/{repositorio}/imagenes/{index}'
+ * @route '/account/repositories/{repository}/images/{index}'
  */
-        destroyForm.delete = (args: { repositorio: string | { slug: string }, index: string | number } | [repositorio: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

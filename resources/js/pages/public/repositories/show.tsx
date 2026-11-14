@@ -6,16 +6,16 @@ import {
 } from '@/features/repositories';
 
 type PageProps = {
-    repositorio: Repository;
+    repository: Repository;
     related: RepositoryListItem[];
 };
 
 const RepositoriesShowPage = ({ repositorio, related }: PageProps) => {
     return (
         <>
-            <Head title={repositorio.nombre_rep} />
+            <Head title={repositorio.title} />
             <RepositoryShowContainer
-                repositorio={repositorio}
+                repositorio={repository}
                 related={related}
             />
         </>

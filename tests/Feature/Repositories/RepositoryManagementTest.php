@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Repositories;
 
-use App\Models\Repositorio;
+use App\Models\Repository;
 use App\Models\User;
 use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class RepositorioManagementTest extends TestCase
+class RepositoryManagementTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -25,23 +25,23 @@ class RepositorioManagementTest extends TestCase
 
     public function test_public_index_lists_only_public_repositories(): void
     {
-        Repositorio::factory()->create(['nombre_rep' => 'Publico', 'publico' => true]);
-        Repositorio::factory()->private()->create(['nombre_rep' => 'Privado']);
+        Repository::factory()->create(['title' => 'Publico', 'is_public' => true]);
+        Repository::factory()->private()->create(['title' => 'Privado']);
 
-        $response = $this->get(route('repositorios.index'));
+        $response = $this->get(route('repositories.index'));
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
             ->component('public/repositories/index')
-            ->has('repositorios.data', 1)
-            ->where('repositorios.data.0.nombre_rep', 'Publico'));
+            ->has('repositories.data', 1)
+            ->where('repositories.data.0.title', 'Publico'));
     }
 
     public function test_private_repository_is_hidden_from_guests(): void
     {
-        $repo = Repositorio::factory()->private()->create();
+        $repo = Repository::factory()->private()->create();
 
-        $this->get(route('repositorios.show', $repo))
+        $this->get(route('repositories.show', $repo))
             ->assertNotFound();
     }
 
@@ -50,22 +50,22 @@ class RepositorioManagementTest extends TestCase
         $user = User::factory()->create();
         $user->assignRole('teacher');
 
-        $response = $this->actingAs($user)->post(route('repositorios.store'), [
-            'nombre_rep' => 'Repo Test',
-            'descripcion' => 'Descripcion de prueba',
-            'tipo_proyecto' => 'Integradora',
-            'nivel_proyecto' => 'TSU',
-            'palabras_clave' => 'laravel, inertia',
-            'visibilidad' => 'privado',
-            'usuario' => [$user->email],
-            'carrera' => 'TIC',
-            'empresa' => 'UTCGG',
-            'generacion' => '2026',
+        $response = $this->actingAs($user)->post(route('repositories.store'), [
+            'title' => 'Repo Test',
+            'description' => 'Descripcion de prueba',
+            'project_type' => 'integrative',
+            'academic_degree' => 'TSU',
+            'keywords' => 'laravel, inertia',
+            'visibility' => 'private',
+            'member_emails' => [$user->email],
+            'career' => 'TIC',
+            'company' => 'UTCGG',
+            'generation' => '2026',
         ]);
 
-        $repo = Repositorio::query()->where('nombre_rep', 'Repo Test')->first();
+        $repo = Repository::query()->where('title', 'Repo Test')->first();
         $this->assertNotNull($repo);
-        $response->assertRedirect(route('repositorios.user.show', $repo));
+        $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
     }
 
@@ -75,7 +75,7 @@ class RepositorioManagementTest extends TestCase
         $user->assignRole('teacher');
 
         $this->actingAs($user)
-            ->get(route('repositorios.create'))
+            ->get(route('repositories.create'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/repositories/create')
@@ -90,11 +90,11 @@ class RepositorioManagementTest extends TestCase
         $intruder = User::factory()->create();
         $intruder->assignRole('teacher');
 
-        $repo = Repositorio::factory()->private()->create();
+        $repo = Repository::factory()->private()->create();
         $repo->users()->attach($owner->id);
 
         $this->actingAs($intruder)
-            ->get(route('repositorios.user.show', $repo))
+            ->get(route('repositories.account.show', $repo))
             ->assertForbidden();
     }
 
@@ -105,20 +105,20 @@ class RepositorioManagementTest extends TestCase
 
         $member = User::factory()->create();
 
-        $repo = Repositorio::factory()->create();
+        $repo = Repository::factory()->create();
         $repo->users()->attach($owner->id);
 
         $this->actingAs($owner)
-            ->post(route('repositorios.member.store', $repo), [
+            ->post(route('repositories.members.store', $repo), [
                 'user_ids' => [$member->id],
             ])
-            ->assertRedirect(route('repositorios.user.show', $repo));
+            ->assertRedirect(route('repositories.account.show', $repo));
 
         $this->assertTrue($repo->users()->whereKey($member->id)->exists());
 
         $this->actingAs($owner)
-            ->delete(route('repositorios.member.destroy', [$repo, $member]))
-            ->assertRedirect(route('repositorios.user.show', $repo));
+            ->delete(route('repositories.members.destroy', [$repo, $member]))
+            ->assertRedirect(route('repositories.account.show', $repo));
 
         $this->assertFalse($repo->users()->whereKey($member->id)->exists());
     }
@@ -128,10 +128,10 @@ class RepositorioManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole('admin');
 
-        $repo = Repositorio::factory()->private()->create();
+        $repo = Repository::factory()->private()->create();
 
         $this->actingAs($admin)
-            ->get(route('repositorios.user.show', $repo))
+            ->get(route('repositories.account.show', $repo))
             ->assertOk();
     }
 }

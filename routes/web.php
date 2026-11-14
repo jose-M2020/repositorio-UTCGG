@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CatalogController;
-use App\Http\Controllers\RepositorioController;
-use App\Http\Controllers\RepositorioUsuarioController;
+use App\Http\Controllers\RepositoryController;
+use App\Http\Controllers\RepositoryMemberController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -22,61 +22,60 @@ Route::post('users/{user}/password-link', [UserController::class, 'sendPasswordL
     ->name('users.password-link');
 
 Route::middleware('auth')->group(function (): void {
-    Route::get('api/users/{repositorio?}', [UserController::class, 'search'])
+    Route::get('api/users/{repository?}', [UserController::class, 'search'])
         ->name('users.search');
 });
 
 Route::resource('roles', RoleController::class);
-Route::resource('catalogos', CatalogController::class)
-    ->except(['create', 'edit', 'show'])
-    ->parameters(['catalogos' => 'catalog']);
-Route::patch('catalogos/{catalog}/active', [CatalogController::class, 'toggleActive'])
-    ->name('catalogos.toggle-active');
+Route::resource('catalogs', CatalogController::class)
+    ->except(['create', 'edit', 'show']);
+Route::patch('catalogs/{catalog}/active', [CatalogController::class, 'toggleActive'])
+    ->name('catalogs.toggle-active');
 
-Route::get('repositorios', [RepositorioController::class, 'index'])
-    ->name('repositorios.index');
+Route::get('repositories', [RepositoryController::class, 'index'])
+    ->name('repositories.index');
 
 Route::get('files/download/{file}', [FileController::class, 'download'])
     ->name('files.download');
 
 Route::middleware('auth')->group(function (): void {
-    Route::resource('repositorios', RepositorioController::class)
+    Route::resource('repositories', RepositoryController::class)
         ->only(['create', 'store']);
 
-    Route::resource('repositorios', RepositorioController::class)
+    Route::resource('repositories', RepositoryController::class)
         ->only(['edit', 'update', 'destroy']);
 
-    Route::prefix('mi-cuenta')->group(function (): void {
-        Route::get('/repositories', [RepositorioController::class, 'mine'])
-            ->name('repositorios.user');
+    Route::prefix('account')->group(function (): void {
+        Route::get('/repositories', [RepositoryController::class, 'mine'])
+            ->name('repositories.mine');
 
-        Route::get('/repositorios/{repositorio}', [RepositorioController::class, 'showByUser'])
-            ->name('repositorios.user.show');
+        Route::get('/repositories/{repository}', [RepositoryController::class, 'showByUser'])
+            ->name('repositories.account.show');
 
-        Route::post('/repositorios/{repositorio}/members', [RepositorioUsuarioController::class, 'store'])
-            ->name('repositorios.member.store');
+        Route::post('/repositories/{repository}/members', [RepositoryMemberController::class, 'store'])
+            ->name('repositories.members.store');
 
-        Route::delete('/repositorios/{repositorio}/members/{user}', [RepositorioUsuarioController::class, 'destroy'])
-            ->name('repositorios.member.destroy');
+        Route::delete('/repositories/{repository}/members/{user}', [RepositoryMemberController::class, 'destroy'])
+            ->name('repositories.members.destroy');
 
-        Route::get('/repositorios/{repositorio}/archivos/upload', [FileController::class, 'create'])
+        Route::get('/repositories/{repository}/files/upload', [FileController::class, 'create'])
             ->name('files.create');
 
-        Route::post('/repositorios/{repositorio}/archivos/upload', [FileController::class, 'store'])
+        Route::post('/repositories/{repository}/files/upload', [FileController::class, 'store'])
             ->name('files.store');
 
-        Route::put('/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'update'])
+        Route::put('/repositories/{repository}/files/{file}', [FileController::class, 'update'])
             ->name('files.update');
 
-        Route::delete('/repositorios/{repositorio}/archivos/{file}', [FileController::class, 'destroy'])
+        Route::delete('/repositories/{repository}/files/{file}', [FileController::class, 'destroy'])
             ->name('files.destroy');
 
-        Route::delete('/repositorios/{repositorio}/imagenes/{index}', [FileController::class, 'destroyImage'])
+        Route::delete('/repositories/{repository}/images/{index}', [FileController::class, 'destroyImage'])
             ->name('files.images.destroy');
     });
 });
 
-Route::get('repositorios/{repositorio}', [RepositorioController::class, 'show'])
-    ->name('repositorios.show');
+Route::get('repositories/{repository}', [RepositoryController::class, 'show'])
+    ->name('repositories.show');
 
 require __DIR__.'/auth.php';

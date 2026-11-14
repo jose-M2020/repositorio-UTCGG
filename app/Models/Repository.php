@@ -2,54 +2,56 @@
 
 namespace App\Models;
 
-use Database\Factories\RepositorioFactory;
+use Database\Factories\RepositoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
- * @property string $nombre_rep
+ * @property string $title
  * @property string $slug
- * @property string $descripcion
- * @property string $palabras_clave
- * @property bool $publico
+ * @property string $description
+ * @property string $keywords
+ * @property bool $is_public
  * @property int|null $career_catalog_id
  * @property int|null $project_type_catalog_id
  * @property int|null $academic_degree_catalog_id
- * @property string|null $asesor_externo
- * @property string $empresa
- * @property string $generacion
- * @property string|null $imagenes
+ * @property string|null $external_advisor
+ * @property string $company
+ * @property string $generation
+ * @property string|null $images
  * @property string $created_by
  */
 #[Fillable([
-    'nombre_rep',
+    'title',
     'slug',
-    'descripcion',
-    'palabras_clave',
-    'publico',
+    'description',
+    'keywords',
+    'is_public',
     'career_catalog_id',
     'project_type_catalog_id',
     'academic_degree_catalog_id',
-    'asesor_externo',
-    'empresa',
-    'generacion',
-    'imagenes',
+    'external_advisor',
+    'company',
+    'generation',
+    'images',
     'created_by',
 ])]
-class Repositorio extends Model
+class Repository extends Model
 {
-    /** @use HasFactory<RepositorioFactory> */
+    /** @use HasFactory<RepositoryFactory> */
     use HasFactory;
+
+    protected $table = 'repositories';
 
     protected function casts(): array
     {
         return [
-            'publico' => 'boolean',
+            'is_public' => 'boolean',
         ];
     }
 
@@ -60,7 +62,7 @@ class Repositorio extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class, 'repository_user')->withTimestamps();
     }
 
     public function files(): HasMany

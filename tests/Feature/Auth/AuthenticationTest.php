@@ -30,7 +30,7 @@ class AuthenticationTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('login'))
-            ->assertRedirect(route('repositorios.user'));
+            ->assertRedirect(route('repositories.mine'));
     }
 
     public function test_user_can_login_with_valid_credentials(): void
@@ -45,7 +45,7 @@ class AuthenticationTest extends TestCase
             'password' => 'Password123!',
         ]);
 
-        $response->assertRedirect(route('repositorios.user'));
+        $response->assertRedirect(route('repositories.mine'));
         $this->assertAuthenticatedAs($user);
     }
 

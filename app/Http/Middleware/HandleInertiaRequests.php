@@ -54,11 +54,11 @@ class HandleInertiaRequests extends Middleware
                     ]
                     : null,
                 'abilities' => [
-                    'repositories.create' => $user?->can('repositorios.create') ?? false,
+                    'repositories.create' => $user?->can('repositories.create') ?? false,
                     'users.view' => $user?->can('users.index') ?? false,
                     'users.create' => $user?->can('users.create') ?? false,
                     'roles.view' => $user?->can('roles.index') ?? false,
-                    'catalogs.view' => $user?->can('catalogos.index') ?? false,
+                    'catalogs.view' => $user?->can('catalogs.index') ?? false,
                 ],
             ],
             'flash' => [

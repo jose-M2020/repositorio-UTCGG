@@ -7,36 +7,41 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('career_catalog_id')
-                ->nullable()
-                ->after('carrera')
-                ->constrained('catalogs')
-                ->restrictOnDelete();
-        });
+        if (! Schema::hasColumn('users', 'career_catalog_id')) {
+            Schema::table('users', function (Blueprint $table): void {
+                $column = $table->foreignId('career_catalog_id')->nullable();
 
-        Schema::table('repositorios', function (Blueprint $table) {
-            $table->foreignId('career_catalog_id')
-                ->nullable()
-                ->after('carrera')
-                ->constrained('catalogs')
-                ->restrictOnDelete();
-            $table->foreignId('project_type_catalog_id')
-                ->nullable()
-                ->after('tipo_proyecto')
-                ->constrained('catalogs')
-                ->restrictOnDelete();
-            $table->foreignId('academic_degree_catalog_id')
-                ->nullable()
-                ->after('nivel_proyecto')
-                ->constrained('catalogs')
-                ->restrictOnDelete();
-        });
+                if (Schema::hasColumn('users', 'carrera')) {
+                    $column->after('carrera');
+                }
+
+                $column->constrained('catalogs')->restrictOnDelete();
+            });
+        }
+
+        if (! Schema::hasColumn('repositorios', 'career_catalog_id')) {
+            Schema::table('repositorios', function (Blueprint $table): void {
+                $career = $table->foreignId('career_catalog_id')->nullable();
+                if (Schema::hasColumn('repositorios', 'carrera')) {
+                    $career->after('carrera');
+                }
+                $career->constrained('catalogs')->restrictOnDelete();
+
+                $projectType = $table->foreignId('project_type_catalog_id')->nullable();
+                if (Schema::hasColumn('repositorios', 'tipo_proyecto')) {
+                    $projectType->after('tipo_proyecto');
+                }
+                $projectType->constrained('catalogs')->restrictOnDelete();
+
+                $academicDegree = $table->foreignId('academic_degree_catalog_id')->nullable();
+                if (Schema::hasColumn('repositorios', 'nivel_proyecto')) {
+                    $academicDegree->after('nivel_proyecto');
+                }
+                $academicDegree->constrained('catalogs')->restrictOnDelete();
+            });
+        }
 
         $careerCatalogs = DB::table('catalogs')
             ->where('type', 'career')
@@ -48,62 +53,67 @@ return new class extends Migration
             ->where('type', 'academic_degree')
             ->pluck('id', 'code');
 
-        DB::table('users')
-            ->select(['id', 'carrera'])
-            ->whereNotNull('carrera')
-            ->orderBy('id')
-            ->chunkById(200, function ($users) use ($careerCatalogs): void {
-                foreach ($users as $user) {
-                    $catalogId = $careerCatalogs[$user->carrera] ?? null;
+        if (Schema::hasColumn('users', 'carrera')) {
+            DB::table('users')
+                ->select(['id', 'carrera'])
+                ->whereNotNull('carrera')
+                ->orderBy('id')
+                ->chunkById(200, function ($users) use ($careerCatalogs): void {
+                    foreach ($users as $user) {
+                        $catalogId = $careerCatalogs[$user->carrera] ?? null;
 
-                    if ($catalogId === null) {
-                        continue;
+                        if ($catalogId === null) {
+                            continue;
+                        }
+
+                        DB::table('users')
+                            ->where('id', $user->id)
+                            ->update(['career_catalog_id' => $catalogId]);
                     }
+                });
 
-                    DB::table('users')
-                        ->where('id', $user->id)
-                        ->update(['career_catalog_id' => $catalogId]);
-                }
+            Schema::table('users', function (Blueprint $table): void {
+                $table->dropColumn('carrera');
             });
+        }
 
-        DB::table('repositorios')
-            ->select(['id', 'carrera', 'tipo_proyecto', 'nivel_proyecto'])
-            ->orderBy('id')
-            ->chunkById(200, function ($repositorios) use ($careerCatalogs, $projectCatalogs, $academicCatalogs): void {
-                foreach ($repositorios as $repositorio) {
-                    DB::table('repositorios')
-                        ->where('id', $repositorio->id)
-                        ->update([
-                            'career_catalog_id' => $careerCatalogs[$repositorio->carrera] ?? null,
-                            'project_type_catalog_id' => $projectCatalogs[$repositorio->tipo_proyecto] ?? null,
-                            'academic_degree_catalog_id' => $academicCatalogs[$repositorio->nivel_proyecto] ?? null,
-                        ]);
-                }
+        if (Schema::hasColumn('repositorios', 'carrera')) {
+            DB::table('repositorios')
+                ->select(['id', 'carrera', 'tipo_proyecto', 'nivel_proyecto'])
+                ->orderBy('id')
+                ->chunkById(200, function ($repositorios) use ($careerCatalogs, $projectCatalogs, $academicCatalogs): void {
+                    foreach ($repositorios as $repositorio) {
+                        DB::table('repositorios')
+                            ->where('id', $repositorio->id)
+                            ->update([
+                                'career_catalog_id' => $careerCatalogs[$repositorio->carrera] ?? null,
+                                'project_type_catalog_id' => $projectCatalogs[$repositorio->tipo_proyecto] ?? null,
+                                'academic_degree_catalog_id' => $academicCatalogs[$repositorio->nivel_proyecto] ?? null,
+                            ]);
+                    }
+                });
+
+            Schema::table('repositorios', function (Blueprint $table): void {
+                $table->dropColumn(['carrera', 'tipo_proyecto', 'nivel_proyecto']);
             });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('carrera');
-        });
-
-        Schema::table('repositorios', function (Blueprint $table) {
-            $table->dropColumn(['carrera', 'tipo_proyecto', 'nivel_proyecto']);
-        });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('carrera')->nullable()->after('password');
-        });
+        if (! Schema::hasColumn('users', 'carrera')) {
+            Schema::table('users', function (Blueprint $table): void {
+                $table->string('carrera')->nullable()->after('password');
+            });
+        }
 
-        Schema::table('repositorios', function (Blueprint $table) {
-            $table->string('tipo_proyecto')->after('descripcion');
-            $table->string('nivel_proyecto')->after('tipo_proyecto');
-            $table->string('carrera')->after('publico');
-        });
+        if (! Schema::hasColumn('repositorios', 'carrera')) {
+            Schema::table('repositorios', function (Blueprint $table): void {
+                $table->string('tipo_proyecto')->after('descripcion');
+                $table->string('nivel_proyecto')->after('tipo_proyecto');
+                $table->string('carrera')->after('publico');
+            });
+        }
 
         $careersById = DB::table('catalogs')
             ->where('type', 'career')
@@ -143,11 +153,11 @@ return new class extends Migration
                 }
             });
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropConstrainedForeignId('career_catalog_id');
         });
 
-        Schema::table('repositorios', function (Blueprint $table) {
+        Schema::table('repositorios', function (Blueprint $table): void {
             $table->dropConstrainedForeignId('career_catalog_id');
             $table->dropConstrainedForeignId('project_type_catalog_id');
             $table->dropConstrainedForeignId('academic_degree_catalog_id');

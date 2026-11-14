@@ -171,9 +171,9 @@ class UserController extends Controller implements HasMiddleware
 
         $user->load(['roles:id,name', 'careerCatalog:id,code']);
 
-        $repositorios = $user->repositories()
-            ->orderByDesc('repositorios.created_at')
-            ->get(['repositorios.id', 'nombre_rep', 'slug', 'publico']);
+        $repositories = $user->repositories()
+            ->orderByDesc('repositories.created_at')
+            ->get(['repositories.id', 'title', 'slug', 'public']);
 
         return Inertia::render('panel/users/show', [
             'user' => [
@@ -187,8 +187,8 @@ class UserController extends Controller implements HasMiddleware
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
             ],
-            'repositoriosPublicos' => $repositorios->where('publico', true)->values(),
-            'repositoriosPrivados' => $repositorios->where('publico', false)->values(),
+            'publicRepositories' => $repositories->where('is_public', true)->values(),
+            'privateRepositories' => $repositories->where('is_public', false)->values(),
         ]);
     }
 

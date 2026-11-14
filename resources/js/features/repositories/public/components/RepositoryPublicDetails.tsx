@@ -2,7 +2,7 @@ import { formatUserName } from '@/shared/lib';
 import type { Repository } from '../../shared/types';
 
 type RepositoryPublicDetailsProps = {
-    repositorio: Repository;
+    repository: Repository;
 };
 
 export const RepositoryPublicDetails = ({
@@ -11,22 +11,22 @@ export const RepositoryPublicDetails = ({
     return (
         <div className="space-y-4">
             <div>
-                <h2 className="text-2xl font-semibold">{repositorio.nombre_rep}</h2>
-                <p className="mt-2 text-muted-foreground">{repositorio.descripcion}</p>
+                <h2 className="text-2xl font-semibold">{repositorio.title}</h2>
+                <p className="mt-2 text-muted-foreground">{repositorio.description}</p>
             </div>
 
             <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
                     <dt className="text-sm text-muted-foreground">Carrera</dt>
-                    <dd className="font-medium">{repositorio.carrera}</dd>
+                    <dd className="font-medium">{repositorio.career}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Tipo</dt>
-                    <dd className="font-medium">{repositorio.tipo_proyecto}</dd>
+                    <dd className="font-medium">{repositorio.project_type}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Nivel</dt>
-                    <dd className="font-medium">{repositorio.nivel_proyecto}</dd>
+                    <dd className="font-medium">{repositorio.academic_degree}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Empresa</dt>
@@ -34,19 +34,19 @@ export const RepositoryPublicDetails = ({
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Generación</dt>
-                    <dd className="font-medium">{repositorio.generacion}</dd>
+                    <dd className="font-medium">{repositorio.generation}</dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Visibilidad</dt>
                     <dd className="font-medium">
-                        {repositorio.publico ? 'Público' : 'Privado'}
+                        {repositorio.is_public ? 'Público' : 'Privado'}
                     </dd>
                 </div>
             </dl>
 
             <div>
                 <p className="text-sm text-muted-foreground">Palabras clave</p>
-                <p className="font-medium">{repositorio.palabras_clave}</p>
+                <p className="font-medium">{repositorio.keywords}</p>
             </div>
 
             {repositorio.users.length > 0 ? (

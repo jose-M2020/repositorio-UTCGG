@@ -8,7 +8,7 @@ class StoreRepositoryFilesRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('archivos.create') ?? false;
+        return $this->user()?->can('files.create') ?? false;
     }
 
     /**
@@ -17,10 +17,10 @@ class StoreRepositoryFilesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'archivos' => ['required', 'array', 'max:5'],
-            'archivos.*' => ['required', 'file', 'mimes:zip,rar,pdf,doc,docx', 'max:20480'],
-            'imagenes' => ['nullable', 'array', 'max:5'],
-            'imagenes.*' => ['required', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:5120'],
+            'files' => ['required', 'array', 'max:5'],
+            'files.*' => ['required', 'file', 'mimes:zip,rar,pdf,doc,docx', 'max:20480'],
+            'images' => ['nullable', 'array', 'max:5'],
+            'images.*' => ['required', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:5120'],
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Repositorio;
+use App\Models\Repository;
 use App\Support\Catalog;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -11,35 +11,35 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        $latest = Repositorio::query()
-            ->where('publico', true)
+        $latest = Repository::query()
+            ->where('is_public', true)
             ->latest()
             ->limit(8)
             ->with('careerCatalog:id,code')
-            ->get(['id', 'nombre_rep', 'slug', 'descripcion', 'career_catalog_id', 'created_at'])
-            ->map(fn (Repositorio $repo) => [
+            ->get(['id', 'title', 'slug', 'description', 'career_catalog_id', 'created_at'])
+            ->map(fn (Repository $repo) => [
                 'id' => $repo->id,
-                'nombre_rep' => $repo->nombre_rep,
+                'title' => $repo->title,
                 'slug' => $repo->slug,
-                'descripcion' => $repo->descripcion,
-                'carrera' => $repo->careerCatalog?->code ?? '—',
+                'description' => $repo->description,
+                'career' => $repo->careerCatalog?->code ?? '—',
                 'created_at' => $repo->created_at?->toDateTimeString(),
             ])
             ->values()
             ->all();
 
-        $featured = Repositorio::query()
-            ->where('publico', true)
+        $featured = Repository::query()
+            ->where('is_public', true)
             ->inRandomOrder()
             ->limit(8)
             ->with('careerCatalog:id,code')
-            ->get(['id', 'nombre_rep', 'slug', 'descripcion', 'career_catalog_id', 'created_at'])
-            ->map(fn (Repositorio $repo) => [
+            ->get(['id', 'title', 'slug', 'description', 'career_catalog_id', 'created_at'])
+            ->map(fn (Repository $repo) => [
                 'id' => $repo->id,
-                'nombre_rep' => $repo->nombre_rep,
+                'title' => $repo->title,
                 'slug' => $repo->slug,
-                'descripcion' => $repo->descripcion,
-                'carrera' => $repo->careerCatalog?->code ?? '—',
+                'description' => $repo->description,
+                'career' => $repo->careerCatalog?->code ?? '—',
                 'created_at' => $repo->created_at?->toDateTimeString(),
             ])
             ->values()

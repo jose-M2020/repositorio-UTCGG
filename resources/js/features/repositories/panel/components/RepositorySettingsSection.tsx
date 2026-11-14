@@ -4,11 +4,11 @@ import {
     destroy as destroyRepo,
     edit,
     update,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import {
     destroy as destroyMember,
     store as storeMember,
-} from '@/actions/App/Http/Controllers/RepositorioUsuarioController';
+} from '@/actions/App/Http/Controllers/RepositoryMemberController';
 import {
     UserSearchPicker,
     type SearchableUser,
@@ -19,14 +19,14 @@ import { formatUserName } from '@/shared/lib';
 import type { Repository } from '../../shared/types';
 
 type RepositorySettingsSectionProps = {
-    repositorio: Repository;
+    repository: Repository;
 };
 
 export const RepositorySettingsSection = ({
     repositorio,
 }: RepositorySettingsSectionProps) => {
     const [selected, setSelected] = useState<SearchableUser[]>([]);
-    const visibility = repositorio.publico ? 'publico' : 'privado';
+    const visibility = repositorio.is_public ? 'public' : 'private';
 
     return (
         <div className="space-y-6">
@@ -53,71 +53,71 @@ export const RepositorySettingsSection = ({
                         <>
                             <input
                                 type="hidden"
-                                name="nombre_rep"
-                                value={repositorio.nombre_rep}
+                                name="title"
+                                value={repositorio.title}
                             />
                             <input
                                 type="hidden"
-                                name="descripcion"
-                                value={repositorio.descripcion}
+                                name="description"
+                                value={repositorio.description}
                             />
                             <input
                                 type="hidden"
-                                name="tipo_proyecto"
-                                value={repositorio.tipo_proyecto}
+                                name="project_type"
+                                value={repositorio.project_type}
                             />
                             <input
                                 type="hidden"
-                                name="nivel_proyecto"
-                                value={repositorio.nivel_proyecto}
+                                name="academic_degree"
+                                value={repositorio.academic_degree}
                             />
                             <input
                                 type="hidden"
-                                name="palabras_clave"
-                                value={repositorio.palabras_clave}
+                                name="keywords"
+                                value={repositorio.keywords}
                             />
                             <input
                                 type="hidden"
-                                name="carrera"
-                                value={repositorio.carrera}
+                                name="career"
+                                value={repositorio.career}
                             />
                             <input
                                 type="hidden"
-                                name="empresa"
+                                name="company"
                                 value={repositorio.empresa}
                             />
                             <input
                                 type="hidden"
-                                name="asesor_externo"
-                                value={repositorio.asesor_externo ?? ''}
+                                name="external_advisor"
+                                value={repositorio.external_advisor ?? ''}
                             />
                             <input
                                 type="hidden"
-                                name="generacion"
-                                value={repositorio.generacion}
+                                name="generation"
+                                value={repositorio.generation}
                             />
 
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="visibilidad"
+                                    htmlFor="visibility"
                                     className="text-sm font-medium"
                                 >
                                     Estado actual
                                 </label>
                                 <select
-                                    id="visibilidad"
-                                    name="visibilidad"
+                                    id="visibility"
+                                    name="visibility"
                                     required
                                     defaultValue={visibility}
                                     className="h-8 w-full max-w-xs rounded-lg border border-input bg-card px-2.5 text-sm"
                                     aria-label="Cambiar visibilidad del repositorio"
                                 >
-                                    <option value="privado">Privado</option>
-                                    <option value="publico">Público</option>
+                                    <option value="private">Privado</option>
+                                    <option value="public">Público</option>
                                 </select>
-                                {errors.visibilidad ? (
+                                {errors.visibility ? (
                                     <p className="text-sm text-destructive">
-                                        {errors.visibilidad}
+                                        {errors.visibility}
                                     </p>
                                 ) : null}
                             </div>
@@ -205,7 +205,7 @@ export const RepositorySettingsSection = ({
                 </div>
                 <ConfirmDeleteButton
                     form={destroyRepo.form(repositorio.slug)}
-                    itemLabel={repositorio.nombre_rep}
+                    itemLabel={repositorio.title}
                     triggerLabel="Eliminar"
                 />
             </section>

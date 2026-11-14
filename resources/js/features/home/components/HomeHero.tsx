@@ -1,5 +1,5 @@
 import { Form } from '@inertiajs/react';
-import { index } from '@/actions/App/Http/Controllers/RepositorioController';
+import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button, Input } from '@/shared/components/ui';
 
 export const HomeHero = () => {

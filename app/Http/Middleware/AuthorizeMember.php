@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Repositorio;
+use App\Models\Repository;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +15,14 @@ class AuthorizeMember
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        /** @var Repositorio|null $repositorio */
-        $repositorio = $request->route('repositorio');
+        /** @var Repository|null $repository */
+        $repository = $request->route('repository');
 
-        if (! $user || ! $repositorio instanceof Repositorio) {
+        if (! $user || ! $repository instanceof Repository) {
             abort(403);
         }
 
-        if ($user->hasRole('admin') || $repositorio->users()->whereKey($user->id)->exists()) {
+        if ($user->hasRole('admin') || $repository->users()->whereKey($user->id)->exists()) {
             return $next($request);
         }
 

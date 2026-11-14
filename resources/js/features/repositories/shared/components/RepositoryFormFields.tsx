@@ -4,7 +4,7 @@ import type { Repository, RepositoryFormErrors } from '../types';
 
 type RepositoryFormFieldsProps = {
     errors: RepositoryFormErrors;
-    defaults?: Partial<Repository> & { visibilidad?: string };
+    defaults?: Partial<Repository> & { visibility?: string };
     catalog: RepositoryCatalog;
 };
 
@@ -20,49 +20,49 @@ export const RepositoryFormFields = ({
     return (
         <div className="space-y-4">
             <div className="space-y-1">
-                <label htmlFor="nombre_rep" className="text-sm font-medium">
+                <label htmlFor="title" className="text-sm font-medium">
                     Nombre del repositorio
                 </label>
                 <Input
-                    id="nombre_rep"
-                    name="nombre_rep"
+                    id="title"
+                    name="title"
                     required
-                    defaultValue={defaults?.nombre_rep}
-                    aria-invalid={Boolean(errors.nombre_rep)}
+                    defaultValue={defaults?.title}
+                    aria-invalid={Boolean(errors.title)}
                 />
-                {errors.nombre_rep ? (
-                    <p className="text-sm text-destructive">{errors.nombre_rep}</p>
+                {errors.title ? (
+                    <p className="text-sm text-destructive">{errors.title}</p>
                 ) : null}
             </div>
 
             <div className="space-y-1">
-                <label htmlFor="descripcion" className="text-sm font-medium">
+                <label htmlFor="description" className="text-sm font-medium">
                     Descripción
                 </label>
                 <textarea
-                    id="descripcion"
-                    name="descripcion"
+                    id="description"
+                    name="description"
                     required
                     rows={4}
-                    defaultValue={defaults?.descripcion}
+                    defaultValue={defaults?.description}
                     className="w-full rounded-lg border border-input bg-card px-2.5 py-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-                    aria-invalid={Boolean(errors.descripcion)}
+                    aria-invalid={Boolean(errors.description)}
                 />
-                {errors.descripcion ? (
-                    <p className="text-sm text-destructive">{errors.descripcion}</p>
+                {errors.description ? (
+                    <p className="text-sm text-destructive">{errors.description}</p>
                 ) : null}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                    <label htmlFor="tipo_proyecto" className="text-sm font-medium">
+                    <label htmlFor="project_type" className="text-sm font-medium">
                         Tipo de proyecto
                     </label>
                     <select
-                        id="tipo_proyecto"
-                        name="tipo_proyecto"
+                        id="project_type"
+                        name="project_type"
                         required
-                        defaultValue={defaults?.tipo_proyecto ?? ''}
+                        defaultValue={defaults?.project_type ?? ''}
                         className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                     >
                         <option value="" disabled>
@@ -74,25 +74,25 @@ export const RepositoryFormFields = ({
                             </option>
                         ))}
                     </select>
-                    {errors.tipo_proyecto ? (
+                    {errors.project_type ? (
                         <p className="text-sm text-destructive">
-                            {errors.tipo_proyecto}
+                            {errors.project_type}
                         </p>
                     ) : null}
                 </div>
 
                 <div className="space-y-1">
                     <label
-                        htmlFor="nivel_proyecto"
+                        htmlFor="academic_degree"
                         className="text-sm font-medium"
                     >
                         Nivel
                     </label>
                     <select
-                        id="nivel_proyecto"
-                        name="nivel_proyecto"
+                        id="academic_degree"
+                        name="academic_degree"
                         required
-                        defaultValue={defaults?.nivel_proyecto ?? ''}
+                        defaultValue={defaults?.academic_degree ?? ''}
                         className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                     >
                         <option value="" disabled>
@@ -109,14 +109,14 @@ export const RepositoryFormFields = ({
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                    <label htmlFor="carrera" className="text-sm font-medium">
+                    <label htmlFor="career" className="text-sm font-medium">
                         Carrera
                     </label>
                     <select
-                        id="carrera"
-                        name="carrera"
+                        id="career"
+                        name="career"
                         required
-                        defaultValue={defaults?.carrera ?? ''}
+                        defaultValue={defaults?.career ?? ''}
                         className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                     >
                         <option value="" disabled>
@@ -130,70 +130,70 @@ export const RepositoryFormFields = ({
                     </select>
                 </div>
                 <div className="space-y-1">
-                    <label htmlFor="generacion" className="text-sm font-medium">
+                    <label htmlFor="generation" className="text-sm font-medium">
                         Generación
                     </label>
                     <Input
-                        id="generacion"
-                        name="generacion"
+                        id="generation"
+                        name="generation"
                         required
-                        defaultValue={defaults?.generacion}
+                        defaultValue={defaults?.generation}
                     />
                 </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                    <label htmlFor="empresa" className="text-sm font-medium">
+                    <label htmlFor="company" className="text-sm font-medium">
                         Empresa
                     </label>
                     <Input
-                        id="empresa"
-                        name="empresa"
+                        id="company"
+                        name="company"
                         required
-                        defaultValue={defaults?.empresa}
+                        defaultValue={defaults?.company}
                     />
                 </div>
                 <div className="space-y-1">
                     <label
-                        htmlFor="asesor_externo"
+                        htmlFor="external_advisor"
                         className="text-sm font-medium"
                     >
                         Asesor externo
                     </label>
                     <Input
-                        id="asesor_externo"
-                        name="asesor_externo"
-                        defaultValue={defaults?.asesor_externo ?? ''}
+                        id="external_advisor"
+                        name="external_advisor"
+                        defaultValue={defaults?.external_advisor ?? ''}
                     />
                 </div>
             </div>
 
             <div className="space-y-1">
-                <label htmlFor="palabras_clave" className="text-sm font-medium">
+                <label htmlFor="keywords" className="text-sm font-medium">
                     Palabras clave
                 </label>
                 <Input
-                    id="palabras_clave"
-                    name="palabras_clave"
+                    id="keywords"
+                    name="keywords"
                     required
-                    defaultValue={defaults?.palabras_clave}
+                    defaultValue={defaults?.keywords}
                 />
             </div>
 
             <div className="space-y-1">
-                <label htmlFor="visibilidad" className="text-sm font-medium">
+                <label htmlFor="visibility" className="text-sm font-medium">
                     Visibilidad
                 </label>
                 <select
-                    id="visibilidad"
-                    name="visibilidad"
+                    id="visibility"
+                    name="visibility"
                     required
-                    defaultValue={defaults?.visibilidad ?? 'privado'}
+                    defaultValue={defaults?.visibility ?? 'private'}
                     className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
                 >
-                    <option value="privado">Privado</option>
-                    <option value="publico">Público</option>
+                    <option value="private">Privado</option>
+                    <option value="public">Público</option>
                 </select>
             </div>
         </div>

@@ -1,11 +1,11 @@
 import { Link } from '@inertiajs/react';
-import { show } from '@/actions/App/Http/Controllers/RepositorioController';
+import { show } from '@/actions/App/Http/Controllers/RepositoryController';
 import { formatUserName } from '@/shared/lib';
 import { highlightMatch } from '@/shared/lib/highlight';
 import type { PaginatedRepositories, RepositoryFilters } from '../types';
 
 type RepositoriesListProps = {
-    repositorios: PaginatedRepositories;
+    repositories: PaginatedRepositories;
     filters?: Pick<RepositoryFilters, 'query' | 'search_field'>;
     hrefForItem?: (slug: string) => string;
 };
@@ -59,18 +59,18 @@ export const RepositoriesList = ({
                                     <h3 className="text-lg font-semibold text-foreground hover:text-primary">
                                         {searchField === 'title'
                                             ? highlightMatch(
-                                                  repo.nombre_rep,
+                                                  repo.title,
                                                   query,
                                               )
-                                            : repo.nombre_rep}
+                                            : repo.title}
                                     </h3>
                                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                                         {searchField === 'description'
                                             ? highlightMatch(
-                                                  repo.descripcion,
+                                                  repo.description,
                                                   query,
                                               )
-                                            : repo.descripcion}
+                                            : repo.description}
                                     </p>
                                     {searchField === 'author' &&
                                     authorNames ? (
@@ -82,9 +82,9 @@ export const RepositoriesList = ({
                                         </p>
                                     ) : null}
                                     <p className="mt-2 text-xs text-muted-foreground">
-                                        {repo.carrera} · {repo.tipo_proyecto} ·{' '}
-                                        {repo.nivel_proyecto}
-                                        {repo.publico
+                                        {repo.career} · {repo.project_type} ·{' '}
+                                        {repo.academic_degree}
+                                        {repo.is_public
                                             ? ' · Público'
                                             : ' · Privado'}
                                     </p>

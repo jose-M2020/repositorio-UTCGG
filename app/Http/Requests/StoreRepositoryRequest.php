@@ -6,11 +6,11 @@ use App\Models\Catalog;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRepositorioRequest extends FormRequest
+class StoreRepositoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('repositorios.create') ?? false;
+        return $this->user()?->can('repositories.create') ?? false;
     }
 
     /**
@@ -18,12 +18,12 @@ class StoreRepositorioRequest extends FormRequest
      */
     public function rules(): array
     {
-        $isEstadia = $this->string('tipo_proyecto')->toString() === 'Estadía';
+        $isEstadia = $this->string('project_type')->toString() === 'internship';
 
         return [
-            'nombre_rep' => ['required', 'string', 'max:255'],
-            'descripcion' => ['required', 'string'],
-            'tipo_proyecto' => [
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'project_type' => [
                 'required',
                 'string',
                 'max:80',
@@ -31,7 +31,7 @@ class StoreRepositorioRequest extends FormRequest
                     ->where('type', Catalog::TYPE_PROJECT)
                     ->where('is_active', true)),
             ],
-            'nivel_proyecto' => [
+            'academic_degree' => [
                 'required',
                 'string',
                 'max:80',
@@ -39,11 +39,11 @@ class StoreRepositorioRequest extends FormRequest
                     ->where('type', Catalog::TYPE_ACADEMIC_DEGREE)
                     ->where('is_active', true)),
             ],
-            'palabras_clave' => ['required', 'string', 'max:255'],
-            'visibilidad' => ['required', Rule::in(['publico', 'privado'])],
-            'usuario' => ['required', 'array', 'min:1', 'max:8'],
-            'usuario.*' => ['required', 'string', 'email', 'distinct', 'exists:users,email'],
-            'carrera' => [
+            'keywords' => ['required', 'string', 'max:255'],
+            'visibility' => ['required', Rule::in(['public', 'private'])],
+            'member_emails' => ['required', 'array', 'min:1', 'max:8'],
+            'member_emails.*' => ['required', 'string', 'email', 'distinct', 'exists:users,email'],
+            'career' => [
                 'required',
                 'string',
                 'max:80',
@@ -51,9 +51,9 @@ class StoreRepositorioRequest extends FormRequest
                     ->where('type', Catalog::TYPE_CAREER)
                     ->where('is_active', true)),
             ],
-            'empresa' => ['required', 'string', 'max:255'],
-            'asesor_externo' => [$isEstadia ? 'required' : 'nullable', 'string', 'max:255'],
-            'generacion' => ['required', 'string', 'max:255'],
+            'company' => ['required', 'string', 'max:255'],
+            'external_advisor' => [$isEstadia ? 'required' : 'nullable', 'string', 'max:255'],
+            'generation' => ['required', 'string', 'max:255'],
         ];
     }
 }

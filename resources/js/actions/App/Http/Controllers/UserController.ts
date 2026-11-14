@@ -695,65 +695,65 @@ sendPasswordLink.post = (args: { user: number | { id: number } } | [user: number
 /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-export const search = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const search = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: search.url(args, options),
     method: 'get',
 })
 
 search.definition = {
     methods: ["get","head"],
-    url: '/api/users/{repositorio?}',
+    url: '/api/users/{repository?}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-search.url = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions) => {
+search.url = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { repositorio: args }
+        args = { repository: args }
     }
 
     
     if (Array.isArray(args)) {
         args = {
-                    repositorio: args[0],
+                    repository: args[0],
                 }
     }
 
     args = applyUrlDefaults(args)
 
     validateParameters(args, [
-            "repositorio",
+            "repository",
         ])
 
     const parsedArgs = {
-                        repositorio: args?.repositorio,
+                        repository: args?.repository,
                 }
 
     return search.definition.url
-            .replace('{repositorio?}', parsedArgs.repositorio?.toString() ?? '')
+            .replace('{repository?}', parsedArgs.repository?.toString() ?? '')
             .replace(/\/+$/, '') + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-search.get = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+search.get = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: search.url(args, options),
     method: 'get',
 })
 /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-search.head = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+search.head = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: search.url(args, options),
     method: 'head',
 })
@@ -761,9 +761,9 @@ search.head = (args?: { repositorio?: string | number } | [repositorio: string |
     /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-    const searchForm = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const searchForm = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: search.url(args, options),
         method: 'get',
     })
@@ -771,18 +771,18 @@ search.head = (args?: { repositorio?: string | number } | [repositorio: string |
             /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-        searchForm.get = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        searchForm.get = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: search.url(args, options),
             method: 'get',
         })
             /**
 * @see \App\Http\Controllers\UserController::search
  * @see app/Http/Controllers/UserController.php:195
- * @route '/api/users/{repositorio?}'
+ * @route '/api/users/{repository?}'
  */
-        searchForm.head = (args?: { repositorio?: string | number } | [repositorio: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        searchForm.head = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: search.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',

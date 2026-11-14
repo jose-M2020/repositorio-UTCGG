@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\File;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +17,7 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
-            'repositorio_id' => Repositorio::factory(),
+            'repository_id' => Repository::factory(),
             'original_name' => fake()->word().'.pdf',
             'file_type' => 'pdf',
             'file_path' => 'files/test/'.fake()->uuid().'.pdf',

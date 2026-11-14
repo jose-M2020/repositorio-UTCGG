@@ -8,6 +8,6 @@ export type RepositoryFile = {
 
 export type RepositoryUploadTarget = {
     id: number;
-    nombre_rep: string;
+    title: string;
     slug: string;
 };

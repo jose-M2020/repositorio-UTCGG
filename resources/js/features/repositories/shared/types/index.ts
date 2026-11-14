@@ -16,35 +16,35 @@ export type RepositoryFileItem = {
 
 export type Repository = {
     id: number;
-    nombre_rep: string;
+    title: string;
     slug: string;
-    descripcion: string;
-    tipo_proyecto: string;
-    nivel_proyecto: string;
-    palabras_clave: string;
-    publico: boolean;
-    carrera: string;
-    asesor_externo: string | null;
-    empresa: string;
-    generacion: string;
+    description: string;
+    project_type: string;
+    academic_degree: string;
+    keywords: string;
+    is_public: boolean;
+    career: string;
+    external_advisor: string | null;
+    company: string;
+    generation: string;
     created_by: string;
     users: RepositoryMember[];
     files: RepositoryFileItem[];
-    imagenes: string[];
-    imagen_urls?: string[];
+    images: string[];
+    image_urls?: string[];
     cover_url?: string;
-    visibilidad?: 'publico' | 'privado';
+    visibility?: "public" | "private";
 };
 
 export type RepositoryListItem = {
     id: number;
-    nombre_rep: string;
+    title: string;
     slug: string;
-    descripcion: string;
-    carrera: string;
-    tipo_proyecto: string;
-    nivel_proyecto: string;
-    publico: boolean;
+    description: string;
+    career: string;
+    project_type: string;
+    academic_degree: string;
+    is_public: boolean;
     created_at?: string;
     cover_url?: string;
     users?: RepositoryMember[];
@@ -53,9 +53,9 @@ export type RepositoryListItem = {
 export type RepositoryFilters = {
     query: string;
     search_field: string;
-    carrera: string[];
-    tipo: string[];
-    nivel: string[];
+    career: string[];
+    project_type: string[];
+    academic_degree: string[];
     year: string[];
 };
 

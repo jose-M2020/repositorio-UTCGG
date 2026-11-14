@@ -5,14 +5,14 @@ import {
 } from '@/features/repositories';
 
 type PageProps = {
-    repositorio: Repository;
+    repository: Repository;
 };
 
 const RepositoriesManagePage = ({ repositorio }: PageProps) => {
     return (
         <>
-            <Head title={`Gestionar · ${repositorio.nombre_rep}`} />
-            <RepositoryManageContainer repositorio={repositorio} />
+            <Head title={`Gestionar · ${repositorio.title}`} />
+            <RepositoryManageContainer repositorio={repository} />
         </>
     );
 };

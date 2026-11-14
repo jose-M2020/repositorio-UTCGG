@@ -8,7 +8,7 @@ class UpdateRepositoryFileRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('archivos.edit') ?? false;
+        return $this->user()?->can('files.edit') ?? false;
     }
 
     /**

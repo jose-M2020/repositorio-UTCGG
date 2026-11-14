@@ -56,7 +56,7 @@ class SetPasswordTest extends TestCase
         $this->post(route('login'), [
             'email' => 'ana@example.com',
             'password' => 'Password123!',
-        ])->assertRedirect(route('repositorios.user'));
+        ])->assertRedirect(route('repositories.mine'));
     }
 
     public function test_active_user_can_reset_password_with_valid_token(): void
@@ -80,7 +80,7 @@ class SetPasswordTest extends TestCase
         $this->post(route('login'), [
             'email' => 'jose@example.com',
             'password' => 'NewPassword123!',
-        ])->assertRedirect(route('repositorios.user'));
+        ])->assertRedirect(route('repositories.mine'));
     }
 
     public function test_invalid_token_is_rejected(): void

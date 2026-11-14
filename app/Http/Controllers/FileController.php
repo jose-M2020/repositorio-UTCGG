@@ -6,7 +6,7 @@ use App\Http\Middleware\AuthorizeMember;
 use App\Http\Requests\StoreRepositoryFilesRequest;
 use App\Http\Requests\UpdateRepositoryFileRequest;
 use App\Models\File;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http\UploadedFile;
@@ -24,43 +24,43 @@ class FileController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['download']),
-            new Middleware('can:archivos.create', only: ['create', 'store']),
-            new Middleware('can:archivos.edit', only: ['update']),
-            new Middleware('can:archivos.destroy', only: ['destroy', 'destroyImage']),
+            new Middleware('can:files.create', only: ['create', 'store']),
+            new Middleware('can:files.edit', only: ['update']),
+            new Middleware('can:files.destroy', only: ['destroy', 'destroyImage']),
             new Middleware(AuthorizeMember::class, only: ['create', 'store', 'update', 'destroy', 'destroyImage']),
         ];
     }
 
-    public function create(Repositorio $repositorio): Response
+    public function create(Repository $repository): Response
     {
         return Inertia::render('panel/files/create', [
-            'repositorio' => [
-                'id' => $repositorio->id,
-                'nombre_rep' => $repositorio->nombre_rep,
-                'slug' => $repositorio->slug,
+            'repository' => [
+                'id' => $repository->id,
+                'title' => $repository->title,
+                'slug' => $repository->slug,
             ],
         ]);
     }
 
-    public function store(StoreRepositoryFilesRequest $request, Repositorio $repositorio): RedirectResponse
+    public function store(StoreRepositoryFilesRequest $request, Repository $repository): RedirectResponse
     {
         try {
-            if ($request->hasFile('imagenes')) {
-                $paths = $this->storeUploads($request->file('imagenes'), $repositorio, 'imagenes');
-                $existing = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
-                $repositorio->update([
-                    'imagenes' => json_encode([...$existing, ...$paths]),
+            if ($request->hasFile('images')) {
+                $paths = $this->storeUploads($request->file('images'), $repository, 'images');
+                $existing = json_decode($repository->images ?? '[]', true) ?: [];
+                $repository->update([
+                    'images' => json_encode([...$existing, ...$paths]),
                 ]);
             }
 
-            if ($request->hasFile('archivos')) {
-                foreach ($request->file('archivos') as $upload) {
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $upload) {
                     $path = $upload->store(
-                        $this->basePath($repositorio).'/archivos',
+                        $this->basePath($repository).'/archivos',
                         's3',
                     );
 
-                    $repositorio->files()->create([
+                    $repository->files()->create([
                         'original_name' => $upload->getClientOriginalName(),
                         'file_type' => $upload->getClientOriginalExtension(),
                         'file_path' => $path,
@@ -70,34 +70,34 @@ class FileController extends Controller implements HasMiddleware
             }
         } catch (Throwable) {
             return redirect()
-                ->route('repositorios.user.show', $repositorio)
+                ->route('repositories.account.show', $repository)
                 ->with('status', 'Ningún archivo ha sido guardado.');
         }
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'Los archivos han sido guardados.');
     }
 
     public function update(
         UpdateRepositoryFileRequest $request,
-        Repositorio $repositorio,
+        Repository $repository,
         File $file,
     ): RedirectResponse {
-        abort_unless($file->repositorio_id === $repositorio->id, 404);
+        abort_unless($file->repository_id === $repository->id, 404);
 
         $file->update([
             'is_public' => $request->boolean('is_public'),
         ]);
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'Archivo actualizado exitosamente.');
     }
 
-    public function destroy(Repositorio $repositorio, File $file): RedirectResponse
+    public function destroy(Repository $repository, File $file): RedirectResponse
     {
-        abort_unless($file->repositorio_id === $repositorio->id, 404);
+        abort_unless($file->repository_id === $repository->id, 404);
 
         if (Storage::disk('s3')->exists($file->file_path)) {
             Storage::disk('s3')->delete($file->file_path);
@@ -106,13 +106,13 @@ class FileController extends Controller implements HasMiddleware
         $file->delete();
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'El archivo se ha eliminado exitosamente.');
     }
 
-    public function destroyImage(Repositorio $repositorio, int $index): RedirectResponse
+    public function destroyImage(Repository $repository, int $index): RedirectResponse
     {
-        $images = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
+        $images = json_decode($repository->images ?? '[]', true) ?: [];
 
         if (! array_key_exists($index, $images)) {
             abort(404);
@@ -125,23 +125,23 @@ class FileController extends Controller implements HasMiddleware
         }
 
         unset($images[$index]);
-        $repositorio->update([
-            'imagenes' => json_encode(array_values($images)),
+        $repository->update([
+            'images' => json_encode(array_values($images)),
         ]);
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'La imagen se ha eliminado exitosamente.');
     }
 
     public function download(File $file): StreamedResponse|HttpResponse
     {
         $user = auth()->user();
-        $repositorio = $file->repositorio()->firstOrFail();
+        $repository = $file->repository()->firstOrFail();
 
         $canAccess = $file->is_public
             || $user?->hasRole('admin')
-            || ($user && $repositorio->users()->whereKey($user->id)->exists());
+            || ($user && $repository->users()->whereKey($user->id)->exists());
 
         abort_unless($canAccess, 403);
 
@@ -152,13 +152,13 @@ class FileController extends Controller implements HasMiddleware
      * @param  array<int, UploadedFile>  $uploads
      * @return list<string>
      */
-    private function storeUploads(array $uploads, Repositorio $repositorio, string $folder): array
+    private function storeUploads(array $uploads, Repository $repository, string $folder): array
     {
         $paths = [];
 
         foreach ($uploads as $upload) {
             $paths[] = $upload->store(
-                $this->basePath($repositorio).'/'.$folder,
+                $this->basePath($repository).'/'.$folder,
                 's3',
             );
         }
@@ -166,12 +166,12 @@ class FileController extends Controller implements HasMiddleware
         return $paths;
     }
 
-    private function basePath(Repositorio $repositorio): string
+    private function basePath(Repository $repository): string
     {
         $userCareerCode = auth()->user()?->careerCatalog()->value('code');
-        $repoCareerCode = $repositorio->careerCatalog()->value('code');
+        $repoCareerCode = $repository->careerCatalog()->value('code');
         $carrera = $userCareerCode ?: $repoCareerCode ?: 'general';
 
-        return 'files/'.$carrera.'/'.date('Y').'/repositorio-'.$repositorio->id;
+        return 'files/'.$carrera.'/'.date('Y').'/repositorio-'.$repository->id;
     }
 }

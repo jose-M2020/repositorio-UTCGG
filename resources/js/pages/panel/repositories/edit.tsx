@@ -6,7 +6,7 @@ import {
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
-    repositorio: Repository;
+    repository: Repository;
     catalog: RepositoryCatalog;
 };
 
@@ -15,7 +15,7 @@ const RepositoriesEditPage = ({ repositorio, catalog }: PageProps) => {
         <>
             <Head title="Editar repositorio" />
             <RepositoryEditContainer
-                repositorio={repositorio}
+                repositorio={repository}
                 catalog={catalog}
             />
         </>

@@ -5,14 +5,14 @@ import {
 } from '@/features/files';
 
 type PageProps = {
-    repositorio: RepositoryUploadTarget;
+    repository: RepositoryUploadTarget;
 };
 
 const FilesCreatePage = ({ repositorio }: PageProps) => {
     return (
         <>
             <Head title="Subir archivos" />
-            <FileUploadContainer repositorio={repositorio} />
+            <FileUploadContainer repositorio={repository} />
         </>
     );
 };

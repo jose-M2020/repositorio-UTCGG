@@ -10,7 +10,7 @@ import {
     create as createRepository,
     index as repositories,
     mine,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import { index as catalogs } from '@/actions/App/Http/Controllers/CatalogController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';

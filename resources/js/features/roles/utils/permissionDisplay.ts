@@ -9,9 +9,9 @@ export type PartitionedPermissions = {
 const MODULE_LABELS: Record<string, string> = {
   users: "Usuarios",
   roles: "Roles",
-  catalogos: "Catalogos",
-  repositorios: "Repositorios",
-  archivos: "Archivos",
+  catalogs: "Catálogos",
+  repositories: "Repositorios",
+  files: "Archivos",
 };
 
 const ACTION_LABELS: Record<string, string> = {

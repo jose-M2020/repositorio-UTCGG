@@ -7,7 +7,7 @@ import {
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
-    repositorios: PaginatedRepositories;
+    repositories: PaginatedRepositories;
     filters: RepositoryFilters;
     catalog: RepositoryCatalog;
 };

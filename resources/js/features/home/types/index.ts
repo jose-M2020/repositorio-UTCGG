@@ -6,7 +6,7 @@ export type HomeCareer = {
 
 export type HomeRepository = {
     id: number;
-    nombre_rep: string;
+    title: string;
     slug: string;
     descripcion: string;
     carrera: string;

@@ -1,10 +1,10 @@
 import { Link } from '@inertiajs/react';
-import { show } from '@/actions/App/Http/Controllers/RepositorioController';
+import { show } from '@/actions/App/Http/Controllers/RepositoryController';
 import type { Repository, RepositoryListItem } from '../../shared/types';
 import { RepositoryPublicDetails } from './RepositoryPublicDetails';
 
 type RepositoryPublicViewProps = {
-    repositorio: Repository;
+    repository: Repository;
     related?: RepositoryListItem[];
 };
 
@@ -15,7 +15,7 @@ export const RepositoryPublicView = ({
     return (
         <div className="space-y-8">
             <section className="rounded-xl border border-border bg-card p-6">
-                <RepositoryPublicDetails repositorio={repositorio} />
+                <RepositoryPublicDetails repositorio={repository} />
             </section>
 
             {related.length > 0 ? (
@@ -28,7 +28,7 @@ export const RepositoryPublicView = ({
                                     href={show.url(item.slug)}
                                     className="block rounded-lg border border-border p-3 hover:bg-muted"
                                 >
-                                    {item.nombre_rep}
+                                    {item.title}
                                 </Link>
                             </li>
                         ))}

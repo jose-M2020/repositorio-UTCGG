@@ -18,10 +18,10 @@ class CatalogController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:catalogos.index', only: ['index']),
-            new Middleware('can:catalogos.create', only: ['store']),
-            new Middleware('can:catalogos.edit', only: ['update', 'toggleActive']),
-            new Middleware('can:catalogos.destroy', only: ['destroy']),
+            new Middleware('can:catalogs.index', only: ['index']),
+            new Middleware('can:catalogs.create', only: ['store']),
+            new Middleware('can:catalogs.edit', only: ['update', 'toggleActive']),
+            new Middleware('can:catalogs.destroy', only: ['destroy']),
         ];
     }
 
@@ -55,7 +55,7 @@ class CatalogController extends Controller implements HasMiddleware
         ]);
 
         return redirect()
-            ->route('catalogos.index')
+            ->route('catalogs.index')
             ->with('status', 'Catalogo creado exitosamente.');
     }
 
@@ -64,7 +64,7 @@ class CatalogController extends Controller implements HasMiddleware
         $catalog->update($this->validatedPayload($request));
 
         return redirect()
-            ->route('catalogos.index')
+            ->route('catalogs.index')
             ->with('status', 'Catalogo actualizado exitosamente.');
     }
 
@@ -79,7 +79,7 @@ class CatalogController extends Controller implements HasMiddleware
             : 'Catalogo desactivado exitosamente.';
 
         return redirect()
-            ->route('catalogos.index')
+            ->route('catalogs.index')
             ->with('status', $message);
     }
 
@@ -88,7 +88,7 @@ class CatalogController extends Controller implements HasMiddleware
         $catalog->delete();
 
         return redirect()
-            ->route('catalogos.index')
+            ->route('catalogs.index')
             ->with('status', 'Catalogo eliminado exitosamente.');
     }
 

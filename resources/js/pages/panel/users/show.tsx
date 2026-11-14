@@ -7,22 +7,22 @@ import {
 
 type UsersShowPageProps = {
     user: UserDetails;
-    repositoriosPublicos: UserRepositorySummary[];
-    repositoriosPrivados: UserRepositorySummary[];
+    publicRepositories: UserRepositorySummary[];
+    privateRepositories: UserRepositorySummary[];
 };
 
 const UsersShowPage = ({
     user,
-    repositoriosPublicos,
-    repositoriosPrivados,
+    publicRepositories,
+    privateRepositories,
 }: UsersShowPageProps) => {
     return (
         <>
             <Head title="Detalle de usuario" />
             <UserShowContainer
                 user={user}
-                repositoriosPublicos={repositoriosPublicos}
-                repositoriosPrivados={repositoriosPrivados}
+                publicRepositories={publicRepositories}
+                privateRepositories={privateRepositories}
             />
         </>
     );

@@ -66,7 +66,7 @@ class User extends Authenticatable
 
     public function repositories(): BelongsToMany
     {
-        return $this->belongsToMany(Repositorio::class)->withTimestamps();
+        return $this->belongsToMany(Repository::class, 'repository_user')->withTimestamps();
     }
 
     public function careerCatalog(): BelongsTo

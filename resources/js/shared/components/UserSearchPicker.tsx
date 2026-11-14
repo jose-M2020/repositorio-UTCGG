@@ -190,7 +190,7 @@ export const UserSearchPicker = ({
                             </Button>
                             <input
                                 type="hidden"
-                                name={mode === 'email' ? 'usuario[]' : 'user_ids[]'}
+                                name={mode === 'email' ? 'member_emails[]' : 'user_ids[]'}
                                 value={mode === 'email' ? user.email : user.id}
                             />
                         </li>

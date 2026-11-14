@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Home;
 
-use App\Models\Repositorio;
+use App\Models\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -13,9 +13,9 @@ class HomePageTest extends TestCase
 
     public function test_home_page_renders_only_public_repositories(): void
     {
-        Repositorio::factory()->create(['nombre_rep' => 'Publico A', 'publico' => true]);
-        Repositorio::factory()->create(['nombre_rep' => 'Publico B', 'publico' => true]);
-        Repositorio::factory()->private()->create(['nombre_rep' => 'Privado']);
+        Repository::factory()->create(['title' => 'Publico A', 'is_public' => true]);
+        Repository::factory()->create(['title' => 'Publico B', 'is_public' => true]);
+        Repository::factory()->private()->create(['title' => 'Privado']);
 
         $response = $this->get(route('home'));
 
@@ -24,8 +24,8 @@ class HomePageTest extends TestCase
             ->component('public/home')
             ->has('latest', 2)
             ->has('featured', 2)
-            ->where('latest', fn ($latest) => collect($latest)->pluck('nombre_rep')->doesntContain('Privado'))
-            ->where('featured', fn ($featured) => collect($featured)->pluck('nombre_rep')->doesntContain('Privado')));
+            ->where('latest', fn ($latest) => collect($latest)->pluck('title')->doesntContain('Privado'))
+            ->where('featured', fn ($featured) => collect($featured)->pluck('title')->doesntContain('Privado')));
     }
 
     public function test_about_page_renders(): void

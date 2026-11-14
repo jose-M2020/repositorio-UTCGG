@@ -27,7 +27,7 @@ export type UserFormValues = {
 
 export type UserRepositorySummary = {
     id: number;
-    nombre_rep: string;
+    title: string;
     slug: string;
     publico: boolean;
 };

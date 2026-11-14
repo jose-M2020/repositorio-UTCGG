@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { index } from '@/actions/App/Http/Controllers/RepositorioController';
+import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import type { HomeCareer } from '../types';
 
 type CareersSectionProps = {

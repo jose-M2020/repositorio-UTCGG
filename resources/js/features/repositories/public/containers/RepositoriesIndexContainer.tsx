@@ -7,7 +7,7 @@ import type {
 import { RepositoryFilters } from '../components/RepositoryFilters';
 
 type RepositoriesIndexContainerProps = {
-    repositorios: PaginatedRepositories;
+    repositories: PaginatedRepositories;
     filters: RepositoryFiltersType;
     catalog: RepositoryCatalog;
 };

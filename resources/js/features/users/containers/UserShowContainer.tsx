@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { show as showRepository } from "@/actions/App/Http/Controllers/RepositorioController";
+import { show as showRepository } from "@/actions/App/Http/Controllers/RepositoryController";
 import { index } from "@/actions/App/Http/Controllers/UserController";
 import { Button } from "@/shared/components/ui";
 import { UserDetails } from "../components/UserDetails";
@@ -10,8 +10,8 @@ import type {
 
 type UserShowContainerProps = {
   user: UserDetailsType;
-  repositoriosPublicos: UserRepositorySummary[];
-  repositoriosPrivados: UserRepositorySummary[];
+  publicRepositories: UserRepositorySummary[];
+  privateRepositories: UserRepositorySummary[];
 };
 
 const RepositoryGroup = ({
@@ -36,7 +36,7 @@ const RepositoryGroup = ({
                 href={showRepository.url(repo.slug)}
                 className="block px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
               >
-                {repo.nombre_rep}
+                {repo.title}
               </Link>
             </li>
           ))}
@@ -48,8 +48,8 @@ const RepositoryGroup = ({
 
 export const UserShowContainer = ({
   user,
-  repositoriosPublicos,
-  repositoriosPrivados,
+  publicRepositories,
+  privateRepositories,
 }: UserShowContainerProps) => {
   const isAdmin = user.roles.includes("admin");
 
@@ -78,12 +78,12 @@ export const UserShowContainer = ({
       {!isAdmin ? (
         <div className="space-y-6">
           <RepositoryGroup
-            title={`${repositoriosPublicos.length} Públicos`}
-            items={repositoriosPublicos}
+            title={`${publicRepositories.length} Públicos`}
+            items={publicRepositories}
           />
           <RepositoryGroup
-            title={`${repositoriosPrivados.length} Privados`}
-            items={repositoriosPrivados}
+            title={`${privateRepositories.length} Privados`}
+            items={privateRepositories}
           />
         </div>
       ) : null}

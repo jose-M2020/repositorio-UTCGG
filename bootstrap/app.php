@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'authorizeMember' => AuthorizeMember::class,
         ]);
 
-        $middleware->redirectUsersTo(fn () => route('repositorios.user'));
+        $middleware->redirectUsersTo(fn () => route('repositories.mine'));
 
         $middleware->encryptCookies(except: ['sidebar_state']);
 

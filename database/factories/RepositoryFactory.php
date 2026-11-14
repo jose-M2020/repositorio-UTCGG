@@ -3,31 +3,33 @@
 namespace Database\Factories;
 
 use App\Models\Catalog;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<Repositorio>
+ * @extends Factory<Repository>
  */
-class RepositorioFactory extends Factory
+class RepositoryFactory extends Factory
 {
+    protected $model = Repository::class;
+
     /**
      * @return array<string, mixed>
      */
     public function definition(): array
     {
-        $nombre = fake()->unique()->sentence(3);
+        $title = fake()->unique()->sentence(3);
         $careerCode = fake()->randomElement(['TIC', 'ER', 'MM', 'MI', 'G', 'LI', 'PA', 'GCH', 'GDT']);
-        $projectTypeCode = fake()->randomElement(['Integradora', 'Estadía', 'Proyecto Especial']);
-        $academicDegreeCode = fake()->randomElement(['TSU', 'Ingeniería']);
+        $projectTypeCode = fake()->randomElement(['integrative', 'internship', 'special_project']);
+        $academicDegreeCode = fake()->randomElement(['TSU', 'engineering']);
 
         return [
-            'nombre_rep' => $nombre,
-            'slug' => Str::slug($nombre),
-            'descripcion' => fake()->paragraph(),
-            'palabras_clave' => implode(', ', fake()->words(4)),
-            'publico' => true,
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'description' => fake()->paragraph(),
+            'keywords' => implode(', ', fake()->words(4)),
+            'is_public' => true,
             'career_catalog_id' => Catalog::query()
                 ->where('type', Catalog::TYPE_CAREER)
                 ->where('code', $careerCode)
@@ -40,15 +42,15 @@ class RepositorioFactory extends Factory
                 ->where('type', Catalog::TYPE_ACADEMIC_DEGREE)
                 ->where('code', $academicDegreeCode)
                 ->value('id'),
-            'asesor_externo' => fake()->optional()->name(),
-            'empresa' => fake()->company(),
-            'generacion' => (string) fake()->numberBetween(2020, 2026),
+            'external_advisor' => fake()->optional()->name(),
+            'company' => fake()->company(),
+            'generation' => (string) fake()->numberBetween(2020, 2026),
             'created_by' => fake()->firstName(),
         ];
     }
 
     public function private(): static
     {
-        return $this->state(fn (): array => ['publico' => false]);
+        return $this->state(fn (): array => ['is_public' => false]);
     }
 }

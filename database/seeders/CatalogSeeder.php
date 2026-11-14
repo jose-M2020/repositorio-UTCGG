@@ -20,10 +20,10 @@ class CatalogSeeder extends Seeder
             [Catalog::TYPE_CAREER, 'GCH', 'Gestión del Capital Humano', 80, true, ['image' => '/img/carrerasBG/GCH.jpg', 'show_on_home' => false]],
             [Catalog::TYPE_CAREER, 'GDT', 'Gestión y Desarrollo Turístico', 90, true, ['image' => '/img/carrerasBG/GDT.jpg', 'show_on_home' => false]],
             [Catalog::TYPE_ACADEMIC_DEGREE, 'TSU', 'Técnico Superior Universitario', 10, true, null],
-            [Catalog::TYPE_ACADEMIC_DEGREE, 'Ingeniería', 'Ingeniería', 20, true, null],
-            [Catalog::TYPE_PROJECT, 'Integradora', 'Integradora', 10, true, null],
-            [Catalog::TYPE_PROJECT, 'Estadía', 'Estadía', 20, true, null],
-            [Catalog::TYPE_PROJECT, 'Proyecto Especial', 'Proyecto Especial', 30, true, null],
+            [Catalog::TYPE_ACADEMIC_DEGREE, 'engineering', 'Ingeniería', 20, true, null],
+            [Catalog::TYPE_PROJECT, 'integrative', 'Integradora', 10, true, null],
+            [Catalog::TYPE_PROJECT, 'internship', 'Estadía', 20, true, null],
+            [Catalog::TYPE_PROJECT, 'special_project', 'Proyecto Especial', 30, true, null],
         ];
 
         foreach ($catalogs as [$type, $code, $name, $sortOrder, $isActive, $meta]) {

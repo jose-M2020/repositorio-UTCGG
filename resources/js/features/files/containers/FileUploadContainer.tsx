@@ -4,13 +4,13 @@ import { store } from '@/actions/App/Http/Controllers/FileController';
 import {
     mine,
     showByUser,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
 import { FileDropzoneField } from '../components/FileDropzoneField';
 import type { RepositoryUploadTarget } from '../types';
 
 type FileUploadContainerProps = {
-    repositorio: RepositoryUploadTarget;
+    repository: RepositoryUploadTarget;
 };
 
 export const FileUploadContainer = ({
@@ -37,7 +37,7 @@ export const FileUploadContainer = ({
             <header className="space-y-1">
                 <h1 className="text-2xl font-semibold">Subir archivos</h1>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Repositorio: {repositorio.nombre_rep}
+                    Repositorio: {repositorio.title}
                 </p>
             </header>
 
@@ -54,7 +54,7 @@ export const FileUploadContainer = ({
                     }}
                     files={data.archivos}
                     error={errors.archivos}
-                    onFilesChange={(files) => setData('archivos', files)}
+                    onFilesChange={(files) => setData('files', files)}
                 />
 
                 <FileDropzoneField
@@ -62,9 +62,9 @@ export const FileUploadContainer = ({
                     accept={{
                         'image/*': ['.png', '.jpg', '.jpeg', '.svg', '.webp'],
                     }}
-                    files={data.imagenes}
-                    error={errors.imagenes}
-                    onFilesChange={(files) => setData('imagenes', files)}
+                    files={data.images}
+                    error={errors.images}
+                    onFilesChange={(files) => setData('images', files)}
                 />
 
                 <div className="flex justify-end gap-2">

@@ -3,7 +3,7 @@
 namespace Tests\Feature\Files;
 
 use App\Models\File;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use App\Models\User;
 use App\Models\Catalog;
 use Database\Seeders\CatalogSeeder;
@@ -38,25 +38,25 @@ class FileManagementTest extends TestCase
         ]);
         $user->assignRole('teacher');
 
-        $repo = Repositorio::factory()->create();
+        $repo = Repository::factory()->create();
         $repo->users()->attach($user->id);
 
         $response = $this->actingAs($user)->post(
             route('files.store', $repo),
             [
-                'archivos' => [
+                'files' => [
                     UploadedFile::fake()->create('documento.pdf', 100, 'application/pdf'),
                 ],
             ],
         );
 
-        $response->assertRedirect(route('repositorios.user.show', $repo));
+        $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertDatabaseHas('files', [
-            'repositorio_id' => $repo->id,
+            'repository_id' => $repo->id,
             'original_name' => 'documento.pdf',
         ]);
 
-        $file = File::query()->where('repositorio_id', $repo->id)->first();
+        $file = File::query()->where('repository_id', $repo->id)->first();
         $this->assertNotNull($file);
         Storage::disk('s3')->assertExists($file->file_path);
     }
@@ -66,11 +66,11 @@ class FileManagementTest extends TestCase
         $user = User::factory()->create();
         $user->assignRole('teacher');
 
-        $repo = Repositorio::factory()->create();
+        $repo = Repository::factory()->create();
         $repo->users()->attach($user->id);
 
         $file = File::factory()->create([
-            'repositorio_id' => $repo->id,
+            'repository_id' => $repo->id,
             'is_public' => false,
         ]);
 
@@ -78,7 +78,7 @@ class FileManagementTest extends TestCase
             ->put(route('files.update', [$repo, $file]), [
                 'is_public' => true,
             ])
-            ->assertRedirect(route('repositorios.user.show', $repo));
+            ->assertRedirect(route('repositories.account.show', $repo));
 
         $this->assertTrue($file->fresh()?->is_public);
     }
@@ -88,18 +88,18 @@ class FileManagementTest extends TestCase
         $user = User::factory()->create();
         $user->assignRole('teacher');
 
-        $repo = Repositorio::factory()->create();
+        $repo = Repository::factory()->create();
         $repo->users()->attach($user->id);
 
         Storage::disk('s3')->put('files/test/demo.pdf', 'contenido');
         $file = File::factory()->create([
-            'repositorio_id' => $repo->id,
+            'repository_id' => $repo->id,
             'file_path' => 'files/test/demo.pdf',
         ]);
 
         $this->actingAs($user)
             ->delete(route('files.destroy', [$repo, $file]))
-            ->assertRedirect(route('repositorios.user.show', $repo));
+            ->assertRedirect(route('repositories.account.show', $repo));
 
         $this->assertDatabaseMissing('files', ['id' => $file->id]);
         Storage::disk('s3')->assertMissing('files/test/demo.pdf');
@@ -139,12 +139,12 @@ class FileManagementTest extends TestCase
         $intruder = User::factory()->create();
         $intruder->assignRole('teacher');
 
-        $repo = Repositorio::factory()->create();
+        $repo = Repository::factory()->create();
         $repo->users()->attach($owner->id);
 
         $this->actingAs($intruder)
             ->post(route('files.store', $repo), [
-                'archivos' => [
+                'files' => [
                     UploadedFile::fake()->create('documento.pdf', 100, 'application/pdf'),
                 ],
             ])

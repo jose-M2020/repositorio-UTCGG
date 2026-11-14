@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { show } from '@/actions/App/Http/Controllers/RepositorioController';
+import { show } from '@/actions/App/Http/Controllers/RepositoryController';
 import type { HomeRepository } from '../types';
 
 type RepositoryHighlightsProps = {
@@ -35,13 +35,13 @@ export const RepositoryHighlights = ({
                                 className="block h-full border-b border-border py-4 transition hover:border-primary"
                             >
                                 <p className="text-xs tracking-wide text-secondary uppercase">
-                                    {item.carrera}
+                                    {item.career}
                                 </p>
                                 <h3 className="mt-1 text-xl font-medium text-foreground">
-                                    {item.nombre_rep}
+                                    {item.title}
                                 </h3>
                                 <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                                    {item.descripcion}
+                                    {item.description}
                                 </p>
                             </Link>
                         </li>

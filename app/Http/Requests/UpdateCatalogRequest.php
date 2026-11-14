@@ -10,7 +10,7 @@ class UpdateCatalogRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('catalogos.edit') ?? false;
+        return $this->user()?->can('catalogs.edit') ?? false;
     }
 
     /** @return array<string, mixed> */

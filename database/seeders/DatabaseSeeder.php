@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Catalog;
 use App\Models\File;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use App\Models\User;
 use App\Support\UserRoles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -74,14 +74,14 @@ class DatabaseSeeder extends Seeder
 
         $users = $docentes->merge($alumnos);
 
-        Repositorio::factory(40)
+        Repository::factory(40)
             ->create()
-            ->each(function (Repositorio $repositorio) use ($users, $admin): void {
+            ->each(function (Repository $repository) use ($users, $admin): void {
                 $members = $users->random(fake()->numberBetween(2, 5))->pluck('id');
-                $repositorio->users()->attach($members->push($admin->id)->unique());
+                $repository->users()->attach($members->push($admin->id)->unique());
 
                 File::factory(fake()->numberBetween(1, 3))->create([
-                    'repositorio_id' => $repositorio->id,
+                    'repository_id' => $repository->id,
                 ]);
             });
     }

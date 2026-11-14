@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
     index,
     store,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import {
     UserSearchPicker,
     type SearchableUser,
@@ -95,52 +95,52 @@ export const RepositoryCreateContainer = ({
                             </h2>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="nombre_rep"
+                                    htmlFor="title"
                                     className="text-sm font-medium"
                                 >
                                     Nombre del repositorio
                                 </label>
                                 <Input
-                                    id="nombre_rep"
-                                    name="nombre_rep"
+                                    id="title"
+                                    name="title"
                                     required={step === 1}
                                 />
-                                {errors.nombre_rep ? (
+                                {errors.title ? (
                                     <p className="text-sm text-destructive">
-                                        {errors.nombre_rep}
+                                        {errors.title}
                                     </p>
                                 ) : null}
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="descripcion"
+                                    htmlFor="description"
                                     className="text-sm font-medium"
                                 >
                                     Descripción
                                 </label>
                                 <textarea
-                                    id="descripcion"
-                                    name="descripcion"
+                                    id="description"
+                                    name="description"
                                     required={step === 1}
                                     rows={4}
                                     className="w-full rounded-lg border border-input bg-card px-2.5 py-2 text-sm"
                                 />
-                                {errors.descripcion ? (
+                                {errors.description ? (
                                     <p className="text-sm text-destructive">
-                                        {errors.descripcion}
+                                        {errors.description}
                                     </p>
                                 ) : null}
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="palabras_clave"
+                                    htmlFor="keywords"
                                     className="text-sm font-medium"
                                 >
                                     Palabras clave de búsqueda
                                 </label>
                                 <Input
-                                    id="palabras_clave"
-                                    name="palabras_clave"
+                                    id="keywords"
+                                    name="keywords"
                                     required={step === 1}
                                 />
                             </div>
@@ -151,8 +151,8 @@ export const RepositoryCreateContainer = ({
                                 <label className="flex items-start gap-2 text-sm">
                                     <input
                                         type="radio"
-                                        name="visibilidad"
-                                        value="privado"
+                                        name="visibility"
+                                        value="private"
                                         defaultChecked
                                         className="mt-1 accent-primary"
                                     />
@@ -167,8 +167,8 @@ export const RepositoryCreateContainer = ({
                                 <label className="flex items-start gap-2 text-sm">
                                     <input
                                         type="radio"
-                                        name="visibilidad"
-                                        value="publico"
+                                        name="visibility"
+                                        value="public"
                                         className="mt-1 accent-primary"
                                     />
                                     <span>
@@ -201,14 +201,14 @@ export const RepositoryCreateContainer = ({
                             </h2>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="tipo_proyecto"
+                                    htmlFor="project_type"
                                     className="text-sm font-medium"
                                 >
                                     Tipo de proyecto
                                 </label>
                                 <select
-                                    id="tipo_proyecto"
-                                    name="tipo_proyecto"
+                                    id="project_type"
+                                    name="project_type"
                                     required={step === 2}
                                     defaultValue=""
                                     className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
@@ -225,14 +225,14 @@ export const RepositoryCreateContainer = ({
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="nivel_proyecto"
+                                    htmlFor="academic_degree"
                                     className="text-sm font-medium"
                                 >
                                     Nivel de proyecto
                                 </label>
                                 <select
-                                    id="nivel_proyecto"
-                                    name="nivel_proyecto"
+                                    id="academic_degree"
+                                    name="academic_degree"
                                     required={step === 2}
                                     defaultValue=""
                                     className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
@@ -249,14 +249,14 @@ export const RepositoryCreateContainer = ({
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="carrera"
+                                    htmlFor="career"
                                     className="text-sm font-medium"
                                 >
                                     Carrera
                                 </label>
                                 <select
-                                    id="carrera"
-                                    name="carrera"
+                                    id="career"
+                                    name="career"
                                     required={step === 2}
                                     defaultValue={
                                         currentUser?.career &&
@@ -280,14 +280,14 @@ export const RepositoryCreateContainer = ({
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="generacion"
+                                    htmlFor="generation"
                                     className="text-sm font-medium"
                                 >
                                     Generación
                                 </label>
                                 <Input
-                                    id="generacion"
-                                    name="generacion"
+                                    id="generation"
+                                    name="generation"
                                     required={step === 2}
                                 />
                             </div>
@@ -319,33 +319,33 @@ export const RepositoryCreateContainer = ({
                                 max={8}
                                 label="Miembro(s)"
                             />
-                            {errors.usuario ? (
-                                <p className="text-sm text-destructive">
-                                    {errors.usuario}
+                            {errors.member_emails ? (
+                                    <p className="text-sm text-destructive">
+                                        {errors.member_emails}
                                 </p>
                             ) : null}
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="asesor_externo"
+                                    htmlFor="external_advisor"
                                     className="text-sm font-medium"
                                 >
                                     Nombre del asesor empresarial/externo
                                 </label>
                                 <Input
-                                    id="asesor_externo"
-                                    name="asesor_externo"
+                                    id="external_advisor"
+                                    name="external_advisor"
                                 />
                             </div>
                             <div className="space-y-1">
                                 <label
-                                    htmlFor="empresa"
+                                    htmlFor="company"
                                     className="text-sm font-medium"
                                 >
                                     Nombre de la Empresa/Negocio/Establecimiento
                                 </label>
                                 <Input
-                                    id="empresa"
-                                    name="empresa"
+                                    id="company"
+                                    name="company"
                                     required={step === 3}
                                 />
                                 {errors.empresa ? (

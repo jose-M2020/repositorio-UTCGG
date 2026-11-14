@@ -5,7 +5,7 @@ import {
 } from '@/features/repositories';
 
 type PageProps = {
-    repositorios: PaginatedRepositories;
+    repositories: PaginatedRepositories;
 };
 
 const RepositoriesMinePage = ({ repositorios }: PageProps) => {

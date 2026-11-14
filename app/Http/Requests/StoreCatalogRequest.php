@@ -10,7 +10,7 @@ class StoreCatalogRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('catalogos.create') ?? false;
+        return $this->user()?->can('catalogs.create') ?? false;
     }
 
     /** @return array<string, mixed> */

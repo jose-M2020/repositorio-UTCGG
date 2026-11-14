@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/catalogos',
+    url: '/catalogs',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: index.url(options),
@@ -55,7 +55,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: index.url(options),
@@ -64,7 +64,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             /**
 * @see \App\Http\Controllers\CatalogController::index
  * @see app/Http/Controllers/CatalogController.php:28
- * @route '/catalogos'
+ * @route '/catalogs'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: index.url({
@@ -80,7 +80,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\CatalogController::store
  * @see app/Http/Controllers/CatalogController.php:50
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -89,13 +89,13 @@ export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 store.definition = {
     methods: ["post"],
-    url: '/catalogos',
+    url: '/catalogs',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\CatalogController::store
  * @see app/Http/Controllers/CatalogController.php:50
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
@@ -104,7 +104,7 @@ store.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\CatalogController::store
  * @see app/Http/Controllers/CatalogController.php:50
- * @route '/catalogos'
+ * @route '/catalogs'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -114,7 +114,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     /**
 * @see \App\Http\Controllers\CatalogController::store
  * @see app/Http/Controllers/CatalogController.php:50
- * @route '/catalogos'
+ * @route '/catalogs'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: store.url(options),
@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
             /**
 * @see \App\Http\Controllers\CatalogController::store
  * @see app/Http/Controllers/CatalogController.php:50
- * @route '/catalogos'
+ * @route '/catalogs'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: store.url(options),
@@ -135,7 +135,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 export const update = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -144,13 +144,13 @@ export const update = (args: { catalog: number | { id: number } } | [catalog: nu
 
 update.definition = {
     methods: ["put","patch"],
-    url: '/catalogos/{catalog}',
+    url: '/catalogs/{catalog}',
 } satisfies RouteDefinition<["put","patch"]>
 
 /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 update.url = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -183,7 +183,7 @@ update.url = (args: { catalog: number | { id: number } } | [catalog: number | { 
 /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 update.put = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -192,7 +192,7 @@ update.put = (args: { catalog: number | { id: number } } | [catalog: number | { 
 /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 update.patch = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
@@ -202,7 +202,7 @@ update.patch = (args: { catalog: number | { id: number } } | [catalog: number | 
     /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
     const updateForm = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
@@ -217,7 +217,7 @@ update.patch = (args: { catalog: number | { id: number } } | [catalog: number | 
             /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
         updateForm.put = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
@@ -231,7 +231,7 @@ update.patch = (args: { catalog: number | { id: number } } | [catalog: number | 
             /**
 * @see \App\Http\Controllers\CatalogController::update
  * @see app/Http/Controllers/CatalogController.php:62
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
         updateForm.patch = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
@@ -247,7 +247,7 @@ update.patch = (args: { catalog: number | { id: number } } | [catalog: number | 
 /**
 * @see \App\Http\Controllers\CatalogController::destroy
  * @see app/Http/Controllers/CatalogController.php:86
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 export const destroy = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
@@ -256,13 +256,13 @@ export const destroy = (args: { catalog: number | { id: number } } | [catalog: n
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/catalogos/{catalog}',
+    url: '/catalogs/{catalog}',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\CatalogController::destroy
  * @see app/Http/Controllers/CatalogController.php:86
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 destroy.url = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -295,7 +295,7 @@ destroy.url = (args: { catalog: number | { id: number } } | [catalog: number | {
 /**
 * @see \App\Http\Controllers\CatalogController::destroy
  * @see app/Http/Controllers/CatalogController.php:86
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
 destroy.delete = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
@@ -305,7 +305,7 @@ destroy.delete = (args: { catalog: number | { id: number } } | [catalog: number 
     /**
 * @see \App\Http\Controllers\CatalogController::destroy
  * @see app/Http/Controllers/CatalogController.php:86
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
     const destroyForm = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
@@ -320,7 +320,7 @@ destroy.delete = (args: { catalog: number | { id: number } } | [catalog: number 
             /**
 * @see \App\Http\Controllers\CatalogController::destroy
  * @see app/Http/Controllers/CatalogController.php:86
- * @route '/catalogos/{catalog}'
+ * @route '/catalogs/{catalog}'
  */
         destroyForm.delete = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
@@ -336,7 +336,7 @@ destroy.delete = (args: { catalog: number | { id: number } } | [catalog: number 
 /**
 * @see \App\Http\Controllers\CatalogController::toggleActive
  * @see app/Http/Controllers/CatalogController.php:71
- * @route '/catalogos/{catalog}/active'
+ * @route '/catalogs/{catalog}/active'
  */
 export const toggleActive = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleActive.url(args, options),
@@ -345,13 +345,13 @@ export const toggleActive = (args: { catalog: number | { id: number } } | [catal
 
 toggleActive.definition = {
     methods: ["patch"],
-    url: '/catalogos/{catalog}/active',
+    url: '/catalogs/{catalog}/active',
 } satisfies RouteDefinition<["patch"]>
 
 /**
 * @see \App\Http\Controllers\CatalogController::toggleActive
  * @see app/Http/Controllers/CatalogController.php:71
- * @route '/catalogos/{catalog}/active'
+ * @route '/catalogs/{catalog}/active'
  */
 toggleActive.url = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -384,7 +384,7 @@ toggleActive.url = (args: { catalog: number | { id: number } } | [catalog: numbe
 /**
 * @see \App\Http\Controllers\CatalogController::toggleActive
  * @see app/Http/Controllers/CatalogController.php:71
- * @route '/catalogos/{catalog}/active'
+ * @route '/catalogs/{catalog}/active'
  */
 toggleActive.patch = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleActive.url(args, options),
@@ -394,7 +394,7 @@ toggleActive.patch = (args: { catalog: number | { id: number } } | [catalog: num
     /**
 * @see \App\Http\Controllers\CatalogController::toggleActive
  * @see app/Http/Controllers/CatalogController.php:71
- * @route '/catalogos/{catalog}/active'
+ * @route '/catalogs/{catalog}/active'
  */
     const toggleActiveForm = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: toggleActive.url(args, {
@@ -409,7 +409,7 @@ toggleActive.patch = (args: { catalog: number | { id: number } } | [catalog: num
             /**
 * @see \App\Http\Controllers\CatalogController::toggleActive
  * @see app/Http/Controllers/CatalogController.php:71
- * @route '/catalogos/{catalog}/active'
+ * @route '/catalogs/{catalog}/active'
  */
         toggleActiveForm.patch = (args: { catalog: number | { id: number } } | [catalog: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: toggleActive.url(args, {

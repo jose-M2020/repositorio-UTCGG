@@ -2,14 +2,14 @@ import { Form, Link } from '@inertiajs/react';
 import {
     showByUser,
     update,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 import { RepositoryFormFields } from '../../shared/components/RepositoryFormFields';
 import type { Repository } from '../../shared/types';
 
 type RepositoryEditContainerProps = {
-    repositorio: Repository;
+    repository: Repository;
     catalog: RepositoryCatalog;
 };
 
@@ -24,7 +24,7 @@ export const RepositoryEditContainer = ({
                     Editar repositorio
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    {repositorio.nombre_rep}
+                    {repositorio.title}
                 </p>
             </header>
 
@@ -36,7 +36,7 @@ export const RepositoryEditContainer = ({
                     <>
                         <RepositoryFormFields
                             errors={errors}
-                            defaults={repositorio}
+                            defaults={repository}
                             catalog={catalog}
                         />
                         <div className="flex justify-end gap-2">

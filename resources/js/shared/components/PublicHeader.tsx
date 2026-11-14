@@ -9,7 +9,7 @@ import {
 import {
     index as repositories,
     mine,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import { buttonVariants } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
 import { AppBrand } from './AppBrand';

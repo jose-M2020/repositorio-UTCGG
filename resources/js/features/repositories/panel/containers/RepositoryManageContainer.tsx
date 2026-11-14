@@ -3,7 +3,7 @@ import type { Repository } from '../../shared/types';
 import { RepositoryDetails } from '../components/RepositoryDetails';
 
 type RepositoryManageContainerProps = {
-    repositorio: Repository;
+    repository: Repository;
 };
 
 export const RepositoryManageContainer = ({
@@ -18,7 +18,7 @@ export const RepositoryManageContainer = ({
                     Gestionar repositorio
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    {repositorio.nombre_rep}
+                    {repositorio.title}
                 </p>
             </header>
 
@@ -28,7 +28,7 @@ export const RepositoryManageContainer = ({
                 </p>
             ) : null}
 
-            <RepositoryDetails repositorio={repositorio} />
+            <RepositoryDetails repositorio={repository} />
         </main>
     );
 };

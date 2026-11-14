@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\AuthorizeMember;
-use App\Http\Requests\StoreRepositorioRequest;
-use App\Http\Requests\UpdateRepositorioRequest;
+use App\Http\Requests\StoreRepositoryRequest;
+use App\Http\Requests\UpdateRepositoryRequest;
 use App\Models\Catalog as CatalogModel;
 use App\Models\File;
-use App\Models\Repositorio;
+use App\Models\Repository;
 use App\Models\User;
 use App\Support\Catalog as CatalogData;
 use App\Support\Media;
@@ -19,15 +19,15 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RepositorioController extends Controller implements HasMiddleware
+class RepositoryController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
             new Middleware('auth', only: ['create', 'store', 'edit', 'update', 'destroy', 'mine', 'showByUser']),
-            new Middleware('can:repositorios.create', only: ['create', 'store']),
-            new Middleware('can:repositorios.edit', only: ['edit', 'update']),
-            new Middleware('can:repositorios.destroy', only: ['destroy']),
+            new Middleware('can:repositories.create', only: ['create', 'store']),
+            new Middleware('can:repositories.edit', only: ['edit', 'update']),
+            new Middleware('can:repositories.destroy', only: ['destroy']),
             new Middleware(AuthorizeMember::class, only: ['edit', 'update', 'destroy', 'showByUser']),
         ];
     }
@@ -36,12 +36,12 @@ class RepositorioController extends Controller implements HasMiddleware
     {
         $search = $request->string('query')->toString();
         $searchField = $request->string('search_field')->toString() ?: 'title';
-        $carreras = array_values(array_filter((array) $request->input('carrera', [])));
+        $carreras = array_values(array_filter((array) $request->input('career', [])));
         $tipos = array_values(array_filter((array) $request->input('tipo', [])));
         $niveles = array_values(array_filter((array) $request->input('nivel', [])));
         $years = array_values(array_filter((array) $request->input('year', [])));
 
-        $repositorios = Repositorio::query()
+        $repositories = Repository::query()
             ->with('users:id,first_name,last_name,second_last_name,email')
             ->with([
                 'careerCatalog:id,code',
@@ -49,10 +49,10 @@ class RepositorioController extends Controller implements HasMiddleware
                 'academicDegreeCatalog:id,code',
             ])
             ->latest()
-            ->where('publico', true)
+            ->where('is_public', true)
             ->when($search !== '', function ($query) use ($search, $searchField): void {
                 if ($searchField === 'description') {
-                    $query->where('descripcion', 'like', "%{$search}%");
+                    $query->where('description', 'like', "%{$search}%");
 
                     return;
                 }
@@ -67,7 +67,7 @@ class RepositorioController extends Controller implements HasMiddleware
                     return;
                 }
 
-                $query->where('nombre_rep', 'like', "%{$search}%");
+                $query->where('title', 'like', "%{$search}%");
             })
             ->when($carreras !== [], fn ($query) => $query->whereHas(
                 'careerCatalog',
@@ -87,21 +87,21 @@ class RepositorioController extends Controller implements HasMiddleware
             )
             ->paginate(15)
             ->withQueryString()
-            ->through(function (Repositorio $repositorio): array {
-                $images = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
+            ->through(function (Repository $repository): array {
+                $images = json_decode($repository->images ?? '[]', true) ?: [];
 
                 return [
-                    'id' => $repositorio->id,
-                    'nombre_rep' => $repositorio->nombre_rep,
-                    'slug' => $repositorio->slug,
-                    'descripcion' => $repositorio->descripcion,
-                    'carrera' => $repositorio->careerCatalog?->code ?? '—',
-                    'tipo_proyecto' => $repositorio->projectTypeCatalog?->code ?? '—',
-                    'nivel_proyecto' => $repositorio->academicDegreeCatalog?->code ?? '—',
-                    'publico' => $repositorio->publico,
-                    'created_at' => $repositorio->created_at?->toDateTimeString(),
+                    'id' => $repository->id,
+                    'title' => $repository->title,
+                    'slug' => $repository->slug,
+                    'description' => $repository->description,
+                    'career' => $repository->careerCatalog?->code ?? '—',
+                    'project_type' => $repository->projectTypeCatalog?->code ?? '—',
+                    'academic_degree' => $repository->academicDegreeCatalog?->code ?? '—',
+                    'is_public' => $repository->is_public,
+                    'created_at' => $repository->created_at?->toDateTimeString(),
                     'cover_url' => Media::url($images[0] ?? null),
-                    'users' => $repositorio->users->map(fn (User $user) => [
+                    'users' => $repository->users->map(fn (User $user) => [
                         'id' => $user->id,
                         'first_name' => $user->first_name,
                         'last_name' => $user->last_name,
@@ -112,11 +112,11 @@ class RepositorioController extends Controller implements HasMiddleware
             });
 
         return Inertia::render('public/repositories/index', [
-            'repositorios' => $repositorios,
+            'repositories' => $repositories,
             'filters' => [
                 'query' => $search,
                 'search_field' => $searchField,
-                'carrera' => $carreras,
+                'career' => $carreras,
                 'tipo' => $tipos,
                 'nivel' => $niveles,
                 'year' => $years,
@@ -140,71 +140,71 @@ class RepositorioController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function store(StoreRepositorioRequest $request): RedirectResponse
+    public function store(StoreRepositoryRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $validated = $request->safe()->except(['usuario', 'visibilidad', 'carrera', 'tipo_proyecto', 'nivel_proyecto']);
+        $validated = $request->safe()->except(['member_emails', 'visibility', 'career', 'project_type', 'academic_degree']);
 
-        $repositorio = Repositorio::query()->create([
+        $repository = Repository::query()->create([
             ...$validated,
-            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('carrera')->toString()),
-            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('tipo_proyecto')->toString()),
-            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('nivel_proyecto')->toString()),
-            'slug' => $this->uniqueSlug($request->string('nombre_rep')->toString()),
-            'publico' => $request->string('visibilidad')->toString() === 'publico',
+            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('career')->toString()),
+            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('project_type')->toString()),
+            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('academic_degree')->toString()),
+            'slug' => $this->uniqueSlug($request->string('title')->toString()),
+            'is_public' => $request->string('visibility')->toString() === 'public',
             'created_by' => $user->fullName(),
         ]);
 
         $memberIds = User::query()
-            ->whereIn('email', $request->input('usuario', []))
+            ->whereIn('email', $request->input('member_emails', []))
             ->pluck('id')
             ->push($user->id)
             ->unique()
             ->values()
             ->all();
 
-        $repositorio->users()->syncWithoutDetaching($memberIds);
+        $repository->users()->syncWithoutDetaching($memberIds);
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'Repositorio creado exitosamente.');
     }
 
-    public function show(Repositorio $repositorio): Response
+    public function show(Repository $repository): Response
     {
         $user = auth()->user();
         $isMember = $user
-            ? $repositorio->users()->whereKey($user->id)->exists()
+            ? $repository->users()->whereKey($user->id)->exists()
             : false;
 
-        if (! $repositorio->publico && ! ($user?->hasRole('admin') || $isMember)) {
+        if (! $repository->is_public && ! ($user?->hasRole('admin') || $isMember)) {
             abort(404);
         }
 
-        $repositorio->load([
+        $repository->load([
             'users:id,first_name,last_name,second_last_name,email',
             'files' => fn ($query) => $query->where('is_public', true),
         ]);
 
-        $related = Repositorio::query()
-            ->where('career_catalog_id', $repositorio->career_catalog_id)
-            ->whereKeyNot($repositorio->id)
-            ->where('publico', true)
+        $related = Repository::query()
+            ->where('career_catalog_id', $repository->career_catalog_id)
+            ->whereKeyNot($repository->id)
+            ->where('is_public', true)
             ->inRandomOrder()
             ->limit(6)
             ->with('careerCatalog:id,code')
-            ->get(['id', 'nombre_rep', 'slug', 'career_catalog_id'])
-            ->map(fn (Repositorio $relatedRepo) => [
+            ->get(['id', 'title', 'slug', 'career_catalog_id'])
+            ->map(fn (Repository $relatedRepo) => [
                 'id' => $relatedRepo->id,
-                'nombre_rep' => $relatedRepo->nombre_rep,
+                'title' => $relatedRepo->title,
                 'slug' => $relatedRepo->slug,
-                'carrera' => $relatedRepo->careerCatalog?->code ?? '—',
+                'career' => $relatedRepo->careerCatalog?->code ?? '—',
             ])
             ->values()
             ->all();
 
         return Inertia::render('public/repositories/show', [
-            'repositorio' => $this->serializeRepository($repositorio),
+            'repository' => $this->serializeRepository($repository),
             'related' => $related,
         ]);
     }
@@ -213,30 +213,30 @@ class RepositorioController extends Controller implements HasMiddleware
     {
         $user = $request->user();
 
-        $repositorios = $user->hasRole('admin')
-            ? Repositorio::query()->latest()->paginate(15)
+        $repositories = $user->hasRole('admin')
+            ? Repository::query()->latest()->paginate(15)
             : $user->repositories()->latest()->paginate(15);
 
         return Inertia::render('panel/repositories/mine', [
-            'repositorios' => $repositorios,
+            'repositories' => $repositories,
         ]);
     }
 
-    public function showByUser(Repositorio $repositorio): Response
+    public function showByUser(Repository $repository): Response
     {
-        $repositorio->load(['users:id,first_name,last_name,second_last_name,email', 'files']);
+        $repository->load(['users:id,first_name,last_name,second_last_name,email', 'files']);
 
         return Inertia::render('panel/repositories/manage', [
-            'repositorio' => $this->serializeRepository($repositorio),
+            'repository' => $this->serializeRepository($repository),
         ]);
     }
 
-    public function edit(Repositorio $repositorio): Response
+    public function edit(Repository $repository): Response
     {
         return Inertia::render('panel/repositories/edit', [
-            'repositorio' => [
-                ...$this->serializeRepository($repositorio),
-                'visibilidad' => $repositorio->publico ? 'publico' : 'privado',
+            'repository' => [
+                ...$this->serializeRepository($repository),
+                'visibility' => $repository->is_public ? 'public' : 'private',
             ],
             'catalog' => [
                 'careers' => CatalogData::careers(),
@@ -246,41 +246,41 @@ class RepositorioController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function update(UpdateRepositorioRequest $request, Repositorio $repositorio): RedirectResponse
+    public function update(UpdateRepositoryRequest $request, Repository $repository): RedirectResponse
     {
-        $validated = $request->safe()->except(['visibilidad', 'carrera', 'tipo_proyecto', 'nivel_proyecto']);
+        $validated = $request->safe()->except(['visibility', 'career', 'project_type', 'academic_degree']);
 
-        $repositorio->update([
+        $repository->update([
             ...$validated,
-            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('carrera')->toString()),
-            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('tipo_proyecto')->toString()),
-            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('nivel_proyecto')->toString()),
-            'slug' => $this->uniqueSlug($request->string('nombre_rep')->toString(), $repositorio->id),
-            'publico' => $request->string('visibilidad')->toString() === 'publico',
+            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('career')->toString()),
+            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('project_type')->toString()),
+            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('academic_degree')->toString()),
+            'slug' => $this->uniqueSlug($request->string('title')->toString(), $repository->id),
+            'is_public' => $request->string('visibility')->toString() === 'public',
         ]);
 
         return redirect()
-            ->route('repositorios.user.show', $repositorio)
+            ->route('repositories.account.show', $repository)
             ->with('status', 'Repositorio actualizado exitosamente.');
     }
 
-    public function destroy(Repositorio $repositorio): RedirectResponse
+    public function destroy(Repository $repository): RedirectResponse
     {
-        $repositorio->delete();
+        $repository->delete();
 
         return redirect()
-            ->route('repositorios.user')
+            ->route('repositories.mine')
             ->with('status', 'Repositorio eliminado exitosamente.');
     }
 
     private function uniqueSlug(string $nombre, ?int $ignoreId = null): string
     {
-        $base = Str::slug($nombre) ?: 'repositorio';
+        $base = Str::slug($nombre) ?: 'repository';
         $slug = $base;
         $suffix = 1;
 
         while (
-            Repositorio::query()
+            Repository::query()
                 ->where('slug', $slug)
                 ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
                 ->exists()
@@ -303,38 +303,38 @@ class RepositorioController extends Controller implements HasMiddleware
     /**
      * @return array<string, mixed>
      */
-    private function serializeRepository(Repositorio $repositorio): array
+    private function serializeRepository(Repository $repository): array
     {
-        $repositorio->loadMissing([
+        $repository->loadMissing([
             'careerCatalog:id,code',
             'projectTypeCatalog:id,code',
             'academicDegreeCatalog:id,code',
         ]);
 
-        $imagePaths = json_decode($repositorio->imagenes ?? '[]', true) ?: [];
+        $imagePaths = json_decode($repository->images ?? '[]', true) ?: [];
 
         return [
-            'id' => $repositorio->id,
-            'nombre_rep' => $repositorio->nombre_rep,
-            'slug' => $repositorio->slug,
-            'descripcion' => $repositorio->descripcion,
-            'tipo_proyecto' => $repositorio->projectTypeCatalog?->code ?? '—',
-            'nivel_proyecto' => $repositorio->academicDegreeCatalog?->code ?? '—',
-            'palabras_clave' => $repositorio->palabras_clave,
-            'publico' => $repositorio->publico,
-            'carrera' => $repositorio->careerCatalog?->code ?? '—',
-            'asesor_externo' => $repositorio->asesor_externo,
-            'empresa' => $repositorio->empresa,
-            'generacion' => $repositorio->generacion,
-            'created_by' => $repositorio->created_by,
-            'imagenes' => $imagePaths,
-            'imagen_urls' => array_map(
+            'id' => $repository->id,
+            'title' => $repository->title,
+            'slug' => $repository->slug,
+            'description' => $repository->description,
+            'project_type' => $repository->projectTypeCatalog?->code ?? '—',
+            'academic_degree' => $repository->academicDegreeCatalog?->code ?? '—',
+            'keywords' => $repository->keywords,
+            'is_public' => $repository->is_public,
+            'career' => $repository->careerCatalog?->code ?? '—',
+            'external_advisor' => $repository->external_advisor,
+            'company' => $repository->company,
+            'generation' => $repository->generation,
+            'created_by' => $repository->created_by,
+            'images' => $imagePaths,
+            'image_urls' => array_map(
                 static fn (string $path): string => Media::url($path),
                 $imagePaths,
             ),
             'cover_url' => Media::url($imagePaths[0] ?? null),
-            'files' => $repositorio->relationLoaded('files')
-                ? $repositorio->files->map(fn (File $file) => [
+            'files' => $repository->relationLoaded('files')
+                ? $repository->files->map(fn (File $file) => [
                     'id' => $file->id,
                     'original_name' => $file->original_name,
                     'file_type' => $file->file_type,
@@ -342,8 +342,8 @@ class RepositorioController extends Controller implements HasMiddleware
                     'url' => Media::url($file->file_path),
                 ])->values()->all()
                 : [],
-            'users' => $repositorio->relationLoaded('users')
-                ? $repositorio->users->map(fn (User $user) => [
+            'users' => $repository->relationLoaded('users')
+                ? $repository->users->map(fn (User $user) => [
                     'id' => $user->id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,

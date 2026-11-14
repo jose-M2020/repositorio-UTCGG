@@ -1,11 +1,11 @@
 import { Link } from '@inertiajs/react';
-import { index } from '@/actions/App/Http/Controllers/RepositorioController';
+import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
 import type { Repository, RepositoryListItem } from '../../shared/types';
 import { RepositoryPublicView } from '../components/RepositoryPublicView';
 
 type RepositoryShowContainerProps = {
-    repositorio: Repository;
+    repository: Repository;
     related: RepositoryListItem[];
 };
 
@@ -24,7 +24,7 @@ export const RepositoryShowContainer = ({
             </div>
 
             <RepositoryPublicView
-                repositorio={repositorio}
+                repositorio={repository}
                 related={related}
             />
         </main>

@@ -1,6 +1,6 @@
 import { Form, router } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import { index } from '@/actions/App/Http/Controllers/RepositorioController';
+import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
 import type { RepositoryCatalog } from '@/shared/data/catalog';
 import type { RepositoryFilters as RepositoryFiltersType } from '../../shared/types';
@@ -76,9 +76,9 @@ export const RepositoryFilters = ({
                 <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4">
                     <CheckboxGroup
                         title="Carrera"
-                        name="carrera"
+                        name="career"
                         options={careerOptions}
-                        selected={filters.carrera}
+                        selected={filters.career}
                     />
                     <CheckboxGroup
                         title="Tipo"

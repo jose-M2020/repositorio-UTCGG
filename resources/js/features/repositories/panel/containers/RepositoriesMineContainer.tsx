@@ -2,13 +2,13 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     create,
     showByUser,
-} from '@/actions/App/Http/Controllers/RepositorioController';
+} from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
 import { RepositoriesList } from '../../shared/components/RepositoriesList';
 import type { PaginatedRepositories } from '../../shared/types';
 
 type RepositoriesMineContainerProps = {
-    repositorios: PaginatedRepositories;
+    repositories: PaginatedRepositories;
 };
 
 export const RepositoriesMineContainer = ({

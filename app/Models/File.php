@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property int $repositorio_id
+ * @property int $repository_id
  * @property string $original_name
  * @property string $file_type
  * @property string $file_path
  * @property bool $is_public
  */
 #[Fillable([
-    'repositorio_id',
+    'repository_id',
     'original_name',
     'file_type',
     'file_path',
@@ -35,8 +35,8 @@ class File extends Model
         ];
     }
 
-    public function repositorio(): BelongsTo
+    public function repository(): BelongsTo
     {
-        return $this->belongsTo(Repositorio::class);
+        return $this->belongsTo(Repository::class);
     }
 }
