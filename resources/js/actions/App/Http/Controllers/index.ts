@@ -4,6 +4,7 @@ import RoleController from './RoleController'
 import CatalogController from './CatalogController'
 import RepositoryController from './RepositoryController'
 import FileController from './FileController'
+import AccountSettingsController from './AccountSettingsController'
 import RepositoryMemberController from './RepositoryMemberController'
 import Auth from './Auth'
 const Controllers = {
@@ -13,6 +14,7 @@ RoleController: Object.assign(RoleController, RoleController),
 CatalogController: Object.assign(CatalogController, CatalogController),
 RepositoryController: Object.assign(RepositoryController, RepositoryController),
 FileController: Object.assign(FileController, FileController),
+AccountSettingsController: Object.assign(AccountSettingsController, AccountSettingsController),
 RepositoryMemberController: Object.assign(RepositoryMemberController, RepositoryMemberController),
 Auth: Object.assign(Auth, Auth),
 }

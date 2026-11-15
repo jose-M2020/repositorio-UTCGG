@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
@@ -46,6 +47,11 @@ Route::middleware('auth')->group(function (): void {
         ->only(['edit', 'update', 'destroy']);
 
     Route::prefix('account')->group(function (): void {
+        Route::get('/settings', [AccountSettingsController::class, 'edit'])
+            ->name('account.settings');
+        Route::patch('/settings/profile', [AccountSettingsController::class, 'updateProfile'])
+            ->name('account.settings.profile');
+
         Route::get('/repositories', [RepositoryController::class, 'mine'])
             ->name('repositories.mine');
 
