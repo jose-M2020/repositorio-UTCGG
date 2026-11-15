@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\UserAccountStatus;
-use App\Models\Catalog;
+use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -26,24 +26,39 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $careerCode = fake()->optional()->randomElement(['TIC', 'ER', 'MM', 'MI', 'G', 'LI', 'PA', 'GCH', 'GDT']);
-
         return [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'second_last_name' => fake()->optional()->lastName(),
             'email' => fake()->unique()->safeEmail(),
+            'user_type' => UserType::Staff,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'career_catalog_id' => $careerCode
-                ? Catalog::query()
-                    ->where('type', Catalog::TYPE_CAREER)
-                    ->where('code', $careerCode)
-                    ->value('id')
-                : null,
             'status' => UserAccountStatus::Active,
+            'must_change_password' => false,
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function student(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => UserType::Student,
+        ]);
+    }
+
+    public function teacher(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => UserType::Teacher,
+        ]);
+    }
+
+    public function staff(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => UserType::Staff,
+        ]);
     }
 
     /**

@@ -2,9 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Catalog;
+use App\Enums\CareerPosition;
+use App\Enums\UserType;
+use App\Models\Career;
+use App\Models\CareerAssignment;
 use App\Models\File;
 use App\Models\Repository;
+use App\Models\StudentProfile;
+use App\Models\TeacherProfile;
 use App\Models\User;
 use App\Support\UserRoles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,58 +24,86 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(CatalogSeeder::class);
+        $this->call(CareerSeeder::class);
+        $this->call(ProjectTypeSeeder::class);
+        $this->call(EducationLevelSeeder::class);
         $this->call(PermissionsSeeder::class);
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
+        $ticCareerId = Career::query()->where('code', 'TIC')->value('id');
 
-        $admin = User::factory()->create([
+        $admin = User::factory()->staff()->create([
             'first_name' => 'Admin',
             'last_name' => 'Admin',
             'email' => 'admin@example.com',
-            'career_catalog_id' => null,
+            'user_type' => UserType::Staff,
         ]);
         $admin->assignRole(UserRoles::ADMIN);
 
-        $director = User::factory()->create([
+        $director = User::factory()->staff()->create([
             'first_name' => 'Director',
             'last_name' => 'General',
             'email' => 'director@example.com',
-            'career_catalog_id' => null,
+            'user_type' => UserType::Staff,
         ]);
         $director->assignRole(UserRoles::DIRECTOR);
 
-        $directorCarrera = User::factory()->create([
+        $directorCarrera = User::factory()->teacher()->create([
             'first_name' => 'Director',
             'last_name' => 'TIC',
             'email' => 'director.tic@example.com',
-            'career_catalog_id' => $ticCareerId,
+            'user_type' => UserType::Teacher,
         ]);
         $directorCarrera->assignRole(UserRoles::CAREER_DIRECTOR);
+        TeacherProfile::query()->create([
+            'user_id' => $directorCarrera->id,
+            'primary_career_id' => $ticCareerId,
+            'can_be_advisor' => true,
+        ]);
+        CareerAssignment::query()->create([
+            'user_id' => $directorCarrera->id,
+            'career_id' => $ticCareerId,
+            'position' => CareerPosition::CareerDirector,
+            'starts_at' => now()->toDateString(),
+        ]);
 
-        $docente = User::factory()->create([
+        $docente = User::factory()->teacher()->create([
             'first_name' => 'Docente',
             'last_name' => 'Docente',
             'email' => 'docente@example.com',
-            'career_catalog_id' => $ticCareerId,
+            'user_type' => UserType::Teacher,
         ]);
         $docente->assignRole(UserRoles::TEACHER);
+        TeacherProfile::query()->create([
+            'user_id' => $docente->id,
+            'primary_career_id' => $ticCareerId,
+            'can_be_advisor' => true,
+        ]);
+        CareerAssignment::query()->create([
+            'user_id' => $docente->id,
+            'career_id' => $ticCareerId,
+            'position' => CareerPosition::Teacher,
+            'starts_at' => now()->toDateString(),
+        ]);
 
-        $alumno = User::factory()->create([
+        $alumno = User::factory()->student()->create([
             'first_name' => 'Alumno',
             'last_name' => 'Alumno',
             'email' => 'alumno@example.com',
-            'career_catalog_id' => $ticCareerId,
+            'user_type' => UserType::Student,
         ]);
         $alumno->assignRole(UserRoles::STUDENT);
+        StudentProfile::query()->create([
+            'user_id' => $alumno->id,
+            'career_id' => $ticCareerId,
+            'academic_status' => 'active',
+        ]);
 
-        $docentes = User::factory(10)->create();
+        $docentes = User::factory(10)->teacher()->create();
         $docentes->each(fn (User $user) => $user->assignRole(UserRoles::TEACHER));
 
-        $alumnos = User::factory(30)->create();
+        $alumnos = User::factory(30)->student()->create();
         $alumnos->each(fn (User $user) => $user->assignRole(UserRoles::STUDENT));
+
+        $this->call(UserProfileBackfillSeeder::class);
 
         $users = $docentes->merge($alumnos);
 
