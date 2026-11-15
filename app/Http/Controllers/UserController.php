@@ -45,9 +45,13 @@ class UserController extends Controller implements HasMiddleware
         $name = $request->string('name')->toString();
         $email = $request->string('email')->toString();
         $careers = array_values(array_filter((array) $request->input('career', [])));
+        $assignableRoleNames = UserRoles::assignableBy($authUser);
         $roles = array_values(array_filter(
             (array) $request->input('role', []),
-            fn ($role): bool => is_string($role) && $role !== '' && $role !== 'all',
+            fn ($role): bool => is_string($role)
+                && $role !== ''
+                && $role !== 'all'
+                && in_array($role, $assignableRoleNames, true),
         ));
         $allowedStatuses = array_column(UserAccountStatus::cases(), 'value');
         $statuses = array_values(array_filter(
@@ -66,6 +70,7 @@ class UserController extends Controller implements HasMiddleware
             ->with('roles:id,name')
             ->with('careerCatalog:id,code')
             ->latest('id')
+            ->whereKeyNot($authUser->getKey())
             ->when(
                 UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
                 fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
@@ -140,7 +145,7 @@ class UserController extends Controller implements HasMiddleware
                 'date' => $date,
                 'date_range' => $dateRange,
             ],
-            'roles' => UserRoles::filterOptions(),
+            'roles' => UserRoles::filterOptionsFor($authUser),
             'assignableRoles' => UserRoles::assignableOptionsFor($authUser),
             'rolePermissions' => $this->permissionsByAssignableRole($authUser),
             'careers' => CatalogData::careers(),

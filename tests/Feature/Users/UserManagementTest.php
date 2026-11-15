@@ -49,9 +49,17 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
+        $other = User::factory()->create(['first_name' => 'Otro']);
+        $other->assignRole(UserRoles::STUDENT);
+
         $this->actingAs($admin)
             ->get(route('users.index'))
-            ->assertOk();
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->has('users.data', 1)
+                ->where('users.data.0.id', $other->id)
+                ->where('users.data.0.first_name', 'Otro'));
     }
 
     public function test_admin_can_create_user_pending_activation_without_password(): void
@@ -221,6 +229,32 @@ class UserManagementTest extends TestCase
                 ->component('panel/users/index')
                 ->has('rolePermissions.'.UserRoles::STUDENT)
                 ->has('assignableRoles'));
+    }
+
+    public function test_career_director_only_sees_assignable_roles_in_users_filter(): void
+    {
+        $ticCareerId = Catalog::query()
+            ->where('type', Catalog::TYPE_CAREER)
+            ->where('code', 'TIC')
+            ->value('id');
+
+        $director = User::factory()->create([
+            'career_catalog_id' => $ticCareerId,
+        ]);
+        $director->assignRole(UserRoles::CAREER_DIRECTOR);
+
+        $this->actingAs($director)
+            ->get(route('users.index', [
+                'role' => [UserRoles::ADMIN, UserRoles::STUDENT],
+            ]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('panel/users/index')
+                ->where('roles', [
+                    ['value' => UserRoles::STUDENT, 'label' => 'Alumno'],
+                    ['value' => UserRoles::TEACHER, 'label' => 'Docente'],
+                ])
+                ->where('filters.role', [UserRoles::STUDENT]));
     }
 
     public function test_admin_can_deactivate_and_activate_user(): void
@@ -567,9 +601,9 @@ class UserManagementTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/users/index')
-                ->has('users.data', 2)
+                ->has('users.data', 1)
+                ->where('users.data.0.id', $sameCareer->id)
                 ->where('users.data.0.career', 'TIC')
-                ->where('users.data.1.career', 'TIC')
                 ->where('careerPolicy.can_select_career', false)
                 ->where('careerPolicy.locked_career', 'TIC'));
     }

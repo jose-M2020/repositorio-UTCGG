@@ -149,19 +149,19 @@ final class UserRoles
     }
 
     /**
+     * Role filter options for the users table (same set the actor may assign).
+     *
      * @return list<array{value: string, label: string}>
      */
-    public static function filterOptions(): array
+    public static function filterOptionsFor(?User $authUser): array
     {
-        return Role::query()
-            ->orderBy('name')
-            ->pluck('name')
-            ->map(fn ($name): array => [
-                'value' => (string) $name,
-                'label' => self::label((string) $name),
-            ])
-            ->values()
-            ->all();
+        return array_map(
+            fn (string $role): array => [
+                'value' => $role,
+                'label' => self::label($role),
+            ],
+            self::assignableBy($authUser),
+        );
     }
 
     /**
