@@ -12,7 +12,7 @@ export const RepositoryManageContainer = ({
     const { flash } = usePage().props;
 
     return (
-        <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8">
+        <main className="page-container space-y-6 py-8">
             <header>
                 <h1 className="text-2xl font-semibold text-primary">
                     Gestionar repositorio

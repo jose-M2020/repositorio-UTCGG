@@ -56,7 +56,7 @@ export const RepositoryCreateContainer = ({
     };
 
     return (
-        <main className="mx-auto w-full max-w-3xl space-y-6 px-4 py-8">
+        <main className="page-container space-y-6 py-8">
             <header className="text-center">
                 <h1 className="text-2xl font-semibold text-primary">
                     Crear nuevo repositorio

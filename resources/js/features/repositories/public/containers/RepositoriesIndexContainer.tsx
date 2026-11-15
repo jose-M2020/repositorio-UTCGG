@@ -18,7 +18,7 @@ export const RepositoriesIndexContainer = ({
     catalog,
 }: RepositoriesIndexContainerProps) => {
     return (
-        <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8">
+        <main className="page-container flex-1 space-y-6 py-8">
             <header className="space-y-1">
                 <h1 className="text-3xl font-semibold tracking-tight text-primary">
                     Repositorios

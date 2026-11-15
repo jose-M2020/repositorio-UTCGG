@@ -15,7 +15,7 @@ export const RoleCreateContainer = ({
     permissionGroups,
 }: RoleCreateContainerProps) => {
     return (
-        <main className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
+        <main className="page-container space-y-6 py-8">
             <header className="space-y-1">
                 <h1 className="text-2xl font-semibold text-foreground">
                     Nuevo rol

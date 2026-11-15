@@ -1,6 +1,6 @@
 export const AboutContent = () => {
     return (
-        <article className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 lg:grid-cols-2">
+        <article className="page-container grid gap-10 py-16 lg:grid-cols-2">
             <div className="flex justify-center">
                 <img
                     src="/img/about.svg"

@@ -5,7 +5,7 @@ import { Button, Input } from '@/shared/components/ui';
 export const HomeHero = () => {
     return (
         <section className="relative overflow-hidden bg-gradient-to-tr from-primary to-secondary text-primary-foreground">
-            <div className="relative mx-auto grid min-h-[88vh] w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
+            <div className="page-container relative grid min-h-[88vh] items-center gap-10 py-16 lg:grid-cols-2">
                 <div className="space-y-6">
                     <h1 className="text-4xl font-extrabold tracking-[0.12em] text-white uppercase sm:text-5xl lg:text-6xl">
                         Repositorio digital

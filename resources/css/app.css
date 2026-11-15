@@ -179,3 +179,8 @@
     @apply font-sans;
     }
 }
+
+/* Shared max-width for readable page content (do not apply globally to layout/main). */
+@utility page-container {
+  @apply mx-auto w-full max-w-6xl px-4;
+}

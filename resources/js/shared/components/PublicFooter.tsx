@@ -6,7 +6,7 @@ export const PublicFooter = () => {
 
     return (
         <footer className="mt-auto border-t border-border bg-card">
-            <div className="mx-auto w-full max-w-6xl px-4 py-10 text-center">
+            <div className="page-container py-10 text-center">
                 <Link href={home.url()} className="inline-flex justify-center">
                     <img
                         src="/img/logo.png"

@@ -8,7 +8,7 @@ type CareersSectionProps = {
 
 export const CareersSection = ({ careers }: CareersSectionProps) => {
     return (
-        <section className="mx-auto w-full max-w-6xl px-4 py-16">
+        <section className="page-container py-16">
             <div className="mb-10 text-center">
                 <h2 className="relative inline-block text-3xl tracking-wide text-foreground after:absolute after:-bottom-2 after:left-1/2 after:h-0.5 after:w-[75px] after:-translate-x-1/2 after:bg-secondary">
                     Áreas de estudio

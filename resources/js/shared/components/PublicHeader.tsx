@@ -29,7 +29,7 @@ export const PublicHeader = () => {
 
     return (
         <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
-            <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
+            <div className="page-container flex h-16 items-center justify-between gap-4">
                 <AppBrand href={home.url()} />
 
                 <nav
@@ -70,7 +70,7 @@ export const PublicHeader = () => {
 
             <nav
                 className={cn(
-                    'mx-auto max-w-6xl space-y-1 border-t border-border px-4 py-3 md:hidden',
+                    'page-container space-y-1 border-t border-border py-3 md:hidden',
                     !isMenuOpen && 'hidden',
                 )}
                 aria-label="Principal móvil"

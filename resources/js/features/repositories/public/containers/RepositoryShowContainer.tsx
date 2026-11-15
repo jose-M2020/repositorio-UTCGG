@@ -14,7 +14,7 @@ export const RepositoryShowContainer = ({
     related,
 }: RepositoryShowContainerProps) => {
     return (
-        <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8">
+        <main className="page-container space-y-8 py-8">
             <div className="flex justify-between gap-3">
                 <Link href={index.url()}>
                     <Button type="button" variant="outline">
