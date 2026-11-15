@@ -21,8 +21,8 @@ class RoleController extends Controller implements HasMiddleware
         return [
             'auth',
             new Middleware('can:roles.index', only: ['index']),
-            new Middleware('can:roles.create', only: ['create', 'store']),
-            new Middleware('can:roles.edit', only: ['edit', 'update']),
+            new Middleware('can:roles.create', only: ['store']),
+            new Middleware('can:roles.edit', only: ['update']),
             new Middleware('can:roles.destroy', only: ['destroy']),
         ];
     }
@@ -52,12 +52,6 @@ class RoleController extends Controller implements HasMiddleware
 
         return Inertia::render('panel/roles/index', [
             'roles' => $roles,
-        ]);
-    }
-
-    public function create(): Response
-    {
-        return Inertia::render('panel/roles/create', [
             'permissionGroups' => $this->permissionGroups(),
         ]);
     }
@@ -77,40 +71,6 @@ class RoleController extends Controller implements HasMiddleware
         return redirect()
             ->route('roles.index')
             ->with('status', 'Rol creado exitosamente.');
-    }
-
-    public function show(Role $role): Response
-    {
-        $role->load('permissions:id,name,description');
-
-        return Inertia::render('panel/roles/show', [
-            'role' => [
-                'id' => $role->id,
-                'name' => $role->name,
-                'permissions' => $role->permissions
-                    ->map(fn (Permission $permission) => [
-                        'id' => $permission->id,
-                        'name' => $permission->name,
-                        'description' => $permission->description,
-                    ])
-                    ->values()
-                    ->all(),
-            ],
-        ]);
-    }
-
-    public function edit(Role $role): Response
-    {
-        $role->load('permissions:id,name');
-
-        return Inertia::render('panel/roles/edit', [
-            'role' => [
-                'id' => $role->id,
-                'name' => $role->name,
-                'permissions' => $role->permissions->pluck('name')->values()->all(),
-            ],
-            'permissionGroups' => $this->permissionGroups(),
-        ]);
     }
 
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse

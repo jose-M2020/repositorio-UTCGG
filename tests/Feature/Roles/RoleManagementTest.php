@@ -177,10 +177,10 @@ class RoleManagementTest extends TestCase
         $admin->assignRole('admin');
 
         $response = $this->actingAs($admin)
-            ->from(route('roles.create'))
+            ->from(route('roles.index'))
             ->post(route('roles.store'), []);
 
-        $response->assertRedirect(route('roles.create'));
+        $response->assertRedirect(route('roles.index'));
         $response->assertSessionHasErrors(['name']);
     }
 }

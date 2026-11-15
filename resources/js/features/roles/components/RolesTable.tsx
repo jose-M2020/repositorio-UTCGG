@@ -4,13 +4,14 @@ import { DataTable } from "@/shared/components/dataTable";
 import { resolveUpdater } from "@/shared/lib";
 import { visitRolesIndex } from "../api/visitRolesIndex";
 import { createRolesColumns } from "../columns";
-import type { PaginatedRoles } from "../types";
+import type { PaginatedRoles, PermissionGroups } from "../types";
 
 type RolesTableProps = {
   roles: PaginatedRoles;
+  permissionGroups: PermissionGroups;
 };
 
-export const RolesTable = ({ roles }: RolesTableProps) => {
+export const RolesTable = ({ roles, permissionGroups }: RolesTableProps) => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: Math.max(0, roles.current_page - 1),
     pageSize: roles.per_page,
@@ -32,7 +33,7 @@ export const RolesTable = ({ roles }: RolesTableProps) => {
     });
   };
 
-  const columns = createRolesColumns();
+  const columns = createRolesColumns({ permissionGroups });
 
   return (
     <DataTable

@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function (): void {
         ->name('users.search');
 });
 
-Route::resource('roles', RoleController::class);
+Route::resource('roles', RoleController::class)
+    ->except(['create', 'edit', 'show']);
 Route::resource('catalogs', CatalogController::class)
     ->except(['create', 'edit', 'show']);
 Route::patch('catalogs/{catalog}/active', [CatalogController::class, 'toggleActive'])

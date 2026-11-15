@@ -13,12 +13,6 @@ export type RoleListItem = {
     permissions: RolePermission[];
 };
 
-export type RoleDetails = {
-    id: number;
-    name: string;
-    permissions: RolePermission[];
-};
-
 export type RoleFormValues = {
     id?: number;
     name: string;
