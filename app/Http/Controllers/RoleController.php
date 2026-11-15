@@ -40,6 +40,7 @@ class RoleController extends Controller implements HasMiddleware
                 'permissions_count' => $role->permissions_count,
                 'users_count' => $role->users_count,
                 'can_delete' => UserRoles::canDelete($role),
+                'is_system' => UserRoles::isSystem($role->name),
                 'permissions' => $role->permissions
                     ->map(fn (Permission $permission) => [
                         'id' => $permission->id,

@@ -10,6 +10,7 @@ export type RoleListItem = {
     permissions_count: number;
     users_count: number;
     can_delete: boolean;
+    is_system: boolean;
     permissions: RolePermission[];
 };
 

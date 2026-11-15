@@ -29,7 +29,7 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
   const [open, setOpen] = useState(false);
   const isEdit = mode === "edit";
   const role = isEdit ? props.role : null;
-  const formProps = isEdit && role ? update.form(role.id) : store.form();
+  const formProps = isEdit && role ? update.form(String(role.id)) : store.form();
   const defaults = role
     ? {
         name: role.name,
@@ -74,6 +74,7 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
                   errors={errors}
                   permissionGroups={permissionGroups}
                   defaults={defaults}
+                  nameLocked={Boolean(isEdit && role?.is_system)}
                 />
               </div>
               <DialogFooter className="m-0 shrink-0 rounded-none border-t border-border px-6 py-4">

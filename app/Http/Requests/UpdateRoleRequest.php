@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 use Spatie\Permission\Models\Role;
 
 class UpdateRoleRequest extends FormRequest
@@ -31,5 +33,21 @@ class UpdateRoleRequest extends FormRequest
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::exists('permissions', 'name')],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            /** @var Role $role */
+            $role = $this->route('role');
+            $newName = $this->string('name')->toString();
+
+            if (UserRoles::isSystem($role->name) && $newName !== $role->name) {
+                $validator->errors()->add(
+                    'name',
+                    'No se puede cambiar el nombre de un rol del sistema.',
+                );
+            }
+        });
     }
 }

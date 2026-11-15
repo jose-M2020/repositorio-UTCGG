@@ -99,6 +99,52 @@ class RoleManagementTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_update_system_role_permissions_without_renaming(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $role = Role::query()->where('name', 'student')->firstOrFail();
+
+        $response = $this->actingAs($admin)->put(route('roles.update', $role), [
+            'name' => 'student',
+            'permissions' => ['repositories.index', 'files.index'],
+        ]);
+
+        $response->assertRedirect(route('roles.index'));
+        $this->assertDatabaseHas('roles', [
+            'id' => $role->id,
+            'name' => 'student',
+        ]);
+        $this->assertTrue($role->fresh()?->hasPermissionTo('repositories.index'));
+        $this->assertTrue($role->fresh()?->hasPermissionTo('files.index'));
+    }
+
+    public function test_admin_cannot_rename_system_role(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $role = Role::query()->where('name', 'student')->firstOrFail();
+
+        $response = $this->actingAs($admin)
+            ->from(route('roles.index'))
+            ->put(route('roles.update', $role), [
+                'name' => 'alumno',
+                'permissions' => ['repositories.index'],
+            ]);
+
+        $response->assertRedirect(route('roles.index'));
+        $response->assertSessionHasErrors(['name']);
+        $this->assertDatabaseHas('roles', [
+            'id' => $role->id,
+            'name' => 'student',
+        ]);
+        $this->assertDatabaseMissing('roles', [
+            'name' => 'alumno',
+        ]);
+    }
+
     public function test_admin_can_delete_unused_custom_role(): void
     {
         $admin = User::factory()->create();
