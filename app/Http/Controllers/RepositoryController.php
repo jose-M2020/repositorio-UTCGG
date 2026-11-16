@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Middleware\AuthorizeMember;
 use App\Http\Requests\StoreRepositoryRequest;
 use App\Http\Requests\UpdateRepositoryRequest;
-use App\Models\Catalog as CatalogModel;
+use App\Models\Career;
+use App\Models\EducationLevel;
 use App\Models\File;
+use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
 use App\Support\Catalog as CatalogData;
@@ -44,9 +46,9 @@ class RepositoryController extends Controller implements HasMiddleware
         $repositories = Repository::query()
             ->with('users:id,first_name,last_name,second_last_name,email')
             ->with([
-                'careerCatalog:id,code',
-                'projectTypeCatalog:id,code',
-                'academicDegreeCatalog:id,code',
+                'career:id,code',
+                'projectType:id,code',
+                'educationLevel:id,code',
             ])
             ->latest()
             ->where('is_public', true)
@@ -70,16 +72,16 @@ class RepositoryController extends Controller implements HasMiddleware
                 $query->where('title', 'like', "%{$search}%");
             })
             ->when($careers !== [], fn ($query) => $query->whereHas(
-                'careerCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $careers),
+                'career',
+                fn ($careerQuery) => $careerQuery->whereIn('code', $careers),
             ))
             ->when($projectTypes !== [], fn ($query) => $query->whereHas(
-                'projectTypeCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $projectTypes),
+                'projectType',
+                fn ($typeQuery) => $typeQuery->whereIn('code', $projectTypes),
             ))
             ->when($academicDegrees !== [], fn ($query) => $query->whereHas(
-                'academicDegreeCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $academicDegrees),
+                'educationLevel',
+                fn ($levelQuery) => $levelQuery->whereIn('code', $academicDegrees),
             ))
             ->when(
                 count($years) === 2 && $years[0] !== '' && $years[1] !== '',
@@ -95,9 +97,9 @@ class RepositoryController extends Controller implements HasMiddleware
                     'title' => $repository->title,
                     'slug' => $repository->slug,
                     'description' => $repository->description,
-                    'career' => $repository->careerCatalog?->code ?? '—',
-                    'project_type' => $repository->projectTypeCatalog?->code ?? '—',
-                    'academic_degree' => $repository->academicDegreeCatalog?->code ?? '—',
+                    'career' => $repository->career?->code ?? '—',
+                    'project_type' => $repository->projectType?->code ?? '—',
+                    'academic_degree' => $repository->educationLevel?->code ?? '—',
                     'is_public' => $repository->is_public,
                     'created_at' => $repository->created_at?->toDateTimeString(),
                     'cover_url' => Media::url($images[0] ?? null),
@@ -145,11 +147,15 @@ class RepositoryController extends Controller implements HasMiddleware
         $user = $request->user();
         $validated = $request->safe()->except(['member_emails', 'visibility', 'career', 'project_type', 'academic_degree']);
 
+        $careerId = $this->careerIdByCode($request->string('career')->toString());
+        $projectTypeId = $this->projectTypeIdByCode($request->string('project_type')->toString());
+        $educationLevelId = $this->educationLevelIdByCode($request->string('academic_degree')->toString());
+
         $repository = Repository::query()->create([
             ...$validated,
-            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('career')->toString()),
-            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('project_type')->toString()),
-            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('academic_degree')->toString()),
+            'career_id' => $careerId,
+            'project_type_id' => $projectTypeId,
+            'education_level_id' => $educationLevelId,
             'slug' => $this->uniqueSlug($request->string('title')->toString()),
             'is_public' => $request->string('visibility')->toString() === 'public',
             'created_by' => $user->fullName(),
@@ -187,18 +193,18 @@ class RepositoryController extends Controller implements HasMiddleware
         ]);
 
         $related = Repository::query()
-            ->where('career_catalog_id', $repository->career_catalog_id)
+            ->where('career_id', $repository->career_id)
             ->whereKeyNot($repository->id)
             ->where('is_public', true)
             ->inRandomOrder()
             ->limit(6)
-            ->with('careerCatalog:id,code')
-            ->get(['id', 'title', 'slug', 'career_catalog_id'])
+            ->with('career:id,code')
+            ->get(['id', 'title', 'slug', 'career_id'])
             ->map(fn (Repository $relatedRepo) => [
                 'id' => $relatedRepo->id,
                 'title' => $relatedRepo->title,
                 'slug' => $relatedRepo->slug,
-                'career' => $relatedRepo->careerCatalog?->code ?? '—',
+                'career' => $relatedRepo->career?->code ?? '—',
             ])
             ->values()
             ->all();
@@ -250,11 +256,15 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         $validated = $request->safe()->except(['visibility', 'career', 'project_type', 'academic_degree']);
 
+        $careerId = $this->careerIdByCode($request->string('career')->toString());
+        $projectTypeId = $this->projectTypeIdByCode($request->string('project_type')->toString());
+        $educationLevelId = $this->educationLevelIdByCode($request->string('academic_degree')->toString());
+
         $repository->update([
             ...$validated,
-            'career_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_CAREER, $request->string('career')->toString()),
-            'project_type_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_PROJECT, $request->string('project_type')->toString()),
-            'academic_degree_catalog_id' => $this->catalogIdByCode(CatalogModel::TYPE_ACADEMIC_DEGREE, $request->string('academic_degree')->toString()),
+            'career_id' => $careerId,
+            'project_type_id' => $projectTypeId,
+            'education_level_id' => $educationLevelId,
             'slug' => $this->uniqueSlug($request->string('title')->toString(), $repository->id),
             'is_public' => $request->string('visibility')->toString() === 'public',
         ]);
@@ -292,12 +302,19 @@ class RepositoryController extends Controller implements HasMiddleware
         return $slug;
     }
 
-    private function catalogIdByCode(string $type, string $code): ?int
+    private function careerIdByCode(string $code): ?int
     {
-        return CatalogModel::query()
-            ->where('type', $type)
-            ->where('code', $code)
-            ->value('id');
+        return Career::query()->where('code', $code)->value('id');
+    }
+
+    private function projectTypeIdByCode(string $code): ?int
+    {
+        return ProjectType::query()->where('code', $code)->value('id');
+    }
+
+    private function educationLevelIdByCode(string $code): ?int
+    {
+        return EducationLevel::query()->where('code', $code)->value('id');
     }
 
     /**
@@ -306,9 +323,9 @@ class RepositoryController extends Controller implements HasMiddleware
     private function serializeRepository(Repository $repository): array
     {
         $repository->loadMissing([
-            'careerCatalog:id,code',
-            'projectTypeCatalog:id,code',
-            'academicDegreeCatalog:id,code',
+            'career:id,code',
+            'projectType:id,code',
+            'educationLevel:id,code',
         ]);
 
         $imagePaths = json_decode($repository->images ?? '[]', true) ?: [];
@@ -318,11 +335,11 @@ class RepositoryController extends Controller implements HasMiddleware
             'title' => $repository->title,
             'slug' => $repository->slug,
             'description' => $repository->description,
-            'project_type' => $repository->projectTypeCatalog?->code ?? '—',
-            'academic_degree' => $repository->academicDegreeCatalog?->code ?? '—',
+            'project_type' => $repository->projectType?->code ?? '—',
+            'academic_degree' => $repository->educationLevel?->code ?? '—',
             'keywords' => $repository->keywords,
             'is_public' => $repository->is_public,
-            'career' => $repository->careerCatalog?->code ?? '—',
+            'career' => $repository->career?->code ?? '—',
             'external_advisor' => $repository->external_advisor,
             'company' => $repository->company,
             'generation' => $repository->generation,

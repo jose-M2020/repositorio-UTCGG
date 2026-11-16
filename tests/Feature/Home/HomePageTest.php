@@ -11,6 +11,13 @@ class HomePageTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seedDedicatedCatalogs();
+    }
+
     public function test_home_page_renders_only_public_repositories(): void
     {
         Repository::factory()->create(['title' => 'Publico A', 'is_public' => true]);

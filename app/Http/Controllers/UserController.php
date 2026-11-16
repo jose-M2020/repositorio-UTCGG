@@ -9,6 +9,7 @@ use App\Actions\Users\SendUserPasswordLink;
 use App\Actions\Users\ToggleUserActive;
 use App\Actions\Users\UpdateUserProfile;
 use App\Enums\UserAccountStatus;
+use App\Enums\UserType;
 use App\Http\Requests\ChangeUserRoleRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -62,18 +63,23 @@ class UserController extends Controller implements HasMiddleware
         $date = $request->string('date')->toString();
         $hasDateRange = ($dateRange[0] ?? '') !== '' && ($dateRange[1] ?? '') !== '';
 
-        if (UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id) {
+        $managedCareerIds = collect();
+        if (UserRoles::isCareerScoped($authUser) && $authUser) {
+            $managedCareerIds = $authUser->managedCareerIds();
             $careers = [];
         }
 
         $users = User::query()
             ->with('roles:id,name')
-            ->with('careerCatalog:id,code')
+            ->with([
+                'studentProfile.career:id,code',
+                'activeCareerAssignments.career:id,code',
+            ])
             ->latest('id')
             ->whereKeyNot($authUser->getKey())
             ->when(
-                UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
-                fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
+                UserRoles::isCareerScoped($authUser) && $managedCareerIds->isNotEmpty(),
+                fn ($query) => $query->inCareers($managedCareerIds->all()),
             )
             ->when($name !== '', function ($query) use ($name): void {
                 $query->where(function ($inner) use ($name): void {
@@ -83,10 +89,7 @@ class UserController extends Controller implements HasMiddleware
                 });
             })
             ->when($email !== '', fn ($query) => $query->where('email', 'like', "%{$email}%"))
-            ->when($careers !== [], fn ($query) => $query->whereHas(
-                'careerCatalog',
-                fn ($catalogQuery) => $catalogQuery->whereIn('code', $careers),
-            ))
+            ->when($careers !== [], fn ($query) => $query->whereCareerCodes($careers))
             ->when($roles !== [], fn ($query) => $query->role($roles))
             ->when($statuses !== [], fn ($query) => $query->whereIn('status', $statuses))
             ->when($hasDateRange, function ($query) use ($dateRange): void {
@@ -117,7 +120,7 @@ class UserController extends Controller implements HasMiddleware
                     $query->whereYear('created_at', now()->year);
                 }
             })
-            ->paginate(10, ['id', 'first_name', 'last_name', 'second_last_name', 'email', 'career_catalog_id', 'status', 'created_at'])
+            ->paginate(10, ['id', 'first_name', 'last_name', 'second_last_name', 'email', 'user_type', 'status', 'created_at'])
             ->withQueryString()
             ->through(fn (User $user): array => [
                 'id' => $user->id,
@@ -125,7 +128,8 @@ class UserController extends Controller implements HasMiddleware
                 'last_name' => $user->last_name,
                 'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
-                'career' => $user->careerCatalog?->code,
+                'user_type' => $user->user_type?->value,
+                'career' => $user->careerCode(),
                 'status' => $user->status->value,
                 'created_at' => (string) $user->created_at,
                 'roles' => $user->roles->map(fn (Role $role) => [
@@ -150,19 +154,32 @@ class UserController extends Controller implements HasMiddleware
             'rolePermissions' => $this->permissionsByAssignableRole($authUser),
             'careers' => CatalogData::careers(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
+            'userTypes' => collect(UserType::cases())
+                ->map(fn (UserType $type): array => [
+                    'value' => $type->value,
+                    'label' => $type->label(),
+                ])
+                ->values()
+                ->all(),
         ]);
     }
 
     public function store(StoreUserRequest $request, CreateUser $createUser): RedirectResponse
     {
+        $validated = $request->validated();
+        $roles = $validated['roles'] ?? [];
+        $primaryRole = (string) ($roles[0] ?? $request->string('role')->toString());
+
         $result = $createUser->handle(
             $request->user(),
             $request->string('first_name')->toString(),
             $request->string('last_name')->toString(),
             $request->filled('second_last_name') ? $request->string('second_last_name')->toString() : null,
             $request->string('email')->toString(),
-            $request->string('role')->toString(),
+            $primaryRole,
             $request->input('career'),
+            $request->string('user_type')->toString(),
+            $validated,
         );
 
         return redirect()
@@ -174,7 +191,11 @@ class UserController extends Controller implements HasMiddleware
     {
         $ensureCanManageUser->handle(request()->user(), $user);
 
-        $user->load(['roles:id,name', 'careerCatalog:id,code']);
+        $user->load([
+            'roles:id,name',
+            'studentProfile.career:id,code',
+            'activeCareerAssignments.career:id,code',
+        ]);
 
         $repositories = $user->repositories()
             ->orderByDesc('repositories.created_at')
@@ -187,7 +208,7 @@ class UserController extends Controller implements HasMiddleware
                 'last_name' => $user->last_name,
                 'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
-                'career' => $user->careerCatalog?->code,
+                'career' => $user->careerCode(),
                 'status' => $user->status->value,
                 'roles' => $user->getRoleNames()->values()->all(),
                 'created_at' => $user->created_at?->toDateTimeString(),
@@ -205,8 +226,13 @@ class UserController extends Controller implements HasMiddleware
         $users = User::query()
             ->latest('id')
             ->when(
-                UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id,
-                fn ($query) => $query->where('career_catalog_id', $authUser->career_catalog_id),
+                UserRoles::isCareerScoped($authUser) && $authUser,
+                function ($query) use ($authUser): void {
+                    $managed = $authUser->managedCareerIds();
+                    if ($managed->isNotEmpty()) {
+                        $query->inCareers($managed->all());
+                    }
+                },
             )
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($inner) use ($search): void {

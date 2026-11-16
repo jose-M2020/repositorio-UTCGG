@@ -15,14 +15,14 @@ class HomeController extends Controller
             ->where('is_public', true)
             ->latest()
             ->limit(8)
-            ->with('careerCatalog:id,code')
-            ->get(['id', 'title', 'slug', 'description', 'career_catalog_id', 'created_at'])
+            ->with('career:id,code')
+            ->get(['id', 'title', 'slug', 'description', 'career_id', 'created_at'])
             ->map(fn (Repository $repo) => [
                 'id' => $repo->id,
                 'title' => $repo->title,
                 'slug' => $repo->slug,
                 'description' => $repo->description,
-                'career' => $repo->careerCatalog?->code ?? '—',
+                'career' => $repo->career?->code ?? '—',
                 'created_at' => $repo->created_at?->toDateTimeString(),
             ])
             ->values()
@@ -32,14 +32,14 @@ class HomeController extends Controller
             ->where('is_public', true)
             ->inRandomOrder()
             ->limit(8)
-            ->with('careerCatalog:id,code')
-            ->get(['id', 'title', 'slug', 'description', 'career_catalog_id', 'created_at'])
+            ->with('career:id,code')
+            ->get(['id', 'title', 'slug', 'description', 'career_id', 'created_at'])
             ->map(fn (Repository $repo) => [
                 'id' => $repo->id,
                 'title' => $repo->title,
                 'slug' => $repo->slug,
                 'description' => $repo->description,
-                'career' => $repo->careerCatalog?->code ?? '—',
+                'career' => $repo->career?->code ?? '—',
                 'created_at' => $repo->created_at?->toDateTimeString(),
             ])
             ->values()

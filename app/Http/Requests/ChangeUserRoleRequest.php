@@ -48,11 +48,11 @@ class ChangeUserRoleRequest extends FormRequest
                 $user = $this->route('user');
                 $authUser = $this->user();
 
-                if ($user->career_catalog_id) {
+                if ($user->careerIds()->isNotEmpty()) {
                     return;
                 }
 
-                if (UserRoles::isCareerScoped($authUser) && $authUser?->career_catalog_id) {
+                if (UserRoles::isCareerScoped($authUser) && $authUser?->managedCareerIds()->isNotEmpty()) {
                     return;
                 }
 

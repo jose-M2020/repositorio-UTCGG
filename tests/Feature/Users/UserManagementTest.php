@@ -4,11 +4,9 @@ namespace Tests\Feature\Users;
 
 use App\Enums\SetPasswordPurpose;
 use App\Enums\UserAccountStatus;
-use App\Models\Catalog;
 use App\Models\User;
 use App\Notifications\SetPasswordNotification;
 use App\Support\UserRoles;
-use Database\Seeders\CatalogSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -22,10 +20,8 @@ class UserManagementTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed([
-            CatalogSeeder::class,
-            PermissionsSeeder::class,
-        ]);
+        $this->seedDedicatedCatalogs();
+        $this->seed(PermissionsSeeder::class);
     }
 
     public function test_guest_is_redirected_from_users_index(): void
@@ -79,18 +75,17 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect(route('users.index'));
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
+        $ticCareerId = $this->careerId('TIC');
         $this->assertDatabaseHas('users', [
             'email' => 'ana@example.com',
             'first_name' => 'Ana',
             'last_name' => 'Lopez',
             'second_last_name' => 'Garcia',
-            'career_catalog_id' => $ticCareerId,
             'status' => UserAccountStatus::PendingActivation->value,
             'password' => null,
+        ]);
+        $this->assertDatabaseHas('student_profiles', [
+            'career_id' => $ticCareerId,
         ]);
 
         $created = User::query()->where('email', 'ana@example.com')->first();
@@ -108,15 +103,10 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
-
-        $user = User::factory()->create([
+        $user = User::factory()->student()->create([
             'email' => 'old@example.com',
-            'career_catalog_id' => $ticCareerId,
         ]);
+        $this->seedStudentCareer($user, 'TIC');
         $user->assignRole(UserRoles::STUDENT);
 
         $response = $this->actingAs($admin)->put(route('users.update', $user), [
@@ -128,16 +118,16 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect(route('users.index'));
-        $erCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'ER')
-            ->value('id');
+        $erCareerId = $this->careerId('ER');
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'email' => 'new@example.com',
             'last_name' => 'Actualizada',
             'second_last_name' => 'Ruiz',
-            'career_catalog_id' => $erCareerId,
+        ]);
+        $this->assertDatabaseHas('student_profiles', [
+            'user_id' => $user->id,
+            'career_id' => $erCareerId,
         ]);
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::STUDENT));
     }
@@ -147,14 +137,10 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
+        $ticCareerId = $this->careerId('TIC');
 
-        $user = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $user = User::factory()->student()->create();
+        $this->seedStudentCareer($user, 'TIC');
         $user->assignRole(UserRoles::STUDENT);
 
         $response = $this->actingAs($admin)->patch(route('users.update-role', $user), [
@@ -163,9 +149,9 @@ class UserManagementTest extends TestCase
 
         $response->assertRedirect(route('users.index'));
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::TEACHER));
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'career_catalog_id' => $ticCareerId,
+        $this->assertDatabaseHas('career_assignments', [
+            'user_id' => $user->id,
+            'career_id' => $ticCareerId,
         ]);
     }
 
@@ -174,14 +160,8 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
-
-        $user = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $user = User::factory()->student()->create();
+        $this->seedStudentCareer($user, 'TIC');
         $user->assignRole(UserRoles::STUDENT);
 
         $response = $this->actingAs($admin)->patch(route('users.update-role', $user), [
@@ -190,10 +170,7 @@ class UserManagementTest extends TestCase
 
         $response->assertRedirect(route('users.index'));
         $this->assertTrue($user->fresh()?->hasRole(UserRoles::ADMIN));
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'career_catalog_id' => null,
-        ]);
+        $this->assertTrue($user->fresh()?->user_type === \App\Enums\UserType::Staff);
     }
 
     public function test_admin_cannot_assign_career_role_without_existing_career(): void
@@ -201,9 +178,7 @@ class UserManagementTest extends TestCase
         $admin = User::factory()->create();
         $admin->assignRole(UserRoles::ADMIN);
 
-        $user = User::factory()->create([
-            'career_catalog_id' => null,
-        ]);
+        $user = User::factory()->staff()->create();
         $user->assignRole(UserRoles::ADMIN);
 
         $response = $this->actingAs($admin)
@@ -233,14 +208,8 @@ class UserManagementTest extends TestCase
 
     public function test_career_director_only_sees_assignable_roles_in_users_filter(): void
     {
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
-
-        $director = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $director = User::factory()->teacher()->create();
+        $this->seedCareerDirector($director, 'TIC');
         $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         $this->actingAs($director)
@@ -353,7 +322,7 @@ class UserManagementTest extends TestCase
         $response = $this->actingAs($admin)->delete(route('users.destroy', $user));
 
         $response->assertRedirect(route('users.index'));
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertSoftDeleted('users', ['id' => $user->id]);
     }
 
     public function test_create_user_validation_errors(): void
@@ -391,21 +360,16 @@ class UserManagementTest extends TestCase
         $response->assertRedirect(route('users.index'));
         $this->assertDatabaseHas('users', [
             'email' => 'root@example.com',
-            'career_catalog_id' => null,
             'status' => UserAccountStatus::PendingActivation->value,
         ]);
     }
 
     public function test_career_director_forces_own_career_when_creating_user(): void
     {
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
+        $ticCareerId = $this->careerId('TIC');
 
-        $director = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $director = User::factory()->teacher()->create();
+        $this->seedCareerDirector($director, 'TIC');
         $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         Notification::fake();
@@ -416,25 +380,23 @@ class UserManagementTest extends TestCase
             'email' => 'luis@example.com',
             'career' => 'ER',
             'role' => UserRoles::STUDENT,
+            'user_type' => 'student',
+            'academic_status' => 'active',
         ]);
 
         $response->assertRedirect(route('users.index'));
-        $this->assertDatabaseHas('users', [
-            'email' => 'luis@example.com',
-            'career_catalog_id' => $ticCareerId,
+        $created = User::query()->where('email', 'luis@example.com')->first();
+        $this->assertNotNull($created);
+        $this->assertDatabaseHas('student_profiles', [
+            'user_id' => $created->id,
+            'career_id' => $ticCareerId,
         ]);
     }
 
     public function test_career_director_cannot_assign_admin_role(): void
     {
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
-
-        $director = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $director = User::factory()->teacher()->create();
+        $this->seedCareerDirector($director, 'TIC');
         $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
         $response = $this->actingAs($director)
@@ -570,30 +532,20 @@ class UserManagementTest extends TestCase
 
     public function test_career_director_only_lists_users_from_same_career(): void
     {
-        $ticCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'TIC')
-            ->value('id');
-        $erCareerId = Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
-            ->where('code', 'ER')
-            ->value('id');
-
-        $director = User::factory()->create([
-            'career_catalog_id' => $ticCareerId,
-        ]);
+        $director = User::factory()->teacher()->create();
+        $this->seedCareerDirector($director, 'TIC');
         $director->assignRole(UserRoles::CAREER_DIRECTOR);
 
-        $sameCareer = User::factory()->create([
+        $sameCareer = User::factory()->student()->create([
             'first_name' => 'Misma',
-            'career_catalog_id' => $ticCareerId,
         ]);
+        $this->seedStudentCareer($sameCareer, 'TIC');
         $sameCareer->assignRole(UserRoles::STUDENT);
 
-        $otherCareer = User::factory()->create([
+        $otherCareer = User::factory()->student()->create([
             'first_name' => 'Otra',
-            'career_catalog_id' => $erCareerId,
         ]);
+        $this->seedStudentCareer($otherCareer, 'ER');
         $otherCareer->assignRole(UserRoles::STUDENT);
 
         $this->actingAs($director)

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Catalog;
+use App\Enums\UserType;
 use App\Models\User;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,25 +18,33 @@ class UpdateUserRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $authUser = $this->user();
-        $authUser?->loadMissing('careerCatalog:id,code');
 
         /** @var User $user */
         $user = $this->route('user');
         $role = (string) ($user->getRoleNames()->first() ?? '');
+        $userType = $user->user_type;
+        $needsCareer = ($userType === UserType::Student || $userType === UserType::Teacher)
+            || UserRoles::requiresCareer($role);
+
+        $lockedCode = $authUser?->careerCode();
+        $lockedCareerId = $authUser?->managedCareerIds()->first()
+            ?? $authUser?->primaryCareer()?->id;
 
         if (
-            UserRoles::requiresCareer($role)
+            $needsCareer
             && ! UserRoles::canSelectCareer($authUser)
-            && $authUser?->careerCatalog?->code
+            && $lockedCode
         ) {
             $this->merge([
-                'career' => $authUser->careerCatalog->code,
+                'career' => $lockedCode,
+                'career_id' => $lockedCareerId,
             ]);
         }
 
-        if ($role !== '' && ! UserRoles::requiresCareer($role)) {
+        if (! $needsCareer) {
             $this->merge([
                 'career' => null,
+                'career_id' => null,
             ]);
         }
     }
@@ -49,8 +57,11 @@ class UpdateUserRequest extends FormRequest
         /** @var User $user */
         $user = $this->route('user');
         $authUser = $this->user();
+        $userType = $user->user_type?->value;
         $role = (string) ($user->getRoleNames()->first() ?? '');
-        $careerRequired = UserRoles::requiresCareer($role)
+        $needsCareer = in_array($userType, [UserType::Student->value, UserType::Teacher->value], true)
+            || UserRoles::requiresCareer($role);
+        $careerRequired = $needsCareer
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
         return [
@@ -64,13 +75,19 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
+            'phone' => ['nullable', 'string', 'max:20'],
             'career' => [
-                $careerRequired ? 'required' : 'nullable',
+                Rule::requiredIf($careerRequired && ! $this->filled('career_id')),
+                'nullable',
                 'string',
                 'max:20',
-                Rule::exists('catalogs', 'code')->where(fn ($query) => $query
-                    ->where('type', Catalog::TYPE_CAREER)
-                    ->where('is_active', true)),
+                Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
+            ],
+            'career_id' => [
+                Rule::requiredIf($careerRequired && ! $this->filled('career')),
+                'nullable',
+                'integer',
+                Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
             ],
         ];
     }

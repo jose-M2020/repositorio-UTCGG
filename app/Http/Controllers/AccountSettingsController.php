@@ -15,7 +15,7 @@ class AccountSettingsController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        $user->loadMissing('careerCatalog:id,code,name');
+        $user->loadMissing(['studentProfile.career', 'activeCareerAssignments.career']);
 
         $role = (string) ($user->getRoleNames()->first() ?? '');
 
@@ -26,7 +26,7 @@ class AccountSettingsController extends Controller
                 'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
                 'role' => $role !== '' ? UserRoles::label($role) : null,
-                'career' => $user->careerCatalog?->name,
+                'career' => $user->careerName(),
             ],
         ]);
     }
