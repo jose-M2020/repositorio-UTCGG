@@ -2,19 +2,18 @@
 
 namespace App\Actions\Users;
 
-use App\Enums\SetPasswordPurpose;
-use App\Enums\UserAccountStatus;
 use App\Models\User;
-use App\Support\UserPasswordSetup;
-use Illuminate\Support\Facades\Password;
+use App\Services\Users\UserProvisioningService;
+use App\Support\UserRoles;
 
 final class CreateUser
 {
     public function __construct(
-        private ResolveUserCareerCatalogId $resolveCareerCatalogId,
+        private UserProvisioningService $provisioning,
     ) {}
 
     /**
+     * @param  array<string, mixed>|null  $profile
      * @return array{user: User, link_status: string}
      */
     public function handle(
@@ -25,35 +24,48 @@ final class CreateUser
         string $email,
         string $role,
         ?string $careerCode,
+        ?string $userType = null,
+        ?array $profile = null,
     ): array {
-        $user = User::query()->create([
+        $resolvedType = $userType ?? $this->defaultUserTypeForRole($role);
+
+        $payload = [
             'first_name' => $firstName,
             'last_name' => $lastName,
             'second_last_name' => $secondLastName,
             'email' => $email,
-            'password' => null,
-            'status' => UserAccountStatus::PendingActivation,
-            'career_catalog_id' => $this->resolveCareerCatalogId->handle(
-                $actor,
-                $role,
-                $careerCode,
-            ),
-        ]);
-
-        $user->assignRole($role);
-
-        $linkStatus = UserPasswordSetup::send($user, SetPasswordPurpose::Activation);
-
-        return [
-            'user' => $user,
-            'link_status' => $linkStatus,
+            'user_type' => $resolvedType,
+            'roles' => [$role],
+            'career' => $careerCode,
+            ...(match ($resolvedType) {
+                'student' => [
+                    'student_number' => $profile['student_number'] ?? null,
+                    'academic_status' => $profile['academic_status'] ?? 'active',
+                ],
+                'teacher' => [
+                    'employee_number' => $profile['employee_number'] ?? null,
+                ],
+                default => [
+                    'job_title' => $profile['job_title'] ?? UserRoles::label($role),
+                ],
+            }),
+            ...($profile ?? []),
         ];
+
+        return $this->provisioning->create($actor, $payload);
     }
 
     public function flashMessage(string $linkStatus): string
     {
-        return $linkStatus === Password::RESET_LINK_SENT
-            ? 'Usuario registrado. El enlace de activación se enviará en breve.'
-            : 'Usuario registrado, pero no se pudo encolar el enlace de activación. Usa “Reenviar activación”.';
+        return $this->provisioning->flashMessage($linkStatus);
+    }
+
+    private function defaultUserTypeForRole(string $role): string
+    {
+        return match ($role) {
+            UserRoles::STUDENT => 'student',
+            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => 'teacher',
+            default => 'staff',
+        };
     }
 }

@@ -2,12 +2,16 @@
 
 namespace App\Actions\Users;
 
+use App\Enums\UserType;
 use App\Models\User;
+use App\Services\Users\UserProvisioningService;
 use App\Support\UserRoles;
+use Illuminate\Support\Facades\DB;
 
 final class ChangeUserRole
 {
     public function __construct(
+        private UserProvisioningService $provisioning,
         private EnsureCanManageUser $ensureCanManageUser,
     ) {}
 
@@ -15,18 +19,40 @@ final class ChangeUserRole
     {
         $this->ensureCanManageUser->handle($actor, $user);
 
-        $careerCatalogId = null;
+        return DB::transaction(function () use ($actor, $user, $role): User {
+            $targetType = $this->userTypeForRole($role);
 
-        if (UserRoles::requiresCareer($role)) {
-            $careerCatalogId = $user->career_catalog_id
-                ?? (UserRoles::isCareerScoped($actor) ? $actor->career_catalog_id : null);
-        }
+            $careerId = null;
+            if (UserRoles::requiresCareer($role)) {
+                $careerId = $user->careerIds()->first()
+                    ?? ($UserRoles::isCareerScoped($actor) ? $actor->managedCareerIds()->first() : null);
+            }
 
-        $user->syncRoles([$role]);
-        $user->update([
-            'career_catalog_id' => $careerCatalogId,
-        ]);
+            if ($user->user_type !== $targetType) {
+                $user = $this->provisioning->changeType($actor, $user, $targetType, [
+                    'career_id' => $careerId,
+                    'job_title' => UserRoles::label($role),
+                    'academic_status' => 'active',
+                    'employee_number' => null,
+                    'student_number' => null,
+                ]);
+            }
 
-        return $user->refresh();
+            $user->syncRoles([$role]);
+            $user->update([
+                'user_type' => $targetType,
+            ]);
+
+            return $user->fresh(['roles']);
+        });
+    }
+
+    private function userTypeForRole(string $role): UserType
+    {
+        return match ($role) {
+            UserRoles::STUDENT => UserType::Student,
+            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Teacher,
+            default => UserType::Staff,
+        };
     }
 }

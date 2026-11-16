@@ -2,7 +2,7 @@
 
 namespace App\Actions\Users;
 
-use App\Models\Catalog;
+use App\Models\Career;
 use App\Models\User;
 use App\Support\UserRoles;
 
@@ -15,15 +15,14 @@ final class ResolveUserCareerCatalogId
         }
 
         if (UserRoles::isCareerScoped($actor)) {
-            return $actor?->career_catalog_id;
+            return $actor?->managedCareerIds()->first();
         }
 
         if ($careerCode === null || $careerCode === '') {
             return null;
         }
 
-        return Catalog::query()
-            ->where('type', Catalog::TYPE_CAREER)
+        return Career::query()
             ->where('code', $careerCode)
             ->value('id');
     }

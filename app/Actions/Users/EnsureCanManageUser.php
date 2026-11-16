@@ -9,18 +9,25 @@ final class EnsureCanManageUser
 {
     /**
      * Abort with 403 when a career-scoped manager tries to act on a user
-     * outside their career. Global managers (CAREER_ANY) are not restricted.
+     * outside their managed careers. Global managers (CAREER_ANY) are not restricted.
      */
     public function handle(?User $actor, User $user): void
     {
-        if (! UserRoles::isCareerScoped($actor)) {
+        if (! UserRoles::isCareerScoped($actor) || ! $actor) {
             return;
         }
 
-        abort_unless(
-            $actor?->career_catalog_id
-                && $user->career_catalog_id === $actor->career_catalog_id,
-            403,
-        );
+        $managedIds = $actor->managedCareerIds();
+
+        if ($managedIds->isEmpty()) {
+            abort(403);
+        }
+
+        $inScope = User::query()
+            ->whereKey($user->getKey())
+            ->inCareers($managedIds->all())
+            ->exists();
+
+        abort_unless($inScope, 403);
     }
 }

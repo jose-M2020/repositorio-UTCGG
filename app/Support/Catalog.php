@@ -2,8 +2,14 @@
 
 namespace App\Support;
 
-use App\Models\Catalog as CatalogModel;
+use App\Models\Career;
+use App\Models\EducationLevel;
+use App\Models\ProjectType;
 
+/**
+ * Temporary facade over dedicated catalog tables.
+ * Prefer Career / ProjectType / EducationLevel models directly in new code.
+ */
 final class Catalog
 {
     /**
@@ -11,10 +17,9 @@ final class Catalog
      */
     public static function careers(): array
     {
-        return CatalogModel::query()
+        return Career::query()
             ->active()
-            ->ofType(CatalogModel::TYPE_CAREER)
-            ->orderBy('sort_order')
+            ->ordered()
             ->pluck('name', 'code')
             ->all();
     }
@@ -24,10 +29,9 @@ final class Catalog
      */
     public static function academicDegrees(): array
     {
-        return CatalogModel::query()
+        return EducationLevel::query()
             ->active()
-            ->ofType(CatalogModel::TYPE_ACADEMIC_DEGREE)
-            ->orderBy('sort_order')
+            ->ordered()
             ->pluck('name', 'code')
             ->all();
     }
@@ -37,10 +41,9 @@ final class Catalog
      */
     public static function projectTypes(): array
     {
-        return CatalogModel::query()
+        return ProjectType::query()
             ->active()
-            ->ofType(CatalogModel::TYPE_PROJECT)
-            ->orderBy('sort_order')
+            ->ordered()
             ->pluck('code')
             ->values()
             ->all();
@@ -51,27 +54,15 @@ final class Catalog
      */
     public static function homeCareers(): array
     {
-        return CatalogModel::query()
-            ->active()
-            ->ofType(CatalogModel::TYPE_CAREER)
-            ->orderBy('sort_order')
-            ->get(['code', 'name', 'meta'])
-            ->map(function (CatalogModel $catalog): ?array {
-                $meta = is_array($catalog->meta) ? $catalog->meta : [];
-                $showOnHome = (bool) ($meta['show_on_home'] ?? false);
-                $image = is_string($meta['image'] ?? null) ? $meta['image'] : null;
-
-                if (! $showOnHome || ! $image) {
-                    return null;
-                }
-
-                return [
-                    'code' => $catalog->code,
-                    'name' => $catalog->name,
-                    'image' => $image,
-                ];
-            })
-            ->filter()
+        return Career::query()
+            ->forHome()
+            ->ordered()
+            ->get(['code', 'name', 'image_path'])
+            ->map(fn (Career $career): array => [
+                'code' => $career->code,
+                'name' => $career->name,
+                'image' => (string) $career->image_path,
+            ])
             ->values()
             ->all();
     }

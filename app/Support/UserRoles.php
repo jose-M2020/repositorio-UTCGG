@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Career;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -181,9 +182,13 @@ final class UserRoles
             ];
         }
 
-        $authUser?->loadMissing('careerCatalog:id,code,name');
-        $code = $authUser?->careerCatalog?->code;
-        $label = $authUser?->careerCatalog?->name;
+        $managedId = $authUser?->managedCareerIds()->first();
+        $career = $managedId !== null
+            ? Career::query()->find($managedId, ['id', 'code', 'name'])
+            : $authUser?->primaryCareer();
+
+        $code = $career?->code;
+        $label = $career?->name;
 
         return [
             'can_select_career' => false,
