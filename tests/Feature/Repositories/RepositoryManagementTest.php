@@ -16,7 +16,7 @@ class RepositoryManagementTest extends TestCase
     {
         parent::setUp();
 
-        $this->seedDedicatedCatalogs();
+        $this->seedDomainLookups();
         $this->seed(PermissionsSeeder::class);
     }
 
@@ -76,7 +76,7 @@ class RepositoryManagementTest extends TestCase
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->component('panel/repositories/create')
-                ->has('catalog'));
+                ->has('lookups'));
     }
 
     public function test_non_member_cannot_manage_repository(): void

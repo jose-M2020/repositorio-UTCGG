@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\HandlesCatalogResourceDestroy;
+use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreProjectTypeRequest;
 use App\Http\Requests\UpdateProjectTypeRequest;
 use App\Models\ProjectType;
@@ -14,7 +14,7 @@ use Inertia\Response;
 
 class ProjectTypeController extends Controller implements HasMiddleware
 {
-    use HandlesCatalogResourceDestroy;
+    use HandlesInUseResourceDestroy;
 
     public static function middleware(): array
     {

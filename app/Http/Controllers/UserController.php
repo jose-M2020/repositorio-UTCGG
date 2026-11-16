@@ -13,8 +13,8 @@ use App\Enums\UserType;
 use App\Http\Requests\ChangeUserRoleRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Career;
 use App\Models\User;
-use App\Support\Catalog as CatalogData;
 use App\Support\UserRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -152,7 +152,7 @@ class UserController extends Controller implements HasMiddleware
             'roles' => UserRoles::filterOptionsFor($authUser),
             'assignableRoles' => UserRoles::assignableOptionsFor($authUser),
             'rolePermissions' => $this->permissionsByAssignableRole($authUser),
-            'careers' => CatalogData::careers(),
+            'careers' => Career::optionsByCode(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
             'userTypes' => collect(UserType::cases())
                 ->map(fn (UserType $type): array => [

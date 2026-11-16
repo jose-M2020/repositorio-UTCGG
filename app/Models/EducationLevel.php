@@ -42,4 +42,16 @@ class EducationLevel extends Model
     {
         return $query->orderBy('sort_order')->orderBy('name');
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function optionsByCode(): array
+    {
+        return static::query()
+            ->active()
+            ->ordered()
+            ->pluck('name', 'code')
+            ->all();
+    }
 }

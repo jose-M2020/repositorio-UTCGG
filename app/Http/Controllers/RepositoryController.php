@@ -11,7 +11,6 @@ use App\Models\File;
 use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
-use App\Support\Catalog as CatalogData;
 use App\Support\Media;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -123,22 +122,14 @@ class RepositoryController extends Controller implements HasMiddleware
                 'academic_degree' => $academicDegrees,
                 'year' => $years,
             ],
-            'catalog' => [
-                'careers' => CatalogData::careers(),
-                'types' => CatalogData::projectTypes(),
-                'levels' => CatalogData::academicDegrees(),
-            ],
+            'lookups' => $this->lookups(),
         ]);
     }
 
     public function create(): Response
     {
         return Inertia::render('panel/repositories/create', [
-            'catalog' => [
-                'careers' => CatalogData::careers(),
-                'types' => CatalogData::projectTypes(),
-                'levels' => CatalogData::academicDegrees(),
-            ],
+            'lookups' => $this->lookups(),
         ]);
     }
 
@@ -244,11 +235,7 @@ class RepositoryController extends Controller implements HasMiddleware
                 ...$this->serializeRepository($repository),
                 'visibility' => $repository->is_public ? 'public' : 'private',
             ],
-            'catalog' => [
-                'careers' => CatalogData::careers(),
-                'types' => CatalogData::projectTypes(),
-                'levels' => CatalogData::academicDegrees(),
-            ],
+            'lookups' => $this->lookups(),
         ]);
     }
 
@@ -300,6 +287,22 @@ class RepositoryController extends Controller implements HasMiddleware
         }
 
         return $slug;
+    }
+
+    /**
+     * @return array{
+     *     careers: array<string, string>,
+     *     project_types: list<string>,
+     *     education_levels: array<string, string>
+     * }
+     */
+    private function lookups(): array
+    {
+        return [
+            'careers' => Career::optionsByCode(),
+            'project_types' => ProjectType::activeCodes(),
+            'education_levels' => EducationLevel::optionsByCode(),
+        ];
     }
 
     private function careerIdByCode(string $code): ?int

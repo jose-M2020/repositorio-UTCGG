@@ -70,4 +70,34 @@ class Career extends Model
             ->where('show_on_home', true)
             ->whereNotNull('image_path');
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function optionsByCode(): array
+    {
+        return static::query()
+            ->active()
+            ->ordered()
+            ->pluck('name', 'code')
+            ->all();
+    }
+
+    /**
+     * @return list<array{code: string, name: string, image: string}>
+     */
+    public static function homeCards(): array
+    {
+        return static::query()
+            ->forHome()
+            ->ordered()
+            ->get(['code', 'name', 'image_path'])
+            ->map(fn (self $career): array => [
+                'code' => $career->code,
+                'name' => $career->name,
+                'image' => (string) $career->image_path,
+            ])
+            ->values()
+            ->all();
+    }
 }

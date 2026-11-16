@@ -56,4 +56,17 @@ class ProjectType extends Model
     {
         return $query->orderBy('sort_order')->orderBy('name');
     }
+
+    /**
+     * @return list<string>
+     */
+    public static function activeCodes(): array
+    {
+        return static::query()
+            ->active()
+            ->ordered()
+            ->pluck('code')
+            ->values()
+            ->all();
+    }
 }

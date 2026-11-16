@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\HandlesCatalogResourceDestroy;
+use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreCareerRequest;
 use App\Http\Requests\UpdateCareerRequest;
 use App\Models\Career;
@@ -15,7 +15,7 @@ use Inertia\Response;
 
 class CareerController extends Controller implements HasMiddleware
 {
-    use HandlesCatalogResourceDestroy;
+    use HandlesInUseResourceDestroy;
 
     public static function middleware(): array
     {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Concerns;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 
-trait HandlesCatalogResourceDestroy
+trait HandlesInUseResourceDestroy
 {
     private const IN_USE_ERROR = 'está en uso; desactívalo en su lugar';
 

@@ -23,7 +23,7 @@ class UserProvisioningTest extends TestCase
     {
         parent::setUp();
 
-        $this->seedDedicatedCatalogs();
+        $this->seedDomainLookups();
         $this->seed(PermissionsSeeder::class);
     }
 

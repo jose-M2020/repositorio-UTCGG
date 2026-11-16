@@ -79,7 +79,7 @@ final class UserRoles
     }
 
     /**
-     * Roles that must be tied to a career catalog.
+     * Roles that must be tied to a career.
      *
      * @return list<string>
      */

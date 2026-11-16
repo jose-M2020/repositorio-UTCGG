@@ -15,7 +15,7 @@ class HomePageTest extends TestCase
     {
         parent::setUp();
 
-        $this->seedDedicatedCatalogs();
+        $this->seedDomainLookups();
     }
 
     public function test_home_page_renders_only_public_repositories(): void

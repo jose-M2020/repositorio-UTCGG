@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Career;
 use App\Models\Repository;
-use App\Support\Catalog;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,7 +48,7 @@ class HomeController extends Controller
         return Inertia::render('public/home', [
             'latest' => $latest,
             'featured' => $featured,
-            'homeCareers' => Catalog::homeCareers(),
+            'homeCareers' => Career::homeCards(),
         ]);
     }
 

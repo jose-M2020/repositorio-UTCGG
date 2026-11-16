@@ -16,7 +16,7 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function seedDedicatedCatalogs(): void
+    protected function seedDomainLookups(): void
     {
         $this->seed([
             CareerSeeder::class,

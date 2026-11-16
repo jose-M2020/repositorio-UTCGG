@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\HandlesCatalogResourceDestroy;
+use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreEducationLevelRequest;
 use App\Http\Requests\UpdateEducationLevelRequest;
 use App\Models\EducationLevel;
@@ -14,7 +14,7 @@ use Inertia\Response;
 
 class EducationLevelController extends Controller implements HasMiddleware
 {
-    use HandlesCatalogResourceDestroy;
+    use HandlesInUseResourceDestroy;
 
     public static function middleware(): array
     {
