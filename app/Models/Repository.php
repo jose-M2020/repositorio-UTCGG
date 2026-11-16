@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description
  * @property string $keywords
  * @property bool $is_public
- * @property int|null $career_catalog_id
- * @property int|null $project_type_catalog_id
- * @property int|null $academic_degree_catalog_id
+ * @property int|null $career_id
+ * @property int|null $project_type_id
+ * @property int|null $education_level_id
  * @property string|null $external_advisor
  * @property string $company
  * @property string $generation
@@ -32,9 +32,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'description',
     'keywords',
     'is_public',
-    'career_catalog_id',
-    'project_type_catalog_id',
-    'academic_degree_catalog_id',
+    'career_id',
+    'project_type_id',
+    'education_level_id',
     'external_advisor',
     'company',
     'generation',
@@ -70,18 +70,18 @@ class Repository extends Model
         return $this->hasMany(File::class);
     }
 
-    public function careerCatalog(): BelongsTo
+    public function career(): BelongsTo
     {
-        return $this->belongsTo(Catalog::class, 'career_catalog_id');
+        return $this->belongsTo(Career::class);
     }
 
-    public function projectTypeCatalog(): BelongsTo
+    public function projectType(): BelongsTo
     {
-        return $this->belongsTo(Catalog::class, 'project_type_catalog_id');
+        return $this->belongsTo(ProjectType::class);
     }
 
-    public function academicDegreeCatalog(): BelongsTo
+    public function educationLevel(): BelongsTo
     {
-        return $this->belongsTo(Catalog::class, 'academic_degree_catalog_id');
+        return $this->belongsTo(EducationLevel::class);
     }
 }
