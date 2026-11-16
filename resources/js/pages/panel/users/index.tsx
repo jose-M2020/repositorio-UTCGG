@@ -6,6 +6,7 @@ import {
     type RoleOption,
     type RolePermissionPreview,
     type UsersFilters,
+    type UserTypeOption,
 } from '@/features/users';
 
 type UsersIndexPageProps = {
@@ -16,6 +17,7 @@ type UsersIndexPageProps = {
     rolePermissions: Record<string, RolePermissionPreview[]>;
     careers: Record<string, string>;
     careerPolicy: CareerFormPolicy;
+    userTypes?: UserTypeOption[];
 };
 
 const UsersIndexPage = ({
@@ -26,6 +28,7 @@ const UsersIndexPage = ({
     rolePermissions,
     careers,
     careerPolicy,
+    userTypes = [],
 }: UsersIndexPageProps) => {
     return (
         <>
@@ -38,6 +41,7 @@ const UsersIndexPage = ({
                 rolePermissions={rolePermissions}
                 careers={careers}
                 careerPolicy={careerPolicy}
+                userTypes={userTypes}
             />
         </>
     );

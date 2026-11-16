@@ -3,12 +3,18 @@ export type UserAccountStatus =
     | "active"
     | "inactive";
 
+export type UserTypeOption = {
+    value: string;
+    label: string;
+};
+
 export type UserListItem = {
     id: number;
     first_name: string;
     last_name: string;
     second_last_name: string | null;
     email: string;
+    user_type?: string | null;
     career: string | null;
     status: UserAccountStatus;
     created_at: string;

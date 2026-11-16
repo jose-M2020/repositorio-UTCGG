@@ -41,7 +41,9 @@ export type AuthAbilities = {
     'users.view': boolean;
     'users.create': boolean;
     'roles.view': boolean;
-    'catalogs.view': boolean;
+    'careers.view': boolean;
+    'project_types.view': boolean;
+    'education_levels.view': boolean;
 };
 
 export type Auth = {

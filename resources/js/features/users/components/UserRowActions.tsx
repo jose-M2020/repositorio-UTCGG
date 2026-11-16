@@ -30,6 +30,7 @@ import type {
   RoleOption,
   RolePermissionPreview,
   UserListItem,
+  UserTypeOption,
 } from "../types";
 import { formatUserName } from "../utils/formatUserName";
 
@@ -39,6 +40,7 @@ type UserRowActionsProps = {
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
+  userTypes?: UserTypeOption[];
 };
 
 export const UserRowActions = ({
@@ -47,6 +49,7 @@ export const UserRowActions = ({
   rolePermissions,
   careers,
   careerPolicy,
+  userTypes = [],
 }: UserRowActionsProps) => {
   const { auth } = usePage().props;
   const [editOpen, setEditOpen] = useState(false);
@@ -132,6 +135,7 @@ export const UserRowActions = ({
         roles={roles}
         careers={careers}
         careerPolicy={careerPolicy}
+        userTypes={userTypes}
         open={editOpen}
         onOpenChange={setEditOpen}
         hideTrigger

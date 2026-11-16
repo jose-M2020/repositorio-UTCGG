@@ -10,6 +10,7 @@ import type {
   RoleOption,
   RolePermissionPreview,
   UsersFilters,
+  UserTypeOption,
 } from "../types";
 import {
   buildColumnFilters,
@@ -24,6 +25,7 @@ type UsersTableProps = {
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careersOptions: Record<string, string>;
   careerPolicy: CareerFormPolicy;
+  userTypes?: UserTypeOption[];
 };
 
 export const UsersTable = ({
@@ -34,6 +36,7 @@ export const UsersTable = ({
   rolePermissions,
   careersOptions,
   careerPolicy,
+  userTypes = [],
 }: UsersTableProps) => {
   const canFilterCareer = careerPolicy.can_select_career;
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() =>
@@ -79,6 +82,7 @@ export const UsersTable = ({
     careersOptions,
     canFilterCareer,
     careerPolicy,
+    userTypes,
   });
 
   return (

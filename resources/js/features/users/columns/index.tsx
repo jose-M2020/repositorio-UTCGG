@@ -8,6 +8,7 @@ import type {
   RoleOption,
   RolePermissionPreview,
   UserListItem,
+  UserTypeOption,
 } from "../types";
 import { formatUserName } from "../utils/formatUserName";
 
@@ -25,6 +26,7 @@ type CreateUsersColumnsOptions = {
   careersOptions: Record<string, string>;
   canFilterCareer: boolean;
   careerPolicy: CareerFormPolicy;
+  userTypes?: UserTypeOption[];
 };
 
 const columnHelper = createDataTableColumnHelper<UserListItem>();
@@ -36,6 +38,7 @@ export const createUsersColumns = ({
   careersOptions,
   canFilterCareer,
   careerPolicy,
+  userTypes = [],
 }: CreateUsersColumnsOptions) => [
   columnHelper.accessor((row) => formatUserName(row), {
     id: "name",
@@ -173,6 +176,7 @@ export const createUsersColumns = ({
         rolePermissions={rolePermissions}
         careers={careersOptions}
         careerPolicy={careerPolicy}
+        userTypes={userTypes}
       />
     ),
   }),

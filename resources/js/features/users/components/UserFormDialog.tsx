@@ -18,6 +18,7 @@ import type {
   RoleOption,
   UserFormValues,
   UserListItem,
+  UserTypeOption,
 } from "../types";
 import { formatUserName } from "../utils/formatUserName";
 
@@ -25,6 +26,7 @@ type UserFormDialogBaseProps = {
   roles: RoleOption[];
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
+  userTypes?: UserTypeOption[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   /** When true, caller owns the trigger (e.g. overflow menu item). */
@@ -44,6 +46,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
     roles,
     careers,
     careerPolicy,
+    userTypes = [],
     trigger,
     triggerContent,
     mode,
@@ -58,7 +61,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
   const user = isEdit ? props.user : null;
   const userName = user ? formatUserName(user) : "";
 
-  const defaultValues: UserFormValues | undefined = user
+  const defaultValues = user
     ? {
         id: user.id,
         first_name: user.first_name,
@@ -67,6 +70,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
         email: user.email,
         career: user.career ?? "",
         role: user.roles[0]?.name ?? null,
+        user_type: user.user_type ?? null,
       }
     : undefined;
 
@@ -113,8 +117,10 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
                 roles={roles}
                 careers={careers}
                 careerPolicy={careerPolicy}
+                userTypes={userTypes}
                 defaults={defaultValues}
                 includeRole={!isEdit}
+                userTypeReadOnly={isEdit}
               />
               <DialogFooter>
                 <DialogClose render={<Button type="button" variant="outline" />}>

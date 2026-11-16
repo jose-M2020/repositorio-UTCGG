@@ -11,7 +11,9 @@ import {
     index as repositories,
     mine,
 } from '@/actions/App/Http/Controllers/RepositoryController';
-import { index as catalogs } from '@/actions/App/Http/Controllers/CatalogController';
+import { index as careers } from '@/actions/App/Http/Controllers/CareerController';
+import { index as educationLevels } from '@/actions/App/Http/Controllers/EducationLevelController';
+import { index as projectTypes } from '@/actions/App/Http/Controllers/ProjectTypeController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';
 import { NavMain, type NavMainItem } from '@/shared/components/sidebar/nav-main';
@@ -95,11 +97,27 @@ const useNavMainItems = (): NavMainItem[] => {
                   },
               ]
             : []),
-        ...(auth.abilities['catalogs.view']
+        ...(auth.abilities['careers.view']
             ? [
                   {
-                      title: 'Catalogos',
-                      url: catalogs.url(),
+                      title: 'Carreras',
+                      url: careers.url(),
+                  },
+              ]
+            : []),
+        ...(auth.abilities['project_types.view']
+            ? [
+                  {
+                      title: 'Tipos de proyecto',
+                      url: projectTypes.url(),
+                  },
+              ]
+            : []),
+        ...(auth.abilities['education_levels.view']
+            ? [
+                  {
+                      title: 'Niveles educativos',
+                      url: educationLevels.url(),
                   },
               ]
             : []),

@@ -10,4 +10,5 @@ export type {
   UserFormValues,
   UserRepositorySummary,
   UsersFilters,
+  UserTypeOption,
 } from "./types";

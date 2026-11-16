@@ -8,6 +8,7 @@ import type {
   RoleOption,
   RolePermissionPreview,
   UsersFilters,
+  UserTypeOption,
 } from "../types";
 
 type UsersIndexContainerProps = {
@@ -18,6 +19,7 @@ type UsersIndexContainerProps = {
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careers: Record<string, string>;
   careerPolicy: CareerFormPolicy;
+  userTypes?: UserTypeOption[];
 };
 
 export const UsersIndexContainer = ({
@@ -28,6 +30,7 @@ export const UsersIndexContainer = ({
   rolePermissions,
   careers,
   careerPolicy,
+  userTypes = [],
 }: UsersIndexContainerProps) => {
   const { flash } = usePage().props;
 
@@ -45,6 +48,7 @@ export const UsersIndexContainer = ({
           roles={assignableRoles}
           careers={careers}
           careerPolicy={careerPolicy}
+          userTypes={userTypes}
           trigger={<Button type="button" />}
           triggerContent="Nuevo"
         />
@@ -75,6 +79,7 @@ export const UsersIndexContainer = ({
         rolePermissions={rolePermissions}
         careersOptions={careers}
         careerPolicy={careerPolicy}
+        userTypes={userTypes}
       />
     </main>
   );
