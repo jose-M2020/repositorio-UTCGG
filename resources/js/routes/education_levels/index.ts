@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\EducationLevelController::index
- * @see app/Http/Controllers/EducationLevelController.php:30
+ * @see app/Http/Controllers/EducationLevelController.php:31
  * @route '/education-levels'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\EducationLevelController::store
- * @see app/Http/Controllers/EducationLevelController.php:42
+ * @see app/Http/Controllers/EducationLevelController.php:43
  * @route '/education-levels'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -94,7 +94,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::store
- * @see app/Http/Controllers/EducationLevelController.php:42
+ * @see app/Http/Controllers/EducationLevelController.php:43
  * @route '/education-levels'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::store
- * @see app/Http/Controllers/EducationLevelController.php:42
+ * @see app/Http/Controllers/EducationLevelController.php:43
  * @route '/education-levels'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -113,7 +113,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\EducationLevelController::store
- * @see app/Http/Controllers/EducationLevelController.php:42
+ * @see app/Http/Controllers/EducationLevelController.php:43
  * @route '/education-levels'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -123,7 +123,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\EducationLevelController::store
- * @see app/Http/Controllers/EducationLevelController.php:42
+ * @see app/Http/Controllers/EducationLevelController.php:43
  * @route '/education-levels'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -134,7 +134,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
 export const update = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -149,7 +149,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
 update.url = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -182,7 +182,7 @@ update.url = (args: { education_level: number | { id: number } } | [education_le
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
 update.put = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -191,7 +191,7 @@ update.put = (args: { education_level: number | { id: number } } | [education_le
 })
 /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
 update.patch = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -201,7 +201,7 @@ update.patch = (args: { education_level: number | { id: number } } | [education_
 
     /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
     const updateForm = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -216,7 +216,7 @@ update.patch = (args: { education_level: number | { id: number } } | [education_
 
             /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
         updateForm.put = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -230,7 +230,7 @@ update.patch = (args: { education_level: number | { id: number } } | [education_
         })
             /**
 * @see \App\Http\Controllers\EducationLevelController::update
- * @see app/Http/Controllers/EducationLevelController.php:58
+ * @see app/Http/Controllers/EducationLevelController.php:59
  * @route '/education-levels/{education_level}'
  */
         updateForm.patch = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -246,7 +246,7 @@ update.patch = (args: { education_level: number | { id: number } } | [education_
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\EducationLevelController::destroy
- * @see app/Http/Controllers/EducationLevelController.php:87
+ * @see app/Http/Controllers/EducationLevelController.php:88
  * @route '/education-levels/{education_level}'
  */
 export const destroy = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -261,7 +261,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::destroy
- * @see app/Http/Controllers/EducationLevelController.php:87
+ * @see app/Http/Controllers/EducationLevelController.php:88
  * @route '/education-levels/{education_level}'
  */
 destroy.url = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -294,7 +294,7 @@ destroy.url = (args: { education_level: number | { id: number } } | [education_l
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::destroy
- * @see app/Http/Controllers/EducationLevelController.php:87
+ * @see app/Http/Controllers/EducationLevelController.php:88
  * @route '/education-levels/{education_level}'
  */
 destroy.delete = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -304,7 +304,7 @@ destroy.delete = (args: { education_level: number | { id: number } } | [educatio
 
     /**
 * @see \App\Http\Controllers\EducationLevelController::destroy
- * @see app/Http/Controllers/EducationLevelController.php:87
+ * @see app/Http/Controllers/EducationLevelController.php:88
  * @route '/education-levels/{education_level}'
  */
     const destroyForm = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -319,7 +319,7 @@ destroy.delete = (args: { education_level: number | { id: number } } | [educatio
 
             /**
 * @see \App\Http\Controllers\EducationLevelController::destroy
- * @see app/Http/Controllers/EducationLevelController.php:87
+ * @see app/Http/Controllers/EducationLevelController.php:88
  * @route '/education-levels/{education_level}'
  */
         destroyForm.delete = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -335,7 +335,7 @@ destroy.delete = (args: { education_level: number | { id: number } } | [educatio
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\EducationLevelController::toggleActive
- * @see app/Http/Controllers/EducationLevelController.php:72
+ * @see app/Http/Controllers/EducationLevelController.php:73
  * @route '/education-levels/{education_level}/active'
  */
 export const toggleActive = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -350,7 +350,7 @@ toggleActive.definition = {
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::toggleActive
- * @see app/Http/Controllers/EducationLevelController.php:72
+ * @see app/Http/Controllers/EducationLevelController.php:73
  * @route '/education-levels/{education_level}/active'
  */
 toggleActive.url = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -383,7 +383,7 @@ toggleActive.url = (args: { education_level: number | { id: number } } | [educat
 
 /**
 * @see \App\Http\Controllers\EducationLevelController::toggleActive
- * @see app/Http/Controllers/EducationLevelController.php:72
+ * @see app/Http/Controllers/EducationLevelController.php:73
  * @route '/education-levels/{education_level}/active'
  */
 toggleActive.patch = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -393,7 +393,7 @@ toggleActive.patch = (args: { education_level: number | { id: number } } | [educ
 
     /**
 * @see \App\Http\Controllers\EducationLevelController::toggleActive
- * @see app/Http/Controllers/EducationLevelController.php:72
+ * @see app/Http/Controllers/EducationLevelController.php:73
  * @route '/education-levels/{education_level}/active'
  */
     const toggleActiveForm = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -408,7 +408,7 @@ toggleActive.patch = (args: { education_level: number | { id: number } } | [educ
 
             /**
 * @see \App\Http\Controllers\EducationLevelController::toggleActive
- * @see app/Http/Controllers/EducationLevelController.php:72
+ * @see app/Http/Controllers/EducationLevelController.php:73
  * @route '/education-levels/{education_level}/active'
  */
         toggleActiveForm.patch = (args: { education_level: number | { id: number } } | [education_level: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

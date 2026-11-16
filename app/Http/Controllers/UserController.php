@@ -34,7 +34,10 @@ class UserController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:users.index', only: ['index']),
             new Middleware('can:users.create', only: ['store']),
-            new Middleware('can:users.edit', only: ['update', 'updateRole', 'toggleActive', 'sendPasswordLink']),
+            new Middleware('can:users.edit', only: ['update']),
+            new Middleware('can:users.update-role', only: ['updateRole']),
+            new Middleware('can:users.toggle-active', only: ['toggleActive']),
+            new Middleware('can:users.password-link', only: ['sendPasswordLink']),
             new Middleware('can:users.destroy', only: ['destroy']),
             new Middleware('can:users.search', only: ['search']),
         ];

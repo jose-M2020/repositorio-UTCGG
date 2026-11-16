@@ -9,7 +9,8 @@ type CareersIndexContainerProps = {
 };
 
 export const CareersIndexContainer = ({ careers }: CareersIndexContainerProps) => {
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
+    const canCreate = auth.abilities["careers.create"];
 
     return (
         <main className="page-container space-y-6 py-8">
@@ -22,11 +23,13 @@ export const CareersIndexContainer = ({ careers }: CareersIndexContainerProps) =
                         Administra las carreras academicas y su visibilidad en el inicio.
                     </p>
                 </div>
-                <CareerFormDialog
-                    mode="create"
-                    trigger={<Button type="button" />}
-                    triggerContent="Nueva carrera"
-                />
+                {canCreate ? (
+                    <CareerFormDialog
+                        mode="create"
+                        trigger={<Button type="button" />}
+                        triggerContent="Nueva carrera"
+                    />
+                ) : null}
             </header>
 
             {flash.status ? (

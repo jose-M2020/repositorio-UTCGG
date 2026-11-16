@@ -2,6 +2,7 @@
 
 export type PartitionedPermissions = {
   management: RolePermission[];
+  actions: RolePermission[];
   assign: RolePermission[];
   career: RolePermission[];
 };
@@ -22,7 +23,16 @@ const ACTION_LABELS: Record<string, string> = {
   edit: "Editar",
   destroy: "Eliminar",
   search: "Buscar",
+  "toggle-active": "Activar/desactivar",
+  "update-role": "Cambiar rol",
+  "password-link": "Enviar enlace de contraseña",
 };
+
+const SPECIAL_ACTION_KEYS = new Set([
+  "toggle-active",
+  "update-role",
+  "password-link",
+]);
 
 const toWords = (value: string): string =>
   value
@@ -68,12 +78,20 @@ export const partitionPermissions = (
         return acc;
       }
 
+      const action = actionFromPermission(permission.name);
+      if (SPECIAL_ACTION_KEYS.has(action)) {
+        acc.actions.push(permission);
+
+        return acc;
+      }
+
       acc.management.push(permission);
 
       return acc;
     },
     {
       management: [],
+      actions: [],
       assign: [],
       career: [],
     },

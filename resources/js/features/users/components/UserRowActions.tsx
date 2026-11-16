@@ -61,12 +61,22 @@ export const UserRowActions = ({
   const isSelf = auth.user?.id === user.id;
   const isPending = user.status === "pending_activation";
   const willActivate = user.status === "inactive";
-  const canToggleActive = user.status === "active" || user.status === "inactive";
+  const canEdit = auth.abilities["users.edit"];
+  const canUpdateRole = auth.abilities["users.update-role"];
+  const canToggleActiveAbility = auth.abilities["users.toggle-active"];
+  const canPasswordLink = auth.abilities["users.password-link"];
+  const canDestroy = auth.abilities["users.destroy"];
+  const canToggleActiveStatus =
+    user.status === "active" || user.status === "inactive";
+  const canToggleActive = canToggleActiveAbility && canToggleActiveStatus;
   const ToggleIcon = willActivate ? Power : PowerOff;
   const PasswordIcon = isPending ? Mail : KeyRound;
   const passwordActionLabel = isPending
     ? "Reenviar activación"
     : "Restablecer contraseña";
+  const showDestructiveSeparator =
+    (canEdit || canUpdateRole || canToggleActive || canPasswordLink) &&
+    canDestroy;
 
   return (
     <>
@@ -88,14 +98,18 @@ export const UserRowActions = ({
             <Eye aria-hidden="true" />
             Ver
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            <Pencil aria-hidden="true" />
-            Editar
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setRoleOpen(true)}>
-            <Shield aria-hidden="true" />
-            Cambiar rol
-          </DropdownMenuItem>
+          {canEdit ? (
+            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+              <Pencil aria-hidden="true" />
+              Editar
+            </DropdownMenuItem>
+          ) : null}
+          {canUpdateRole ? (
+            <DropdownMenuItem onClick={() => setRoleOpen(true)}>
+              <Shield aria-hidden="true" />
+              Cambiar rol
+            </DropdownMenuItem>
+          ) : null}
           {canToggleActive ? (
             <DropdownMenuItem
               disabled={isSelf}
@@ -108,46 +122,54 @@ export const UserRowActions = ({
               {willActivate ? "Activar" : "Desactivar"}
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuItem
-            disabled={isSelf}
-            onClick={() => {
-              if (isSelf) return;
-              setPasswordLinkOpen(true);
-            }}
-          >
-            <PasswordIcon aria-hidden="true" />
-            {passwordActionLabel}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => setDeleteOpen(true)}
-          >
-            <Trash2 aria-hidden="true" />
-            Eliminar
-          </DropdownMenuItem>
+          {canPasswordLink ? (
+            <DropdownMenuItem
+              disabled={isSelf}
+              onClick={() => {
+                if (isSelf) return;
+                setPasswordLinkOpen(true);
+              }}
+            >
+              <PasswordIcon aria-hidden="true" />
+              {passwordActionLabel}
+            </DropdownMenuItem>
+          ) : null}
+          {showDestructiveSeparator ? <DropdownMenuSeparator /> : null}
+          {canDestroy ? (
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => setDeleteOpen(true)}
+            >
+              <Trash2 aria-hidden="true" />
+              Eliminar
+            </DropdownMenuItem>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <UserFormDialog
-        mode="edit"
-        user={user}
-        roles={roles}
-        careers={careers}
-        careerPolicy={careerPolicy}
-        userTypes={userTypes}
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        hideTrigger
-      />
-      <UserChangeRoleDialog
-        user={user}
-        roles={roles}
-        rolePermissions={rolePermissions}
-        open={roleOpen}
-        onOpenChange={setRoleOpen}
-        hideTrigger
-      />
+      {canEdit ? (
+        <UserFormDialog
+          mode="edit"
+          user={user}
+          roles={roles}
+          careers={careers}
+          careerPolicy={careerPolicy}
+          userTypes={userTypes}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          hideTrigger
+        />
+      ) : null}
+      {canUpdateRole ? (
+        <UserChangeRoleDialog
+          user={user}
+          roles={roles}
+          rolePermissions={rolePermissions}
+          open={roleOpen}
+          onOpenChange={setRoleOpen}
+          hideTrigger
+        />
+      ) : null}
       {canToggleActive ? (
         <UserToggleActiveDialog
           user={user}
@@ -155,18 +177,22 @@ export const UserRowActions = ({
           onOpenChange={setToggleActiveOpen}
         />
       ) : null}
-      <UserSendPasswordLinkDialog
-        user={user}
-        open={passwordLinkOpen}
-        onOpenChange={setPasswordLinkOpen}
-      />
-      <ConfirmDeleteButton
-        form={destroy.form(user.id)}
-        itemLabel={userName}
-        open={deleteOpen}
-        onOpenChange={setDeleteOpen}
-        hideTrigger
-      />
+      {canPasswordLink ? (
+        <UserSendPasswordLinkDialog
+          user={user}
+          open={passwordLinkOpen}
+          onOpenChange={setPasswordLinkOpen}
+        />
+      ) : null}
+      {canDestroy ? (
+        <ConfirmDeleteButton
+          form={destroy.form(user.id)}
+          itemLabel={userName}
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          hideTrigger
+        />
+      ) : null}
     </>
   );
 };

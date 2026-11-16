@@ -575,4 +575,116 @@ class UserManagementTest extends TestCase
             ])
             ->assertForbidden();
     }
+
+    public function test_director_seed_includes_granular_user_action_permissions(): void
+    {
+        $director = \Spatie\Permission\Models\Role::findByName(UserRoles::DIRECTOR);
+        $careerDirector = \Spatie\Permission\Models\Role::findByName(UserRoles::CAREER_DIRECTOR);
+
+        foreach (['users.toggle-active', 'users.update-role', 'users.password-link'] as $permission) {
+            $this->assertTrue($director->hasPermissionTo($permission));
+            $this->assertTrue($careerDirector->hasPermissionTo($permission));
+        }
+    }
+
+    public function test_user_with_only_edit_cannot_use_split_user_actions(): void
+    {
+        $actor = User::factory()->create();
+        $actor->givePermissionTo([
+            'users.index',
+            'users.edit',
+            UserRoles::CAREER_ANY,
+        ]);
+
+        $target = User::factory()->create([
+            'status' => UserAccountStatus::Active,
+        ]);
+        $this->seedStudentCareer($target, 'TIC');
+        $target->assignRole(UserRoles::STUDENT);
+
+        $this->actingAs($actor)
+            ->put(route('users.update', $target), [
+                'first_name' => 'Ana',
+                'last_name' => 'Editada',
+                'email' => $target->email,
+                'career' => 'TIC',
+            ])
+            ->assertRedirect(route('users.index'));
+
+        $this->actingAs($actor)
+            ->patch(route('users.update-role', $target), [
+                'role' => UserRoles::TEACHER,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($actor)
+            ->patch(route('users.toggle-active', $target))
+            ->assertForbidden();
+
+        $this->actingAs($actor)
+            ->post(route('users.password-link', $target))
+            ->assertForbidden();
+    }
+
+    public function test_user_with_dedicated_permissions_can_run_split_user_actions(): void
+    {
+        Notification::fake();
+
+        $actor = User::factory()->create();
+        $actor->givePermissionTo([
+            'users.index',
+            'users.update-role',
+            'users.toggle-active',
+            'users.password-link',
+            UserRoles::CAREER_ANY,
+            UserRoles::assignPermissionName(UserRoles::TEACHER),
+        ]);
+
+        $target = User::factory()->student()->create([
+            'status' => UserAccountStatus::Active,
+        ]);
+        $this->seedStudentCareer($target, 'TIC');
+        $target->assignRole(UserRoles::STUDENT);
+
+        $this->actingAs($actor)
+            ->patch(route('users.update-role', $target), [
+                'role' => UserRoles::TEACHER,
+            ])
+            ->assertRedirect(route('users.index'));
+        $this->assertTrue($target->fresh()?->hasRole(UserRoles::TEACHER));
+
+        $this->actingAs($actor)
+            ->patch(route('users.toggle-active', $target))
+            ->assertRedirect(route('users.index'));
+        $this->assertSame(UserAccountStatus::Inactive, $target->fresh()?->status);
+
+        $this->actingAs($actor)
+            ->post(route('users.password-link', $target))
+            ->assertRedirect(route('users.index'));
+
+        Notification::assertSentTo($target, SetPasswordNotification::class);
+    }
+
+    public function test_granular_permission_migration_backfills_from_users_edit(): void
+    {
+        $role = \Spatie\Permission\Models\Role::query()->create([
+            'name' => 'legacy_user_editor',
+            'guard_name' => 'web',
+        ]);
+        $role->givePermissionTo('users.edit');
+
+        foreach (['users.toggle-active', 'users.update-role', 'users.password-link'] as $permission) {
+            $this->assertFalse($role->hasPermissionTo($permission));
+        }
+
+        $migration = require database_path('migrations/2026_11_15_220000_add_granular_action_permissions.php');
+        $migration->up();
+
+        $role->refresh();
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+        foreach (['users.toggle-active', 'users.update-role', 'users.password-link'] as $permission) {
+            $this->assertTrue($role->hasPermissionTo($permission));
+        }
+    }
 }

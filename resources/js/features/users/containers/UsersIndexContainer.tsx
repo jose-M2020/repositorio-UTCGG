@@ -32,7 +32,8 @@ export const UsersIndexContainer = ({
   careerPolicy,
   userTypes = [],
 }: UsersIndexContainerProps) => {
-  const { flash } = usePage().props;
+  const { auth, flash } = usePage().props;
+  const canCreate = auth.abilities["users.create"];
 
   return (
     <main className="page-container space-y-6 py-8">
@@ -43,15 +44,17 @@ export const UsersIndexContainer = ({
             Usuarios totales: <b>{users.total}</b>
           </p>
         </div>
-        <UserFormDialog
-          mode="create"
-          roles={assignableRoles}
-          careers={careers}
-          careerPolicy={careerPolicy}
-          userTypes={userTypes}
-          trigger={<Button type="button" />}
-          triggerContent="Nuevo"
-        />
+        {canCreate ? (
+          <UserFormDialog
+            mode="create"
+            roles={assignableRoles}
+            careers={careers}
+            careerPolicy={careerPolicy}
+            userTypes={userTypes}
+            trigger={<Button type="button" />}
+            triggerContent="Nuevo"
+          />
+        ) : null}
       </header>
 
       {flash.status ? (

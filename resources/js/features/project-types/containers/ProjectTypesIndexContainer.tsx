@@ -11,7 +11,8 @@ type ProjectTypesIndexContainerProps = {
 export const ProjectTypesIndexContainer = ({
     projectTypes,
 }: ProjectTypesIndexContainerProps) => {
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
+    const canCreate = auth.abilities["project_types.create"];
 
     return (
         <main className="page-container space-y-6 py-8">
@@ -24,11 +25,13 @@ export const ProjectTypesIndexContainer = ({
                         Configura reglas de equipo, cuatrimestre, estadía y asesoría.
                     </p>
                 </div>
-                <ProjectTypeFormDialog
-                    mode="create"
-                    trigger={<Button type="button" />}
-                    triggerContent="Nuevo tipo"
-                />
+                {canCreate ? (
+                    <ProjectTypeFormDialog
+                        mode="create"
+                        trigger={<Button type="button" />}
+                        triggerContent="Nuevo tipo"
+                    />
+                ) : null}
             </header>
 
             {flash.status ? (

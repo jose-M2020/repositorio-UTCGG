@@ -129,4 +129,63 @@ class CareerManagementTest extends TestCase
         $response->assertSessionHas('error', 'está en uso; desactívalo en su lugar');
         $this->assertDatabaseHas('careers', ['id' => $career->id]);
     }
+
+    public function test_user_with_only_edit_cannot_toggle_career_active(): void
+    {
+        $actor = User::factory()->create();
+        $actor->givePermissionTo([
+            'careers.index',
+            'careers.edit',
+        ]);
+
+        $career = Career::query()->where('code', 'TIC')->firstOrFail();
+
+        $this->actingAs($actor)
+            ->put(route('careers.update', $career), [
+                'name' => 'Carrera editada',
+                'sort_order' => $career->sort_order,
+                'show_on_home' => false,
+            ])
+            ->assertRedirect(route('careers.index'));
+
+        $this->actingAs($actor)
+            ->patch(route('careers.toggle-active', $career))
+            ->assertForbidden();
+    }
+
+    public function test_user_with_toggle_active_can_toggle_career(): void
+    {
+        $actor = User::factory()->create();
+        $actor->givePermissionTo([
+            'careers.index',
+            'careers.toggle-active',
+        ]);
+
+        $career = Career::query()->where('code', 'TIC')->firstOrFail();
+        $this->assertTrue($career->is_active);
+
+        $this->actingAs($actor)
+            ->patch(route('careers.toggle-active', $career))
+            ->assertRedirect(route('careers.index'));
+
+        $this->assertFalse($career->fresh()?->is_active);
+    }
+
+    public function test_granular_permission_migration_backfills_from_careers_edit(): void
+    {
+        $role = \Spatie\Permission\Models\Role::query()->create([
+            'name' => 'legacy_career_editor',
+            'guard_name' => 'web',
+        ]);
+        $role->givePermissionTo('careers.edit');
+        $this->assertFalse($role->hasPermissionTo('careers.toggle-active'));
+
+        $migration = require database_path('migrations/2026_11_15_220000_add_granular_action_permissions.php');
+        $migration->up();
+
+        $role->refresh();
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $this->assertTrue($role->hasPermissionTo('careers.toggle-active'));
+    }
 }

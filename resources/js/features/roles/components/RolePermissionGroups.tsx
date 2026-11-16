@@ -257,7 +257,7 @@ export const RolePermissionGroups = ({
 
             <div
               ref={scrollContainerRef}
-              className="min-h-0 flex-1 space-y-5 overflow-y-auto p-3 scroll-smooth"
+              className="min-h-0 flex-1 space-y-6 overflow-y-auto p-3 scroll-smooth"
             >
               {visibleGroups.length === 0 ? (
                 <p className="py-8 text-center text-sm text-muted-foreground">
@@ -266,75 +266,97 @@ export const RolePermissionGroups = ({
               ) : (
                 visibleGroups.map(([moduleName, permissions]) => {
                   const partitioned = partitionPermissions(permissions);
-                  const hasSpecialSections =
+                  const hasNestedSections =
+                    partitioned.actions.length > 0 ||
                     partitioned.assign.length > 0 ||
                     partitioned.career.length > 0;
+                  const selectedInModule = permissions.filter((permission) =>
+                    checkedState.has(permission.name),
+                  ).length;
 
                   return (
                     <section
                       key={moduleName}
                       id={moduleSectionId(moduleName)}
                       data-module={moduleName}
-                      className="scroll-mt-2 space-y-3 rounded-lg border border-border/70 p-3"
+                      className="scroll-mt-2 overflow-hidden rounded-xl border border-border"
                     >
-                      <header className="flex items-center justify-between gap-2">
-                        <h3 className="text-sm font-semibold text-foreground">
-                          {moduleLabel(moduleName)}
-                        </h3>
-                        <span className="text-xs text-muted-foreground tabular-nums">
-                          {
-                            permissions.filter((permission) =>
-                              checkedState.has(permission.name),
-                            ).length
-                          }
-                          /{permissions.length}
+                      <header className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
+                        <div className="min-w-0">
+                          <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                            Módulo
+                          </p>
+                          <h3 className="truncate text-base font-semibold text-foreground">
+                            {moduleLabel(moduleName)}
+                          </h3>
+                        </div>
+                        <span className="shrink-0 rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground tabular-nums ring-1 ring-border">
+                          {selectedInModule}/{permissions.length}
                         </span>
                       </header>
 
-                      {hasSpecialSections ? (
-                        <div className="space-y-4">
+                      <div className="space-y-3 bg-background p-3">
+                        {hasNestedSections ? (
+                          <>
+                            <PermissionSection
+                              eyebrow="CRUD"
+                              title="Gestión"
+                              description="Ver, crear, editar, eliminar y buscar en este módulo."
+                              permissions={partitioned.management}
+                              isAllChecked={isAllChecked}
+                              isIndeterminate={isIndeterminate}
+                              checkedState={checkedState}
+                              onToggleGroup={handleToggleGroup}
+                              onTogglePermission={handleTogglePermission}
+                            />
+                            <PermissionSection
+                              eyebrow="Operaciones"
+                              title="Acciones específicas"
+                              description="Operaciones puntuales aparte del CRUD (activar, cambiar rol, enviar enlace, etc.)."
+                              permissions={partitioned.actions}
+                              isAllChecked={isAllChecked}
+                              isIndeterminate={isIndeterminate}
+                              checkedState={checkedState}
+                              onToggleGroup={handleToggleGroup}
+                              onTogglePermission={handleTogglePermission}
+                            />
+                            <PermissionSection
+                              eyebrow="Asignación"
+                              title="Roles que puede asignar"
+                              description="Al crear o editar usuarios, este rol podrá asignar estos roles."
+                              permissions={partitioned.assign}
+                              isAllChecked={isAllChecked}
+                              isIndeterminate={isIndeterminate}
+                              checkedState={checkedState}
+                              onToggleGroup={handleToggleGroup}
+                              onTogglePermission={handleTogglePermission}
+                            />
+                            <PermissionSection
+                              eyebrow="Alcance"
+                              title="Alcance de carrera"
+                              description="Define si puede elegir cualquier carrera o se fuerza su carrera."
+                              permissions={partitioned.career}
+                              isAllChecked={isAllChecked}
+                              isIndeterminate={isIndeterminate}
+                              checkedState={checkedState}
+                              onToggleGroup={handleToggleGroup}
+                              onTogglePermission={handleTogglePermission}
+                            />
+                          </>
+                        ) : (
                           <PermissionSection
+                            eyebrow="CRUD"
                             title="Gestión"
-                            description="Permisos base para ver y administrar este módulo."
-                            permissions={partitioned.management}
+                            description={`Permisos base de ${moduleLabel(moduleName).toLowerCase()}.`}
+                            permissions={permissions}
                             isAllChecked={isAllChecked}
                             isIndeterminate={isIndeterminate}
                             checkedState={checkedState}
                             onToggleGroup={handleToggleGroup}
                             onTogglePermission={handleTogglePermission}
                           />
-                          <PermissionSection
-                            title="Roles que puede asignar"
-                            description="Al crear o editar usuarios, este rol podrá asignar estos roles."
-                            permissions={partitioned.assign}
-                            isAllChecked={isAllChecked}
-                            isIndeterminate={isIndeterminate}
-                            checkedState={checkedState}
-                            onToggleGroup={handleToggleGroup}
-                            onTogglePermission={handleTogglePermission}
-                          />
-                          <PermissionSection
-                            title="Alcance de carrera"
-                            description="Define si puede elegir cualquier carrera o se fuerza su carrera."
-                            permissions={partitioned.career}
-                            isAllChecked={isAllChecked}
-                            isIndeterminate={isIndeterminate}
-                            checkedState={checkedState}
-                            onToggleGroup={handleToggleGroup}
-                            onTogglePermission={handleTogglePermission}
-                          />
-                        </div>
-                      ) : (
-                        <PermissionSection
-                          title={`Permisos de ${moduleLabel(moduleName).toLowerCase()}`}
-                          permissions={permissions}
-                          isAllChecked={isAllChecked}
-                          isIndeterminate={isIndeterminate}
-                          checkedState={checkedState}
-                          onToggleGroup={handleToggleGroup}
-                          onTogglePermission={handleTogglePermission}
-                        />
-                      )}
+                        )}
+                      </div>
                     </section>
                   );
                 })
@@ -352,6 +374,7 @@ export const RolePermissionGroups = ({
 };
 
 type PermissionSectionProps = {
+  eyebrow: string;
   title: string;
   description?: string;
   permissions: RolePermission[];
@@ -363,6 +386,7 @@ type PermissionSectionProps = {
 };
 
 const PermissionSection = ({
+  eyebrow,
   title,
   description,
   permissions,
@@ -376,28 +400,44 @@ const PermissionSection = ({
     return null;
   }
 
+  const selectedCount = permissions.filter((permission) =>
+    checkedState.has(permission.name),
+  ).length;
+
   return (
-    <div className="space-y-3">
-      <div className="space-y-1 border-b border-border pb-2">
-        <p className="text-sm font-medium text-foreground">{title}</p>
-        {description ? (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        ) : null}
-        <label className="mt-2 inline-flex items-center gap-2 text-sm text-foreground">
-          <Checkbox
-            checked={isAllChecked(permissions)}
-            indeterminate={isIndeterminate(permissions)}
-            onCheckedChange={() => onToggleGroup(permissions)}
-          />
-          <span>Seleccionar todos</span>
-        </label>
+    <div className="rounded-lg border border-border/80 bg-muted/20">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/70 px-3 py-2.5">
+        <div className="min-w-0 space-y-0.5">
+          <p className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+            {eyebrow}
+          </p>
+          <h4 className="text-sm font-semibold text-foreground">{title}</h4>
+          {description ? (
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {description}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          <span className="text-[11px] text-muted-foreground tabular-nums">
+            {selectedCount}/{permissions.length}
+          </span>
+          <label className="inline-flex items-center gap-2 text-xs text-foreground">
+            <Checkbox
+              checked={isAllChecked(permissions)}
+              indeterminate={isIndeterminate(permissions)}
+              onCheckedChange={() => onToggleGroup(permissions)}
+            />
+            <span>Todos</span>
+          </label>
+        </div>
       </div>
 
-      <div className="grid gap-x-4 gap-y-2 sm:grid-cols-2">
+      <div className="grid gap-x-3 gap-y-1 p-2 sm:grid-cols-2">
         {permissions.map((permission) => (
           <label
             key={permission.id}
-            className="flex items-start gap-2 rounded-md px-1 py-1.5 text-sm text-foreground hover:bg-muted/50"
+            className="flex items-start gap-2 rounded-md px-2 py-2 text-sm text-foreground hover:bg-background/80"
           >
             <Checkbox
               checked={checkedState.has(permission.name)}
@@ -406,9 +446,7 @@ const PermissionSection = ({
               }
               className="mt-0.5"
             />
-            <span className="font-medium leading-snug">
-              {permissionLabel(permission)}
-            </span>
+            <span className="leading-snug">{permissionLabel(permission)}</span>
           </label>
         ))}
       </div>

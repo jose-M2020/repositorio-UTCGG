@@ -11,7 +11,8 @@ type EducationLevelsIndexContainerProps = {
 export const EducationLevelsIndexContainer = ({
     educationLevels,
 }: EducationLevelsIndexContainerProps) => {
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
+    const canCreate = auth.abilities["education_levels.create"];
 
     return (
         <main className="page-container space-y-6 py-8">
@@ -24,11 +25,13 @@ export const EducationLevelsIndexContainer = ({
                         Administra los niveles usados en perfiles y requisitos academicos.
                     </p>
                 </div>
-                <EducationLevelFormDialog
-                    mode="create"
-                    trigger={<Button type="button" />}
-                    triggerContent="Nuevo nivel"
-                />
+                {canCreate ? (
+                    <EducationLevelFormDialog
+                        mode="create"
+                        trigger={<Button type="button" />}
+                        triggerContent="Nuevo nivel"
+                    />
+                ) : null}
             </header>
 
             {flash.status ? (

@@ -29,7 +29,7 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
   const [open, setOpen] = useState(false);
   const isEdit = mode === "edit";
   const role = isEdit ? props.role : null;
-  const formProps = isEdit && role ? update.form(String(role.id)) : store.form();
+  const formProps = isEdit && role ? update.form(role.id) : store.form();
   const defaults = role
     ? {
         name: role.name,

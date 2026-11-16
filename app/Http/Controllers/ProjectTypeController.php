@@ -22,7 +22,8 @@ class ProjectTypeController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:project_types.index', only: ['index']),
             new Middleware('can:project_types.create', only: ['store']),
-            new Middleware('can:project_types.edit', only: ['update', 'toggleActive']),
+            new Middleware('can:project_types.edit', only: ['update']),
+            new Middleware('can:project_types.toggle-active', only: ['toggleActive']),
             new Middleware('can:project_types.destroy', only: ['destroy']),
         ];
     }

@@ -23,7 +23,8 @@ class CareerController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:careers.index', only: ['index']),
             new Middleware('can:careers.create', only: ['store']),
-            new Middleware('can:careers.edit', only: ['update', 'toggleActive']),
+            new Middleware('can:careers.edit', only: ['update']),
+            new Middleware('can:careers.toggle-active', only: ['toggleActive']),
             new Middleware('can:careers.destroy', only: ['destroy']),
         ];
     }

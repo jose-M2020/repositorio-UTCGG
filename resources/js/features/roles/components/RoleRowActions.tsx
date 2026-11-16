@@ -38,7 +38,7 @@ export const RoleRowActions = ({
         triggerContent={<Pencil aria-hidden="true" />}
       />
       <ConfirmDeleteButton
-        form={destroy.form(String(role.id))}
+        form={destroy.form(role.id)}
         itemLabel={roleName}
         disabledReason={disabledReason}
       />

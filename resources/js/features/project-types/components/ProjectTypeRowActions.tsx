@@ -1,3 +1,4 @@
+import { usePage } from "@inertiajs/react";
 import { Pencil } from "lucide-react";
 import { destroy } from "@/actions/App/Http/Controllers/ProjectTypeController";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
@@ -13,28 +14,42 @@ type ProjectTypeRowActionsProps = {
 export const ProjectTypeRowActions = ({
     projectType,
 }: ProjectTypeRowActionsProps) => {
+    const { auth } = usePage().props;
     const projectTypeName = projectType.name.trim();
+    const canEdit = auth.abilities["project_types.edit"];
+    const canToggleActive = auth.abilities["project_types.toggle-active"];
+    const canDestroy = auth.abilities["project_types.destroy"];
+
+    if (!canEdit && !canToggleActive && !canDestroy) {
+        return null;
+    }
 
     return (
         <div className="flex justify-end gap-1">
-            <ProjectTypeFormDialog
-                mode="edit"
-                projectType={projectType}
-                trigger={
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Editar ${projectTypeName}`}
-                    />
-                }
-                triggerContent={<Pencil aria-hidden="true" />}
-            />
-            <ProjectTypeToggleActiveButton projectType={projectType} />
-            <ConfirmDeleteButton
-                form={destroy.form(projectType.id)}
-                itemLabel={projectTypeName}
-            />
+            {canEdit ? (
+                <ProjectTypeFormDialog
+                    mode="edit"
+                    projectType={projectType}
+                    trigger={
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={`Editar ${projectTypeName}`}
+                        />
+                    }
+                    triggerContent={<Pencil aria-hidden="true" />}
+                />
+            ) : null}
+            {canToggleActive ? (
+                <ProjectTypeToggleActiveButton projectType={projectType} />
+            ) : null}
+            {canDestroy ? (
+                <ConfirmDeleteButton
+                    form={destroy.form(projectType.id)}
+                    itemLabel={projectTypeName}
+                />
+            ) : null}
         </div>
     );
 };

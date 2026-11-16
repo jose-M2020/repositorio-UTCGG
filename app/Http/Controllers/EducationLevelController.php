@@ -22,7 +22,8 @@ class EducationLevelController extends Controller implements HasMiddleware
             'auth',
             new Middleware('can:education_levels.index', only: ['index']),
             new Middleware('can:education_levels.create', only: ['store']),
-            new Middleware('can:education_levels.edit', only: ['update', 'toggleActive']),
+            new Middleware('can:education_levels.edit', only: ['update']),
+            new Middleware('can:education_levels.toggle-active', only: ['toggleActive']),
             new Middleware('can:education_levels.destroy', only: ['destroy']),
         ];
     }
