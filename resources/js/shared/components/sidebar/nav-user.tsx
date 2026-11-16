@@ -98,7 +98,7 @@ export const NavUser = ({ user }: { user: AuthUser | null }) => {
                         }
                     >
                         <Avatar className="size-8 rounded-lg">
-                            <AvatarFallback className="rounded-lg">
+                            <AvatarFallback className="rounded-lg bg-sidebar-primary/15 text-sidebar-primary">
                                 {initials}
                             </AvatarFallback>
                         </Avatar>
@@ -106,7 +106,7 @@ export const NavUser = ({ user }: { user: AuthUser | null }) => {
                             <span className="truncate font-medium">
                                 {displayName}
                             </span>
-                            <span className="truncate text-xs">
+                            <span className="truncate text-xs text-sidebar-foreground/65">
                                 {user?.email}
                             </span>
                         </div>

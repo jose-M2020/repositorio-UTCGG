@@ -1,8 +1,16 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
+    Compass,
     FolderKanban,
+    FolderPlus,
+    Globe,
+    GraduationCap,
+    Layers,
+    Library,
+    Settings2,
     ShieldCheck,
+    Users,
 } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { index as home } from '@/actions/App/Http/Controllers/HomeController';
@@ -16,7 +24,11 @@ import { index as educationLevels } from '@/actions/App/Http/Controllers/Educati
 import { index as projectTypes } from '@/actions/App/Http/Controllers/ProjectTypeController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';
-import { NavMain, type NavMainItem } from '@/shared/components/sidebar/nav-main';
+import {
+    NavMain,
+    type NavMainGroup,
+    type NavMainLink,
+} from '@/shared/components/sidebar/nav-main';
 import { NavUser } from '@/shared/components/sidebar/nav-user';
 import {
     Sidebar,
@@ -28,16 +40,6 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from '@/shared/components/ui/sidebar';
-
-const isActivePath = (currentUrl: string, href: string) => {
-    const currentPath = currentUrl.split('?')[0] ?? currentUrl;
-    const linkPath = href.split('?')[0] ?? href;
-
-    return (
-        currentPath === linkPath ||
-        (linkPath !== '/' && currentPath.startsWith(`${linkPath}/`))
-    );
-};
 
 const SidebarBrand = () => {
     return (
@@ -61,31 +63,33 @@ const SidebarBrand = () => {
     );
 };
 
-const useNavMainItems = (): NavMainItem[] => {
+const useNavGroups = (): NavMainGroup[] => {
     const { auth } = usePage().props;
-    const { url } = usePage();
 
-    const trabajoItems = [
+    const projectItems: NavMainLink[] = [
         {
             title: 'Mis proyectos',
             url: mine.url(),
+            icon: FolderKanban,
         },
         ...(auth.abilities['repositories.create']
             ? [
                   {
                       title: 'Nuevo proyecto',
                       url: createRepository.url(),
+                      icon: FolderPlus,
                   },
               ]
             : []),
     ];
 
-    const gestionItems = [
+    const administrationItems: NavMainLink[] = [
         ...(auth.abilities['users.view']
             ? [
                   {
                       title: 'Usuarios',
                       url: users.url(),
+                      icon: Users,
                   },
               ]
             : []),
@@ -94,14 +98,19 @@ const useNavMainItems = (): NavMainItem[] => {
                   {
                       title: 'Roles y permisos',
                       url: roles.url(),
+                      icon: ShieldCheck,
                   },
               ]
             : []),
+    ];
+
+    const catalogItems: NavMainLink[] = [
         ...(auth.abilities['careers.view']
             ? [
                   {
                       title: 'Carreras',
                       url: careers.url(),
+                      icon: GraduationCap,
                   },
               ]
             : []),
@@ -110,6 +119,7 @@ const useNavMainItems = (): NavMainItem[] => {
                   {
                       title: 'Tipos de proyecto',
                       url: projectTypes.url(),
+                      icon: Layers,
                   },
               ]
             : []),
@@ -118,68 +128,85 @@ const useNavMainItems = (): NavMainItem[] => {
                   {
                       title: 'Niveles educativos',
                       url: educationLevels.url(),
+                      icon: BookOpen,
                   },
               ]
             : []),
     ];
 
-    const explorarItems = [
+    const exploreItems: NavMainLink[] = [
         {
             title: 'Catálogo público',
             url: repositories.url(),
+            icon: Library,
         },
         {
             title: 'Sitio público',
             url: home.url(),
+            icon: Globe,
         },
     ];
 
     return [
         {
-            title: 'Trabajo',
-            url: mine.url(),
+            title: 'Proyectos',
             icon: FolderKanban,
-            isActive: trabajoItems.some((item) => isActivePath(url, item.url)),
-            items: trabajoItems,
+            items: projectItems,
         },
-        ...(gestionItems.length > 0
+        ...(administrationItems.length > 0
             ? [
                   {
-                      title: 'Gestión',
-                      url: gestionItems[0]?.url ?? users.url(),
-                      icon: ShieldCheck,
-                      isActive: gestionItems.some((item) =>
-                          isActivePath(url, item.url),
-                      ),
-                      items: gestionItems,
+                      title: 'Administración',
+                      icon: Settings2,
+                      items: administrationItems,
+                  },
+              ]
+            : []),
+        ...(catalogItems.length > 0
+            ? [
+                  {
+                      title: 'Catálogos',
+                      icon: Layers,
+                      items: catalogItems,
                   },
               ]
             : []),
         {
             title: 'Explorar',
-            url: repositories.url(),
-            icon: BookOpen,
-            isActive: explorarItems.some((item) => isActivePath(url, item.url)),
-            items: explorarItems,
+            icon: Compass,
+            items: exploreItems,
         },
     ];
+};
+
+const SidebarAtmosphere = () => {
+    return (
+        <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        >
+            <div className="absolute -top-16 -right-14 size-48 rounded-full bg-accent/70 blur-2xl" />
+            <div className="absolute top-1/3 -left-20 size-56 rounded-full bg-primary/20 blur-3xl" />
+        </div>
+    );
 };
 
 export const AppSidebar = ({
     ...props
 }: ComponentProps<typeof Sidebar>) => {
     const { auth } = usePage().props;
-    const navMain = useNavMainItems();
+    const navGroups = useNavGroups();
 
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
+            <SidebarAtmosphere />
+            <SidebarHeader className="relative z-10 border-b border-sidebar-border/70">
                 <SidebarBrand />
             </SidebarHeader>
-            <SidebarContent>
-                <NavMain items={navMain} />
+            <SidebarContent className="relative z-10">
+                <NavMain groups={navGroups} />
             </SidebarContent>
-            <SidebarFooter>
+            <SidebarFooter className="relative z-10 border-t border-sidebar-border/70">
                 <NavUser user={auth.user} />
             </SidebarFooter>
             <SidebarRail />

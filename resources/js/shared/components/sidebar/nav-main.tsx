@@ -7,7 +7,6 @@ import {
 } from '@/shared/components/ui/collapsible';
 import {
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
@@ -17,15 +16,16 @@ import {
     useSidebar,
 } from '@/shared/components/ui/sidebar';
 
-export type NavMainItem = {
+export type NavMainLink = {
     title: string;
     url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-        title: string;
-        url: string;
-    }[];
+    icon: LucideIcon;
+};
+
+export type NavMainGroup = {
+    title: string;
+    icon: LucideIcon;
+    items: NavMainLink[];
 };
 
 const isActivePath = (currentUrl: string, href: string) => {
@@ -38,7 +38,7 @@ const isActivePath = (currentUrl: string, href: string) => {
     );
 };
 
-export const NavMain = ({ items }: { items: NavMainItem[] }) => {
+export const NavMain = ({ groups }: { groups: NavMainGroup[] }) => {
     const { url } = usePage();
     const { isMobile, setOpenMobile } = useSidebar();
 
@@ -48,51 +48,62 @@ export const NavMain = ({ items }: { items: NavMainItem[] }) => {
         }
     };
 
-    if (items.length === 0) {
+    if (groups.length === 0) {
         return null;
     }
 
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Navegación</SidebarGroupLabel>
             <SidebarMenu>
-                {items.map((item) => {
-                    const Icon = item.icon;
+                {groups.map((group) => {
+                    const GroupIcon = group.icon;
+                    const isGroupActive = group.items.some((item) =>
+                        isActivePath(url, item.url),
+                    );
 
                     return (
                         <Collapsible
-                            key={item.title}
-                            defaultOpen={item.isActive}
+                            key={group.title}
+                            defaultOpen
                             className="group/collapsible"
                             render={<SidebarMenuItem />}
                         >
                             <CollapsibleTrigger
                                 render={
-                                    <SidebarMenuButton tooltip={item.title} />
+                                    <SidebarMenuButton
+                                        tooltip={group.title}
+                                        isActive={isGroupActive}
+                                    />
                                 }
                             >
-                                {Icon ? <Icon /> : null}
-                                <span>{item.title}</span>
+                                <GroupIcon />
+                                <span>{group.title}</span>
                                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-open/collapsible:rotate-90" />
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
-                                    {item.items?.map((subItem) => (
-                                        <SidebarMenuSubItem key={subItem.title}>
-                                            <SidebarMenuSubButton
-                                                render={
-                                                    <Link href={subItem.url} />
-                                                }
-                                                isActive={isActivePath(
-                                                    url,
-                                                    subItem.url,
-                                                )}
-                                                onClick={handleNavigate}
-                                            >
-                                                <span>{subItem.title}</span>
-                                            </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                    ))}
+                                    {group.items.map((item) => {
+                                        const ItemIcon = item.icon;
+
+                                        return (
+                                            <SidebarMenuSubItem key={item.url}>
+                                                <SidebarMenuSubButton
+                                                    render={
+                                                        <Link href={item.url} />
+                                                    }
+                                                    isActive={isActivePath(
+                                                        url,
+                                                        item.url,
+                                                    )}
+                                                    onClick={handleNavigate}
+                                                    className="data-active:bg-sidebar-primary/15 data-active:font-medium data-active:text-sidebar-primary"
+                                                >
+                                                    <ItemIcon />
+                                                    <span>{item.title}</span>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        );
+                                    })}
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </Collapsible>

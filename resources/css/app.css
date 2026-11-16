@@ -124,13 +124,14 @@
     --chart-4: #A6D5C1;
     --chart-5: #414A48;
     --radius: 0.625rem;
-    --sidebar: #dae6e2;
+    /* Soft mint panel — combina con contenido blanco, con más presencia de color */
+    --sidebar: #E6F1EC;
     --sidebar-foreground: #414A48;
     --sidebar-primary: #087E65;
     --sidebar-primary-foreground: #F4F6F5;
-    --sidebar-accent: #E4EBE8;
+    --sidebar-accent: #C8E4D8;
     --sidebar-accent-foreground: #087E65;
-    --sidebar-border: #D5DED9;
+    --sidebar-border: #C5D9CF;
     --sidebar-ring: #087E65;
 }
 
@@ -158,14 +159,60 @@
     --chart-3: #0A9B7C;
     --chart-4: #414A48;
     --chart-5: #F4F6F5;
-    --sidebar: #293B38;
-    --sidebar-foreground: #F4F6F5;
+    --sidebar: #1F2A28;
+    --sidebar-foreground: #E8EEEC;
     --sidebar-primary: #A6D5C1;
     --sidebar-primary-foreground: #1A2422;
-    --sidebar-accent: #344542;
+    --sidebar-accent: #2A3F3B;
     --sidebar-accent-foreground: #A6D5C1;
-    --sidebar-border: #414A48;
+    --sidebar-border: #344542;
     --sidebar-ring: #A6D5C1;
+}
+
+/* Sidebar atmosphere: jade/mint gradient with more color presence */
+[data-slot='sidebar-inner'],
+[data-slot='sidebar'][data-mobile='true'] {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--sidebar);
+    background-image:
+        radial-gradient(
+            ellipse 95% 60% at -5% -5%,
+            color-mix(in oklab, var(--accent) 85%, transparent),
+            transparent 58%
+        ),
+        radial-gradient(
+            ellipse 75% 50% at 105% 105%,
+            color-mix(in oklab, var(--primary) 22%, transparent),
+            transparent 52%
+        ),
+        linear-gradient(
+            165deg,
+            color-mix(in oklab, var(--accent) 55%, white) 0%,
+            var(--sidebar) 42%,
+            color-mix(in oklab, var(--accent) 45%, var(--sidebar)) 100%
+        );
+}
+
+.dark [data-slot='sidebar-inner'],
+.dark [data-slot='sidebar'][data-mobile='true'] {
+    background-image:
+        radial-gradient(
+            ellipse 90% 55% at 0% -10%,
+            color-mix(in oklab, var(--primary) 18%, transparent),
+            transparent 60%
+        ),
+        radial-gradient(
+            ellipse 70% 45% at 110% 110%,
+            color-mix(in oklab, var(--accent) 20%, transparent),
+            transparent 55%
+        ),
+        linear-gradient(
+            165deg,
+            color-mix(in oklab, var(--sidebar) 80%, black) 0%,
+            var(--sidebar) 50%,
+            color-mix(in oklab, var(--primary) 10%, var(--sidebar)) 100%
+        );
 }
 
 @layer base {
