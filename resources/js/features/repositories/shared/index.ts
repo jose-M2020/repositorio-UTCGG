@@ -6,6 +6,7 @@ export type {
     RepositoryFilters,
     RepositoryFormErrors,
     RepositoryListItem,
+    RepositoryLookups,
     RepositoryMember,
     RepositoryFileItem,
 } from './types';

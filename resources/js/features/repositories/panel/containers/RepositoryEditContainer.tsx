@@ -4,18 +4,17 @@ import {
     update,
 } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
 import { RepositoryFormFields } from '../../shared/components/RepositoryFormFields';
-import type { Repository } from '../../shared/types';
+import type { Repository, RepositoryLookups } from '../../shared/types';
 
 type RepositoryEditContainerProps = {
     repository: Repository;
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
 export const RepositoryEditContainer = ({
     repository,
-    catalog,
+    lookups,
 }: RepositoryEditContainerProps) => {
     return (
         <main className="page-container space-y-6 py-8">
@@ -37,7 +36,7 @@ export const RepositoryEditContainer = ({
                         <RepositoryFormFields
                             errors={errors}
                             defaults={repository}
-                            catalog={catalog}
+                            lookups={lookups}
                         />
                         <div className="flex justify-end gap-2">
                             <Link href={showByUser.url(repository.slug)}>

@@ -73,3 +73,9 @@ export type PaginatedRepositories = {
 };
 
 export type RepositoryFormErrors = Record<string, string>;
+
+export type RepositoryLookups = {
+    careers: Record<string, string>;
+    project_types: string[];
+    education_levels: Record<string, string>;
+};

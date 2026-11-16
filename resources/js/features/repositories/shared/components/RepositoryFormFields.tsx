@@ -1,21 +1,24 @@
 import { Input } from '@/shared/components/ui';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
-import type { Repository, RepositoryFormErrors } from '../types';
+import type {
+    Repository,
+    RepositoryFormErrors,
+    RepositoryLookups,
+} from '../types';
 
 type RepositoryFormFieldsProps = {
     errors: RepositoryFormErrors;
     defaults?: Partial<Repository> & { visibility?: string };
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
 export const RepositoryFormFields = ({
     errors,
     defaults,
-    catalog,
+    lookups,
 }: RepositoryFormFieldsProps) => {
-    const careerOptions = catalog.careers;
-    const typeOptions = catalog.types;
-    const levelOptions = catalog.levels;
+    const careerOptions = lookups.careers;
+    const typeOptions = lookups.project_types;
+    const levelOptions = lookups.education_levels;
 
     return (
         <div className="space-y-4">

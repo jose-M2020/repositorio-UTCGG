@@ -69,8 +69,8 @@ export const ProjectTypeToggleActiveButton = ({
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         {willActivate
-                            ? "El tipo de proyecto quedara disponible al registrar proyectos."
-                            : "El tipo dejara de estar disponible para nuevos proyectos."}
+                            ? "El tipo de proyecto quedará disponible al registrar proyectos."
+                            : "El tipo dejará de estar disponible para nuevos proyectos."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

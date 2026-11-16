@@ -69,8 +69,8 @@ export const EducationLevelToggleActiveButton = ({
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         {willActivate
-                            ? "El nivel educativo quedara disponible para perfiles y asignaciones."
-                            : "El nivel dejara de estar disponible para nuevas asignaciones."}
+                            ? "El nivel educativo quedará disponible para perfiles y asignaciones."
+                            : "El nivel dejará de estar disponible para nuevas asignaciones."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

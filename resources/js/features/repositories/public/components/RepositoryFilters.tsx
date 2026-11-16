@@ -2,12 +2,14 @@ import { Form, router } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button, Checkbox, Input } from '@/shared/components/ui';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
-import type { RepositoryFilters as RepositoryFiltersType } from '../../shared/types';
+import type {
+    RepositoryFilters as RepositoryFiltersType,
+    RepositoryLookups,
+} from '../../shared/types';
 
 type RepositoryFiltersProps = {
     filters: RepositoryFiltersType;
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
     children?: ReactNode;
 };
 
@@ -47,17 +49,17 @@ const CheckboxGroup = ({
 
 export const RepositoryFilters = ({
     filters,
-    catalog,
+    lookups,
     children,
 }: RepositoryFiltersProps) => {
-    const careerOptions = Object.entries(catalog.careers).map(
+    const careerOptions = Object.entries(lookups.careers).map(
         ([value, label]) => ({ value, label: `${value} — ${label}` }),
     );
-    const typeOptions = catalog.types.map((value) => ({
+    const typeOptions = lookups.project_types.map((value) => ({
         value,
         label: value,
     }));
-    const levelOptions = Object.entries(catalog.levels).map(
+    const levelOptions = Object.entries(lookups.education_levels).map(
         ([value, label]) => ({ value, label }),
     );
 

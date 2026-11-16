@@ -15,4 +15,5 @@ export type {
     Repository,
     RepositoryFilters,
     RepositoryListItem,
+    RepositoryLookups,
 } from './shared';

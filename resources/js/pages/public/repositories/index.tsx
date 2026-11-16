@@ -3,19 +3,19 @@ import {
     RepositoriesIndexContainer,
     type PaginatedRepositories,
     type RepositoryFilters,
+    type RepositoryLookups,
 } from '@/features/repositories';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
     repositories: PaginatedRepositories;
     filters: RepositoryFilters;
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
 const RepositoriesIndexPage = ({
     repositories,
     filters,
-    catalog,
+    lookups,
 }: PageProps) => {
     return (
         <>
@@ -23,7 +23,7 @@ const RepositoriesIndexPage = ({
             <RepositoriesIndexContainer
                 repositories={repositories}
                 filters={filters}
-                catalog={catalog}
+                lookups={lookups}
             />
         </>
     );

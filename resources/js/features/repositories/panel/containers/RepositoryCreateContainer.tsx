@@ -9,11 +9,11 @@ import {
     type SearchableUser,
 } from '@/shared/components';
 import { Button, Input } from '@/shared/components/ui';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
 import { cn } from '@/shared/lib';
+import type { RepositoryLookups } from '../../shared/types';
 
 type RepositoryCreateContainerProps = {
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
 const steps = [
@@ -23,15 +23,15 @@ const steps = [
 ] as const;
 
 export const RepositoryCreateContainer = ({
-    catalog,
+    lookups,
 }: RepositoryCreateContainerProps) => {
     const { auth } = usePage().props;
     const currentUser = auth.user;
     const [step, setStep] = useState(1);
 
-    const careerOptions = catalog.careers;
-    const typeOptions = catalog.types;
-    const levelOptions = catalog.levels;
+    const careerOptions = lookups.careers;
+    const typeOptions = lookups.project_types;
+    const levelOptions = lookups.education_levels;
 
     const [collaborators, setCollaborators] = useState<SearchableUser[]>(
         currentUser

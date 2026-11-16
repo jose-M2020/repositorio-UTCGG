@@ -9,15 +9,10 @@ use Spatie\Permission\Models\Role;
 final class UserRoles
 {
     public const ADMIN = 'admin';
-
     public const DIRECTOR = 'director';
-
     public const CAREER_DIRECTOR = 'career_director';
-
     public const TEACHER = 'teacher';
-
     public const STUDENT = 'student';
-
     public const CAREER_ANY = 'users.career.any';
 
     /**

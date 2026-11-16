@@ -69,8 +69,8 @@ export const CareerToggleActiveButton = ({
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         {willActivate
-                            ? "La carrera quedara disponible para asignaciones y catalogos."
-                            : "La carrera dejara de estar disponible para nuevas asignaciones."}
+                            ? "La carrera quedará disponible para asignaciones y proyectos."
+                            : "La carrera dejará de estar disponible para nuevas asignaciones."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

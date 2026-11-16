@@ -1,16 +1,18 @@
 import { Head } from '@inertiajs/react';
-import { RepositoryCreateContainer } from '@/features/repositories';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
+import {
+    RepositoryCreateContainer,
+    type RepositoryLookups,
+} from '@/features/repositories';
 
 type PageProps = {
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
-const RepositoriesCreatePage = ({ catalog }: PageProps) => {
+const RepositoriesCreatePage = ({ lookups }: PageProps) => {
     return (
         <>
             <Head title="Nuevo repositorio" />
-            <RepositoryCreateContainer catalog={catalog} />
+            <RepositoryCreateContainer lookups={lookups} />
         </>
     );
 };

@@ -2,21 +2,21 @@ import { Head } from '@inertiajs/react';
 import {
     RepositoryEditContainer,
     type Repository,
+    type RepositoryLookups,
 } from '@/features/repositories';
-import type { RepositoryCatalog } from '@/shared/data/catalog';
 
 type PageProps = {
     repository: Repository;
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
-const RepositoriesEditPage = ({ repository, catalog }: PageProps) => {
+const RepositoriesEditPage = ({ repository, lookups }: PageProps) => {
     return (
         <>
             <Head title="Editar repositorio" />
             <RepositoryEditContainer
                 repository={repository}
-                catalog={catalog}
+                lookups={lookups}
             />
         </>
     );

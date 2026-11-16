@@ -1,21 +1,21 @@
-import type { RepositoryCatalog } from '@/shared/data/catalog';
 import { RepositoriesList } from '../../shared/components/RepositoriesList';
 import type {
     PaginatedRepositories,
     RepositoryFilters as RepositoryFiltersType,
+    RepositoryLookups,
 } from '../../shared/types';
 import { RepositoryFilters } from '../components/RepositoryFilters';
 
 type RepositoriesIndexContainerProps = {
     repositories: PaginatedRepositories;
     filters: RepositoryFiltersType;
-    catalog: RepositoryCatalog;
+    lookups: RepositoryLookups;
 };
 
 export const RepositoriesIndexContainer = ({
     repositories,
     filters,
-    catalog,
+    lookups,
 }: RepositoriesIndexContainerProps) => {
     return (
         <main className="page-container flex-1 space-y-6 py-8">
@@ -28,7 +28,7 @@ export const RepositoriesIndexContainer = ({
                 </p>
             </header>
 
-            <RepositoryFilters filters={filters} catalog={catalog}>
+            <RepositoryFilters filters={filters} lookups={lookups}>
                 <RepositoriesList
                     repositories={repositories}
                     filters={filters}
