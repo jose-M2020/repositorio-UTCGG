@@ -1,39 +1,23 @@
-﻿import { useEffect, useRef, useState } from "react";
+﻿import { useState } from "react";
 import { Search } from "lucide-react";
 import { cn } from "cn";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Input } from "@/shared/components/ui";
-import type { PermissionGroups, RoleFormErrors, RolePermission } from "../types";
+import { usePermissionModuleScrollSpy } from "../hooks/usePermissionModuleScrollSpy";
+import { usePermissionSelection } from "../hooks/usePermissionSelection";
+import type { PermissionGroups, RoleFormErrors } from "../types";
+import { filterPermissionGroups } from "../utils/filterPermissionGroups";
+import { moduleSectionId } from "../utils/moduleSectionId";
 import {
   moduleLabel,
   partitionPermissions,
-  permissionLabel,
 } from "../utils/permissionDisplay";
+import { PermissionSection } from "./PermissionSection";
 
 type RolePermissionGroupsProps = {
   permissionGroups: PermissionGroups;
   selected?: string[];
   errors?: RoleFormErrors;
-};
-
-const moduleSectionId = (moduleName: string): string =>
-  `permission-module-${moduleName}`;
-
-const matchesSearch = (
-  permission: RolePermission,
-  query: string,
-): boolean => {
-  if (query === "") {
-    return true;
-  }
-
-  const normalizedQuery = query.toLowerCase();
-  const label = permissionLabel(permission).toLowerCase();
-
-  return (
-    label.includes(normalizedQuery) ||
-    permission.name.toLowerCase().includes(normalizedQuery)
-  );
 };
 
 export const RolePermissionGroups = ({
@@ -42,62 +26,25 @@ export const RolePermissionGroups = ({
   errors,
 }: RolePermissionGroupsProps) => {
   const groups = Object.entries(permissionGroups);
-  const [checkedState, setCheckedState] = useState<Set<string>>(
-    () => new Set(selected),
-  );
-  const [activeModule, setActiveModule] = useState<string>(
-    () => groups[0]?.[0] ?? "",
-  );
+  const moduleNames = Object.keys(permissionGroups);
   const [searchQuery, setSearchQuery] = useState("");
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isScrollingToModuleRef = useRef(false);
+  const normalizedQuery = searchQuery.trim();
 
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    const moduleNames = Object.keys(permissionGroups);
-    if (!container || moduleNames.length === 0) {
-      return;
-    }
+  const {
+    checkedState,
+    selectedCount,
+    togglePermission,
+    toggleGroup,
+    isAllChecked,
+    isIndeterminate,
+  } = usePermissionSelection(selected);
 
-    const sectionElements = moduleNames
-      .map((moduleName) =>
-        container.querySelector(`#${CSS.escape(moduleSectionId(moduleName))}`),
-      )
-      .filter((element): element is Element => element !== null);
-
-    if (sectionElements.length === 0) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (isScrollingToModuleRef.current) {
-          return;
-        }
-
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) =>
-              a.boundingClientRect.top - b.boundingClientRect.top,
-          );
-
-        const topVisible = visible[0]?.target.getAttribute("data-module");
-        if (topVisible) {
-          setActiveModule(topVisible);
-        }
-      },
-      {
-        root: container,
-        rootMargin: "-10% 0px -60% 0px",
-        threshold: [0, 0.25, 0.5],
-      },
-    );
-
-    sectionElements.forEach((element) => observer.observe(element));
-
-    return () => observer.disconnect();
-  }, [permissionGroups, searchQuery]);
+  const { activeModule, scrollContainerRef, navigateToModule } =
+    usePermissionModuleScrollSpy({
+      moduleNames,
+      initialModule: moduleNames[0] ?? "",
+      observeKey: normalizedQuery,
+    });
 
   if (groups.length === 0) {
     return (
@@ -107,74 +54,35 @@ export const RolePermissionGroups = ({
     );
   }
 
-  const handleTogglePermission = (name: string, checked: boolean) => {
-    const next = new Set(checkedState);
-    if (checked) {
-      next.add(name);
-    } else {
-      next.delete(name);
-    }
-    setCheckedState(next);
-  };
-
-  const handleToggleGroup = (permissions: RolePermission[]) => {
-    const names = permissions.map((permission) => permission.name);
-    const allChecked = names.every((name) => checkedState.has(name));
-    const next = new Set(checkedState);
-
-    if (allChecked) {
-      names.forEach((name) => next.delete(name));
-    } else {
-      names.forEach((name) => next.add(name));
-    }
-
-    setCheckedState(next);
-  };
-
-  const isAllChecked = (permissions: RolePermission[]): boolean =>
-    permissions.length > 0 &&
-    permissions.every((permission) => checkedState.has(permission.name));
-
-  const isIndeterminate = (permissions: RolePermission[]): boolean =>
-    permissions.some((permission) => checkedState.has(permission.name)) &&
-    !isAllChecked(permissions);
-
-  const handleNavigateToModule = (moduleName: string) => {
-    setActiveModule(moduleName);
-    const container = scrollContainerRef.current;
-    const section = container?.querySelector(
-      `#${CSS.escape(moduleSectionId(moduleName))}`,
-    );
-
-    if (!container || !(section instanceof HTMLElement)) {
-      return;
-    }
-
-    isScrollingToModuleRef.current = true;
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    window.setTimeout(() => {
-      isScrollingToModuleRef.current = false;
-    }, 450);
-  };
-
-  const normalizedQuery = searchQuery.trim();
-  const visibleGroups = groups
-    .map(([moduleName, permissions]) => {
-      const filteredPermissions = permissions.filter((permission) =>
-        matchesSearch(permission, normalizedQuery),
-      );
-
-      return [moduleName, filteredPermissions] as const;
-    })
-    .filter(([, permissions]) => permissions.length > 0);
-
-  const selectedCount = checkedState.size;
+  const visibleGroups = filterPermissionGroups(
+    permissionGroups,
+    normalizedQuery,
+  );
+  const allPermissions = groups.flatMap(([, permissions]) => permissions);
+  const visiblePermissions = visibleGroups.flatMap(
+    ([, permissions]) => permissions,
+  );
+  const selectablePermissions = normalizedQuery === "" ? allPermissions : visiblePermissions;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
-      <div className="flex shrink-0 flex-wrap items-end justify-between gap-2">
-        <p className="text-sm font-medium text-foreground">Permisos</p>
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-foreground">Permisos</p>
+          <label className="inline-flex items-center gap-2 text-sm text-foreground">
+            <Checkbox
+              checked={isAllChecked(selectablePermissions)}
+              indeterminate={isIndeterminate(selectablePermissions)}
+              onCheckedChange={() => toggleGroup(selectablePermissions)}
+              disabled={selectablePermissions.length === 0}
+            />
+            <span>
+              {normalizedQuery === ""
+                ? "Seleccionar todos"
+                : "Seleccionar resultados"}
+            </span>
+          </label>
+        </div>
         <p className="text-xs text-muted-foreground" aria-live="polite">
           {selectedCount === 1
             ? "1 permiso seleccionado"
@@ -210,7 +118,7 @@ export const RolePermissionGroups = ({
                 <button
                   key={moduleName}
                   type="button"
-                  onClick={() => handleNavigateToModule(moduleName)}
+                  onClick={() => navigateToModule(moduleName)}
                   disabled={isHiddenBySearch}
                   className={cn(
                     "flex shrink-0 items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors",
@@ -281,7 +189,7 @@ export const RolePermissionGroups = ({
                       data-module={moduleName}
                       className="scroll-mt-2 overflow-hidden rounded-xl border border-border"
                     >
-                      <header className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
+                      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
                         <div className="min-w-0">
                           <p className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                             Módulo
@@ -290,9 +198,19 @@ export const RolePermissionGroups = ({
                             {moduleLabel(moduleName)}
                           </h3>
                         </div>
-                        <span className="shrink-0 rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground tabular-nums ring-1 ring-border">
-                          {selectedInModule}/{permissions.length}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-3">
+                          <label className="inline-flex items-center gap-2 text-xs text-foreground">
+                            <Checkbox
+                              checked={isAllChecked(permissions)}
+                              indeterminate={isIndeterminate(permissions)}
+                              onCheckedChange={() => toggleGroup(permissions)}
+                            />
+                            <span>Todo el módulo</span>
+                          </label>
+                          <span className="rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground tabular-nums ring-1 ring-border">
+                            {selectedInModule}/{permissions.length}
+                          </span>
+                        </div>
                       </header>
 
                       <div className="space-y-3 bg-background p-3">
@@ -306,8 +224,8 @@ export const RolePermissionGroups = ({
                               isAllChecked={isAllChecked}
                               isIndeterminate={isIndeterminate}
                               checkedState={checkedState}
-                              onToggleGroup={handleToggleGroup}
-                              onTogglePermission={handleTogglePermission}
+                              onToggleGroup={toggleGroup}
+                              onTogglePermission={togglePermission}
                             />
                             <PermissionSection
                               eyebrow="Operaciones"
@@ -317,8 +235,8 @@ export const RolePermissionGroups = ({
                               isAllChecked={isAllChecked}
                               isIndeterminate={isIndeterminate}
                               checkedState={checkedState}
-                              onToggleGroup={handleToggleGroup}
-                              onTogglePermission={handleTogglePermission}
+                              onToggleGroup={toggleGroup}
+                              onTogglePermission={togglePermission}
                             />
                             <PermissionSection
                               eyebrow="Asignación"
@@ -328,8 +246,8 @@ export const RolePermissionGroups = ({
                               isAllChecked={isAllChecked}
                               isIndeterminate={isIndeterminate}
                               checkedState={checkedState}
-                              onToggleGroup={handleToggleGroup}
-                              onTogglePermission={handleTogglePermission}
+                              onToggleGroup={toggleGroup}
+                              onTogglePermission={togglePermission}
                             />
                             <PermissionSection
                               eyebrow="Alcance"
@@ -339,8 +257,8 @@ export const RolePermissionGroups = ({
                               isAllChecked={isAllChecked}
                               isIndeterminate={isIndeterminate}
                               checkedState={checkedState}
-                              onToggleGroup={handleToggleGroup}
-                              onTogglePermission={handleTogglePermission}
+                              onToggleGroup={toggleGroup}
+                              onTogglePermission={togglePermission}
                             />
                           </>
                         ) : (
@@ -352,8 +270,8 @@ export const RolePermissionGroups = ({
                             isAllChecked={isAllChecked}
                             isIndeterminate={isIndeterminate}
                             checkedState={checkedState}
-                            onToggleGroup={handleToggleGroup}
-                            onTogglePermission={handleTogglePermission}
+                            onToggleGroup={toggleGroup}
+                            onTogglePermission={togglePermission}
                           />
                         )}
                       </div>
@@ -369,87 +287,6 @@ export const RolePermissionGroups = ({
       {errors?.permissions ? (
         <p className="text-sm text-destructive">{errors.permissions}</p>
       ) : null}
-    </div>
-  );
-};
-
-type PermissionSectionProps = {
-  eyebrow: string;
-  title: string;
-  description?: string;
-  permissions: RolePermission[];
-  checkedState: Set<string>;
-  isAllChecked: (permissions: RolePermission[]) => boolean;
-  isIndeterminate: (permissions: RolePermission[]) => boolean;
-  onToggleGroup: (permissions: RolePermission[]) => void;
-  onTogglePermission: (name: string, checked: boolean) => void;
-};
-
-const PermissionSection = ({
-  eyebrow,
-  title,
-  description,
-  permissions,
-  checkedState,
-  isAllChecked,
-  isIndeterminate,
-  onToggleGroup,
-  onTogglePermission,
-}: PermissionSectionProps) => {
-  if (permissions.length === 0) {
-    return null;
-  }
-
-  const selectedCount = permissions.filter((permission) =>
-    checkedState.has(permission.name),
-  ).length;
-
-  return (
-    <div className="rounded-lg border border-border/80 bg-muted/20">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/70 px-3 py-2.5">
-        <div className="min-w-0 space-y-0.5">
-          <p className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-            {eyebrow}
-          </p>
-          <h4 className="text-sm font-semibold text-foreground">{title}</h4>
-          {description ? (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {description}
-            </p>
-          ) : null}
-        </div>
-        <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <span className="text-[11px] text-muted-foreground tabular-nums">
-            {selectedCount}/{permissions.length}
-          </span>
-          <label className="inline-flex items-center gap-2 text-xs text-foreground">
-            <Checkbox
-              checked={isAllChecked(permissions)}
-              indeterminate={isIndeterminate(permissions)}
-              onCheckedChange={() => onToggleGroup(permissions)}
-            />
-            <span>Todos</span>
-          </label>
-        </div>
-      </div>
-
-      <div className="grid gap-x-3 gap-y-1 p-2 sm:grid-cols-2">
-        {permissions.map((permission) => (
-          <label
-            key={permission.id}
-            className="flex items-start gap-2 rounded-md px-2 py-2 text-sm text-foreground hover:bg-background/80"
-          >
-            <Checkbox
-              checked={checkedState.has(permission.name)}
-              onCheckedChange={(checked) =>
-                onTogglePermission(permission.name, checked === true)
-              }
-              className="mt-0.5"
-            />
-            <span className="leading-snug">{permissionLabel(permission)}</span>
-          </label>
-        ))}
-      </div>
     </div>
   );
 };
