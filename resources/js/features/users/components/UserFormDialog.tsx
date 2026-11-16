@@ -1,26 +1,19 @@
 import { useState, type ReactElement, type ReactNode } from "react";
-import { Form } from "@inertiajs/react";
-import { store, update } from "@/actions/App/Http/Controllers/UserController";
 import {
-  Button,
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui";
-import { UserFormFields } from "./UserFormFields";
 import type {
   CareerFormPolicy,
   RoleOption,
-  UserFormValues,
   UserListItem,
   UserTypeOption,
 } from "../types";
-import { formatUserName } from "../utils/formatUserName";
+import { UserCreateTypeStep } from "./UserCreateTypeStep";
+import { UserFormStep } from "./UserFormStep";
+
+type CreateStep = "type" | "form";
 
 type UserFormDialogBaseProps = {
   roles: RoleOption[];
@@ -36,10 +29,7 @@ type UserFormDialogBaseProps = {
 };
 
 type UserFormDialogProps = UserFormDialogBaseProps &
-  (
-    | { mode: "create" }
-    | { mode: "edit"; user: UserListItem }
-  );
+  ({ mode: "create" } | { mode: "edit"; user: UserListItem });
 
 export const UserFormDialog = (props: UserFormDialogProps) => {
   const {
@@ -55,28 +45,24 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
     hideTrigger = false,
   } = props;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const [createStep, setCreateStep] = useState<CreateStep>("type");
+  const [selectedUserType, setSelectedUserType] = useState("");
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
   const isEdit = mode === "edit";
   const user = isEdit ? props.user : null;
-  const userName = user ? formatUserName(user) : "";
+  const showTypeStep = !isEdit && createStep === "type" && userTypes.length > 0;
 
-  const defaultValues = user
-    ? {
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        second_last_name: user.second_last_name ?? "",
-        email: user.email,
-        career: user.career ?? "",
-        role: user.roles[0]?.name ?? null,
-        user_type: user.user_type ?? null,
-      }
-    : undefined;
-
-  const formProps = isEdit && user ? update.form(user.id) : store.form();
+  const resetCreateFlow = () => {
+    setCreateStep("type");
+    setSelectedUserType("");
+  };
 
   const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      resetCreateFlow();
+    }
+
     if (!isControlled) {
       setUncontrolledOpen(nextOpen);
     }
@@ -87,6 +73,15 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
     handleOpenChange(false);
   };
 
+  const handleSelectUserType = (value: string) => {
+    setSelectedUserType(value);
+    setCreateStep("form");
+  };
+
+  const handleBackToTypeStep = () => {
+    setCreateStep("type");
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {!hideTrigger && trigger ? (
@@ -94,49 +89,29 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
       ) : null}
 
       <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>
-            {isEdit ? "Editar usuario" : "Nuevo usuario"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEdit
-              ? `Actualiza los datos de ${userName}. El rol se cambia en una acción aparte.`
-              : "Registra nombre, correo y rol. El usuario recibirá un enlace para activar la cuenta y elegir su contraseña."}
-          </DialogDescription>
-        </DialogHeader>
-
-        <Form
-          {...formProps}
-          className="space-y-6"
-          onSuccess={handleSuccess}
-        >
-          {({ errors, processing }) => (
-            <>
-              <UserFormFields
-                errors={errors}
-                roles={roles}
-                careers={careers}
-                careerPolicy={careerPolicy}
-                userTypes={userTypes}
-                defaults={defaultValues}
-                includeRole={!isEdit}
-                userTypeReadOnly={isEdit}
-              />
-              <DialogFooter>
-                <DialogClose render={<Button type="button" variant="outline" />}>
-                  Cancelar
-                </DialogClose>
-                <Button type="submit" disabled={processing}>
-                  {processing
-                    ? "Guardando..."
-                    : isEdit
-                      ? "Actualizar"
-                      : "Registrar"}
-                </Button>
-              </DialogFooter>
-            </>
-          )}
-        </Form>
+        {showTypeStep ? (
+          <UserCreateTypeStep
+            userTypes={userTypes}
+            selectedValue={selectedUserType}
+            onSelect={handleSelectUserType}
+          />
+        ) : (
+          <UserFormStep
+            mode={isEdit ? "edit" : "create"}
+            user={user}
+            roles={roles}
+            careers={careers}
+            careerPolicy={careerPolicy}
+            userTypes={userTypes}
+            selectedUserType={selectedUserType}
+            onBackToTypeStep={
+              !isEdit && userTypes.length > 0
+                ? handleBackToTypeStep
+                : undefined
+            }
+            onSuccess={handleSuccess}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -6,6 +6,7 @@ import type {
   UserFormErrors,
   UserTypeOption,
 } from "../types";
+import { defaultRoleForType } from "../utils/userTypeDefaults";
 
 type UserFormFieldsProps = {
   errors: UserFormErrors;
@@ -28,18 +29,7 @@ type UserFormFieldsProps = {
   };
   includeRole?: boolean;
   userTypeReadOnly?: boolean;
-};
-
-const defaultRoleForType = (userType: string): string => {
-  if (userType === "student") {
-    return "student";
-  }
-
-  if (userType === "teacher") {
-    return "teacher";
-  }
-
-  return "";
+  showUserTypeField?: boolean;
 };
 
 export const UserFormFields = ({
@@ -51,18 +41,20 @@ export const UserFormFields = ({
   defaults,
   includeRole = true,
   userTypeReadOnly = false,
+  showUserTypeField = true,
 }: UserFormFieldsProps) => {
   const [selectedUserType, setSelectedUserType] = useState(
     defaults?.user_type ?? "",
   );
   const [selectedRole, setSelectedRole] = useState(defaults?.role ?? "");
+  const resolvedUserType = selectedUserType || defaults?.user_type || "";
 
   const effectiveRole = includeRole ? selectedRole : (defaults?.role ?? "");
   const selectedRoleOption = roles.find((role) => role.value === effectiveRole);
   const showCareerField =
     careerPolicy.can_select_career &&
-    (selectedUserType === "student" ||
-      selectedUserType === "teacher" ||
+    (resolvedUserType === "student" ||
+      resolvedUserType === "teacher" ||
       Boolean(selectedRoleOption?.requires_career));
 
   const handleUserTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -88,7 +80,11 @@ export const UserFormFields = ({
 
   return (
     <div className="space-y-4">
-      {userTypes.length > 0 ? (
+      {!showUserTypeField && resolvedUserType ? (
+        <input type="hidden" name="user_type" value={resolvedUserType} />
+      ) : null}
+
+      {showUserTypeField && userTypes.length > 0 ? (
         <div className="space-y-1">
           <label
             htmlFor="user_type"
@@ -102,11 +98,11 @@ export const UserFormFields = ({
                 id="user_type_label"
                 readOnly
                 value={
-                  userTypes.find((type) => type.value === selectedUserType)
-                    ?.label ?? selectedUserType
+                  userTypes.find((type) => type.value === resolvedUserType)
+                    ?.label ?? resolvedUserType
                 }
               />
-              <input type="hidden" name="user_type" value={selectedUserType} />
+              <input type="hidden" name="user_type" value={resolvedUserType} />
             </>
           ) : (
             <select
@@ -230,7 +226,7 @@ export const UserFormFields = ({
         ) : null}
       </div>
 
-      {selectedUserType === "student" ? (
+      {resolvedUserType === "student" ? (
         <div className="space-y-1">
           <label
             htmlFor="student_number"
@@ -251,7 +247,7 @@ export const UserFormFields = ({
         </div>
       ) : null}
 
-      {selectedUserType === "teacher" ? (
+      {resolvedUserType === "teacher" ? (
         <div className="space-y-1">
           <label
             htmlFor="employee_number"
@@ -271,7 +267,7 @@ export const UserFormFields = ({
         </div>
       ) : null}
 
-      {selectedUserType === "staff" ? (
+      {resolvedUserType === "staff" ? (
         <div className="space-y-1">
           <label
             htmlFor="job_title"
