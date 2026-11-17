@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/ui";
 import type {
   CareerFormPolicy,
+  CareerOption,
   RoleOption,
   UserListItem,
   UserTypeOption,
@@ -17,7 +18,7 @@ type CreateStep = "type" | "form";
 
 type UserFormDialogBaseProps = {
   roles: RoleOption[];
-  careers: Record<string, string>;
+  careers: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
   open?: boolean;
@@ -88,7 +89,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
         <DialogTrigger render={trigger}>{triggerContent}</DialogTrigger>
       ) : null}
 
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         {showTypeStep ? (
           <UserCreateTypeStep
             userTypes={userTypes}

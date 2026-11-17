@@ -22,25 +22,26 @@ export const UserCreateTypeStep = ({
 }: UserCreateTypeStepProps) => {
   return (
     <>
-      <DialogHeader>
+      <DialogHeader className="shrink-0 gap-1.5 border-b border-border px-6 py-5 pr-14">
         <DialogTitle>¿Qué tipo de usuario?</DialogTitle>
         <DialogDescription>
           Elige el tipo para mostrar solo los campos que aplican.
         </DialogDescription>
       </DialogHeader>
 
-      <div className="space-y-6">
+      <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-6 py-5">
         <UserTypePicker
           userTypes={userTypes}
           selectedValue={selectedValue}
           onSelect={onSelect}
         />
-        <DialogFooter>
-          <DialogClose render={<Button type="button" variant="outline" />}>
-            Cancelar
-          </DialogClose>
-        </DialogFooter>
       </div>
+
+      <DialogFooter className="m-0 shrink-0 rounded-none border-t border-border px-6 py-4">
+        <DialogClose render={<Button type="button" variant="outline" />}>
+          Cancelar
+        </DialogClose>
+      </DialogFooter>
     </>
   );
 };

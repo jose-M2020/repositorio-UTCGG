@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults, validateParameters } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\UserController::index
- * @see app/Http/Controllers/UserController.php:47
+ * @see app/Http/Controllers/UserController.php:48
  * @route '/users'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\UserController::store
- * @see app/Http/Controllers/UserController.php:171
+ * @see app/Http/Controllers/UserController.php:174
  * @route '/users'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -94,7 +94,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::store
- * @see app/Http/Controllers/UserController.php:171
+ * @see app/Http/Controllers/UserController.php:174
  * @route '/users'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\UserController::store
- * @see app/Http/Controllers/UserController.php:171
+ * @see app/Http/Controllers/UserController.php:174
  * @route '/users'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -113,7 +113,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\UserController::store
- * @see app/Http/Controllers/UserController.php:171
+ * @see app/Http/Controllers/UserController.php:174
  * @route '/users'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -123,7 +123,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\UserController::store
- * @see app/Http/Controllers/UserController.php:171
+ * @see app/Http/Controllers/UserController.php:174
  * @route '/users'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -134,7 +134,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
 export const show = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -149,7 +149,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
 show.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -182,7 +182,7 @@ show.url = (args: { user: number | { id: number } } | [user: number | { id: numb
 
 /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
 show.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -191,7 +191,7 @@ show.get = (args: { user: number | { id: number } } | [user: number | { id: numb
 })
 /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
 show.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -201,7 +201,7 @@ show.head = (args: { user: number | { id: number } } | [user: number | { id: num
 
     /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
     const showForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -211,7 +211,7 @@ show.head = (args: { user: number | { id: number } } | [user: number | { id: num
 
             /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
         showForm.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -220,7 +220,7 @@ show.head = (args: { user: number | { id: number } } | [user: number | { id: num
         })
             /**
 * @see \App\Http\Controllers\UserController::show
- * @see app/Http/Controllers/UserController.php:194
+ * @see app/Http/Controllers/UserController.php:197
  * @route '/users/{user}'
  */
         showForm.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -236,7 +236,7 @@ show.head = (args: { user: number | { id: number } } | [user: number | { id: num
     show.form = showForm
 /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
 export const update = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -251,7 +251,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
 update.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -284,7 +284,7 @@ update.url = (args: { user: number | { id: number } } | [user: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
 update.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -293,7 +293,7 @@ update.put = (args: { user: number | { id: number } } | [user: number | { id: nu
 })
 /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
 update.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -303,7 +303,7 @@ update.patch = (args: { user: number | { id: number } } | [user: number | { id: 
 
     /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
     const updateForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -318,7 +318,7 @@ update.patch = (args: { user: number | { id: number } } | [user: number | { id: 
 
             /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
         updateForm.put = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -332,7 +332,7 @@ update.patch = (args: { user: number | { id: number } } | [user: number | { id: 
         })
             /**
 * @see \App\Http\Controllers\UserController::update
- * @see app/Http/Controllers/UserController.php:257
+ * @see app/Http/Controllers/UserController.php:260
  * @route '/users/{user}'
  */
         updateForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -348,7 +348,7 @@ update.patch = (args: { user: number | { id: number } } | [user: number | { id: 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\UserController::destroy
- * @see app/Http/Controllers/UserController.php:315
+ * @see app/Http/Controllers/UserController.php:321
  * @route '/users/{user}'
  */
 export const destroy = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -363,7 +363,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
- * @see app/Http/Controllers/UserController.php:315
+ * @see app/Http/Controllers/UserController.php:321
  * @route '/users/{user}'
  */
 destroy.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -396,7 +396,7 @@ destroy.url = (args: { user: number | { id: number } } | [user: number | { id: n
 
 /**
 * @see \App\Http\Controllers\UserController::destroy
- * @see app/Http/Controllers/UserController.php:315
+ * @see app/Http/Controllers/UserController.php:321
  * @route '/users/{user}'
  */
 destroy.delete = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -406,7 +406,7 @@ destroy.delete = (args: { user: number | { id: number } } | [user: number | { id
 
     /**
 * @see \App\Http\Controllers\UserController::destroy
- * @see app/Http/Controllers/UserController.php:315
+ * @see app/Http/Controllers/UserController.php:321
  * @route '/users/{user}'
  */
     const destroyForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -421,7 +421,7 @@ destroy.delete = (args: { user: number | { id: number } } | [user: number | { id
 
             /**
 * @see \App\Http\Controllers\UserController::destroy
- * @see app/Http/Controllers/UserController.php:315
+ * @see app/Http/Controllers/UserController.php:321
  * @route '/users/{user}'
  */
         destroyForm.delete = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -437,7 +437,7 @@ destroy.delete = (args: { user: number | { id: number } } | [user: number | { id
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:277
+ * @see app/Http/Controllers/UserController.php:283
  * @route '/users/{user}/role'
  */
 export const updateRole = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -452,7 +452,7 @@ updateRole.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:277
+ * @see app/Http/Controllers/UserController.php:283
  * @route '/users/{user}/role'
  */
 updateRole.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -485,7 +485,7 @@ updateRole.url = (args: { user: number | { id: number } } | [user: number | { id
 
 /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:277
+ * @see app/Http/Controllers/UserController.php:283
  * @route '/users/{user}/role'
  */
 updateRole.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -495,7 +495,7 @@ updateRole.patch = (args: { user: number | { id: number } } | [user: number | { 
 
     /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:277
+ * @see app/Http/Controllers/UserController.php:283
  * @route '/users/{user}/role'
  */
     const updateRoleForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -510,7 +510,7 @@ updateRole.patch = (args: { user: number | { id: number } } | [user: number | { 
 
             /**
 * @see \App\Http\Controllers\UserController::updateRole
- * @see app/Http/Controllers/UserController.php:277
+ * @see app/Http/Controllers/UserController.php:283
  * @route '/users/{user}/role'
  */
         updateRoleForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -526,7 +526,7 @@ updateRole.patch = (args: { user: number | { id: number } } | [user: number | { 
     updateRole.form = updateRoleForm
 /**
 * @see \App\Http\Controllers\UserController::toggleActive
- * @see app/Http/Controllers/UserController.php:293
+ * @see app/Http/Controllers/UserController.php:299
  * @route '/users/{user}/active'
  */
 export const toggleActive = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -541,7 +541,7 @@ toggleActive.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::toggleActive
- * @see app/Http/Controllers/UserController.php:293
+ * @see app/Http/Controllers/UserController.php:299
  * @route '/users/{user}/active'
  */
 toggleActive.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -574,7 +574,7 @@ toggleActive.url = (args: { user: number | { id: number } } | [user: number | { 
 
 /**
 * @see \App\Http\Controllers\UserController::toggleActive
- * @see app/Http/Controllers/UserController.php:293
+ * @see app/Http/Controllers/UserController.php:299
  * @route '/users/{user}/active'
  */
 toggleActive.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -584,7 +584,7 @@ toggleActive.patch = (args: { user: number | { id: number } } | [user: number | 
 
     /**
 * @see \App\Http\Controllers\UserController::toggleActive
- * @see app/Http/Controllers/UserController.php:293
+ * @see app/Http/Controllers/UserController.php:299
  * @route '/users/{user}/active'
  */
     const toggleActiveForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -599,7 +599,7 @@ toggleActive.patch = (args: { user: number | { id: number } } | [user: number | 
 
             /**
 * @see \App\Http\Controllers\UserController::toggleActive
- * @see app/Http/Controllers/UserController.php:293
+ * @see app/Http/Controllers/UserController.php:299
  * @route '/users/{user}/active'
  */
         toggleActiveForm.patch = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -615,7 +615,7 @@ toggleActive.patch = (args: { user: number | { id: number } } | [user: number | 
     toggleActive.form = toggleActiveForm
 /**
 * @see \App\Http\Controllers\UserController::passwordLink
- * @see app/Http/Controllers/UserController.php:304
+ * @see app/Http/Controllers/UserController.php:310
  * @route '/users/{user}/password-link'
  */
 export const passwordLink = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -630,7 +630,7 @@ passwordLink.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::passwordLink
- * @see app/Http/Controllers/UserController.php:304
+ * @see app/Http/Controllers/UserController.php:310
  * @route '/users/{user}/password-link'
  */
 passwordLink.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -663,7 +663,7 @@ passwordLink.url = (args: { user: number | { id: number } } | [user: number | { 
 
 /**
 * @see \App\Http\Controllers\UserController::passwordLink
- * @see app/Http/Controllers/UserController.php:304
+ * @see app/Http/Controllers/UserController.php:310
  * @route '/users/{user}/password-link'
  */
 passwordLink.post = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -673,7 +673,7 @@ passwordLink.post = (args: { user: number | { id: number } } | [user: number | {
 
     /**
 * @see \App\Http\Controllers\UserController::passwordLink
- * @see app/Http/Controllers/UserController.php:304
+ * @see app/Http/Controllers/UserController.php:310
  * @route '/users/{user}/password-link'
  */
     const passwordLinkForm = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -683,7 +683,7 @@ passwordLink.post = (args: { user: number | { id: number } } | [user: number | {
 
             /**
 * @see \App\Http\Controllers\UserController::passwordLink
- * @see app/Http/Controllers/UserController.php:304
+ * @see app/Http/Controllers/UserController.php:310
  * @route '/users/{user}/password-link'
  */
         passwordLinkForm.post = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -694,7 +694,7 @@ passwordLink.post = (args: { user: number | { id: number } } | [user: number | {
     passwordLink.form = passwordLinkForm
 /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
 export const search = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -709,7 +709,7 @@ search.definition = {
 
 /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
 search.url = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -741,7 +741,7 @@ search.url = (args?: { repository?: string | number } | [repository: string | nu
 
 /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
 search.get = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -750,7 +750,7 @@ search.get = (args?: { repository?: string | number } | [repository: string | nu
 })
 /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
 search.head = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -760,7 +760,7 @@ search.head = (args?: { repository?: string | number } | [repository: string | n
 
     /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
     const searchForm = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -770,7 +770,7 @@ search.head = (args?: { repository?: string | number } | [repository: string | n
 
             /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
         searchForm.get = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -779,7 +779,7 @@ search.head = (args?: { repository?: string | number } | [repository: string | n
         })
             /**
 * @see \App\Http\Controllers\UserController::search
- * @see app/Http/Controllers/UserController.php:225
+ * @see app/Http/Controllers/UserController.php:228
  * @route '/api/users/{repository?}'
  */
         searchForm.head = (args?: { repository?: string | number } | [repository: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

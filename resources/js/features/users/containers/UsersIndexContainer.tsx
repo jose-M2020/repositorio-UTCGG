@@ -5,6 +5,7 @@ import { UserFormDialog } from "../components/UserFormDialog";
 import { UsersTable } from "../components/UsersTable";
 import type {
   CareerFormPolicy,
+  CareerOption,
   PaginatedUsers,
   RoleOption,
   RolePermissionPreview,
@@ -19,6 +20,7 @@ type UsersIndexContainerProps = {
   assignableRoles: RoleOption[];
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careers: Record<string, string>;
+  careerOptions: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
 };
@@ -30,6 +32,7 @@ export const UsersIndexContainer = ({
   assignableRoles,
   rolePermissions,
   careers,
+  careerOptions,
   careerPolicy,
   userTypes = [],
 }: UsersIndexContainerProps) => {
@@ -49,7 +52,7 @@ export const UsersIndexContainer = ({
           <UserFormDialog
             mode="create"
             roles={assignableRoles}
-            careers={careers}
+            careers={careerOptions}
             careerPolicy={careerPolicy}
             userTypes={userTypes}
             trigger={<Button type="button" />}
@@ -82,6 +85,7 @@ export const UsersIndexContainer = ({
         assignableRoles={assignableRoles}
         rolePermissions={rolePermissions}
         careersOptions={careers}
+        careerOptions={careerOptions}
         careerPolicy={careerPolicy}
         userTypes={userTypes}
       />

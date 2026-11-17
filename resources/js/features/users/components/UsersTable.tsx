@@ -6,6 +6,7 @@ import { visitUsersIndex } from "../api/visitUsersIndex";
 import { createUsersColumns } from "../columns";
 import type {
   CareerFormPolicy,
+  CareerOption,
   PaginatedUsers,
   RoleOption,
   RolePermissionPreview,
@@ -24,6 +25,7 @@ type UsersTableProps = {
   assignableRoles: RoleOption[];
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careersOptions: Record<string, string>;
+  careerOptions: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
 };
@@ -35,6 +37,7 @@ export const UsersTable = ({
   assignableRoles,
   rolePermissions,
   careersOptions,
+  careerOptions,
   careerPolicy,
   userTypes = [],
 }: UsersTableProps) => {
@@ -80,6 +83,7 @@ export const UsersTable = ({
     assignableRoles,
     rolePermissions,
     careersOptions,
+    careerOptions,
     canFilterCareer,
     careerPolicy,
     userTypes,

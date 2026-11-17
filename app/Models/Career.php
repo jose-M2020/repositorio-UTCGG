@@ -84,6 +84,24 @@ class Career extends Model
     }
 
     /**
+     * @return list<array{id: int, code: string, name: string}>
+     */
+    public static function formOptions(): array
+    {
+        return static::query()
+            ->active()
+            ->ordered()
+            ->get(['id', 'code', 'name'])
+            ->map(fn (self $career): array => [
+                'id' => (int) $career->id,
+                'code' => $career->code,
+                'name' => $career->name,
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
      * @return list<array{code: string, name: string, image: string}>
      */
     public static function homeCards(): array

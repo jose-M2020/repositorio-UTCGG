@@ -28,6 +28,7 @@ import { UserSendPasswordLinkDialog } from "./UserSendPasswordLinkDialog";
 import { UserToggleActiveDialog } from "./UserToggleActiveDialog";
 import type {
   CareerFormPolicy,
+  CareerOption,
   RoleOption,
   RolePermissionPreview,
   UserListItem,
@@ -39,7 +40,7 @@ type UserRowActionsProps = {
   user: UserListItem;
   roles: RoleOption[];
   rolePermissions: Record<string, RolePermissionPreview[]>;
-  careers: Record<string, string>;
+  careers: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
 };

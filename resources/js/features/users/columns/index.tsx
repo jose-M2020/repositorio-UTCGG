@@ -5,6 +5,7 @@ import { UserRowActions } from "../components/UserRowActions";
 import { UserStatusBadge } from "../components/UserStatusBadge";
 import type {
   CareerFormPolicy,
+  CareerOption,
   RoleOption,
   RolePermissionPreview,
   UserListItem,
@@ -24,6 +25,7 @@ type CreateUsersColumnsOptions = {
   assignableRoles: RoleOption[];
   rolePermissions: Record<string, RolePermissionPreview[]>;
   careersOptions: Record<string, string>;
+  careerOptions: CareerOption[];
   canFilterCareer: boolean;
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
@@ -36,6 +38,7 @@ export const createUsersColumns = ({
   assignableRoles,
   rolePermissions,
   careersOptions,
+  careerOptions,
   canFilterCareer,
   careerPolicy,
   userTypes = [],
@@ -174,7 +177,7 @@ export const createUsersColumns = ({
         user={row.original}
         roles={assignableRoles}
         rolePermissions={rolePermissions}
-        careers={careersOptions}
+        careers={careerOptions}
         careerPolicy={careerPolicy}
         userTypes={userTypes}
       />

@@ -379,6 +379,22 @@ final class UserProvisioningService
             ]);
         }
 
+        $teacherCareerIds = collect($careers)
+            ->filter(fn (array $row): bool => (($row['position'] ?? CareerPosition::Teacher->value) === CareerPosition::Teacher->value))
+            ->map(fn (array $row): int => (int) $row['career_id'])
+            ->unique()
+            ->values()
+            ->all();
+
+        if ($teacherCareerIds !== []) {
+            CareerAssignment::query()
+                ->where('user_id', $user->id)
+                ->where('position', CareerPosition::Teacher->value)
+                ->active()
+                ->whereNotIn('career_id', $teacherCareerIds)
+                ->update(['ends_at' => now()->toDateString()]);
+        }
+
         $this->syncCareerDirectorRole($user->fresh());
     }
 

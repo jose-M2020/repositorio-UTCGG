@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Support\Permissions;
 use App\Enums\AcademicStatus;
 use App\Enums\UserType;
+use App\Models\Career;
+use App\Support\Permissions;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -77,6 +78,33 @@ class StoreUserRequest extends FormRequest
         if ($resolvedType === UserType::Student->value && ! $this->filled('academic_status')) {
             $this->merge(['academic_status' => AcademicStatus::Active->value]);
         }
+
+        $this->mergePrimaryCareerFromCareers();
+    }
+
+    private function mergePrimaryCareerFromCareers(): void
+    {
+        if ($this->filled('career') || $this->filled('career_id')) {
+            return;
+        }
+
+        $careers = $this->input('careers');
+        if (! is_array($careers) || $careers === []) {
+            return;
+        }
+
+        $first = $careers[0] ?? null;
+        if (! is_array($first) || ! isset($first['career_id'])) {
+            return;
+        }
+
+        $careerId = (int) $first['career_id'];
+        $code = Career::query()->whereKey($careerId)->value('code');
+
+        $this->merge([
+            'career_id' => $careerId,
+            'career' => is_string($code) ? $code : null,
+        ]);
     }
 
     /**
@@ -101,17 +129,23 @@ class StoreUserRequest extends FormRequest
             'roles' => ['required_without:role', 'nullable', 'array', 'min:1'],
             'roles.*' => ['string', Rule::in($assignableRoles)],
             'career' => [
-                Rule::requiredIf($careerRequired && ! $this->filled('career_id')),
+                Rule::requiredIf($careerRequired && ! $this->filled('career_id') && ! $this->filled('careers')),
                 'nullable',
                 'string',
                 'max:20',
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'career_id' => [
-                Rule::requiredIf($careerRequired && ! $this->filled('career')),
+                Rule::requiredIf($careerRequired && ! $this->filled('career') && ! $this->filled('careers')),
                 'nullable',
                 'integer',
                 Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
+            ],
+            'careers' => [
+                Rule::requiredIf($careerRequired && $userType === UserType::Teacher->value && ! $this->filled('career') && ! $this->filled('career_id')),
+                'nullable',
+                'array',
+                'min:1',
             ],
             'student_number' => [
                 Rule::requiredIf($userType === UserType::Student->value && $this->boolean('require_profile_ids')),
@@ -142,7 +176,6 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'careers' => ['nullable', 'array'],
             'careers.*.career_id' => [
                 'required_with:careers',
                 'integer',

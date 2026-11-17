@@ -8,6 +8,7 @@ use App\Actions\Users\EnsureCanManageUser;
 use App\Actions\Users\SendUserPasswordLink;
 use App\Actions\Users\ToggleUserActive;
 use App\Actions\Users\UpdateUserProfile;
+use App\Enums\CareerPosition;
 use App\Enums\UserAccountStatus;
 use App\Enums\UserType;
 use App\Http\Requests\ChangeUserRoleRequest;
@@ -133,7 +134,8 @@ class UserController extends Controller implements HasMiddleware
                 'second_last_name' => $user->second_last_name,
                 'email' => $user->email,
                 'user_type' => $user->user_type?->value,
-                'career' => $user->careerCode(),
+                'career' => $this->careerCodesForDisplay($user),
+                'career_ids' => $this->careerIdsForForm($user),
                 'status' => $user->status->value,
                 'created_at' => (string) $user->created_at,
                 'roles' => $user->roles->map(fn (Role $role) => [
@@ -157,6 +159,7 @@ class UserController extends Controller implements HasMiddleware
             'assignableRoles' => UserRoles::assignableOptionsFor($authUser),
             'rolePermissions' => $this->permissionsByAssignableRole($authUser),
             'careers' => Career::optionsByCode(),
+            'careerOptions' => Career::formOptions(),
             'careerPolicy' => UserRoles::careerFormPolicyFor($authUser),
             'userTypes' => collect(UserType::cases())
                 ->map(fn (UserType $type): array => [
@@ -259,6 +262,8 @@ class UserController extends Controller implements HasMiddleware
         User $user,
         UpdateUserProfile $updateUserProfile,
     ): RedirectResponse {
+        $validated = $request->validated();
+
         $updateUserProfile->handle(
             $request->user(),
             $user,
@@ -267,6 +272,7 @@ class UserController extends Controller implements HasMiddleware
             $request->filled('second_last_name') ? $request->string('second_last_name')->toString() : null,
             $request->string('email')->toString(),
             $request->input('career'),
+            $validated,
         );
 
         return redirect()
@@ -355,5 +361,44 @@ class UserController extends Controller implements HasMiddleware
         }
 
         return $map;
+    }
+
+    private function careerCodesForDisplay(User $user): ?string
+    {
+        if ($user->user_type === UserType::Teacher) {
+            $codes = $user->activeCareerAssignments
+                ->map(fn ($assignment) => $assignment->career?->code)
+                ->filter()
+                ->unique()
+                ->values();
+
+            return $codes->isEmpty() ? null : $codes->implode(', ');
+        }
+
+        return $user->careerCode();
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function careerIdsForForm(User $user): array
+    {
+        if ($user->user_type === UserType::Teacher) {
+            return $user->activeCareerAssignments
+                ->filter(fn ($assignment): bool => $assignment->position === CareerPosition::Teacher)
+                ->pluck('career_id')
+                ->map(fn ($id): int => (int) $id)
+                ->unique()
+                ->values()
+                ->all();
+        }
+
+        if ($user->user_type === UserType::Student) {
+            $careerId = $user->studentProfile?->career_id;
+
+            return $careerId !== null ? [(int) $careerId] : [];
+        }
+
+        return [];
     }
 }

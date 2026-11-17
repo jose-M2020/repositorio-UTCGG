@@ -8,6 +8,12 @@ export type UserTypeOption = {
     label: string;
 };
 
+export type CareerOption = {
+    id: number;
+    code: string;
+    name: string;
+};
+
 export type UserListItem = {
     id: number;
     first_name: string;
@@ -16,6 +22,7 @@ export type UserListItem = {
     email: string;
     user_type?: string | null;
     career: string | null;
+    career_ids?: number[];
     status: UserAccountStatus;
     created_at: string;
     roles: Array<{ id: number; name: string }>;

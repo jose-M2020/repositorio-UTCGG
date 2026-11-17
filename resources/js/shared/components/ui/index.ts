@@ -16,6 +16,24 @@ export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, Ava
 export { Button, buttonVariants } from './button';
 export { Checkbox } from './checkbox';
 export {
+    Combobox,
+    ComboboxChip,
+    ComboboxChips,
+    ComboboxChipsInput,
+    ComboboxCollection,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxGroup,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxLabel,
+    ComboboxList,
+    ComboboxSeparator,
+    ComboboxTrigger,
+    ComboboxValue,
+    useComboboxAnchor,
+} from './combobox';
+export {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,

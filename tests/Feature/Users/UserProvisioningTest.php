@@ -238,4 +238,64 @@ class UserProvisioningTest extends TestCase
         $this->assertContains('tic.student@example.com', $visible);
         $this->assertNotContains('er.student@example.com', User::query()->inCareers([$ticId])->pluck('email')->all());
     }
+
+    public function test_teacher_can_be_assigned_to_multiple_careers_on_create_and_update(): void
+    {
+        $admin = User::factory()->staff()->create(['user_type' => UserType::Staff]);
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $ticId = (int) Career::query()->where('code', 'TIC')->value('id');
+        $erId = (int) Career::query()->where('code', 'ER')->value('id');
+
+        $this->actingAs($admin)->post(route('users.store'), [
+            'first_name' => 'Multi',
+            'last_name' => 'Docente',
+            'email' => 'multi.docente@example.com',
+            'user_type' => UserType::Teacher->value,
+            'role' => UserRoles::TEACHER,
+            'careers' => [
+                ['career_id' => $ticId, 'position' => CareerPosition::Teacher->value],
+                ['career_id' => $erId, 'position' => CareerPosition::Teacher->value],
+            ],
+        ])->assertRedirect(route('users.index'));
+
+        $teacher = User::query()->where('email', 'multi.docente@example.com')->firstOrFail();
+
+        $this->assertDatabaseHas('career_assignments', [
+            'user_id' => $teacher->id,
+            'career_id' => $ticId,
+            'position' => CareerPosition::Teacher->value,
+            'ends_at' => null,
+        ]);
+        $this->assertDatabaseHas('career_assignments', [
+            'user_id' => $teacher->id,
+            'career_id' => $erId,
+            'position' => CareerPosition::Teacher->value,
+            'ends_at' => null,
+        ]);
+
+        $this->actingAs($admin)->put(route('users.update', $teacher), [
+            'first_name' => 'Multi',
+            'last_name' => 'Docente',
+            'email' => 'multi.docente@example.com',
+            'careers' => [
+                ['career_id' => $ticId, 'position' => CareerPosition::Teacher->value],
+            ],
+        ])->assertRedirect(route('users.index'));
+
+        $this->assertDatabaseHas('career_assignments', [
+            'user_id' => $teacher->id,
+            'career_id' => $ticId,
+            'position' => CareerPosition::Teacher->value,
+            'ends_at' => null,
+        ]);
+
+        $endedEr = CareerAssignment::query()
+            ->where('user_id', $teacher->id)
+            ->where('career_id', $erId)
+            ->where('position', CareerPosition::Teacher->value)
+            ->first();
+
+        $this->assertNotNull($endedEr?->ends_at);
+    }
 }

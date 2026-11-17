@@ -2,16 +2,18 @@ import { useState, type ChangeEvent } from "react";
 import { Input } from "@/shared/components/ui";
 import type {
   CareerFormPolicy,
+  CareerOption,
   RoleOption,
   UserFormErrors,
   UserTypeOption,
 } from "../types";
 import { defaultRoleForType } from "../utils/userTypeDefaults";
+import { TeacherCareerPicker } from "./TeacherCareerPicker";
 
 type UserFormFieldsProps = {
   errors: UserFormErrors;
   roles: RoleOption[];
-  careers: Record<string, string>;
+  careers: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes?: UserTypeOption[];
   defaults?: {
@@ -21,6 +23,7 @@ type UserFormFieldsProps = {
     email?: string;
     phone?: string | null;
     career?: string;
+    career_ids?: number[];
     role?: string | null;
     user_type?: string | null;
     student_number?: string | null;
@@ -56,6 +59,12 @@ export const UserFormFields = ({
     (resolvedUserType === "student" ||
       resolvedUserType === "teacher" ||
       Boolean(selectedRoleOption?.requires_career));
+  const showTeacherCareers =
+    showCareerField && resolvedUserType === "teacher";
+  const showStudentCareer =
+    showCareerField && resolvedUserType !== "teacher";
+  const careerError =
+    errors.careers ?? errors["careers.0.career_id"] ?? errors.career;
 
   const handleUserTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const nextType = event.target.value;
@@ -320,7 +329,7 @@ export const UserFormFields = ({
           </div>
         ) : null}
 
-        {showCareerField ? (
+        {showStudentCareer ? (
           <div className="space-y-1">
             <label
               htmlFor="career"
@@ -339,9 +348,9 @@ export const UserFormFields = ({
               <option value="" disabled>
                 Selecciona una carrera
               </option>
-              {Object.entries(careers).map(([code, label]) => (
-                <option key={code} value={code}>
-                  {code} — {label}
+              {careers.map((career) => (
+                <option key={career.code} value={career.code}>
+                  {career.code} — {career.name}
                 </option>
               ))}
             </select>
@@ -349,6 +358,14 @@ export const UserFormFields = ({
               <p className="text-sm text-red-600">{errors.career}</p>
             ) : null}
           </div>
+        ) : null}
+
+        {showTeacherCareers ? (
+          <TeacherCareerPicker
+            careers={careers}
+            defaultSelectedIds={defaults?.career_ids ?? []}
+            error={careerError}
+          />
         ) : null}
       </div>
     </div>

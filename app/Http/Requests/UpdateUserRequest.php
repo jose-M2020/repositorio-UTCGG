@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Support\Permissions;
 use App\Enums\UserType;
+use App\Models\Career;
 use App\Models\User;
+use App\Support\Permissions;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -46,8 +47,11 @@ class UpdateUserRequest extends FormRequest
             $this->merge([
                 'career' => null,
                 'career_id' => null,
+                'careers' => null,
             ]);
         }
+
+        $this->mergePrimaryCareerFromCareers();
     }
 
     /**
@@ -78,18 +82,57 @@ class UpdateUserRequest extends FormRequest
             ],
             'phone' => ['nullable', 'string', 'max:20'],
             'career' => [
-                Rule::requiredIf($careerRequired && ! $this->filled('career_id')),
+                Rule::requiredIf($careerRequired && ! $this->filled('career_id') && ! $this->filled('careers')),
                 'nullable',
                 'string',
                 'max:20',
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'career_id' => [
-                Rule::requiredIf($careerRequired && ! $this->filled('career')),
+                Rule::requiredIf($careerRequired && ! $this->filled('career') && ! $this->filled('careers')),
                 'nullable',
                 'integer',
                 Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
             ],
+            'careers' => [
+                Rule::requiredIf($careerRequired && $userType === UserType::Teacher->value && ! $this->filled('career') && ! $this->filled('career_id')),
+                'nullable',
+                'array',
+                'min:1',
+            ],
+            'careers.*.career_id' => [
+                'required_with:careers',
+                'integer',
+                Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
+            ],
+            'careers.*.position' => ['nullable', 'string', 'max:32'],
+            'careers.*.starts_at' => ['nullable', 'date'],
+            'careers.*.ends_at' => ['nullable', 'date', 'after_or_equal:careers.*.starts_at'],
         ];
+    }
+
+    private function mergePrimaryCareerFromCareers(): void
+    {
+        if ($this->filled('career') || $this->filled('career_id')) {
+            return;
+        }
+
+        $careers = $this->input('careers');
+        if (! is_array($careers) || $careers === []) {
+            return;
+        }
+
+        $first = $careers[0] ?? null;
+        if (! is_array($first) || ! isset($first['career_id'])) {
+            return;
+        }
+
+        $careerId = (int) $first['career_id'];
+        $code = Career::query()->whereKey($careerId)->value('code');
+
+        $this->merge([
+            'career_id' => $careerId,
+            'career' => is_string($code) ? $code : null,
+        ]);
     }
 }
