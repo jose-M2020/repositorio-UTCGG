@@ -24,6 +24,7 @@ import { index as educationLevels } from '@/actions/App/Http/Controllers/Educati
 import { index as projectTypes } from '@/actions/App/Http/Controllers/ProjectTypeController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';
+import { AUTH_ABILITIES } from '@/features/auth';
 import {
     NavMain,
     type NavMainGroup,
@@ -72,7 +73,7 @@ const useNavGroups = (): NavMainGroup[] => {
             url: mine.url(),
             icon: FolderKanban,
         },
-        ...(auth.abilities['repositories.create']
+        ...(auth.abilities[AUTH_ABILITIES.REPOSITORIES_CREATE]
             ? [
                   {
                       title: 'Nuevo proyecto',
@@ -84,7 +85,7 @@ const useNavGroups = (): NavMainGroup[] => {
     ];
 
     const administrationItems: NavMainLink[] = [
-        ...(auth.abilities['users.view']
+        ...(auth.abilities[AUTH_ABILITIES.USERS_VIEW]
             ? [
                   {
                       title: 'Usuarios',
@@ -93,7 +94,7 @@ const useNavGroups = (): NavMainGroup[] => {
                   },
               ]
             : []),
-        ...(auth.abilities['roles.view']
+        ...(auth.abilities[AUTH_ABILITIES.ROLES_VIEW]
             ? [
                   {
                       title: 'Roles y permisos',
@@ -105,7 +106,7 @@ const useNavGroups = (): NavMainGroup[] => {
     ];
 
     const catalogItems: NavMainLink[] = [
-        ...(auth.abilities['careers.view']
+        ...(auth.abilities[AUTH_ABILITIES.CAREERS_VIEW]
             ? [
                   {
                       title: 'Carreras',
@@ -114,7 +115,7 @@ const useNavGroups = (): NavMainGroup[] => {
                   },
               ]
             : []),
-        ...(auth.abilities['project_types.view']
+        ...(auth.abilities[AUTH_ABILITIES.PROJECT_TYPES_VIEW]
             ? [
                   {
                       title: 'Tipos de proyecto',
@@ -123,7 +124,7 @@ const useNavGroups = (): NavMainGroup[] => {
                   },
               ]
             : []),
-        ...(auth.abilities['education_levels.view']
+        ...(auth.abilities[AUTH_ABILITIES.EDUCATION_LEVELS_VIEW]
             ? [
                   {
                       title: 'Niveles educativos',

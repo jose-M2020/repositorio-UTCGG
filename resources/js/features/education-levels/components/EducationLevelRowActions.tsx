@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { Pencil } from "lucide-react";
 import { destroy } from "@/actions/App/Http/Controllers/EducationLevelController";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { Button } from "@/shared/components/ui";
 import { EducationLevelFormDialog } from "./EducationLevelFormDialog";
@@ -16,9 +17,10 @@ export const EducationLevelRowActions = ({
 }: EducationLevelRowActionsProps) => {
     const { auth } = usePage().props;
     const educationLevelName = educationLevel.name.trim();
-    const canEdit = auth.abilities["education_levels.edit"];
-    const canToggleActive = auth.abilities["education_levels.toggle-active"];
-    const canDestroy = auth.abilities["education_levels.destroy"];
+    const canEdit = auth.abilities[AUTH_ABILITIES.EDUCATION_LEVELS_EDIT];
+    const canToggleActive =
+        auth.abilities[AUTH_ABILITIES.EDUCATION_LEVELS_TOGGLE_ACTIVE];
+    const canDestroy = auth.abilities[AUTH_ABILITIES.EDUCATION_LEVELS_DESTROY];
 
     if (!canEdit && !canToggleActive && !canDestroy) {
         return null;

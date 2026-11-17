@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRepositoryFilesRequest;
 use App\Http\Requests\UpdateRepositoryFileRequest;
 use App\Models\File;
 use App\Models\Repository;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http\UploadedFile;
@@ -24,9 +25,9 @@ class FileController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', except: ['download']),
-            new Middleware('can:files.create', only: ['create', 'store']),
-            new Middleware('can:files.edit', only: ['update']),
-            new Middleware('can:files.destroy', only: ['destroy', 'destroyImage']),
+            new Middleware(Permissions::ability(Permissions::FILES_CREATE), only: ['create', 'store']),
+            new Middleware(Permissions::ability(Permissions::FILES_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::FILES_DESTROY), only: ['destroy', 'destroyImage']),
             new Middleware(AuthorizeMember::class, only: ['create', 'store', 'update', 'destroy', 'destroyImage']),
         ];
     }

@@ -1,4 +1,5 @@
 import { usePage } from "@inertiajs/react";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
 import { UserFormDialog } from "../components/UserFormDialog";
 import { UsersTable } from "../components/UsersTable";
@@ -33,7 +34,7 @@ export const UsersIndexContainer = ({
   userTypes = [],
 }: UsersIndexContainerProps) => {
   const { auth, flash } = usePage().props;
-  const canCreate = auth.abilities["users.create"];
+  const canCreate = auth.abilities[AUTH_ABILITIES.USERS_CREATE];
 
   return (
     <main className="page-container space-y-6 py-8">

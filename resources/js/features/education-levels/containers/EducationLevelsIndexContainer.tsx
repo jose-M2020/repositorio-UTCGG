@@ -1,4 +1,5 @@
 import { usePage } from "@inertiajs/react";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
 import { EducationLevelFormDialog } from "../components/EducationLevelFormDialog";
 import { EducationLevelsTable } from "../components/EducationLevelsTable";
@@ -12,7 +13,7 @@ export const EducationLevelsIndexContainer = ({
     educationLevels,
 }: EducationLevelsIndexContainerProps) => {
     const { auth, flash } = usePage().props;
-    const canCreate = auth.abilities["education_levels.create"];
+    const canCreate = auth.abilities[AUTH_ABILITIES.EDUCATION_LEVELS_CREATE];
 
     return (
         <main className="page-container space-y-6 py-8">

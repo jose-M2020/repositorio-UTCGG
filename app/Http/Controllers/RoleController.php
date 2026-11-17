@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Support\Permissions;
 use App\Support\RoleAssignPermissionSync;
 use App\Support\UserRoles;
 use Illuminate\Http\RedirectResponse;
@@ -20,10 +21,10 @@ class RoleController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:roles.index', only: ['index']),
-            new Middleware('can:roles.create', only: ['store']),
-            new Middleware('can:roles.edit', only: ['update']),
-            new Middleware('can:roles.destroy', only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::ROLES_INDEX), only: ['index']),
+            new Middleware(Permissions::ability(Permissions::ROLES_CREATE), only: ['store']),
+            new Middleware(Permissions::ability(Permissions::ROLES_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::ROLES_DESTROY), only: ['destroy']),
         ];
     }
 
@@ -46,6 +47,7 @@ class RoleController extends Controller implements HasMiddleware
                         'id' => $permission->id,
                         'name' => $permission->name,
                         'description' => $permission->description,
+                        'section' => Permissions::sectionFor($permission->name),
                     ])
                     ->values()
                     ->all(),
@@ -125,7 +127,7 @@ class RoleController extends Controller implements HasMiddleware
     }
 
     /**
-     * @return array<string, list<array{id: int, name: string, description: string|null}>>
+     * @return array<string, list<array{id: int, name: string, description: string|null, section: string}>>
      */
     private function permissionGroups(): array
     {
@@ -138,6 +140,7 @@ class RoleController extends Controller implements HasMiddleware
                 'id' => $permission->id,
                 'name' => $permission->name,
                 'description' => $permission->description,
+                'section' => Permissions::sectionFor($permission->name),
             ];
         }
 

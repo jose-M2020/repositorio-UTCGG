@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEducationLevelRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('education_levels.edit') ?? false;
+        return $this->user()?->can(Permissions::EDUCATION_LEVELS_EDIT) ?? false;
     }
 
     /** @return array<string, mixed> */

@@ -1,7 +1,14 @@
+export type PermissionSection =
+    | "management"
+    | "action"
+    | "assign"
+    | "career";
+
 export type RolePermission = {
     id: number;
     name: string;
     description: string | null;
+    section?: PermissionSection | string;
 };
 
 export type RoleListItem = {

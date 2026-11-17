@@ -12,6 +12,7 @@ use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
 use App\Support\Media;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -26,9 +27,9 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', only: ['create', 'store', 'edit', 'update', 'destroy', 'mine', 'showByUser']),
-            new Middleware('can:repositories.create', only: ['create', 'store']),
-            new Middleware('can:repositories.edit', only: ['edit', 'update']),
-            new Middleware('can:repositories.destroy', only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::REPOSITORIES_CREATE), only: ['create', 'store']),
+            new Middleware(Permissions::ability(Permissions::REPOSITORIES_EDIT), only: ['edit', 'update']),
+            new Middleware(Permissions::ability(Permissions::REPOSITORIES_DESTROY), only: ['destroy']),
             new Middleware(AuthorizeMember::class, only: ['edit', 'update', 'destroy', 'showByUser']),
         ];
     }

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\RoleController::index
- * @see app/Http/Controllers/RoleController.php:30
+ * @see app/Http/Controllers/RoleController.php:31
  * @route '/roles'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\RoleController::store
- * @see app/Http/Controllers/RoleController.php:60
+ * @see app/Http/Controllers/RoleController.php:62
  * @route '/roles'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -94,7 +94,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\RoleController::store
- * @see app/Http/Controllers/RoleController.php:60
+ * @see app/Http/Controllers/RoleController.php:62
  * @route '/roles'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RoleController::store
- * @see app/Http/Controllers/RoleController.php:60
+ * @see app/Http/Controllers/RoleController.php:62
  * @route '/roles'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -113,7 +113,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\RoleController::store
- * @see app/Http/Controllers/RoleController.php:60
+ * @see app/Http/Controllers/RoleController.php:62
  * @route '/roles'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -123,7 +123,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\RoleController::store
- * @see app/Http/Controllers/RoleController.php:60
+ * @see app/Http/Controllers/RoleController.php:62
  * @route '/roles'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -134,7 +134,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
 export const update = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -149,7 +149,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
 update.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -182,7 +182,7 @@ update.url = (args: { role: number | { id: number } } | [role: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
 update.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -191,7 +191,7 @@ update.put = (args: { role: number | { id: number } } | [role: number | { id: nu
 })
 /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
 update.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -201,7 +201,7 @@ update.patch = (args: { role: number | { id: number } } | [role: number | { id: 
 
     /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
     const updateForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -216,7 +216,7 @@ update.patch = (args: { role: number | { id: number } } | [role: number | { id: 
 
             /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
         updateForm.put = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -230,7 +230,7 @@ update.patch = (args: { role: number | { id: number } } | [role: number | { id: 
         })
             /**
 * @see \App\Http\Controllers\RoleController::update
- * @see app/Http/Controllers/RoleController.php:77
+ * @see app/Http/Controllers/RoleController.php:79
  * @route '/roles/{role}'
  */
         updateForm.patch = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -246,7 +246,7 @@ update.patch = (args: { role: number | { id: number } } | [role: number | { id: 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\RoleController::destroy
- * @see app/Http/Controllers/RoleController.php:101
+ * @see app/Http/Controllers/RoleController.php:103
  * @route '/roles/{role}'
  */
 export const destroy = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -261,7 +261,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\RoleController::destroy
- * @see app/Http/Controllers/RoleController.php:101
+ * @see app/Http/Controllers/RoleController.php:103
  * @route '/roles/{role}'
  */
 destroy.url = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -294,7 +294,7 @@ destroy.url = (args: { role: number | { id: number } } | [role: number | { id: n
 
 /**
 * @see \App\Http\Controllers\RoleController::destroy
- * @see app/Http/Controllers/RoleController.php:101
+ * @see app/Http/Controllers/RoleController.php:103
  * @route '/roles/{role}'
  */
 destroy.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -304,7 +304,7 @@ destroy.delete = (args: { role: number | { id: number } } | [role: number | { id
 
     /**
 * @see \App\Http\Controllers\RoleController::destroy
- * @see app/Http/Controllers/RoleController.php:101
+ * @see app/Http/Controllers/RoleController.php:103
  * @route '/roles/{role}'
  */
     const destroyForm = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -319,7 +319,7 @@ destroy.delete = (args: { role: number | { id: number } } | [role: number | { id
 
             /**
 * @see \App\Http\Controllers\RoleController::destroy
- * @see app/Http/Controllers/RoleController.php:101
+ * @see app/Http/Controllers/RoleController.php:103
  * @route '/roles/{role}'
  */
         destroyForm.delete = (args: { role: number | { id: number } } | [role: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

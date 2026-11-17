@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRepositoryFileRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('files.edit') ?? false;
+        return $this->user()?->can(Permissions::FILES_EDIT) ?? false;
     }
 
     /**

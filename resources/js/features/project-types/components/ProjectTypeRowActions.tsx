@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { Pencil } from "lucide-react";
 import { destroy } from "@/actions/App/Http/Controllers/ProjectTypeController";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { Button } from "@/shared/components/ui";
 import { ProjectTypeFormDialog } from "./ProjectTypeFormDialog";
@@ -16,9 +17,9 @@ export const ProjectTypeRowActions = ({
 }: ProjectTypeRowActionsProps) => {
     const { auth } = usePage().props;
     const projectTypeName = projectType.name.trim();
-    const canEdit = auth.abilities["project_types.edit"];
-    const canToggleActive = auth.abilities["project_types.toggle-active"];
-    const canDestroy = auth.abilities["project_types.destroy"];
+    const canEdit = auth.abilities[AUTH_ABILITIES.PROJECT_TYPES_EDIT];
+    const canToggleActive = auth.abilities[AUTH_ABILITIES.PROJECT_TYPES_TOGGLE_ACTIVE];
+    const canDestroy = auth.abilities[AUTH_ABILITIES.PROJECT_TYPES_DESTROY];
 
     if (!canEdit && !canToggleActive && !canDestroy) {
         return null;

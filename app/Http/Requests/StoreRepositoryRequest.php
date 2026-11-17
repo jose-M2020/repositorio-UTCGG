@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use App\Models\ProjectType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -10,7 +11,7 @@ class StoreRepositoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('repositories.create') ?? false;
+        return $this->user()?->can(Permissions::REPOSITORIES_CREATE) ?? false;
     }
 
     /**

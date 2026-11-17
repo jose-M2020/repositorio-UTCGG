@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use App\Enums\UserType;
 use App\Models\User;
 use App\Support\UserRoles;
@@ -12,7 +13,7 @@ class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('users.edit') ?? false;
+        return $this->user()?->can(Permissions::USERS_EDIT) ?? false;
     }
 
     protected function prepareForValidation(): void

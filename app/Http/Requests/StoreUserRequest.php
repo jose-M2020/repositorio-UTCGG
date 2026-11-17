@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use App\Enums\AcademicStatus;
 use App\Enums\UserType;
 use App\Support\UserRoles;
@@ -12,7 +13,7 @@ class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('users.create') ?? false;
+        return $this->user()?->can(Permissions::USERS_CREATE) ?? false;
     }
 
     protected function prepareForValidation(): void

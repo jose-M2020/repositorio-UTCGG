@@ -1,4 +1,5 @@
 import { usePage } from "@inertiajs/react";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
 import { CareerFormDialog } from "../components/CareerFormDialog";
 import { CareersTable } from "../components/CareersTable";
@@ -10,7 +11,7 @@ type CareersIndexContainerProps = {
 
 export const CareersIndexContainer = ({ careers }: CareersIndexContainerProps) => {
     const { auth, flash } = usePage().props;
-    const canCreate = auth.abilities["careers.create"];
+    const canCreate = auth.abilities[AUTH_ABILITIES.CAREERS_CREATE];
 
     return (
         <main className="page-container space-y-6 py-8">

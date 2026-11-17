@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreCareerRequest;
 use App\Http\Requests\UpdateCareerRequest;
 use App\Models\Career;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -21,11 +22,11 @@ class CareerController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:careers.index', only: ['index']),
-            new Middleware('can:careers.create', only: ['store']),
-            new Middleware('can:careers.edit', only: ['update']),
-            new Middleware('can:careers.toggle-active', only: ['toggleActive']),
-            new Middleware('can:careers.destroy', only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::CAREERS_INDEX), only: ['index']),
+            new Middleware(Permissions::ability(Permissions::CAREERS_CREATE), only: ['store']),
+            new Middleware(Permissions::ability(Permissions::CAREERS_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::CAREERS_TOGGLE_ACTIVE), only: ['toggleActive']),
+            new Middleware(Permissions::ability(Permissions::CAREERS_DESTROY), only: ['destroy']),
         ];
     }
 

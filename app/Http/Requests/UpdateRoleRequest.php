@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -12,7 +13,7 @@ class UpdateRoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('roles.edit') ?? false;
+        return $this->user()?->can(Permissions::ROLES_EDIT) ?? false;
     }
 
     /**

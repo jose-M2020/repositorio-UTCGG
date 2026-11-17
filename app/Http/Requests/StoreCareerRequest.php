@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -9,7 +10,7 @@ class StoreCareerRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('careers.create') ?? false;
+        return $this->user()?->can(Permissions::CAREERS_CREATE) ?? false;
     }
 
     /** @return array<string, mixed> */

@@ -15,6 +15,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Career;
 use App\Models\User;
+use App\Support\Permissions;
 use App\Support\UserRoles;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -32,14 +33,14 @@ class UserController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:users.index', only: ['index']),
-            new Middleware('can:users.create', only: ['store']),
-            new Middleware('can:users.edit', only: ['update']),
-            new Middleware('can:users.update-role', only: ['updateRole']),
-            new Middleware('can:users.toggle-active', only: ['toggleActive']),
-            new Middleware('can:users.password-link', only: ['sendPasswordLink']),
-            new Middleware('can:users.destroy', only: ['destroy']),
-            new Middleware('can:users.search', only: ['search']),
+            new Middleware(Permissions::ability(Permissions::USERS_INDEX), only: ['index']),
+            new Middleware(Permissions::ability(Permissions::USERS_CREATE), only: ['store']),
+            new Middleware(Permissions::ability(Permissions::USERS_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::USERS_UPDATE_ROLE), only: ['updateRole']),
+            new Middleware(Permissions::ability(Permissions::USERS_TOGGLE_ACTIVE), only: ['toggleActive']),
+            new Middleware(Permissions::ability(Permissions::USERS_PASSWORD_LINK), only: ['sendPasswordLink']),
+            new Middleware(Permissions::ability(Permissions::USERS_DESTROY), only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::USERS_SEARCH), only: ['search']),
         ];
     }
 

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { destroy, show } from "@/actions/App/Http/Controllers/UserController";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import {
   Button,
@@ -61,11 +62,12 @@ export const UserRowActions = ({
   const isSelf = auth.user?.id === user.id;
   const isPending = user.status === "pending_activation";
   const willActivate = user.status === "inactive";
-  const canEdit = auth.abilities["users.edit"];
-  const canUpdateRole = auth.abilities["users.update-role"];
-  const canToggleActiveAbility = auth.abilities["users.toggle-active"];
-  const canPasswordLink = auth.abilities["users.password-link"];
-  const canDestroy = auth.abilities["users.destroy"];
+  const canEdit = auth.abilities[AUTH_ABILITIES.USERS_EDIT];
+  const canUpdateRole = auth.abilities[AUTH_ABILITIES.USERS_UPDATE_ROLE];
+  const canToggleActiveAbility =
+    auth.abilities[AUTH_ABILITIES.USERS_TOGGLE_ACTIVE];
+  const canPasswordLink = auth.abilities[AUTH_ABILITIES.USERS_PASSWORD_LINK];
+  const canDestroy = auth.abilities[AUTH_ABILITIES.USERS_DESTROY];
   const canToggleActiveStatus =
     user.status === "active" || user.status === "inactive";
   const canToggleActive = canToggleActiveAbility && canToggleActiveStatus;

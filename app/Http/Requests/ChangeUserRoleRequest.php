@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use App\Models\User;
 use App\Support\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,7 +13,7 @@ class ChangeUserRoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('users.update-role') ?? false;
+        return $this->user()?->can(Permissions::USERS_UPDATE_ROLE) ?? false;
     }
 
     /**

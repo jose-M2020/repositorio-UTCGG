@@ -28,12 +28,6 @@ const ACTION_LABELS: Record<string, string> = {
   "password-link": "Enviar enlace de contraseña",
 };
 
-const SPECIAL_ACTION_KEYS = new Set([
-  "toggle-active",
-  "update-role",
-  "password-link",
-]);
-
 const toWords = (value: string): string =>
   value
     .replaceAll("_", " ")
@@ -58,6 +52,27 @@ const assignRoleFromPermission = (permissionName: string): string => {
   return roleName ? toWords(roleName) : permissionName;
 };
 
+const resolveSection = (
+  permission: RolePermission,
+): keyof PartitionedPermissions => {
+  if (permission.section === "assign" || permission.name.includes(".assign.")) {
+    return "assign";
+  }
+
+  if (
+    permission.section === "career" ||
+    permission.name.endsWith(".career.any")
+  ) {
+    return "career";
+  }
+
+  if (permission.section === "action") {
+    return "actions";
+  }
+
+  return "management";
+};
+
 export const moduleLabel = (moduleName: string): string =>
   MODULE_LABELS[moduleName] ?? toWords(moduleName);
 
@@ -66,26 +81,8 @@ export const partitionPermissions = (
 ): PartitionedPermissions =>
   permissions.reduce<PartitionedPermissions>(
     (acc, permission) => {
-      if (permission.name.includes(".assign.")) {
-        acc.assign.push(permission);
-
-        return acc;
-      }
-
-      if (permission.name.endsWith(".career.any")) {
-        acc.career.push(permission);
-
-        return acc;
-      }
-
-      const action = actionFromPermission(permission.name);
-      if (SPECIAL_ACTION_KEYS.has(action)) {
-        acc.actions.push(permission);
-
-        return acc;
-      }
-
-      acc.management.push(permission);
+      const section = resolveSection(permission);
+      acc[section].push(permission);
 
       return acc;
     },

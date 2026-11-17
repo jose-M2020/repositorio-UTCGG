@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -9,7 +10,7 @@ class StoreEducationLevelRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('education_levels.create') ?? false;
+        return $this->user()?->can(Permissions::EDUCATION_LEVELS_CREATE) ?? false;
     }
 
     /** @return array<string, mixed> */

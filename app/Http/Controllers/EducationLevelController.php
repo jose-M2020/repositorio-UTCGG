@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreEducationLevelRequest;
 use App\Http\Requests\UpdateEducationLevelRequest;
 use App\Models\EducationLevel;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -20,11 +21,11 @@ class EducationLevelController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:education_levels.index', only: ['index']),
-            new Middleware('can:education_levels.create', only: ['store']),
-            new Middleware('can:education_levels.edit', only: ['update']),
-            new Middleware('can:education_levels.toggle-active', only: ['toggleActive']),
-            new Middleware('can:education_levels.destroy', only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::EDUCATION_LEVELS_INDEX), only: ['index']),
+            new Middleware(Permissions::ability(Permissions::EDUCATION_LEVELS_CREATE), only: ['store']),
+            new Middleware(Permissions::ability(Permissions::EDUCATION_LEVELS_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::EDUCATION_LEVELS_TOGGLE_ACTIVE), only: ['toggleActive']),
+            new Middleware(Permissions::ability(Permissions::EDUCATION_LEVELS_DESTROY), only: ['destroy']),
         ];
     }
 

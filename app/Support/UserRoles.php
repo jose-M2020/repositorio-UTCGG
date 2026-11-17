@@ -103,10 +103,10 @@ final class UserRoles
             return false;
         }
 
-        return $user->can('users.index')
-            || $user->can('users.create')
-            || $user->can('users.edit')
-            || $user->can('users.destroy');
+        return $user->can(Permissions::USERS_INDEX)
+            || $user->can(Permissions::USERS_CREATE)
+            || $user->can(Permissions::USERS_EDIT)
+            || $user->can(Permissions::USERS_DESTROY);
     }
 
     /**

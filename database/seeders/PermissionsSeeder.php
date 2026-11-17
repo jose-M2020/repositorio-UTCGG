@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Support\Permissions;
 use App\Support\RoleAssignPermissionSync;
 use App\Support\UserRoles;
 use Illuminate\Database\Seeder;
@@ -18,47 +19,8 @@ class PermissionsSeeder extends Seeder
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $permissions = [
-            ['name' => 'users.index', 'description' => 'Ver usuarios'],
-            ['name' => 'users.create', 'description' => 'Crear usuario'],
-            ['name' => 'users.edit', 'description' => 'Editar usuario'],
-            ['name' => 'users.toggle-active', 'description' => 'Activar/desactivar usuario'],
-            ['name' => 'users.update-role', 'description' => 'Cambiar rol de usuario'],
-            ['name' => 'users.password-link', 'description' => 'Enviar enlace de contraseña'],
-            ['name' => 'users.destroy', 'description' => 'Borrar usuario'],
-            ['name' => 'users.search', 'description' => 'Buscar usuarios'],
-            ['name' => UserRoles::CAREER_ANY, 'description' => 'Seleccionar cualquier carrera al registrar usuarios'],
-            ['name' => 'roles.index', 'description' => 'Ver roles'],
-            ['name' => 'roles.create', 'description' => 'Crear rol'],
-            ['name' => 'roles.edit', 'description' => 'Editar rol'],
-            ['name' => 'roles.destroy', 'description' => 'Borrar rol'],
-            ['name' => 'careers.index', 'description' => 'Ver carreras'],
-            ['name' => 'careers.create', 'description' => 'Crear carrera'],
-            ['name' => 'careers.edit', 'description' => 'Editar carrera'],
-            ['name' => 'careers.toggle-active', 'description' => 'Activar/desactivar carrera'],
-            ['name' => 'careers.destroy', 'description' => 'Borrar carrera'],
-            ['name' => 'project_types.index', 'description' => 'Ver tipos de proyecto'],
-            ['name' => 'project_types.create', 'description' => 'Crear tipo de proyecto'],
-            ['name' => 'project_types.edit', 'description' => 'Editar tipo de proyecto'],
-            ['name' => 'project_types.toggle-active', 'description' => 'Activar/desactivar tipo de proyecto'],
-            ['name' => 'project_types.destroy', 'description' => 'Borrar tipo de proyecto'],
-            ['name' => 'education_levels.index', 'description' => 'Ver niveles educativos'],
-            ['name' => 'education_levels.create', 'description' => 'Crear nivel educativo'],
-            ['name' => 'education_levels.edit', 'description' => 'Editar nivel educativo'],
-            ['name' => 'education_levels.toggle-active', 'description' => 'Activar/desactivar nivel educativo'],
-            ['name' => 'education_levels.destroy', 'description' => 'Borrar nivel educativo'],
-            ['name' => 'repositories.index', 'description' => 'Ver repositorios'],
-            ['name' => 'repositories.create', 'description' => 'Crear repositorio'],
-            ['name' => 'repositories.edit', 'description' => 'Editar repositorio'],
-            ['name' => 'repositories.destroy', 'description' => 'Borrar repositorio'],
-            ['name' => 'files.index', 'description' => 'Ver archivos'],
-            ['name' => 'files.create', 'description' => 'Subir archivo'],
-            ['name' => 'files.edit', 'description' => 'Editar archivo'],
-            ['name' => 'files.destroy', 'description' => 'Borrar archivo'],
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::query()->firstOrCreate(
+        foreach (Permissions::catalog() as $permission) {
+            Permission::query()->updateOrCreate(
                 ['name' => $permission['name'], 'guard_name' => 'web'],
                 ['description' => $permission['description']],
             );
@@ -72,75 +34,17 @@ class PermissionsSeeder extends Seeder
 
         RoleAssignPermissionSync::syncAllExistingRoles();
 
-        $director = Role::query()->where('name', UserRoles::DIRECTOR)->firstOrFail();
-        $director->syncPermissions([
-            'users.index',
-            'users.create',
-            'users.edit',
-            'users.toggle-active',
-            'users.update-role',
-            'users.password-link',
-            'users.destroy',
-            'users.search',
-            UserRoles::CAREER_ANY,
-            RoleAssignPermissionSync::permissionName(UserRoles::CAREER_DIRECTOR),
-            RoleAssignPermissionSync::permissionName(UserRoles::TEACHER),
-            RoleAssignPermissionSync::permissionName(UserRoles::STUDENT),
-            'repositories.index',
-            'repositories.create',
-            'repositories.edit',
-            'repositories.destroy',
-            'files.index',
-            'files.create',
-            'files.edit',
-            'files.destroy',
-        ]);
+        Role::query()->where('name', UserRoles::DIRECTOR)->firstOrFail()
+            ->syncPermissions(Permissions::defaultsForRole(UserRoles::DIRECTOR));
 
-        $careerDirector = Role::query()->where('name', UserRoles::CAREER_DIRECTOR)->firstOrFail();
-        $careerDirector->syncPermissions([
-            'users.index',
-            'users.create',
-            'users.edit',
-            'users.toggle-active',
-            'users.update-role',
-            'users.password-link',
-            'users.search',
-            RoleAssignPermissionSync::permissionName(UserRoles::TEACHER),
-            RoleAssignPermissionSync::permissionName(UserRoles::STUDENT),
-            'repositories.index',
-            'repositories.create',
-            'repositories.edit',
-            'repositories.destroy',
-            'files.index',
-            'files.create',
-            'files.edit',
-            'files.destroy',
-        ]);
+        Role::query()->where('name', UserRoles::CAREER_DIRECTOR)->firstOrFail()
+            ->syncPermissions(Permissions::defaultsForRole(UserRoles::CAREER_DIRECTOR));
 
-        $teacher = Role::query()->where('name', UserRoles::TEACHER)->firstOrFail();
-        $teacher->syncPermissions([
-            'users.search',
-            'repositories.index',
-            'repositories.create',
-            'repositories.edit',
-            'repositories.destroy',
-            'files.index',
-            'files.create',
-            'files.edit',
-            'files.destroy',
-        ]);
+        Role::query()->where('name', UserRoles::TEACHER)->firstOrFail()
+            ->syncPermissions(Permissions::defaultsForRole(UserRoles::TEACHER));
 
-        $student = Role::query()->where('name', UserRoles::STUDENT)->firstOrFail();
-        $student->syncPermissions([
-            'users.search',
-            'repositories.index',
-            'repositories.create',
-            'repositories.edit',
-            'files.index',
-            'files.create',
-            'files.edit',
-            'files.destroy',
-        ]);
+        Role::query()->where('name', UserRoles::STUDENT)->firstOrFail()
+            ->syncPermissions(Permissions::defaultsForRole(UserRoles::STUDENT));
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }

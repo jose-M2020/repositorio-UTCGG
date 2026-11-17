@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -9,7 +10,7 @@ class StoreProjectTypeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('project_types.create') ?? false;
+        return $this->user()?->can(Permissions::PROJECT_TYPES_CREATE) ?? false;
     }
 
     /** @return array<string, mixed> */

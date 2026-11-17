@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRepositoryFilesRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('files.create') ?? false;
+        return $this->user()?->can(Permissions::FILES_CREATE) ?? false;
     }
 
     /**

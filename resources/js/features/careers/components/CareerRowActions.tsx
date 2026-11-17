@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import { Pencil } from "lucide-react";
 import { destroy } from "@/actions/App/Http/Controllers/CareerController";
+import { AUTH_ABILITIES } from "@/features/auth";
 import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
 import { Button } from "@/shared/components/ui";
 import { CareerFormDialog } from "./CareerFormDialog";
@@ -14,9 +15,9 @@ type CareerRowActionsProps = {
 export const CareerRowActions = ({ career }: CareerRowActionsProps) => {
     const { auth } = usePage().props;
     const careerName = career.name.trim();
-    const canEdit = auth.abilities["careers.edit"];
-    const canToggleActive = auth.abilities["careers.toggle-active"];
-    const canDestroy = auth.abilities["careers.destroy"];
+    const canEdit = auth.abilities[AUTH_ABILITIES.CAREERS_EDIT];
+    const canToggleActive = auth.abilities[AUTH_ABILITIES.CAREERS_TOGGLE_ACTIVE];
+    const canDestroy = auth.abilities[AUTH_ABILITIES.CAREERS_DESTROY];
 
     if (!canEdit && !canToggleActive && !canDestroy) {
         return null;

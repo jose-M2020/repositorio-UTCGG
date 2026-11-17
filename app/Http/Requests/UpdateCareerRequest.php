@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCareerRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('careers.edit') ?? false;
+        return $this->user()?->can(Permissions::CAREERS_EDIT) ?? false;
     }
 
     /** @return array<string, mixed> */

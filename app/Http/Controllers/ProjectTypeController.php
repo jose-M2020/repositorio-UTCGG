@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreProjectTypeRequest;
 use App\Http\Requests\UpdateProjectTypeRequest;
 use App\Models\ProjectType;
+use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -20,11 +21,11 @@ class ProjectTypeController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('can:project_types.index', only: ['index']),
-            new Middleware('can:project_types.create', only: ['store']),
-            new Middleware('can:project_types.edit', only: ['update']),
-            new Middleware('can:project_types.toggle-active', only: ['toggleActive']),
-            new Middleware('can:project_types.destroy', only: ['destroy']),
+            new Middleware(Permissions::ability(Permissions::PROJECT_TYPES_INDEX), only: ['index']),
+            new Middleware(Permissions::ability(Permissions::PROJECT_TYPES_CREATE), only: ['store']),
+            new Middleware(Permissions::ability(Permissions::PROJECT_TYPES_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::PROJECT_TYPES_TOGGLE_ACTIVE), only: ['toggleActive']),
+            new Middleware(Permissions::ability(Permissions::PROJECT_TYPES_DESTROY), only: ['destroy']),
         ];
     }
 

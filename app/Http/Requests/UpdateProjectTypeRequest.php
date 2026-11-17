@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProjectTypeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->can('project_types.edit') ?? false;
+        return $this->user()?->can(Permissions::PROJECT_TYPES_EDIT) ?? false;
     }
 
     /** @return array<string, mixed> */
