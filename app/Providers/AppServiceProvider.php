@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Inertia\ExceptionResponse;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureInertiaErrorPages();
 
         Gate::before(function ($user, string $ability): ?bool {
             if (! $user instanceof User) {
@@ -33,6 +36,19 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return $user->hasRole('admin') ? true : null;
+        });
+    }
+
+    protected function configureInertiaErrorPages(): void
+    {
+        Inertia::handleExceptionsUsing(function (ExceptionResponse $response) {
+            if ($response->statusCode() !== 403) {
+                return null;
+            }
+
+            return $response
+                ->render('errors/403')
+                ->withSharedData();
         });
     }
 

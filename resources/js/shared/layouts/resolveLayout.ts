@@ -11,6 +11,7 @@ export type PageLayout = ComponentType<{ children: ReactNode }>;
 const SURFACE_LAYOUTS: Record<string, PageLayout> = {
     public: PublicLayout,
     auth: PublicLayout,
+    errors: PanelLayout,
     panel: PanelLayout,
 };
 
