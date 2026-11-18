@@ -55,10 +55,9 @@ export const RepositoryFilters = ({
     const careerOptions = Object.entries(lookups.careers).map(
         ([value, label]) => ({ value, label: `${value} — ${label}` }),
     );
-    const typeOptions = lookups.project_types.map((value) => ({
-        value,
-        label: value,
-    }));
+    const typeOptions = Object.entries(lookups.project_types).map(
+        ([value, label]) => ({ value, label }),
+    );
     const levelOptions = Object.entries(lookups.education_levels).map(
         ([value, label]) => ({ value, label }),
     );

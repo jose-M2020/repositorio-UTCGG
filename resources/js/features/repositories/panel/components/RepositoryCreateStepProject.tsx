@@ -79,9 +79,9 @@ export const RepositoryCreateStepProject = ({
                             <SelectValue placeholder="Seleccionar" />
                         </SelectTrigger>
                         <SelectContent>
-                            {typeOptions.map((type) => (
-                                <SelectItem key={type} value={type}>
-                                    {type}
+                            {Object.entries(typeOptions).map(([code, label]) => (
+                                <SelectItem key={code} value={code}>
+                                    {label}
                                 </SelectItem>
                             ))}
                         </SelectContent>

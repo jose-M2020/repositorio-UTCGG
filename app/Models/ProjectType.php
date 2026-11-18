@@ -58,6 +58,18 @@ class ProjectType extends Model
     }
 
     /**
+     * @return array<string, string>
+     */
+    public static function optionsByCode(): array
+    {
+        return static::query()
+            ->active()
+            ->ordered()
+            ->pluck('name', 'code')
+            ->all();
+    }
+
+    /**
      * @return list<string>
      */
     public static function activeCodes(): array

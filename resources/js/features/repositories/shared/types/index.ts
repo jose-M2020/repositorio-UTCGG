@@ -76,6 +76,6 @@ export type RepositoryFormErrors = Record<string, string>;
 
 export type RepositoryLookups = {
     careers: Record<string, string>;
-    project_types: string[];
+    project_types: Record<string, string>;
     education_levels: Record<string, string>;
 };

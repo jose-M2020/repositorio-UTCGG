@@ -71,9 +71,9 @@ export const RepositoryFormFields = ({
                         <option value="" disabled>
                             Selecciona
                         </option>
-                        {typeOptions.map((type) => (
-                            <option key={type} value={type}>
-                                {type}
+                        {Object.entries(typeOptions).map(([code, label]) => (
+                            <option key={code} value={code}>
+                                {label}
                             </option>
                         ))}
                     </select>

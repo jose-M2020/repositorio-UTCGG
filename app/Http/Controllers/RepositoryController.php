@@ -301,7 +301,7 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         return [
             'careers' => Career::optionsByCode(),
-            'project_types' => ProjectType::activeCodes(),
+            'project_types' => ProjectType::optionsByCode(),
             'education_levels' => EducationLevel::optionsByCode(),
         ];
     }
