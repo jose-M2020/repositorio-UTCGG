@@ -107,9 +107,12 @@ export const UserSearchPicker = ({
     };
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-2">
             <div className="space-y-1">
-                <label htmlFor={listId} className="text-sm font-medium">
+                <label
+                    htmlFor={listId}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
                     {label}
                 </label>
                 <Input
@@ -125,9 +128,15 @@ export const UserSearchPicker = ({
                 />
             </div>
 
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? (
+                <p className="text-[0.8rem] font-medium text-destructive">
+                    {error}
+                </p>
+            ) : null}
             {loading ? (
-                <p className="text-sm text-muted-foreground">Buscando...</p>
+                <p className="text-[0.8rem] text-muted-foreground">
+                    Buscando...
+                </p>
             ) : null}
 
             {results.length > 0 ? (

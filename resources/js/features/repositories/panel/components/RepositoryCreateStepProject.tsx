@@ -38,15 +38,15 @@ export const RepositoryCreateStepProject = ({
 
     return (
         <section
-            className="space-y-4"
+            className="animate-in fade-in slide-in-from-right-2 space-y-6 duration-300"
             aria-hidden={!isActive}
             hidden={!isActive}
         >
             <div>
-                <h2 className="text-lg font-semibold text-secondary">
+                <h2 className="text-lg font-semibold text-foreground">
                     Proyecto
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-[0.8rem] text-muted-foreground">
                     Datos académicos y de la organización del proyecto.
                 </p>
             </div>
@@ -59,11 +59,11 @@ export const RepositoryCreateStepProject = ({
             />
             <input type="hidden" name="career" value={career ?? ''} />
 
-            <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
+            <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
                     <label
                         htmlFor="project_type"
-                        className="text-sm font-medium"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                         Tipo de proyecto
                     </label>
@@ -87,16 +87,16 @@ export const RepositoryCreateStepProject = ({
                         </SelectContent>
                     </Select>
                     {errors.project_type ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.project_type}
                         </p>
                     ) : null}
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-2">
                     <label
                         htmlFor="academic_degree"
-                        className="text-sm font-medium"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                         Nivel de proyecto
                     </label>
@@ -122,16 +122,19 @@ export const RepositoryCreateStepProject = ({
                         </SelectContent>
                     </Select>
                     {errors.academic_degree ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.academic_degree}
                         </p>
                     ) : null}
                 </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <label htmlFor="career" className="text-sm font-medium">
+            <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                    <label
+                        htmlFor="career"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                         Carrera
                     </label>
                     <Select value={career} onValueChange={setCareer}>
@@ -153,14 +156,17 @@ export const RepositoryCreateStepProject = ({
                         </SelectContent>
                     </Select>
                     {errors.career ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.career}
                         </p>
                     ) : null}
                 </div>
 
-                <div className="space-y-1">
-                    <label htmlFor="generation" className="text-sm font-medium">
+                <div className="space-y-2">
+                    <label
+                        htmlFor="generation"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                         Generación
                     </label>
                     <Input
@@ -170,16 +176,19 @@ export const RepositoryCreateStepProject = ({
                         aria-invalid={Boolean(errors.generation)}
                     />
                     {errors.generation ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.generation}
                         </p>
                     ) : null}
                 </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <label htmlFor="company" className="text-sm font-medium">
+            <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                    <label
+                        htmlFor="company"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                         Nombre de la Empresa/Negocio/Establecimiento
                     </label>
                     <Input
@@ -189,16 +198,16 @@ export const RepositoryCreateStepProject = ({
                         aria-invalid={Boolean(errors.company)}
                     />
                     {errors.company ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.company}
                         </p>
                     ) : null}
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-2">
                     <label
                         htmlFor="external_advisor"
-                        className="text-sm font-medium"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                         Nombre del asesor empresarial/externo
                     </label>
@@ -208,7 +217,7 @@ export const RepositoryCreateStepProject = ({
                         aria-invalid={Boolean(errors.external_advisor)}
                     />
                     {errors.external_advisor ? (
-                        <p className="text-sm text-destructive">
+                        <p className="text-[0.8rem] font-medium text-destructive">
                             {errors.external_advisor}
                         </p>
                     ) : null}

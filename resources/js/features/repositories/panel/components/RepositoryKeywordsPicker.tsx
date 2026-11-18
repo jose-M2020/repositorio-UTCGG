@@ -43,11 +43,14 @@ export const RepositoryKeywordsPicker = ({
     const keywordsPayload = selected.join(', ');
 
     return (
-        <div className="space-y-1">
-            <label htmlFor={inputId} className="text-sm font-medium">
+        <div className="space-y-2">
+            <label
+                htmlFor={inputId}
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
                 Palabras clave de búsqueda
             </label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[0.8rem] text-muted-foreground">
                 Escribe y selecciona para agregar. Usa Enter o elige la
                 sugerencia.
             </p>
@@ -121,7 +124,9 @@ export const RepositoryKeywordsPicker = ({
             </Combobox>
 
             {error ? (
-                <p className="text-sm text-destructive">{error}</p>
+                <p className="text-[0.8rem] font-medium text-destructive">
+                    {error}
+                </p>
             ) : null}
         </div>
     );

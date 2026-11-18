@@ -19,31 +19,35 @@ export const RepositoryCreateStepMembers = ({
 }: RepositoryCreateStepMembersProps) => {
     return (
         <section
-            className="space-y-4"
+            className="animate-in fade-in slide-in-from-right-2 space-y-6 duration-300"
             aria-hidden={!isActive}
             hidden={!isActive}
         >
             <div>
-                <h2 className="text-lg font-semibold text-secondary">
+                <h2 className="text-lg font-semibold text-foreground">
                     Miembros
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-[0.8rem] text-muted-foreground">
                     Opcional — puedes agregar miembros ahora o más tarde desde la
                     configuración del repositorio.
                 </p>
             </div>
 
-            <UserSearchPicker
-                mode="email"
-                selected={collaborators}
-                onChange={onCollaboratorsChange}
-                max={8}
-                label="Miembro(s)"
-            />
+            <div className="space-y-2">
+                <UserSearchPicker
+                    mode="email"
+                    selected={collaborators}
+                    onChange={onCollaboratorsChange}
+                    max={8}
+                    label="Colaboradores"
+                />
 
-            {errors.member_emails ? (
-                <p className="text-sm text-destructive">{errors.member_emails}</p>
-            ) : null}
+                {errors.member_emails ? (
+                    <p className="text-[0.8rem] font-medium text-destructive">
+                        {errors.member_emails}
+                    </p>
+                ) : null}
+            </div>
         </section>
     );
 };

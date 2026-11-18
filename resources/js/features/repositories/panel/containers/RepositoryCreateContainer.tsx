@@ -65,7 +65,7 @@ export const RepositoryCreateContainer = ({
     return (
         <main className="page-container space-y-6 py-8">
             <header>
-                <h1 className="text-2xl font-semibold text-primary">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
                     Crear nuevo repositorio
                 </h1>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -75,7 +75,7 @@ export const RepositoryCreateContainer = ({
 
             <Form
                 {...store.form()}
-                className="overflow-hidden rounded-xl border border-border bg-card"
+                className="overflow-hidden rounded-xl border border-border bg-card shadow-sm"
             >
                 {({ errors, processing }) => (
                     <div className="grid md:grid-cols-[14rem_1fr]">

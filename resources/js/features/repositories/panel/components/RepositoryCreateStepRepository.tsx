@@ -12,21 +12,24 @@ export const RepositoryCreateStepRepository = ({
 }: RepositoryCreateStepRepositoryProps) => {
     return (
         <section
-            className="space-y-4"
+            className="animate-in fade-in slide-in-from-right-2 space-y-6 duration-300"
             aria-hidden={!isActive}
             hidden={!isActive}
         >
             <div>
-                <h2 className="text-lg font-semibold text-secondary">
+                <h2 className="text-lg font-semibold text-foreground">
                     Información del repositorio
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-[0.8rem] text-muted-foreground">
                     Define el nombre y la descripción del repositorio.
                 </p>
             </div>
 
-            <div className="space-y-1">
-                <label htmlFor="title" className="text-sm font-medium">
+            <div className="space-y-2">
+                <label
+                    htmlFor="title"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
                     Nombre del repositorio
                 </label>
                 <Input
@@ -36,12 +39,17 @@ export const RepositoryCreateStepRepository = ({
                     aria-invalid={Boolean(errors.title)}
                 />
                 {errors.title ? (
-                    <p className="text-sm text-destructive">{errors.title}</p>
+                    <p className="text-[0.8rem] font-medium text-destructive">
+                        {errors.title}
+                    </p>
                 ) : null}
             </div>
 
-            <div className="space-y-1">
-                <label htmlFor="description" className="text-sm font-medium">
+            <div className="space-y-2">
+                <label
+                    htmlFor="description"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
                     Descripción
                 </label>
                 <Textarea
@@ -52,7 +60,7 @@ export const RepositoryCreateStepRepository = ({
                     aria-invalid={Boolean(errors.description)}
                 />
                 {errors.description ? (
-                    <p className="text-sm text-destructive">
+                    <p className="text-[0.8rem] font-medium text-destructive">
                         {errors.description}
                     </p>
                 ) : null}
