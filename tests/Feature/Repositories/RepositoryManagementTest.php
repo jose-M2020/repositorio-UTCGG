@@ -66,6 +66,30 @@ class RepositoryManagementTest extends TestCase
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
     }
 
+    public function test_member_can_create_repository_without_extra_members(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('teacher');
+
+        $response = $this->actingAs($user)->post(route('repositories.store'), [
+            'title' => 'Repo Solo',
+            'description' => 'Descripcion de prueba',
+            'project_type' => 'integrative',
+            'academic_degree' => 'TSU',
+            'keywords' => 'laravel, inertia',
+            'visibility' => 'private',
+            'career' => 'TIC',
+            'company' => 'UTCGG',
+            'generation' => '2026',
+        ]);
+
+        $repo = Repository::query()->where('title', 'Repo Solo')->first();
+        $this->assertNotNull($repo);
+        $response->assertRedirect(route('repositories.account.show', $repo));
+        $this->assertTrue($repo->users()->whereKey($user->id)->exists());
+        $this->assertSame(1, $repo->users()->count());
+    }
+
     public function test_user_with_permission_can_view_create_repository_page(): void
     {
         $user = User::factory()->create();

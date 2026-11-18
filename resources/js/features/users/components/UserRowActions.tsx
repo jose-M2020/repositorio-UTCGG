@@ -65,12 +65,10 @@ export const UserRowActions = ({
   const willActivate = user.status === "inactive";
   const canEdit = auth.abilities[AUTH_ABILITIES.USERS_EDIT];
   const canUpdateRole = auth.abilities[AUTH_ABILITIES.USERS_UPDATE_ROLE];
-  const canToggleActiveAbility =
-    auth.abilities[AUTH_ABILITIES.USERS_TOGGLE_ACTIVE];
+  const canToggleActiveAbility = auth.abilities[AUTH_ABILITIES.USERS_TOGGLE_ACTIVE];
   const canPasswordLink = auth.abilities[AUTH_ABILITIES.USERS_PASSWORD_LINK];
   const canDestroy = auth.abilities[AUTH_ABILITIES.USERS_DESTROY];
-  const canToggleActiveStatus =
-    user.status === "active" || user.status === "inactive";
+  const canToggleActiveStatus = user.status === "active" || user.status === "inactive";
   const canToggleActive = canToggleActiveAbility && canToggleActiveStatus;
   const ToggleIcon = willActivate ? Power : PowerOff;
   const PasswordIcon = isPending ? Mail : KeyRound;

@@ -41,7 +41,7 @@ class StoreRepositoryRequest extends FormRequest
             ],
             'keywords' => ['required', 'string', 'max:255'],
             'visibility' => ['required', Rule::in(['public', 'private'])],
-            'member_emails' => ['required', 'array', 'min:1', 'max:8'],
+            'member_emails' => ['nullable', 'array', 'max:8'],
             'member_emails.*' => ['required', 'string', 'email', 'distinct', 'exists:users,email'],
             'career' => [
                 'required',
