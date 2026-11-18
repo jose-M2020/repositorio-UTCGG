@@ -47,7 +47,7 @@ class UpdateRepositoryRequest extends FormRequest
                 'max:80',
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
-            'company' => ['required', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'max:255'],
             'external_advisor' => [$requiresBusinessAdvisor ? 'required' : 'nullable', 'string', 'max:255'],
             'generation' => ['required', 'string', 'max:255'],
         ];

@@ -9,6 +9,7 @@ import { Button } from '@/shared/components/ui';
 import type { RepositoryLookups } from '../../shared/types';
 import { RepositoryCreateStepMembers } from '../components/RepositoryCreateStepMembers';
 import { RepositoryCreateStepNav } from '../components/RepositoryCreateStepNav';
+import { RepositoryCreateStepOrganization } from '../components/RepositoryCreateStepOrganization';
 import { RepositoryCreateStepProject } from '../components/RepositoryCreateStepProject';
 import { RepositoryCreateStepRepository } from '../components/RepositoryCreateStepRepository';
 import { RepositoryCreateStepSettings } from '../components/RepositoryCreateStepSettings';
@@ -97,6 +98,10 @@ export const RepositoryCreateContainer = ({
                                     defaultCareer={
                                         currentUser?.career ?? undefined
                                     }
+                                />
+                                <RepositoryCreateStepOrganization
+                                    errors={errors}
+                                    isActive={step === 'organization'}
                                 />
                                 <RepositoryCreateStepMembers
                                     errors={errors}

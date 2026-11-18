@@ -153,8 +153,7 @@ export const RepositoryFormFields = ({
                     <Input
                         id="company"
                         name="company"
-                        required
-                        defaultValue={defaults?.company}
+                        defaultValue={defaults?.company ?? ''}
                     />
                 </div>
                 <div className="space-y-1">

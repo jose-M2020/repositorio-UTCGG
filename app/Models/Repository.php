@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $project_type_id
  * @property int|null $education_level_id
  * @property string|null $external_advisor
- * @property string $company
+ * @property string|null $company
  * @property string $generation
  * @property string|null $images
  * @property string $created_by

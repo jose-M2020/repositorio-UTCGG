@@ -79,7 +79,6 @@ class RepositoryManagementTest extends TestCase
             'keywords' => 'laravel, inertia',
             'visibility' => 'private',
             'career' => 'TIC',
-            'company' => 'UTCGG',
             'generation' => '2026',
         ]);
 
@@ -88,6 +87,8 @@ class RepositoryManagementTest extends TestCase
         $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
         $this->assertSame(1, $repo->users()->count());
+        $this->assertNull($repo->company);
+        $this->assertNull($repo->external_advisor);
     }
 
     public function test_user_with_permission_can_view_create_repository_page(): void

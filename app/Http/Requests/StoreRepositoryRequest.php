@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Support\Permissions;
-use App\Models\ProjectType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,11 +18,6 @@ class StoreRepositoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $projectType = ProjectType::query()
-            ->where('code', $this->string('project_type')->toString())
-            ->first();
-        $requiresBusinessAdvisor = (bool) $projectType?->requires_business_advisor;
-
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -49,9 +43,19 @@ class StoreRepositoryRequest extends FormRequest
                 'max:80',
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
-            'company' => ['required', 'string', 'max:255'],
-            'external_advisor' => [$requiresBusinessAdvisor ? 'required' : 'nullable', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'external_advisor' => ['nullable', 'string', 'max:255'],
             'generation' => ['required', 'string', 'max:255'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'company' => $this->filled('company') ? $this->string('company')->toString() : null,
+            'external_advisor' => $this->filled('external_advisor')
+                ? $this->string('external_advisor')->toString()
+                : null,
+        ]);
     }
 }

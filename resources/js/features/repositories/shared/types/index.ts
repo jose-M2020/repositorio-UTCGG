@@ -25,7 +25,7 @@ export type Repository = {
     is_public: boolean;
     career: string;
     external_advisor: string | null;
-    company: string;
+    company: string | null;
     generation: string;
     created_by: string;
     users: RepositoryMember[];
