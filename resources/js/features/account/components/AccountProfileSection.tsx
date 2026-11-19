@@ -1,47 +1,11 @@
-import { Form } from '@inertiajs/react';
-import { updateProfile } from '@/actions/App/Http/Controllers/AccountSettingsController';
-import { Button, Input } from '@/shared/components/ui';
-import type { AccountSettings } from '../types';
+import { Form } from "@inertiajs/react";
+import { updateProfile } from "@/actions/App/Http/Controllers/AccountSettingsController";
+import { InputField } from "@/shared/components/form";
+import { Button } from "@/shared/components/ui";
+import type { AccountSettings } from "../types";
 
 type AccountProfileSectionProps = {
     account: AccountSettings;
-};
-
-const EditableField = ({
-    id,
-    name,
-    label,
-    defaultValue,
-    error,
-    required = false,
-}: {
-    id: string;
-    name: string;
-    label: string;
-    defaultValue?: string;
-    error?: string;
-    required?: boolean;
-}) => {
-    return (
-        <div className="space-y-1">
-            <label htmlFor={id} className="text-sm font-medium text-foreground">
-                {label}
-            </label>
-            <Input
-                id={id}
-                name={name}
-                required={required}
-                defaultValue={defaultValue}
-                aria-invalid={Boolean(error)}
-                aria-describedby={error ? `${id}-error` : undefined}
-            />
-            {error ? (
-                <p id={`${id}-error`} className="text-sm text-destructive">
-                    {error}
-                </p>
-            ) : null}
-        </div>
-    );
 };
 
 const DetailItem = ({
@@ -76,8 +40,8 @@ export const AccountProfileSection = ({
 
             <dl className="grid gap-4 rounded-lg border border-border bg-muted/30 px-4 py-3 sm:grid-cols-3">
                 <DetailItem label="Correo" value={account.email} />
-                <DetailItem label="Rol" value={account.role ?? '—'} />
-                <DetailItem label="Carrera" value={account.career ?? '—'} />
+                <DetailItem label="Rol" value={account.role ?? "—"} />
+                <DetailItem label="Carrera" value={account.career ?? "—"} />
             </dl>
 
             <Form
@@ -88,7 +52,7 @@ export const AccountProfileSection = ({
                 {({ errors, processing }) => (
                     <>
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <EditableField
+                            <InputField
                                 id="first_name"
                                 name="first_name"
                                 label="Nombre(s)"
@@ -96,7 +60,7 @@ export const AccountProfileSection = ({
                                 defaultValue={account.first_name}
                                 error={errors.first_name}
                             />
-                            <EditableField
+                            <InputField
                                 id="last_name"
                                 name="last_name"
                                 label="Apellido paterno"
@@ -106,19 +70,19 @@ export const AccountProfileSection = ({
                             />
                         </div>
 
-                        <EditableField
+                        <InputField
                             id="second_last_name"
                             name="second_last_name"
                             label="Apellido materno"
-                            defaultValue={account.second_last_name ?? ''}
+                            defaultValue={account.second_last_name ?? ""}
                             error={errors.second_last_name}
                         />
 
                         <div className="flex justify-end pt-2">
                             <Button type="submit" disabled={processing}>
                                 {processing
-                                    ? 'Guardando...'
-                                    : 'Guardar cambios'}
+                                    ? "Guardando..."
+                                    : "Guardar cambios"}
                             </Button>
                         </div>
                     </>

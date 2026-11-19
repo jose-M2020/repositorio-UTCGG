@@ -1,5 +1,3 @@
-import type { ChangeEvent } from 'react';
-
 export type AuthFormErrors = Record<string, string>;
 
 export type SetPasswordLinkStatus = 'valid' | 'invalid';
@@ -7,21 +5,6 @@ export type SetPasswordLinkStatus = 'valid' | 'invalid';
 export type SetPasswordPurpose = 'activation' | 'reset';
 
 export const PASSWORD_SET_STATUS = 'password_set';
-
-export type AuthFieldProps = {
-    id: string;
-    name: string;
-    label: string;
-    type?: 'text' | 'email' | 'password';
-    error?: string;
-    required?: boolean;
-    autoComplete?: string;
-    maxLength?: number;
-    defaultValue?: string;
-    value?: string;
-    readOnly?: boolean;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-};
 
 export type AuthUser = {
     id: number;

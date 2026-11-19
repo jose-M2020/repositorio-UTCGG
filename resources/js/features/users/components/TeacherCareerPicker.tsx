@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { FormField } from "@/shared/components/form";
 import {
   Combobox,
   ComboboxChip,
@@ -40,17 +41,13 @@ export const TeacherCareerPicker = ({
   const primaryCode = selected[0]?.code ?? "";
 
   return (
-    <div className="space-y-2 sm:col-span-2">
-      <label
-        htmlFor={inputId}
-        className="text-sm font-medium text-slate-700 dark:text-slate-300"
-      >
-        Carreras
-      </label>
-      <p className="text-xs text-muted-foreground">
-        Selecciona una o más carreras donde imparte.
-      </p>
-
+    <FormField
+      id={inputId}
+      label="Carreras"
+      error={error}
+      hint="Selecciona una o más carreras donde imparte."
+      className="sm:col-span-2"
+    >
       {selected.map((career, index) => (
         <span key={`career-payload-${career.id}`}>
           <input
@@ -121,12 +118,11 @@ export const TeacherCareerPicker = ({
         </ComboboxContent>
       </Combobox>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {!error && selected.length === 0 ? (
         <p className="text-sm text-amber-700 dark:text-amber-400">
           Elige al menos una carrera.
         </p>
       ) : null}
-    </div>
+    </FormField>
   );
 };

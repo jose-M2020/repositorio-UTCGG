@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Button } from '@/shared/components/ui';
-import type { AuthFormErrors, SetPasswordPurpose } from '../types';
-import { passwordMeetsRequirements } from '../utils/passwordRequirements';
-import { AuthField } from './AuthField';
-import { PasswordRequirements } from './PasswordRequirements';
+import { useState } from "react";
+import { InputField } from "@/shared/components/form";
+import { Button } from "@/shared/components/ui";
+import type { AuthFormErrors, SetPasswordPurpose } from "../types";
+import { passwordMeetsRequirements } from "../utils/passwordRequirements";
+import { PasswordRequirements } from "./PasswordRequirements";
 
 type SetPasswordFormProps = {
     email: string;
@@ -22,12 +22,12 @@ export const SetPasswordForm = ({
     processing,
     submitLabel,
 }: SetPasswordFormProps) => {
-    const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [password, setPassword] = useState("");
+    const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
     const confirmationError =
         passwordConfirmation.length > 0 && password !== passwordConfirmation
-            ? 'Las contraseñas no coinciden.'
+            ? "Las contraseñas no coinciden."
             : undefined;
     const canSubmit =
         passwordMeetsRequirements(password) &&
@@ -47,7 +47,7 @@ export const SetPasswordForm = ({
             ) : null}
 
             <div className="space-y-2">
-                <AuthField
+                <InputField
                     id="password"
                     name="password"
                     label="Contraseña"
@@ -61,7 +61,7 @@ export const SetPasswordForm = ({
                 <PasswordRequirements password={password} />
             </div>
 
-            <AuthField
+            <InputField
                 id="password_confirmation"
                 name="password_confirmation"
                 label="Confirmar contraseña"
@@ -77,7 +77,7 @@ export const SetPasswordForm = ({
 
             <div className="flex justify-end pt-2">
                 <Button type="submit" disabled={processing || !canSubmit}>
-                    {processing ? 'Guardando...' : submitLabel}
+                    {processing ? "Guardando..." : submitLabel}
                 </Button>
             </div>
         </div>

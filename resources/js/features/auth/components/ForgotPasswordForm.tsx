@@ -1,8 +1,8 @@
-import { Link } from '@inertiajs/react';
-import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import { Button } from '@/shared/components/ui';
-import type { AuthFormErrors } from '../types';
-import { AuthField } from './AuthField';
+import { Link } from "@inertiajs/react";
+import { create as login } from "@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController";
+import { InputField } from "@/shared/components/form";
+import { Button } from "@/shared/components/ui";
+import type { AuthFormErrors } from "../types";
 
 type ForgotPasswordFormProps = {
     errors: AuthFormErrors;
@@ -15,7 +15,7 @@ export const ForgotPasswordForm = ({
 }: ForgotPasswordFormProps) => {
     return (
         <div className="space-y-4">
-            <AuthField
+            <InputField
                 id="email"
                 name="email"
                 label="Correo"
@@ -33,7 +33,7 @@ export const ForgotPasswordForm = ({
                     Volver al inicio de sesión
                 </Link>
                 <Button type="submit" disabled={processing}>
-                    {processing ? 'Enviando...' : 'Enviar enlace'}
+                    {processing ? "Enviando..." : "Enviar enlace"}
                 </Button>
             </div>
         </div>

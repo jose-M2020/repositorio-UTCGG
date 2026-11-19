@@ -14,6 +14,7 @@ import {
     type SearchableUser,
 } from '@/shared/components';
 import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
+import { SelectField } from '@/shared/components/form';
 import { Button } from '@/shared/components/ui';
 import { formatUserName } from '@/shared/lib';
 import type { Repository } from '../../shared/types';
@@ -84,7 +85,7 @@ export const RepositorySettingsSection = ({
                             <input
                                 type="hidden"
                                 name="company"
-                                value={repository.company}
+                                value={repository.company ?? ''}
                             />
                             <input
                                 type="hidden"
@@ -97,30 +98,20 @@ export const RepositorySettingsSection = ({
                                 value={repository.generation}
                             />
 
-                            <div className="space-y-1">
-                                <label
-                                    htmlFor="visibility"
-                                    className="text-sm font-medium"
-                                >
-                                    Estado actual
-                                </label>
-                                <select
-                                    id="visibility"
-                                    name="visibility"
-                                    required
-                                    defaultValue={visibility}
-                                    className="h-8 w-full max-w-xs rounded-lg border border-input bg-card px-2.5 text-sm"
-                                    aria-label="Cambiar visibilidad del repositorio"
-                                >
-                                    <option value="private">Privado</option>
-                                    <option value="public">Público</option>
-                                </select>
-                                {errors.visibility ? (
-                                    <p className="text-sm text-destructive">
-                                        {errors.visibility}
-                                    </p>
-                                ) : null}
-                            </div>
+                            <SelectField
+                                id="visibility"
+                                name="visibility"
+                                label="Estado actual"
+                                required
+                                defaultValue={visibility}
+                                error={errors.visibility}
+                                triggerClassName="max-w-xs"
+                                aria-label="Cambiar visibilidad del repositorio"
+                                options={[
+                                    { value: "private", label: "Privado" },
+                                    { value: "public", label: "Público" },
+                                ]}
+                            />
 
                             <Button type="submit" disabled={processing}>
                                 {processing

@@ -1,4 +1,10 @@
-import { cn } from "cn";
+import {
+    CheckboxField,
+    FormField,
+    InputField,
+    TextareaField,
+    fieldDescribedBy,
+} from "@/shared/components/form";
 import { Input } from "@/shared/components/ui";
 import type { ProjectTypeFormErrors, ProjectTypeFormValues } from "../types";
 
@@ -8,74 +14,34 @@ type ProjectTypeFormFieldsProps = {
     isEdit?: boolean;
 };
 
-const textareaClassName = cn(
-    "w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30",
-);
-
-type BooleanFlagFieldProps = {
-    id: string;
-    name: string;
-    label: string;
-    description: string;
-    defaultChecked?: boolean;
-    error?: string;
-};
-
-const BooleanFlagField = ({
-    id,
-    name,
-    label,
-    description,
-    defaultChecked = false,
-    error,
-}: BooleanFlagFieldProps) => {
-    return (
-        <div className="space-y-1 rounded-lg border border-border p-3">
-            <input type="hidden" name={name} value="0" />
-            <label
-                htmlFor={id}
-                className="flex cursor-pointer items-start gap-3"
-            >
-                <input
-                    id={id}
-                    name={name}
-                    type="checkbox"
-                    value="1"
-                    defaultChecked={defaultChecked}
-                    aria-invalid={Boolean(error)}
-                    className="mt-0.5 size-4 shrink-0 rounded border border-input accent-primary"
-                />
-                <span className="space-y-0.5">
-                    <span className="block text-sm font-medium">{label}</span>
-                    <span className="block text-xs text-muted-foreground">
-                        {description}
-                    </span>
-                </span>
-            </label>
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
-    );
-};
-
 export const ProjectTypeFormFields = ({
     errors,
     defaults,
     isEdit = false,
 }: ProjectTypeFormFieldsProps) => {
+    const codeHint = isEdit
+        ? "El codigo no se puede cambiar despues de crear el tipo."
+        : undefined;
+
     return (
         <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <label htmlFor="code" className="text-sm font-medium">
-                        Codigo
-                    </label>
+                <FormField
+                    id="code"
+                    label="Codigo"
+                    error={errors.code}
+                    hint={codeHint}
+                >
                     {isEdit ? (
                         <Input
                             id="code"
                             readOnly
                             value={defaults?.code ?? ""}
                             className="bg-muted"
-                            aria-describedby="project-type-code-locked-hint"
+                            aria-describedby={fieldDescribedBy("code", {
+                                error: errors.code,
+                                hint: codeHint,
+                            })}
                         />
                     ) : (
                         <Input
@@ -83,76 +49,47 @@ export const ProjectTypeFormFields = ({
                             name="code"
                             required
                             defaultValue={defaults?.code}
-                            aria-invalid={Boolean(errors.code)}
+                            aria-invalid={Boolean(errors.code) || undefined}
+                            aria-describedby={fieldDescribedBy("code", {
+                                error: errors.code,
+                            })}
                         />
                     )}
-                    {isEdit ? (
-                        <p
-                            id="project-type-code-locked-hint"
-                            className="text-xs text-muted-foreground"
-                        >
-                            El codigo no se puede cambiar despues de crear el tipo.
-                        </p>
-                    ) : null}
-                    {errors.code ? (
-                        <p className="text-sm text-destructive">{errors.code}</p>
-                    ) : null}
-                </div>
+                </FormField>
 
-                <div className="space-y-1">
-                    <label htmlFor="name" className="text-sm font-medium">
-                        Nombre
-                    </label>
-                    <Input
-                        id="name"
-                        name="name"
-                        required
-                        defaultValue={defaults?.name}
-                        aria-invalid={Boolean(errors.name)}
-                    />
-                    {errors.name ? (
-                        <p className="text-sm text-destructive">{errors.name}</p>
-                    ) : null}
-                </div>
+                <InputField
+                    id="name"
+                    name="name"
+                    label="Nombre"
+                    required
+                    defaultValue={defaults?.name}
+                    error={errors.name}
+                />
 
-                <div className="space-y-1 sm:col-span-2">
-                    <label htmlFor="description" className="text-sm font-medium">
-                        Descripcion
-                    </label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows={3}
-                        defaultValue={defaults?.description}
-                        aria-invalid={Boolean(errors.description)}
-                        className={textareaClassName}
-                    />
-                    {errors.description ? (
-                        <p className="text-sm text-destructive">{errors.description}</p>
-                    ) : null}
-                </div>
+                <TextareaField
+                    id="description"
+                    name="description"
+                    label="Descripcion"
+                    rows={3}
+                    defaultValue={defaults?.description}
+                    error={errors.description}
+                    fieldClassName="sm:col-span-2"
+                />
 
-                <div className="space-y-1">
-                    <label htmlFor="sort_order" className="text-sm font-medium">
-                        Orden
-                    </label>
-                    <Input
-                        id="sort_order"
-                        name="sort_order"
-                        type="number"
-                        min={0}
-                        required
-                        defaultValue={defaults?.sort_order ?? 0}
-                        aria-invalid={Boolean(errors.sort_order)}
-                    />
-                    {errors.sort_order ? (
-                        <p className="text-sm text-destructive">{errors.sort_order}</p>
-                    ) : null}
-                </div>
+                <InputField
+                    id="sort_order"
+                    name="sort_order"
+                    label="Orden"
+                    type="number"
+                    min={0}
+                    required
+                    defaultValue={defaults?.sort_order ?? 0}
+                    error={errors.sort_order}
+                />
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-                <BooleanFlagField
+                <CheckboxField
                     id="is_team_project"
                     name="is_team_project"
                     label="Proyecto en equipo"
@@ -160,7 +97,7 @@ export const ProjectTypeFormFields = ({
                     defaultChecked={defaults?.is_team_project}
                     error={errors.is_team_project}
                 />
-                <BooleanFlagField
+                <CheckboxField
                     id="requires_term"
                     name="requires_term"
                     label="Requiere cuatrimestre"
@@ -168,7 +105,7 @@ export const ProjectTypeFormFields = ({
                     defaultChecked={defaults?.requires_term}
                     error={errors.requires_term}
                 />
-                <BooleanFlagField
+                <CheckboxField
                     id="requires_internship_flow"
                     name="requires_internship_flow"
                     label="Flujo de estadía"
@@ -176,7 +113,7 @@ export const ProjectTypeFormFields = ({
                     defaultChecked={defaults?.requires_internship_flow}
                     error={errors.requires_internship_flow}
                 />
-                <BooleanFlagField
+                <CheckboxField
                     id="requires_business_advisor"
                     name="requires_business_advisor"
                     label="Asesor empresarial"

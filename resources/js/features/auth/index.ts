@@ -1,4 +1,3 @@
-export { AuthField } from './components/AuthField';
 export { ForgotPasswordContainer } from './containers/ForgotPasswordContainer';
 export { LoginContainer } from './containers/LoginContainer';
 export { PasswordRequirements } from './components/PasswordRequirements';
@@ -9,7 +8,6 @@ export type {
     Auth,
     AuthAbilities,
     AuthAbilityKey,
-    AuthFieldProps,
     AuthFormErrors,
     AuthUser,
 } from './types';

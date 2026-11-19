@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { Form } from '@inertiajs/react';
-import { update as updatePassword } from '@/actions/App/Http/Controllers/Auth/PasswordController';
+import { useState } from "react";
+import { Form } from "@inertiajs/react";
+import { update as updatePassword } from "@/actions/App/Http/Controllers/Auth/PasswordController";
 import {
-    AuthField,
     PasswordRequirements,
     passwordMeetsRequirements,
-} from '@/features/auth';
-import { Button } from '@/shared/components/ui';
+} from "@/features/auth";
+import { InputField } from "@/shared/components/form";
+import { Button } from "@/shared/components/ui";
 
 export const AccountSecuritySection = () => {
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
     const confirmationError =
         passwordConfirmation.length > 0 && password !== passwordConfirmation
-            ? 'Las contraseñas no coinciden.'
+            ? "Las contraseñas no coinciden."
             : undefined;
     const canSubmit =
         currentPassword.length > 0 &&
@@ -39,14 +39,14 @@ export const AccountSecuritySection = () => {
                 className="space-y-4"
                 options={{ preserveScroll: true }}
                 onSuccess={() => {
-                    setCurrentPassword('');
-                    setPassword('');
-                    setPasswordConfirmation('');
+                    setCurrentPassword("");
+                    setPassword("");
+                    setPasswordConfirmation("");
                 }}
             >
                 {({ errors, processing }) => (
                     <>
-                        <AuthField
+                        <InputField
                             id="current_password"
                             name="current_password"
                             label="Contraseña actual"
@@ -61,7 +61,7 @@ export const AccountSecuritySection = () => {
                         />
 
                         <div className="space-y-2">
-                            <AuthField
+                            <InputField
                                 id="password"
                                 name="password"
                                 label="Nueva contraseña"
@@ -77,7 +77,7 @@ export const AccountSecuritySection = () => {
                             <PasswordRequirements password={password} />
                         </div>
 
-                        <AuthField
+                        <InputField
                             id="password_confirmation"
                             name="password_confirmation"
                             label="Confirmar nueva contraseña"
@@ -97,8 +97,8 @@ export const AccountSecuritySection = () => {
                                 disabled={processing || !canSubmit}
                             >
                                 {processing
-                                    ? 'Guardando...'
-                                    : 'Actualizar contraseña'}
+                                    ? "Guardando..."
+                                    : "Actualizar contraseña"}
                             </Button>
                         </div>
                     </>

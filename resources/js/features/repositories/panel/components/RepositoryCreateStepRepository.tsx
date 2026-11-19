@@ -1,5 +1,5 @@
-import { Input, Textarea } from '@/shared/components/ui';
-import type { RepositoryFormErrors } from '../../shared/types';
+import { InputField, TextareaField } from "@/shared/components/form";
+import type { RepositoryFormErrors } from "../../shared/types";
 
 type RepositoryCreateStepRepositoryProps = {
     errors: RepositoryFormErrors;
@@ -25,46 +25,22 @@ export const RepositoryCreateStepRepository = ({
                 </p>
             </div>
 
-            <div className="space-y-2">
-                <label
-                    htmlFor="title"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                    Nombre del repositorio
-                </label>
-                <Input
-                    id="title"
-                    name="title"
-                    required={isActive}
-                    aria-invalid={Boolean(errors.title)}
-                />
-                {errors.title ? (
-                    <p className="text-[0.8rem] font-medium text-destructive">
-                        {errors.title}
-                    </p>
-                ) : null}
-            </div>
+            <InputField
+                id="title"
+                name="title"
+                label="Nombre del repositorio"
+                required={isActive}
+                error={errors.title}
+            />
 
-            <div className="space-y-2">
-                <label
-                    htmlFor="description"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                    Descripción
-                </label>
-                <Textarea
-                    id="description"
-                    name="description"
-                    required={isActive}
-                    rows={4}
-                    aria-invalid={Boolean(errors.description)}
-                />
-                {errors.description ? (
-                    <p className="text-[0.8rem] font-medium text-destructive">
-                        {errors.description}
-                    </p>
-                ) : null}
-            </div>
+            <TextareaField
+                id="description"
+                name="description"
+                label="Descripción"
+                required={isActive}
+                rows={4}
+                error={errors.description}
+            />
         </section>
     );
 };

@@ -6,7 +6,7 @@ import {
     showByUser,
 } from "@/actions/App/Http/Controllers/RepositoryController";
 import { Button } from "@/shared/components/ui";
-import { FileUploadField } from "@/shared/components/form/FileUploadField";
+import { FileUploadField } from "@/shared/components/form";
 import type { RepositoryUploadTarget } from "../types";
 
 type FileUploadContainerProps = {

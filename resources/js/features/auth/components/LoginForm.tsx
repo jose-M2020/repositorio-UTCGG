@@ -1,8 +1,8 @@
-import { Link } from '@inertiajs/react';
-import { create as forgotPassword } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
-import { Button } from '@/shared/components/ui';
-import type { AuthFormErrors } from '../types';
-import { AuthField } from './AuthField';
+import { Link } from "@inertiajs/react";
+import { create as forgotPassword } from "@/actions/App/Http/Controllers/Auth/PasswordResetLinkController";
+import { InputField } from "@/shared/components/form";
+import { Button } from "@/shared/components/ui";
+import type { AuthFormErrors } from "../types";
 
 type LoginFormProps = {
     errors: AuthFormErrors;
@@ -12,7 +12,7 @@ type LoginFormProps = {
 export const LoginForm = ({ errors, processing }: LoginFormProps) => {
     return (
         <div className="space-y-4">
-            <AuthField
+            <InputField
                 id="email"
                 name="email"
                 label="Correo"
@@ -22,7 +22,7 @@ export const LoginForm = ({ errors, processing }: LoginFormProps) => {
                 error={errors.email}
             />
 
-            <AuthField
+            <InputField
                 id="password"
                 name="password"
                 label="Contraseña"
@@ -40,7 +40,7 @@ export const LoginForm = ({ errors, processing }: LoginFormProps) => {
                     ¿Olvidaste tu contraseña?
                 </Link>
                 <Button type="submit" disabled={processing}>
-                    {processing ? 'Ingresando...' : 'Entrar'}
+                    {processing ? "Ingresando..." : "Entrar"}
                 </Button>
             </div>
         </div>

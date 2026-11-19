@@ -1,3 +1,8 @@
+import {
+    FormField,
+    InputField,
+    fieldDescribedBy,
+} from "@/shared/components/form";
 import { Input } from "@/shared/components/ui";
 import type { EducationLevelFormErrors, EducationLevelFormValues } from "../types";
 
@@ -12,19 +17,28 @@ export const EducationLevelFormFields = ({
     defaults,
     isEdit = false,
 }: EducationLevelFormFieldsProps) => {
+    const codeHint = isEdit
+        ? "El codigo no se puede cambiar despues de crear el nivel."
+        : undefined;
+
     return (
         <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-                <label htmlFor="code" className="text-sm font-medium">
-                    Codigo
-                </label>
+            <FormField
+                id="code"
+                label="Codigo"
+                error={errors.code}
+                hint={codeHint}
+            >
                 {isEdit ? (
                     <Input
                         id="code"
                         readOnly
                         value={defaults?.code ?? ""}
                         className="bg-muted"
-                        aria-describedby="education-level-code-locked-hint"
+                        aria-describedby={fieldDescribedBy("code", {
+                            error: errors.code,
+                            hint: codeHint,
+                        })}
                     />
                 ) : (
                     <Input
@@ -32,55 +46,33 @@ export const EducationLevelFormFields = ({
                         name="code"
                         required
                         defaultValue={defaults?.code}
-                        aria-invalid={Boolean(errors.code)}
+                        aria-invalid={Boolean(errors.code) || undefined}
+                        aria-describedby={fieldDescribedBy("code", {
+                            error: errors.code,
+                        })}
                     />
                 )}
-                {isEdit ? (
-                    <p
-                        id="education-level-code-locked-hint"
-                        className="text-xs text-muted-foreground"
-                    >
-                        El codigo no se puede cambiar despues de crear el nivel.
-                    </p>
-                ) : null}
-                {errors.code ? (
-                    <p className="text-sm text-destructive">{errors.code}</p>
-                ) : null}
-            </div>
+            </FormField>
 
-            <div className="space-y-1">
-                <label htmlFor="name" className="text-sm font-medium">
-                    Nombre
-                </label>
-                <Input
-                    id="name"
-                    name="name"
-                    required
-                    defaultValue={defaults?.name}
-                    aria-invalid={Boolean(errors.name)}
-                />
-                {errors.name ? (
-                    <p className="text-sm text-destructive">{errors.name}</p>
-                ) : null}
-            </div>
+            <InputField
+                id="name"
+                name="name"
+                label="Nombre"
+                required
+                defaultValue={defaults?.name}
+                error={errors.name}
+            />
 
-            <div className="space-y-1">
-                <label htmlFor="sort_order" className="text-sm font-medium">
-                    Orden
-                </label>
-                <Input
-                    id="sort_order"
-                    name="sort_order"
-                    type="number"
-                    min={0}
-                    required
-                    defaultValue={defaults?.sort_order ?? 0}
-                    aria-invalid={Boolean(errors.sort_order)}
-                />
-                {errors.sort_order ? (
-                    <p className="text-sm text-destructive">{errors.sort_order}</p>
-                ) : null}
-            </div>
+            <InputField
+                id="sort_order"
+                name="sort_order"
+                label="Orden"
+                type="number"
+                min={0}
+                required
+                defaultValue={defaults?.sort_order ?? 0}
+                error={errors.sort_order}
+            />
         </div>
     );
 };

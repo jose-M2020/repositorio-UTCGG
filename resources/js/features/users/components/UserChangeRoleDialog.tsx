@@ -1,12 +1,12 @@
 import {
   useEffect,
   useState,
-  type ChangeEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
 import { Form } from "@inertiajs/react";
 import { updateRole } from "@/actions/App/Http/Controllers/UserController";
+import { SelectField } from "@/shared/components/form";
 import {
   Button,
   Dialog,
@@ -69,8 +69,8 @@ export const UserChangeRoleDialog = ({
     onOpenChange?.(nextOpen);
   };
 
-  const handleRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRole(event.target.value);
+  const handleRoleChange = (nextValue: string | null) => {
+    setSelectedRole(nextValue ?? "");
   };
 
   const handleSuccess = () => {
@@ -100,35 +100,20 @@ export const UserChangeRoleDialog = ({
           {({ errors, processing }) => (
             <>
               <div className="space-y-4">
-                <div className="space-y-1">
-                  <label
-                    htmlFor="change-role"
-                    className="text-sm font-medium text-slate-700 dark:text-slate-300"
-                  >
-                    Rol
-                  </label>
-                  <select
-                    id="change-role"
-                    name="role"
-                    required
-                    value={selectedRole}
-                    onChange={handleRoleChange}
-                    className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-                    aria-invalid={Boolean(errors.role)}
-                  >
-                    <option value="" disabled>
-                      Selecciona un rol
-                    </option>
-                    {roles.map((role) => (
-                      <option key={role.value} value={role.value}>
-                        {role.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.role ? (
-                    <p className="text-sm text-red-600">{errors.role}</p>
-                  ) : null}
-                </div>
+                <SelectField
+                  id="change-role"
+                  name="role"
+                  label="Rol"
+                  required
+                  value={selectedRole || null}
+                  onValueChange={handleRoleChange}
+                  error={errors.role}
+                  placeholder="Selecciona un rol"
+                  options={roles.map((role) => ({
+                    value: role.value,
+                    label: role.label,
+                  }))}
+                />
 
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">

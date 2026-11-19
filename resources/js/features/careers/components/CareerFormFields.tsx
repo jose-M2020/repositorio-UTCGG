@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { cn } from "cn";
+import {
+    FileUploadField,
+    FormField,
+    InputField,
+    SelectField,
+    TextareaField,
+    fieldDescribedBy,
+} from "@/shared/components/form";
 import { Input } from "@/shared/components/ui";
-import { FileUploadField } from "@/shared/components/form/FileUploadField";
 import type { CareerFormErrors, CareerFormValues } from "../types";
 
 type CareerFormFieldsProps = {
@@ -9,10 +15,6 @@ type CareerFormFieldsProps = {
     defaults?: CareerFormValues;
     isEdit?: boolean;
 };
-
-const textareaClassName = cn(
-    "w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30",
-);
 
 const IMAGE_ACCEPT = {
     "image/png": [".png"],
@@ -55,19 +57,28 @@ export const CareerFormFields = ({
               ]
             : [];
 
+    const codeHint = isEdit
+        ? "El codigo no se puede cambiar despues de crear la carrera."
+        : undefined;
+
     return (
         <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-                <label htmlFor="code" className="text-sm font-medium">
-                    Codigo
-                </label>
+            <FormField
+                id="code"
+                label="Codigo"
+                error={errors.code}
+                hint={codeHint}
+            >
                 {isEdit ? (
                     <Input
                         id="code"
                         readOnly
                         value={defaults?.code ?? ""}
                         className="bg-muted"
-                        aria-describedby="career-code-locked-hint"
+                        aria-describedby={fieldDescribedBy("code", {
+                            error: errors.code,
+                            hint: codeHint,
+                        })}
                     />
                 ) : (
                     <Input
@@ -75,90 +86,55 @@ export const CareerFormFields = ({
                         name="code"
                         required
                         defaultValue={defaults?.code}
-                        aria-invalid={Boolean(errors.code)}
+                        aria-invalid={Boolean(errors.code) || undefined}
+                        aria-describedby={fieldDescribedBy("code", {
+                            error: errors.code,
+                        })}
                     />
                 )}
-                {isEdit ? (
-                    <p
-                        id="career-code-locked-hint"
-                        className="text-xs text-muted-foreground"
-                    >
-                        El codigo no se puede cambiar despues de crear la carrera.
-                    </p>
-                ) : null}
-                {errors.code ? (
-                    <p className="text-sm text-destructive">{errors.code}</p>
-                ) : null}
-            </div>
+            </FormField>
 
-            <div className="space-y-1">
-                <label htmlFor="name" className="text-sm font-medium">
-                    Nombre
-                </label>
-                <Input
-                    id="name"
-                    name="name"
-                    required
-                    defaultValue={defaults?.name}
-                    aria-invalid={Boolean(errors.name)}
-                />
-                {errors.name ? (
-                    <p className="text-sm text-destructive">{errors.name}</p>
-                ) : null}
-            </div>
+            <InputField
+                id="name"
+                name="name"
+                label="Nombre"
+                required
+                defaultValue={defaults?.name}
+                error={errors.name}
+            />
 
-            <div className="space-y-1 sm:col-span-2">
-                <label htmlFor="description" className="text-sm font-medium">
-                    Descripcion
-                </label>
-                <textarea
-                    id="description"
-                    name="description"
-                    rows={3}
-                    defaultValue={defaults?.description}
-                    aria-invalid={Boolean(errors.description)}
-                    className={textareaClassName}
-                />
-                {errors.description ? (
-                    <p className="text-sm text-destructive">{errors.description}</p>
-                ) : null}
-            </div>
+            <TextareaField
+                id="description"
+                name="description"
+                label="Descripcion"
+                rows={3}
+                defaultValue={defaults?.description}
+                error={errors.description}
+                fieldClassName="sm:col-span-2"
+            />
 
-            <div className="space-y-1">
-                <label htmlFor="sort_order" className="text-sm font-medium">
-                    Orden
-                </label>
-                <Input
-                    id="sort_order"
-                    name="sort_order"
-                    type="number"
-                    min={0}
-                    required
-                    defaultValue={defaults?.sort_order ?? 0}
-                    aria-invalid={Boolean(errors.sort_order)}
-                />
-                {errors.sort_order ? (
-                    <p className="text-sm text-destructive">{errors.sort_order}</p>
-                ) : null}
-            </div>
+            <InputField
+                id="sort_order"
+                name="sort_order"
+                label="Orden"
+                type="number"
+                min={0}
+                required
+                defaultValue={defaults?.sort_order ?? 0}
+                error={errors.sort_order}
+            />
 
-            <div className="space-y-1">
-                <label htmlFor="show_on_home" className="text-sm font-medium">
-                    Mostrar en inicio
-                </label>
-                <select
-                    id="show_on_home"
-                    name="show_on_home"
-                    defaultValue={defaults?.show_on_home ? "1" : "0"}
-                    className="h-8 w-full rounded-lg border border-input bg-card px-2.5 text-sm"
-                >
-                    <option value="1">Si</option>
-                    <option value="0">No</option>
-                </select>
-                {errors.show_on_home ? (
-                    <p className="text-sm text-destructive">{errors.show_on_home}</p>
-                ) : null}
-            </div>
+            <SelectField
+                id="show_on_home"
+                name="show_on_home"
+                label="Mostrar en inicio"
+                defaultValue={defaults?.show_on_home ? "1" : "0"}
+                error={errors.show_on_home}
+                options={[
+                    { value: "1", label: "Si" },
+                    { value: "0", label: "No" },
+                ]}
+            />
 
             <div className="sm:col-span-2">
                 <FileUploadField
