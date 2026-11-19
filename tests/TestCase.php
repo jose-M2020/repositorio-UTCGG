@@ -32,7 +32,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function seedStudentCareer(User $user, string $code = 'TIC'): void
     {
-        $user->forceFill(['user_type' => UserType::Student])->save();
+        $user->forceFill(['user_type' => UserType::Academic])->save();
 
         StudentProfile::query()->updateOrCreate(
             ['user_id' => $user->id],
@@ -46,7 +46,7 @@ abstract class TestCase extends BaseTestCase
     protected function seedTeacherCareer(User $user, string $code = 'TIC'): void
     {
         $careerId = $this->careerId($code);
-        $user->forceFill(['user_type' => UserType::Teacher])->save();
+        $user->forceFill(['user_type' => UserType::Workforce])->save();
 
         TeacherProfile::query()->updateOrCreate(
             ['user_id' => $user->id],

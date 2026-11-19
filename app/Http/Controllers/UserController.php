@@ -365,7 +365,7 @@ class UserController extends Controller implements HasMiddleware
 
     private function careerCodesForDisplay(User $user): ?string
     {
-        if ($user->user_type === UserType::Teacher) {
+        if ($user->user_type === UserType::Workforce) {
             $codes = $user->activeCareerAssignments
                 ->map(fn ($assignment) => $assignment->career?->code)
                 ->filter()
@@ -383,7 +383,7 @@ class UserController extends Controller implements HasMiddleware
      */
     private function careerIdsForForm(User $user): array
     {
-        if ($user->user_type === UserType::Teacher) {
+        if ($user->user_type === UserType::Workforce) {
             return $user->activeCareerAssignments
                 ->filter(fn ($assignment): bool => $assignment->position === CareerPosition::Teacher)
                 ->pluck('career_id')
@@ -393,7 +393,7 @@ class UserController extends Controller implements HasMiddleware
                 ->all();
         }
 
-        if ($user->user_type === UserType::Student) {
+        if ($user->user_type === UserType::Academic) {
             $careerId = $user->studentProfile?->career_id;
 
             return $careerId !== null ? [(int) $careerId] : [];

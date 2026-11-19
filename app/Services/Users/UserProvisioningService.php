@@ -115,7 +115,7 @@ final class UserProvisioningService
         return DB::transaction(function () use ($actor, $user, $newType, $data): User {
             $this->ensureCanManageUser->handle($actor, $user);
 
-            if ($user->user_type === UserType::Student && $newType !== UserType::Student) {
+            if ($user->user_type === UserType::Academic && $newType !== UserType::Academic) {
                 $user->studentProfile?->update([
                     'academic_status' => AcademicStatus::Graduated,
                 ]);
@@ -139,7 +139,7 @@ final class UserProvisioningService
         return DB::transaction(function () use ($actor, $user, $data): CareerAssignment {
             $this->ensureCanManageUser->handle($actor, $user);
 
-            if ($user->user_type !== UserType::Teacher) {
+            if ($user->user_type !== UserType::Workforce) {
                 throw ValidationException::withMessages([
                     'user_type' => 'Solo un docente puede ser director de carrera.',
                 ]);
@@ -219,8 +219,8 @@ final class UserProvisioningService
     private function createProfileForType(User $user, UserType $userType, array $data, User $actor): void
     {
         match ($userType) {
-            UserType::Student => $this->upsertStudentProfile($user, $data, createOnly: true),
-            UserType::Teacher => $this->upsertTeacherProfile($user, $data, $actor, createOnly: true),
+            UserType::Academic => $this->upsertStudentProfile($user, $data, createOnly: true),
+            UserType::Workforce => $this->upsertTeacherProfile($user, $data, $actor, createOnly: true),
             UserType::Staff => $this->upsertStaffProfile($user, $data, createOnly: true),
         };
     }
@@ -231,8 +231,8 @@ final class UserProvisioningService
     private function updateProfileForType(User $user, UserType $userType, array $data, User $actor): void
     {
         match ($userType) {
-            UserType::Student => $this->upsertStudentProfile($user, $data, createOnly: false),
-            UserType::Teacher => $this->upsertTeacherProfile($user, $data, $actor, createOnly: false),
+            UserType::Academic => $this->upsertStudentProfile($user, $data, createOnly: false),
+            UserType::Workforce => $this->upsertTeacherProfile($user, $data, $actor, createOnly: false),
             UserType::Staff => $this->upsertStaffProfile($user, $data, createOnly: false),
         };
     }
@@ -433,8 +433,8 @@ final class UserProvisioningService
                 && UserRoles::requiresCareer($role)
             ) {
                 return match ($role) {
-                    UserRoles::STUDENT => UserType::Student,
-                    UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Teacher,
+                    UserRoles::STUDENT => UserType::Academic,
+                    UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Workforce,
                     default => UserType::Staff,
                 };
             }
@@ -445,8 +445,8 @@ final class UserProvisioningService
         $role = (string) ($user->getRoleNames()->first() ?? '');
 
         return match ($role) {
-            UserRoles::STUDENT => UserType::Student,
-            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Teacher,
+            UserRoles::STUDENT => UserType::Academic,
+            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Workforce,
             default => UserType::Staff,
         };
     }
@@ -496,8 +496,8 @@ final class UserProvisioningService
             }
 
             $allowed = match ($role) {
-                UserRoles::STUDENT => $userType === UserType::Student,
-                UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => $userType === UserType::Teacher,
+                UserRoles::STUDENT => $userType === UserType::Academic,
+                UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => $userType === UserType::Workforce,
                 UserRoles::ADMIN, UserRoles::DIRECTOR => $userType === UserType::Staff,
                 default => true,
             };

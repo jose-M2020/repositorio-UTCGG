@@ -1,6 +1,7 @@
 import { Form } from "@inertiajs/react";
 import { ArrowLeft } from "lucide-react";
 import { store, update } from "@/actions/App/Http/Controllers/UserController";
+import type { UserType } from "@/shared/types";
 import {
   Button,
   DialogClose,
@@ -30,7 +31,7 @@ type UserFormStepProps = {
   careers: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes: UserTypeOption[];
-  selectedUserType?: string;
+  selectedUserType?: UserType | "";
   onBackToTypeStep?: () => void;
   onSuccess: () => void;
 };
@@ -65,7 +66,7 @@ export const UserFormStep = ({
         user_type: user.user_type ?? null,
       }
     : {
-        user_type: selectedUserType,
+        user_type: selectedUserType || null,
         role: defaultRoleForType(selectedUserType) || null,
         career_ids: [] as number[],
       };

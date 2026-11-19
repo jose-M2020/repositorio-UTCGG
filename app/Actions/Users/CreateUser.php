@@ -38,11 +38,11 @@ final class CreateUser
             'roles' => [$role],
             'career' => $careerCode,
             ...(match ($resolvedType) {
-                'student' => [
+                'academic' => [
                     'student_number' => $profile['student_number'] ?? null,
                     'academic_status' => $profile['academic_status'] ?? 'active',
                 ],
-                'teacher' => [
+                'workforce' => [
                     'employee_number' => $profile['employee_number'] ?? null,
                 ],
                 default => [
@@ -63,8 +63,8 @@ final class CreateUser
     private function defaultUserTypeForRole(string $role): string
     {
         return match ($role) {
-            UserRoles::STUDENT => 'student',
-            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => 'teacher',
+            UserRoles::STUDENT => 'academic',
+            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => 'workforce',
             default => 'staff',
         };
     }

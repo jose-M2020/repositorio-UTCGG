@@ -32,15 +32,15 @@ class StoreUserRequest extends FormRequest
         if ($userType === '' && $role !== '') {
             $this->merge([
                 'user_type' => match ($role) {
-                    UserRoles::STUDENT => UserType::Student->value,
-                    UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Teacher->value,
+                    UserRoles::STUDENT => UserType::Academic->value,
+                    UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Workforce->value,
                     default => UserType::Staff->value,
                 },
             ]);
         }
 
         $resolvedType = $this->string('user_type')->toString();
-        $needsCareer = in_array($resolvedType, [UserType::Student->value, UserType::Teacher->value], true);
+        $needsCareer = in_array($resolvedType, [UserType::Academic->value, UserType::Workforce->value], true);
 
         $lockedCode = $authUser?->careerCode();
         $lockedCareerId = $authUser?->managedCareerIds()->first()
@@ -75,7 +75,7 @@ class StoreUserRequest extends FormRequest
             }
         }
 
-        if ($resolvedType === UserType::Student->value && ! $this->filled('academic_status')) {
+        if ($resolvedType === UserType::Academic->value && ! $this->filled('academic_status')) {
             $this->merge(['academic_status' => AcademicStatus::Active->value]);
         }
 
@@ -115,7 +115,7 @@ class StoreUserRequest extends FormRequest
         $authUser = $this->user();
         $assignableRoles = UserRoles::assignableBy($authUser);
         $userType = $this->string('user_type')->toString();
-        $careerRequired = in_array($userType, [UserType::Student->value, UserType::Teacher->value], true)
+        $careerRequired = in_array($userType, [UserType::Academic->value, UserType::Workforce->value], true)
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
 
         return [
@@ -142,20 +142,20 @@ class StoreUserRequest extends FormRequest
                 Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'careers' => [
-                Rule::requiredIf($careerRequired && $userType === UserType::Teacher->value && ! $this->filled('career') && ! $this->filled('career_id')),
+                Rule::requiredIf($careerRequired && $userType === UserType::Workforce->value && ! $this->filled('career') && ! $this->filled('career_id')),
                 'nullable',
                 'array',
                 'min:1',
             ],
             'student_number' => [
-                Rule::requiredIf($userType === UserType::Student->value && $this->boolean('require_profile_ids')),
+                Rule::requiredIf($userType === UserType::Academic->value && $this->boolean('require_profile_ids')),
                 'nullable',
                 'string',
                 'max:20',
                 'unique:student_profiles,student_number',
             ],
             'academic_status' => [
-                Rule::requiredIf($userType === UserType::Student->value),
+                Rule::requiredIf($userType === UserType::Academic->value),
                 'nullable',
                 Rule::enum(AcademicStatus::class),
             ],
@@ -165,7 +165,7 @@ class StoreUserRequest extends FormRequest
                 Rule::exists('education_levels', 'id')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'employee_number' => [
-                Rule::requiredIf($userType === UserType::Teacher->value && $this->boolean('require_profile_ids')),
+                Rule::requiredIf($userType === UserType::Workforce->value && $this->boolean('require_profile_ids')),
                 'nullable',
                 'string',
                 'max:20',

@@ -33,8 +33,8 @@ return new class extends Migration
             ]);
 
             match ($userType) {
-                UserType::Student->value => $this->backfillStudent($user),
-                UserType::Teacher->value => $this->backfillTeacher($user, $roleNames),
+                UserType::Academic->value => $this->backfillStudent($user),
+                UserType::Workforce->value => $this->backfillTeacher($user, $roleNames),
                 default => $this->backfillStaff($user, $roleNames),
             };
         }
@@ -68,14 +68,14 @@ return new class extends Migration
     private function resolveUserType(array $roleNames): string
     {
         if (in_array(UserRoles::STUDENT, $roleNames, true)) {
-            return UserType::Student->value;
+            return UserType::Academic->value;
         }
 
         if (
             in_array(UserRoles::TEACHER, $roleNames, true)
             || in_array(UserRoles::CAREER_DIRECTOR, $roleNames, true)
         ) {
-            return UserType::Teacher->value;
+            return UserType::Workforce->value;
         }
 
         return UserType::Staff->value;

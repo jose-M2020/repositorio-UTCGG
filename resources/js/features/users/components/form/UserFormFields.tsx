@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { USER_TYPE, isUserType, type UserType } from "@/shared/types";
 import {
     FormField,
     InputField,
@@ -31,7 +32,7 @@ type UserFormFieldsProps = {
         career?: string;
         career_ids?: number[];
         role?: string | null;
-        user_type?: string | null;
+        user_type?: UserType | null;
         student_number?: string | null;
         employee_number?: string | null;
         job_title?: string | null;
@@ -52,7 +53,7 @@ export const UserFormFields = ({
     userTypeReadOnly = false,
     showUserTypeField = true,
 }: UserFormFieldsProps) => {
-    const [selectedUserType, setSelectedUserType] = useState(
+    const [selectedUserType, setSelectedUserType] = useState<UserType | "">(
         defaults?.user_type ?? "",
     );
     const [selectedRole, setSelectedRole] = useState(defaults?.role ?? "");
@@ -62,21 +63,22 @@ export const UserFormFields = ({
     const selectedRoleOption = roles.find((role) => role.value === effectiveRole);
     const showCareerField =
         careerPolicy.can_select_career &&
-        (resolvedUserType === "student" ||
-            resolvedUserType === "teacher" ||
+        (resolvedUserType === USER_TYPE.ACADEMIC ||
+            resolvedUserType === USER_TYPE.WORKFORCE ||
             Boolean(selectedRoleOption?.requires_career));
     const showTeacherCareers =
-        showCareerField && resolvedUserType === "teacher";
+        showCareerField && resolvedUserType === USER_TYPE.WORKFORCE;
     const showStudentCareer =
-        showCareerField && resolvedUserType !== "teacher";
+        showCareerField && resolvedUserType !== USER_TYPE.WORKFORCE;
     const careerError =
         errors.careers ?? errors["careers.0.career_id"] ?? errors.career;
 
     const handleUserTypeChange = (nextValue: string | null) => {
-        const nextType = nextValue ?? "";
+        const nextType =
+            nextValue && isUserType(nextValue) ? nextValue : "";
         setSelectedUserType(nextType);
 
-        if (!includeRole) {
+        if (!includeRole || !nextType) {
             return;
         }
 
@@ -188,7 +190,7 @@ export const UserFormFields = ({
                 error={errors.phone}
             />
 
-            {resolvedUserType === "student" ? (
+            {resolvedUserType === USER_TYPE.ACADEMIC ? (
                 <>
                     <InputField
                         id="student_number"
@@ -201,7 +203,7 @@ export const UserFormFields = ({
                 </>
             ) : null}
 
-            {resolvedUserType === "teacher" ? (
+            {resolvedUserType === USER_TYPE.WORKFORCE ? (
                 <InputField
                     id="employee_number"
                     name="employee_number"
@@ -211,7 +213,7 @@ export const UserFormFields = ({
                 />
             ) : null}
 
-            {resolvedUserType === "staff" ? (
+            {resolvedUserType === USER_TYPE.STAFF ? (
                 <InputField
                     id="job_title"
                     name="job_title"

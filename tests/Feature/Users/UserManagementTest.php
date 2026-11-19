@@ -380,7 +380,7 @@ class UserManagementTest extends TestCase
             'email' => 'luis@example.com',
             'career' => 'ER',
             'role' => UserRoles::STUDENT,
-            'user_type' => 'student',
+            'user_type' => 'academic',
             'academic_status' => 'active',
         ]);
 

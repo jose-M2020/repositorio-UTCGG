@@ -4,15 +4,15 @@ namespace App\Enums;
 
 enum UserType: string
 {
-    case Student = 'student';
-    case Teacher = 'teacher';
+    case Academic = 'academic';
+    case Workforce = 'workforce';
     case Staff = 'staff';
 
     public function label(): string
     {
         return match ($this) {
-            self::Student => 'Alumno',
-            self::Teacher => 'Docente',
+            self::Academic => 'Académico',
+            self::Workforce => 'Laboral',
             self::Staff => 'Personal',
         };
     }

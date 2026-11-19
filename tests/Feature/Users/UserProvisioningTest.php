@@ -38,7 +38,7 @@ class UserProvisioningTest extends TestCase
             'first_name' => 'Ana',
             'last_name' => 'Alumna',
             'email' => 'ana@example.com',
-            'user_type' => UserType::Student->value,
+            'user_type' => UserType::Academic->value,
             'role' => UserRoles::STUDENT,
             'career' => 'TIC',
             'academic_status' => 'active',
@@ -52,7 +52,7 @@ class UserProvisioningTest extends TestCase
             'first_name' => 'Luis',
             'last_name' => 'Docente',
             'email' => 'luis@example.com',
-            'user_type' => UserType::Teacher->value,
+            'user_type' => UserType::Workforce->value,
             'role' => UserRoles::TEACHER,
             'career' => 'TIC',
         ])->assertRedirect(route('users.index'));
@@ -92,7 +92,7 @@ class UserProvisioningTest extends TestCase
                 'first_name' => 'Bad',
                 'last_name' => 'Combo',
                 'email' => 'bad@example.com',
-                'user_type' => UserType::Student->value,
+                'user_type' => UserType::Academic->value,
                 'role' => UserRoles::TEACHER,
                 'career' => 'TIC',
                 'academic_status' => 'active',
@@ -108,11 +108,11 @@ class UserProvisioningTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
         $ticId = (int) Career::query()->where('code', 'TIC')->value('id');
 
-        $first = User::factory()->teacher()->create(['user_type' => UserType::Teacher]);
+        $first = User::factory()->teacher()->create(['user_type' => UserType::Workforce]);
         $this->seedTeacherCareer($first, 'TIC');
         $first->assignRole(UserRoles::TEACHER);
 
-        $second = User::factory()->teacher()->create(['user_type' => UserType::Teacher]);
+        $second = User::factory()->teacher()->create(['user_type' => UserType::Workforce]);
         $this->seedTeacherCareer($second, 'TIC');
         $second->assignRole(UserRoles::TEACHER);
 
@@ -135,7 +135,7 @@ class UserProvisioningTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
         $ticId = (int) Career::query()->where('code', 'TIC')->value('id');
 
-        $teacher = User::factory()->teacher()->create(['user_type' => UserType::Teacher]);
+        $teacher = User::factory()->teacher()->create(['user_type' => UserType::Workforce]);
         $this->seedTeacherCareer($teacher, 'TIC');
         $teacher->assignRole(UserRoles::TEACHER);
 
@@ -160,7 +160,7 @@ class UserProvisioningTest extends TestCase
         $admin->assignRole(UserRoles::ADMIN);
         $ticId = (int) Career::query()->where('code', 'TIC')->value('id');
 
-        $student = User::factory()->student()->create(['user_type' => UserType::Student]);
+        $student = User::factory()->student()->create(['user_type' => UserType::Academic]);
         $student->assignRole(UserRoles::STUDENT);
         StudentProfile::query()->create([
             'user_id' => $student->id,
@@ -171,12 +171,12 @@ class UserProvisioningTest extends TestCase
         app(UserProvisioningService::class)->changeType(
             $admin,
             $student,
-            UserType::Teacher,
+            UserType::Workforce,
             ['career_id' => $ticId],
         );
 
         $student->refresh();
-        $this->assertSame(UserType::Teacher, $student->user_type);
+        $this->assertSame(UserType::Workforce, $student->user_type);
         $this->assertNotNull($student->studentProfile);
         $this->assertNotNull($student->teacherProfile);
     }
@@ -198,14 +198,14 @@ class UserProvisioningTest extends TestCase
         $erId = (int) Career::query()->where('code', 'ER')->value('id');
 
         $director = User::factory()->teacher()->create([
-            'user_type' => UserType::Teacher,
+            'user_type' => UserType::Workforce,
             'email' => 'dir.tic@example.com',
         ]);
         $director->assignRole(UserRoles::CAREER_DIRECTOR);
         $this->seedCareerDirector($director, 'TIC');
 
         $ticStudent = User::factory()->student()->create([
-            'user_type' => UserType::Student,
+            'user_type' => UserType::Academic,
             'email' => 'tic.student@example.com',
         ]);
         $ticStudent->assignRole(UserRoles::STUDENT);
@@ -216,7 +216,7 @@ class UserProvisioningTest extends TestCase
         ]);
 
         $erStudent = User::factory()->student()->create([
-            'user_type' => UserType::Student,
+            'user_type' => UserType::Academic,
             'email' => 'er.student@example.com',
         ]);
         $erStudent->assignRole(UserRoles::STUDENT);
@@ -251,7 +251,7 @@ class UserProvisioningTest extends TestCase
             'first_name' => 'Multi',
             'last_name' => 'Docente',
             'email' => 'multi.docente@example.com',
-            'user_type' => UserType::Teacher->value,
+            'user_type' => UserType::Workforce->value,
             'role' => UserRoles::TEACHER,
             'careers' => [
                 ['career_id' => $ticId, 'position' => CareerPosition::Teacher->value],

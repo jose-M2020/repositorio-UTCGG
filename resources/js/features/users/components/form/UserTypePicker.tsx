@@ -1,11 +1,12 @@
 import { Briefcase, GraduationCap, School, type LucideIcon } from "lucide-react";
+import { USER_TYPE, type UserType } from "@/shared/types";
 import { cn } from "@/shared/lib";
 import type { UserTypeOption } from "../../types";
 
 type UserTypePickerProps = {
   userTypes: UserTypeOption[];
-  selectedValue?: string;
-  onSelect: (value: string) => void;
+  selectedValue?: UserType | string;
+  onSelect: (value: UserType) => void;
   error?: string;
 };
 
@@ -14,16 +15,16 @@ type UserTypeMeta = {
   description: string;
 };
 
-const USER_TYPE_META: Record<string, UserTypeMeta> = {
-  student: {
+const USER_TYPE_META: Record<UserType, UserTypeMeta> = {
+  [USER_TYPE.ACADEMIC]: {
     icon: GraduationCap,
-    description: "Alumnos con matrícula y carrera.",
+    description: "Perfil académico con matrícula y carrera.",
   },
-  teacher: {
+  [USER_TYPE.WORKFORCE]: {
     icon: School,
-    description: "Docentes y directores de carrera.",
+    description: "Personal laboral (docentes, directores de carrera, …).",
   },
-  staff: {
+  [USER_TYPE.STAFF]: {
     icon: Briefcase,
     description: "Personal administrativo u operativo.",
   },

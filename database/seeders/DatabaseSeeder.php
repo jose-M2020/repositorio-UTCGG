@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Director',
             'last_name' => 'TIC',
             'email' => 'director.tic@example.com',
-            'user_type' => UserType::Teacher,
+            'user_type' => UserType::Workforce,
         ]);
         $directorCarrera->assignRole(UserRoles::CAREER_DIRECTOR);
         TeacherProfile::query()->create([
@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Docente',
             'last_name' => 'Docente',
             'email' => 'docente@example.com',
-            'user_type' => UserType::Teacher,
+            'user_type' => UserType::Workforce,
         ]);
         $docente->assignRole(UserRoles::TEACHER);
         TeacherProfile::query()->create([
@@ -88,7 +88,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Alumno',
             'last_name' => 'Alumno',
             'email' => 'alumno@example.com',
-            'user_type' => UserType::Student,
+            'user_type' => UserType::Academic,
         ]);
         $alumno->assignRole(UserRoles::STUDENT);
         StudentProfile::query()->create([

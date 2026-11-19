@@ -1,4 +1,5 @@
 import { useState, type ReactElement, type ReactNode } from "react";
+import type { UserType } from "@/shared/types";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +48,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
   } = props;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const [createStep, setCreateStep] = useState<CreateStep>("type");
-  const [selectedUserType, setSelectedUserType] = useState("");
+  const [selectedUserType, setSelectedUserType] = useState<UserType | "">("");
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
   const isEdit = mode === "edit";
@@ -74,7 +75,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
     handleOpenChange(false);
   };
 
-  const handleSelectUserType = (value: string) => {
+  const handleSelectUserType = (value: UserType) => {
     setSelectedUserType(value);
     setCreateStep("form");
   };

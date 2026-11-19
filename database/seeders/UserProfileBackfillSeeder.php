@@ -26,8 +26,8 @@ class UserProfileBackfillSeeder extends Seeder
             }
 
             match ($userType) {
-                UserType::Student => $this->backfillStudent($user),
-                UserType::Teacher => $this->backfillTeacher($user, $roleNames),
+                UserType::Academic => $this->backfillStudent($user),
+                UserType::Workforce => $this->backfillTeacher($user, $roleNames),
                 UserType::Staff => $this->backfillStaff($user, $roleNames),
             };
         });
@@ -39,14 +39,14 @@ class UserProfileBackfillSeeder extends Seeder
     private function resolveUserType(array $roleNames): UserType
     {
         if (in_array(UserRoles::STUDENT, $roleNames, true)) {
-            return UserType::Student;
+            return UserType::Academic;
         }
 
         if (
             in_array(UserRoles::TEACHER, $roleNames, true)
             || in_array(UserRoles::CAREER_DIRECTOR, $roleNames, true)
         ) {
-            return UserType::Teacher;
+            return UserType::Workforce;
         }
 
         return UserType::Staff;

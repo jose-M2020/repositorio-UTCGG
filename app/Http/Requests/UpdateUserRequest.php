@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
         $user = $this->route('user');
         $role = (string) ($user->getRoleNames()->first() ?? '');
         $userType = $user->user_type;
-        $needsCareer = ($userType === UserType::Student || $userType === UserType::Teacher)
+        $needsCareer = ($userType === UserType::Academic || $userType === UserType::Workforce)
             || UserRoles::requiresCareer($role);
 
         $lockedCode = $authUser?->careerCode();
@@ -64,7 +64,7 @@ class UpdateUserRequest extends FormRequest
         $authUser = $this->user();
         $userType = $user->user_type?->value;
         $role = (string) ($user->getRoleNames()->first() ?? '');
-        $needsCareer = in_array($userType, [UserType::Student->value, UserType::Teacher->value], true)
+        $needsCareer = in_array($userType, [UserType::Academic->value, UserType::Workforce->value], true)
             || UserRoles::requiresCareer($role);
         $careerRequired = $needsCareer
             && (UserRoles::canSelectCareer($authUser) || UserRoles::isCareerScoped($authUser));
@@ -95,7 +95,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::exists('careers', 'id')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'careers' => [
-                Rule::requiredIf($careerRequired && $userType === UserType::Teacher->value && ! $this->filled('career') && ! $this->filled('career_id')),
+                Rule::requiredIf($careerRequired && $userType === UserType::Workforce->value && ! $this->filled('career') && ! $this->filled('career_id')),
                 'nullable',
                 'array',
                 'min:1',

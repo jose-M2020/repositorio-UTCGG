@@ -1,10 +1,12 @@
+import type { UserType } from "@/shared/types";
+
 export type UserAccountStatus =
     | "pending_activation"
     | "active"
     | "inactive";
 
 export type UserTypeOption = {
-    value: string;
+    value: UserType;
     label: string;
 };
 
@@ -20,7 +22,7 @@ export type UserListItem = {
     last_name: string;
     second_last_name: string | null;
     email: string;
-    user_type?: string | null;
+    user_type?: UserType | null;
     career: string | null;
     career_ids?: number[];
     status: UserAccountStatus;

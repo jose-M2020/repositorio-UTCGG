@@ -124,8 +124,8 @@ class User extends Authenticatable
     public function profile(): StudentProfile|TeacherProfile|StaffProfile|null
     {
         return match ($this->user_type) {
-            UserType::Student => $this->studentProfile,
-            UserType::Teacher => $this->teacherProfile,
+            UserType::Academic => $this->studentProfile,
+            UserType::Workforce => $this->teacherProfile,
             UserType::Staff => $this->staffProfile,
             default => null,
         };
@@ -155,7 +155,7 @@ class User extends Authenticatable
     {
         $this->loadMissing(['studentProfile.career', 'activeCareerAssignments.career']);
 
-        if ($this->user_type === UserType::Student) {
+        if ($this->user_type === UserType::Academic) {
             return $this->studentProfile?->career;
         }
 
@@ -178,7 +178,7 @@ class User extends Authenticatable
             ->pluck('career_id')
             ->map(fn ($id): int => (int) $id);
 
-        if ($this->user_type === UserType::Student) {
+        if ($this->user_type === UserType::Academic) {
             $careerId = $this->studentProfile?->career_id;
             if ($careerId !== null) {
                 $ids->push((int) $careerId);

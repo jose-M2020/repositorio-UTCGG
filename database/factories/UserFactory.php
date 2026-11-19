@@ -43,14 +43,14 @@ class UserFactory extends Factory
     public function student(): static
     {
         return $this->state(fn (array $attributes) => [
-            'user_type' => UserType::Student,
+            'user_type' => UserType::Academic,
         ]);
     }
 
     public function teacher(): static
     {
         return $this->state(fn (array $attributes) => [
-            'user_type' => UserType::Teacher,
+            'user_type' => UserType::Workforce,
         ]);
     }
 

@@ -50,8 +50,8 @@ final class ChangeUserRole
     private function userTypeForRole(string $role): UserType
     {
         return match ($role) {
-            UserRoles::STUDENT => UserType::Student,
-            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Teacher,
+            UserRoles::STUDENT => UserType::Academic,
+            UserRoles::TEACHER, UserRoles::CAREER_DIRECTOR => UserType::Workforce,
             default => UserType::Staff,
         };
     }
