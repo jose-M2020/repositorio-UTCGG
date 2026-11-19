@@ -12,6 +12,17 @@ export {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from './alert-dialog';
+export {
+    Attachment,
+    AttachmentAction,
+    AttachmentActions,
+    AttachmentContent,
+    AttachmentDescription,
+    AttachmentGroup,
+    AttachmentMedia,
+    AttachmentTitle,
+    AttachmentTrigger,
+} from './attachment';
 export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from './avatar';
 export { Button, buttonVariants } from './button';
 export { Checkbox } from './checkbox';

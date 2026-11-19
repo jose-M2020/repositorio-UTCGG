@@ -1,6 +1,7 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { cn } from "cn";
 import { Input } from "@/shared/components/ui";
+import { FileUploadField } from "@/shared/components/form/FileUploadField";
 import type { CareerFormErrors, CareerFormValues } from "../types";
 
 type CareerFormFieldsProps = {
@@ -13,46 +14,46 @@ const textareaClassName = cn(
     "w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30",
 );
 
+const IMAGE_ACCEPT = {
+    "image/png": [".png"],
+    "image/jpeg": [".jpg", ".jpeg"],
+    "image/svg+xml": [".svg"],
+    "image/webp": [".webp"],
+};
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
 export const CareerFormFields = ({
     errors,
     defaults,
     isEdit = false,
 }: CareerFormFieldsProps) => {
-    const imageInputRef = useRef<HTMLInputElement>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [removeImage, setRemoveImage] = useState(false);
-    const currentImageUrl =
-        !removeImage && !previewUrl && defaults?.image_url
-            ? defaults.image_url
-            : null;
-    const displayUrl = previewUrl ?? currentImageUrl;
 
-    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0] ?? null;
-
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl);
+    const handleFilesChange = (nextFiles: File[]) => {
+        setImageFiles(nextFiles);
+        if (nextFiles.length > 0) {
+            setRemoveImage(false);
         }
-
-        if (!file) {
-            setPreviewUrl(null);
-            return;
-        }
-
-        setRemoveImage(false);
-        setPreviewUrl(URL.createObjectURL(file));
     };
 
-    const handleRemoveImage = () => {
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl);
-        }
-        setPreviewUrl(null);
+    const handleExistingRemove = () => {
         setRemoveImage(true);
-        if (imageInputRef.current) {
-            imageInputRef.current.value = "";
-        }
+        setImageFiles([]);
     };
+
+    const existingImage =
+        !removeImage && imageFiles.length === 0 && defaults?.image_url
+            ? [
+                  {
+                      id: "current-logo",
+                      name: "Logo actual",
+                      description: "Imagen guardada",
+                      url: defaults.image_url,
+                  },
+              ]
+            : [];
 
     return (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -123,48 +124,6 @@ export const CareerFormFields = ({
                 ) : null}
             </div>
 
-            <div className="space-y-2 sm:col-span-2">
-                <label htmlFor="image" className="text-sm font-medium">
-                    Logo de la carrera
-                </label>
-                <Input
-                    ref={imageInputRef}
-                    id="image"
-                    name="image"
-                    type="file"
-                    accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
-                    onChange={handleImageChange}
-                    aria-invalid={Boolean(errors.image)}
-                />
-                <p className="text-xs text-muted-foreground">
-                    PNG, JPG, SVG o WebP. Maximo 5 MB.
-                </p>
-                {displayUrl ? (
-                    <div className="flex items-start gap-3">
-                        <img
-                            src={displayUrl}
-                            alt="Vista previa del logo"
-                            className="h-20 w-32 rounded-md border border-border object-cover"
-                        />
-                        {isEdit && !previewUrl ? (
-                            <button
-                                type="button"
-                                className="text-sm text-destructive underline-offset-2 hover:underline"
-                                onClick={handleRemoveImage}
-                            >
-                                Quitar imagen
-                            </button>
-                        ) : null}
-                    </div>
-                ) : null}
-                {removeImage ? (
-                    <input type="hidden" name="remove_image" value="1" />
-                ) : null}
-                {errors.image ? (
-                    <p className="text-sm text-destructive">{errors.image}</p>
-                ) : null}
-            </div>
-
             <div className="space-y-1">
                 <label htmlFor="sort_order" className="text-sm font-medium">
                     Orden
@@ -198,6 +157,28 @@ export const CareerFormFields = ({
                 </select>
                 {errors.show_on_home ? (
                     <p className="text-sm text-destructive">{errors.show_on_home}</p>
+                ) : null}
+            </div>
+
+            <div className="sm:col-span-2">
+                <FileUploadField
+                    label="Logo de la carrera"
+                    name="image"
+                    accept={IMAGE_ACCEPT}
+                    maxFiles={1}
+                    maxSize={MAX_IMAGE_SIZE}
+                    files={imageFiles}
+                    onFilesChange={handleFilesChange}
+                    existing={existingImage}
+                    onExistingRemove={
+                        isEdit ? handleExistingRemove : undefined
+                    }
+                    error={errors.image}
+                    hint="PNG, JPG, SVG o WebP. Maximo 5 MB."
+                    attachmentOrientation="horizontal"
+                />
+                {removeImage ? (
+                    <input type="hidden" name="remove_image" value="1" />
                 ) : null}
             </div>
         </div>
