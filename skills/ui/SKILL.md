@@ -1,10 +1,10 @@
 ---
-name: halo-ui
+name: ui
 description: >
-  Halo Finance UI patterns and conventions. For generic patterns, see: typescript, react-19, tailwind-4, zod-4.
+  UI patterns and conventions. For generic patterns, see: typescript, react-19, tailwind-4, zod-4.
   Trigger: When working on UI components, forms, or client-side features.
 metadata:
-  author: halo-finance
+  author:
   version: "1.0"
   scope: [src]
   auto_invoke:
@@ -88,6 +88,35 @@ src/
 Used 2+ pages?     → src/components/ (global)
 Used 1 page only?  → src/pages/{page}/_components/
 ```
+
+### Extract Shared UI When It Repeats (REQUIRED)
+
+When the same **non-domain** UI pattern appears in **2+ places** (or is about to), extract it to the shared/global layer instead of copying markup.
+
+Classic signal — label + control + error/hint repeated across forms:
+
+```tsx
+// ❌ NEVER: Copy this block per field / per feature
+<div className="space-y-1">
+  <label htmlFor="name">Name</label>
+  <Input id="name" name="name" />
+  {errors.name ? <p>{errors.name}</p> : null}
+</div>
+
+// ✅ ALWAYS: Shared field composed on the design system
+<InputField id="name" name="name" label="Name" error={errors.name} />
+```
+
+Decision:
+
+```
+Domain-specific UI (feature form layout)?   → feature / page local
+Repeated control chrome (label/error/hint)? → shared form fields
+Design-system primitive only?               → shared/ui (shadcn)
+Generic util?                               → shared/lib
+```
+
+Keep shared fields generic (`label`, `error`, `options`, `name`). Domain copy and option maps stay in the feature/page. Compose fields on shadcn/ui primitives — do not reintroduce raw native controls when a shared field exists.
 
 ### Page-Specific Files (use `_` prefix)
 

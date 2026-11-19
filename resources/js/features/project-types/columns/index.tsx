@@ -1,6 +1,6 @@
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { ProjectTypeRowActions } from "../components/ProjectTypeRowActions";
-import { ProjectTypeStatusBadge } from "../components/ProjectTypeStatusBadge";
+import { ProjectTypeRowActions } from "../components/list/ProjectTypeRowActions";
+import { ProjectTypeStatusBadge } from "../components/list/ProjectTypeStatusBadge";
 import type { ProjectTypeItem } from "../types";
 
 const columnHelper = createDataTableColumnHelper<ProjectTypeItem>();

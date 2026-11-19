@@ -1,13 +1,13 @@
 import { Deferred, Form, usePage } from '@inertiajs/react';
 import { store } from '@/actions/App/Http/Controllers/Auth/SetPasswordController';
-import { AuthShell } from '../components/AuthShell';
-import { SetPasswordForm } from '../components/SetPasswordForm';
+import { AuthShell } from '../components/shared/AuthShell';
+import { SetPasswordForm } from '../components/set-password/SetPasswordForm';
 import {
     SetPasswordInvalidActions,
     SetPasswordRetryActions,
     SetPasswordSuccessActions,
     SetPasswordVerifyingState,
-} from '../components/SetPasswordLinkStates';
+} from '../components/set-password/SetPasswordLinkStates';
 import {
     PASSWORD_SET_STATUS,
     type SetPasswordLinkStatus,

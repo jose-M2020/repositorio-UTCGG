@@ -7,12 +7,12 @@ import {
 import { type SearchableUser } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import type { RepositoryLookups } from '../../shared/types';
-import { RepositoryCreateStepMembers } from '../components/RepositoryCreateStepMembers';
-import { RepositoryCreateStepNav } from '../components/RepositoryCreateStepNav';
-import { RepositoryCreateStepOrganization } from '../components/RepositoryCreateStepOrganization';
-import { RepositoryCreateStepProject } from '../components/RepositoryCreateStepProject';
-import { RepositoryCreateStepRepository } from '../components/RepositoryCreateStepRepository';
-import { RepositoryCreateStepSettings } from '../components/RepositoryCreateStepSettings';
+import { RepositoryCreateStepMembers } from '../components/create/RepositoryCreateStepMembers';
+import { RepositoryCreateStepNav } from '../components/create/RepositoryCreateStepNav';
+import { RepositoryCreateStepOrganization } from '../components/create/RepositoryCreateStepOrganization';
+import { RepositoryCreateStepProject } from '../components/create/RepositoryCreateStepProject';
+import { RepositoryCreateStepRepository } from '../components/create/RepositoryCreateStepRepository';
+import { RepositoryCreateStepSettings } from '../components/create/RepositoryCreateStepSettings';
 import {
     REPOSITORY_CREATE_STEPS,
     type RepositoryCreateStepId,

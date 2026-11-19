@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import { index } from '@/actions/App/Http/Controllers/RepositoryController';
 import { Button } from '@/shared/components/ui';
 import type { Repository, RepositoryListItem } from '../../shared/types';
-import { RepositoryPublicView } from '../components/RepositoryPublicView';
+import { RepositoryPublicView } from '../components/show/RepositoryPublicView';
 
 type RepositoryShowContainerProps = {
     repository: Repository;

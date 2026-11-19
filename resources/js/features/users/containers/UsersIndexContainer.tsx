@@ -1,8 +1,8 @@
 import { usePage } from "@inertiajs/react";
 import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
-import { UserFormDialog } from "../components/UserFormDialog";
-import { UsersTable } from "../components/UsersTable";
+import { UserFormDialog } from "../components/form/UserFormDialog";
+import { UsersTable } from "../components/list/UsersTable";
 import type {
   CareerFormPolicy,
   CareerOption,

@@ -1,7 +1,7 @@
-import { CareersSection } from '../components/CareersSection';
-import { HomeHero } from '../components/HomeHero';
-import { RepositoryHighlights } from '../components/RepositoryHighlights';
-import { StatsStrip } from '../components/StatsStrip';
+import { CareersSection } from '../components/landing/CareersSection';
+import { HomeHero } from '../components/landing/HomeHero';
+import { RepositoryHighlights } from '../components/landing/RepositoryHighlights';
+import { StatsStrip } from '../components/landing/StatsStrip';
 import type { HomeCareer, HomeRepository } from '../types';
 
 type HomeContainerProps = {

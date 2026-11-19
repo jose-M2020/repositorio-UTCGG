@@ -1,6 +1,6 @@
 import { Form, usePage } from '@inertiajs/react';
 import { store } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import { AuthShell } from '../components/AuthShell';
+import { AuthShell } from '../components/shared/AuthShell';
 import { LoginForm } from '../components/LoginForm';
 
 export const LoginContainer = () => {

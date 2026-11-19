@@ -1,6 +1,6 @@
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { CareerRowActions } from "../components/CareerRowActions";
-import { CareerStatusBadge } from "../components/CareerStatusBadge";
+import { CareerRowActions } from "../components/list/CareerRowActions";
+import { CareerStatusBadge } from "../components/list/CareerStatusBadge";
 import type { CareerItem } from "../types";
 
 const columnHelper = createDataTableColumnHelper<CareerItem>();

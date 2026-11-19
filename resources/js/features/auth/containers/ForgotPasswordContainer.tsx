@@ -1,6 +1,6 @@
 import { Form, usePage } from '@inertiajs/react';
 import { store } from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
-import { AuthShell } from '../components/AuthShell';
+import { AuthShell } from '../components/shared/AuthShell';
 import { ForgotPasswordForm } from '../components/ForgotPasswordForm';
 
 export const ForgotPasswordContainer = () => {

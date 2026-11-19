@@ -1,8 +1,8 @@
 import { usePage } from "@inertiajs/react";
 import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
-import { ProjectTypeFormDialog } from "../components/ProjectTypeFormDialog";
-import { ProjectTypesTable } from "../components/ProjectTypesTable";
+import { ProjectTypeFormDialog } from "../components/form/ProjectTypeFormDialog";
+import { ProjectTypesTable } from "../components/list/ProjectTypesTable";
 import type { PaginatedProjectTypes } from "../types";
 
 type ProjectTypesIndexContainerProps = {

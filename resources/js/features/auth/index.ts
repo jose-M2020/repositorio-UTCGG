@@ -1,6 +1,6 @@
 export { ForgotPasswordContainer } from './containers/ForgotPasswordContainer';
 export { LoginContainer } from './containers/LoginContainer';
-export { PasswordRequirements } from './components/PasswordRequirements';
+export { PasswordRequirements } from './components/shared/PasswordRequirements';
 export { SetPasswordContainer } from './containers/SetPasswordContainer';
 export { passwordMeetsRequirements } from './utils/passwordRequirements';
 export { AUTH_ABILITIES } from './types';

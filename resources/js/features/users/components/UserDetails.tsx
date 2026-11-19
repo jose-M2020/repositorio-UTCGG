@@ -1,4 +1,4 @@
-import { UserStatusBadge } from './UserStatusBadge';
+import { UserStatusBadge } from './list/UserStatusBadge';
 import type { UserDetails as UserDetailsType } from '../types';
 import { formatUserName } from '../utils/formatUserName';
 

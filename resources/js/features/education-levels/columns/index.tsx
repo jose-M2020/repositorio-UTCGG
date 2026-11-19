@@ -1,6 +1,6 @@
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { EducationLevelRowActions } from "../components/EducationLevelRowActions";
-import { EducationLevelStatusBadge } from "../components/EducationLevelStatusBadge";
+import { EducationLevelRowActions } from "../components/list/EducationLevelRowActions";
+import { EducationLevelStatusBadge } from "../components/list/EducationLevelStatusBadge";
 import type { EducationLevelItem } from "../types";
 
 const columnHelper = createDataTableColumnHelper<EducationLevelItem>();

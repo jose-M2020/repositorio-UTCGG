@@ -1,8 +1,8 @@
 import { usePage } from "@inertiajs/react";
 import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
-import { EducationLevelFormDialog } from "../components/EducationLevelFormDialog";
-import { EducationLevelsTable } from "../components/EducationLevelsTable";
+import { EducationLevelFormDialog } from "../components/form/EducationLevelFormDialog";
+import { EducationLevelsTable } from "../components/list/EducationLevelsTable";
 import type { PaginatedEducationLevels } from "../types";
 
 type EducationLevelsIndexContainerProps = {

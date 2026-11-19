@@ -1,5 +1,5 @@
-﻿import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { RoleRowActions } from "../components/RoleRowActions";
+import { createDataTableColumnHelper } from "@/shared/components/dataTable";
+import { RoleRowActions } from "../components/list/RoleRowActions";
 import type { PermissionGroups, RoleListItem } from "../types";
 
 type CreateRolesColumnsOptions = {

@@ -1,8 +1,8 @@
 import { usePage } from "@inertiajs/react";
 import { AUTH_ABILITIES } from "@/features/auth";
 import { Button } from "@/shared/components/ui";
-import { CareerFormDialog } from "../components/CareerFormDialog";
-import { CareersTable } from "../components/CareersTable";
+import { CareerFormDialog } from "../components/form/CareerFormDialog";
+import { CareersTable } from "../components/list/CareersTable";
 import type { PaginatedCareers } from "../types";
 
 type CareersIndexContainerProps = {

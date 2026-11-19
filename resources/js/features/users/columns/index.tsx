@@ -1,8 +1,8 @@
-﻿import { Link } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { show } from "@/actions/App/Http/Controllers/UserController";
 import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { UserRowActions } from "../components/UserRowActions";
-import { UserStatusBadge } from "../components/UserStatusBadge";
+import { UserRowActions } from "../components/list/UserRowActions";
+import { UserStatusBadge } from "../components/list/UserStatusBadge";
 import type {
   CareerFormPolicy,
   CareerOption,

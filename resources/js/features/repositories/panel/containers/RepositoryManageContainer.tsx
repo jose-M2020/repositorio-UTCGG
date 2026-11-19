@@ -1,6 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import type { Repository } from '../../shared/types';
-import { RepositoryDetails } from '../components/RepositoryDetails';
+import { RepositoryDetails } from '../components/detail/RepositoryDetails';
 
 type RepositoryManageContainerProps = {
     repository: Repository;
