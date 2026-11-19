@@ -17,6 +17,10 @@ final class Media
             return $path;
         }
 
-        return Storage::disk('s3')->url($path);
+        if (Str::startsWith($path, '/')) {
+            return asset(ltrim($path, '/'));
+        }
+
+        return Storage::url($path);
     }
 }

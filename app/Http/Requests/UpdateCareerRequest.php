@@ -18,7 +18,8 @@ class UpdateCareerRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:5120'],
+            'remove_image' => ['nullable', 'boolean'],
             'show_on_home' => ['nullable', 'boolean'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];

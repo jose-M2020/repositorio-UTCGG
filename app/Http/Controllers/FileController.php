@@ -56,10 +56,7 @@ class FileController extends Controller implements HasMiddleware
 
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $upload) {
-                    $path = $upload->store(
-                        $this->basePath($repository).'/files',
-                        's3',
-                    );
+                    $path = $upload->store($this->basePath($repository).'/files');
 
                     $repository->files()->create([
                         'original_name' => $upload->getClientOriginalName(),
@@ -100,10 +97,7 @@ class FileController extends Controller implements HasMiddleware
     {
         abort_unless($file->repository_id === $repository->id, 404);
 
-        if (Storage::disk('s3')->exists($file->file_path)) {
-            Storage::disk('s3')->delete($file->file_path);
-        }
-
+        Storage::delete($file->file_path);
         $file->delete();
 
         return redirect()
@@ -120,10 +114,7 @@ class FileController extends Controller implements HasMiddleware
         }
 
         $path = $images[$index];
-
-        if (Storage::disk('s3')->exists($path)) {
-            Storage::disk('s3')->delete($path);
-        }
+        Storage::delete($path);
 
         unset($images[$index]);
         $repository->update([
@@ -146,7 +137,7 @@ class FileController extends Controller implements HasMiddleware
 
         abort_unless($canAccess, 403);
 
-        return Storage::disk('s3')->download($file->file_path, $file->original_name);
+        return Storage::download($file->file_path, $file->original_name);
     }
 
     /**
@@ -158,10 +149,7 @@ class FileController extends Controller implements HasMiddleware
         $paths = [];
 
         foreach ($uploads as $upload) {
-            $paths[] = $upload->store(
-                $this->basePath($repository).'/'.$folder,
-                's3',
-            );
+            $paths[] = $upload->store($this->basePath($repository).'/'.$folder);
         }
 
         return $paths;

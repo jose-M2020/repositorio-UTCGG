@@ -6,10 +6,13 @@ use App\Http\Controllers\Concerns\HandlesInUseResourceDestroy;
 use App\Http\Requests\StoreCareerRequest;
 use App\Http\Requests\UpdateCareerRequest;
 use App\Models\Career;
+use App\Support\Media;
 use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -45,13 +48,21 @@ class CareerController extends Controller implements HasMiddleware
     public function store(StoreCareerRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $code = trim((string) $validated['code']);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            /** @var UploadedFile $image */
+            $image = $request->file('image');
+            $imagePath = $image->store('careers/'.$code);
+        }
 
         Career::query()->create([
-            'code' => trim((string) $validated['code']),
+            'code' => $code,
             'name' => trim((string) $validated['name']),
             'slug' => $this->uniqueSlug(trim((string) $validated['name'])),
             'description' => isset($validated['description']) ? trim((string) $validated['description']) : null,
-            'image_path' => isset($validated['image_path']) ? trim((string) $validated['image_path']) : null,
+            'image_path' => $imagePath,
             'show_on_home' => (bool) ($validated['show_on_home'] ?? false),
             'sort_order' => (int) $validated['sort_order'],
             'is_active' => true,
@@ -65,11 +76,24 @@ class CareerController extends Controller implements HasMiddleware
     public function update(UpdateCareerRequest $request, Career $career): RedirectResponse
     {
         $validated = $request->validated();
+        $imagePath = $career->image_path;
+
+        if ($request->boolean('remove_image') && ! $request->hasFile('image')) {
+            $this->deleteStoredPath($career->image_path);
+            $imagePath = null;
+        }
+
+        if ($request->hasFile('image')) {
+            /** @var UploadedFile $image */
+            $image = $request->file('image');
+            $this->deleteStoredPath($career->image_path);
+            $imagePath = $image->store('careers/'.$career->code);
+        }
 
         $career->update([
             'name' => trim((string) $validated['name']),
             'description' => isset($validated['description']) ? trim((string) $validated['description']) : null,
-            'image_path' => isset($validated['image_path']) ? trim((string) $validated['image_path']) : null,
+            'image_path' => $imagePath,
             'show_on_home' => (bool) ($validated['show_on_home'] ?? false),
             'sort_order' => (int) $validated['sort_order'],
         ]);
@@ -96,7 +120,15 @@ class CareerController extends Controller implements HasMiddleware
 
     public function destroy(Career $career): RedirectResponse
     {
-        return $this->destroyResource($career, 'careers.index', 'Carrera eliminada exitosamente.');
+        $careerId = $career->id;
+        $imagePath = $career->image_path;
+        $response = $this->destroyResource($career, 'careers.index', 'Carrera eliminada exitosamente.');
+
+        if (! Career::query()->whereKey($careerId)->exists()) {
+            $this->deleteStoredPath($imagePath);
+        }
+
+        return $response;
     }
 
     /**
@@ -111,6 +143,7 @@ class CareerController extends Controller implements HasMiddleware
             'slug' => $career->slug,
             'description' => $career->description ?? '',
             'image_path' => $career->image_path ?? '',
+            'image_url' => Media::url($career->image_path),
             'show_on_home' => $career->show_on_home,
             'sort_order' => $career->sort_order,
             'is_active' => $career->is_active,
@@ -129,5 +162,14 @@ class CareerController extends Controller implements HasMiddleware
         }
 
         return $slug;
+    }
+
+    private function deleteStoredPath(?string $path): void
+    {
+        if ($path === null || $path === '' || Str::startsWith($path, ['http://', 'https://', '/'])) {
+            return;
+        }
+
+        Storage::delete($path);
     }
 }

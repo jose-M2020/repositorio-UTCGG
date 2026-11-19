@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
 export const download = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ download.definition = {
 
 /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
 download.url = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ download.url = (args: { file: number | { id: number } } | [file: number | { id: 
 
 /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
 download.get = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +58,7 @@ download.get = (args: { file: number | { id: number } } | [file: number | { id: 
 })
 /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
 download.head = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +68,7 @@ download.head = (args: { file: number | { id: number } } | [file: number | { id:
 
     /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
     const downloadForm = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -78,7 +78,7 @@ download.head = (args: { file: number | { id: number } } | [file: number | { id:
 
             /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
         downloadForm.get = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -87,7 +87,7 @@ download.head = (args: { file: number | { id: number } } | [file: number | { id:
         })
             /**
 * @see \App\Http\Controllers\FileController::download
- * @see app/Http/Controllers/FileController.php:138
+ * @see app/Http/Controllers/FileController.php:129
  * @route '/files/download/{file}'
  */
         downloadForm.head = (args: { file: number | { id: number } } | [file: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -284,7 +284,7 @@ store.post = (args: { repository: string | { slug: string } } | [repository: str
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\FileController::update
- * @see app/Http/Controllers/FileController.php:83
+ * @see app/Http/Controllers/FileController.php:80
  * @route '/account/repositories/{repository}/files/{file}'
  */
 export const update = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -299,7 +299,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\FileController::update
- * @see app/Http/Controllers/FileController.php:83
+ * @see app/Http/Controllers/FileController.php:80
  * @route '/account/repositories/{repository}/files/{file}'
  */
 update.url = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions) => {
@@ -329,7 +329,7 @@ update.url = (args: { repository: string | { slug: string }, file: number | { id
 
 /**
 * @see \App\Http\Controllers\FileController::update
- * @see app/Http/Controllers/FileController.php:83
+ * @see app/Http/Controllers/FileController.php:80
  * @route '/account/repositories/{repository}/files/{file}'
  */
 update.put = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -339,7 +339,7 @@ update.put = (args: { repository: string | { slug: string }, file: number | { id
 
     /**
 * @see \App\Http\Controllers\FileController::update
- * @see app/Http/Controllers/FileController.php:83
+ * @see app/Http/Controllers/FileController.php:80
  * @route '/account/repositories/{repository}/files/{file}'
  */
     const updateForm = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -354,7 +354,7 @@ update.put = (args: { repository: string | { slug: string }, file: number | { id
 
             /**
 * @see \App\Http\Controllers\FileController::update
- * @see app/Http/Controllers/FileController.php:83
+ * @see app/Http/Controllers/FileController.php:80
  * @route '/account/repositories/{repository}/files/{file}'
  */
         updateForm.put = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -370,7 +370,7 @@ update.put = (args: { repository: string | { slug: string }, file: number | { id
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\FileController::destroy
- * @see app/Http/Controllers/FileController.php:99
+ * @see app/Http/Controllers/FileController.php:96
  * @route '/account/repositories/{repository}/files/{file}'
  */
 export const destroy = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -385,7 +385,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\FileController::destroy
- * @see app/Http/Controllers/FileController.php:99
+ * @see app/Http/Controllers/FileController.php:96
  * @route '/account/repositories/{repository}/files/{file}'
  */
 destroy.url = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions) => {
@@ -415,7 +415,7 @@ destroy.url = (args: { repository: string | { slug: string }, file: number | { i
 
 /**
 * @see \App\Http\Controllers\FileController::destroy
- * @see app/Http/Controllers/FileController.php:99
+ * @see app/Http/Controllers/FileController.php:96
  * @route '/account/repositories/{repository}/files/{file}'
  */
 destroy.delete = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -425,7 +425,7 @@ destroy.delete = (args: { repository: string | { slug: string }, file: number | 
 
     /**
 * @see \App\Http\Controllers\FileController::destroy
- * @see app/Http/Controllers/FileController.php:99
+ * @see app/Http/Controllers/FileController.php:96
  * @route '/account/repositories/{repository}/files/{file}'
  */
     const destroyForm = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -440,7 +440,7 @@ destroy.delete = (args: { repository: string | { slug: string }, file: number | 
 
             /**
 * @see \App\Http\Controllers\FileController::destroy
- * @see app/Http/Controllers/FileController.php:99
+ * @see app/Http/Controllers/FileController.php:96
  * @route '/account/repositories/{repository}/files/{file}'
  */
         destroyForm.delete = (args: { repository: string | { slug: string }, file: number | { id: number } } | [repository: string | { slug: string }, file: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -456,7 +456,7 @@ destroy.delete = (args: { repository: string | { slug: string }, file: number | 
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\FileController::destroyImage
- * @see app/Http/Controllers/FileController.php:114
+ * @see app/Http/Controllers/FileController.php:108
  * @route '/account/repositories/{repository}/images/{index}'
  */
 export const destroyImage = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -471,7 +471,7 @@ destroyImage.definition = {
 
 /**
 * @see \App\Http\Controllers\FileController::destroyImage
- * @see app/Http/Controllers/FileController.php:114
+ * @see app/Http/Controllers/FileController.php:108
  * @route '/account/repositories/{repository}/images/{index}'
  */
 destroyImage.url = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions) => {
@@ -499,7 +499,7 @@ destroyImage.url = (args: { repository: string | { slug: string }, index: string
 
 /**
 * @see \App\Http\Controllers\FileController::destroyImage
- * @see app/Http/Controllers/FileController.php:114
+ * @see app/Http/Controllers/FileController.php:108
  * @route '/account/repositories/{repository}/images/{index}'
  */
 destroyImage.delete = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -509,7 +509,7 @@ destroyImage.delete = (args: { repository: string | { slug: string }, index: str
 
     /**
 * @see \App\Http\Controllers\FileController::destroyImage
- * @see app/Http/Controllers/FileController.php:114
+ * @see app/Http/Controllers/FileController.php:108
  * @route '/account/repositories/{repository}/images/{index}'
  */
     const destroyImageForm = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -524,7 +524,7 @@ destroyImage.delete = (args: { repository: string | { slug: string }, index: str
 
             /**
 * @see \App\Http\Controllers\FileController::destroyImage
- * @see app/Http/Controllers/FileController.php:114
+ * @see app/Http/Controllers/FileController.php:108
  * @route '/account/repositories/{repository}/images/{index}'
  */
         destroyImageForm.delete = (args: { repository: string | { slug: string }, index: string | number } | [repository: string | { slug: string }, index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

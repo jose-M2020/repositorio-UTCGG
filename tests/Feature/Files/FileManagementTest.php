@@ -21,7 +21,7 @@ class FileManagementTest extends TestCase
 
         $this->seedDomainLookups();
         $this->seed(PermissionsSeeder::class);
-        Storage::fake('s3');
+        Storage::fake();
     }
 
     public function test_member_can_upload_files_to_repository(): void
@@ -50,7 +50,7 @@ class FileManagementTest extends TestCase
 
         $file = File::query()->where('repository_id', $repo->id)->first();
         $this->assertNotNull($file);
-        Storage::disk('s3')->assertExists($file->file_path);
+        Storage::assertExists($file->file_path);
     }
 
     public function test_member_can_toggle_file_visibility(): void
@@ -83,7 +83,7 @@ class FileManagementTest extends TestCase
         $repo = Repository::factory()->create();
         $repo->users()->attach($user->id);
 
-        Storage::disk('s3')->put('files/test/demo.pdf', 'contenido');
+        Storage::put('files/test/demo.pdf', 'contenido');
         $file = File::factory()->create([
             'repository_id' => $repo->id,
             'file_path' => 'files/test/demo.pdf',
@@ -94,12 +94,12 @@ class FileManagementTest extends TestCase
             ->assertRedirect(route('repositories.account.show', $repo));
 
         $this->assertDatabaseMissing('files', ['id' => $file->id]);
-        Storage::disk('s3')->assertMissing('files/test/demo.pdf');
+        Storage::assertMissing('files/test/demo.pdf');
     }
 
     public function test_public_file_can_be_downloaded_by_guest(): void
     {
-        Storage::disk('s3')->put('files/test/public.pdf', 'contenido-publico');
+        Storage::put('files/test/public.pdf', 'contenido-publico');
 
         $file = File::factory()->public()->create([
             'file_path' => 'files/test/public.pdf',
@@ -112,7 +112,7 @@ class FileManagementTest extends TestCase
 
     public function test_private_file_cannot_be_downloaded_by_guest(): void
     {
-        Storage::disk('s3')->put('files/test/private.pdf', 'contenido-privado');
+        Storage::put('files/test/private.pdf', 'contenido-privado');
 
         $file = File::factory()->create([
             'file_path' => 'files/test/private.pdf',

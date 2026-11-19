@@ -15,7 +15,7 @@ Permite:
 - Catálogo público de repositorios (Open Access).
 - Gestión privada por miembros (edición, miembros, archivos).
 - Administración de usuarios y roles (Spatie Permission).
-- Subida/descarga de documentos e imágenes en **Amazon S3**.
+- Subida/descarga de documentos e imágenes vía disco configurable (`public` local o **Amazon S3**).
 - Autenticación por sesión (login / logout) y alta administrativa de usuarios.
 
 ---
@@ -29,7 +29,7 @@ Permite:
 | Framework | Laravel 13 (PHP ≥ 8.3) |
 | SPA bridge | Inertia.js v3 |
 | Auth / permisos | Sesión Laravel + Spatie Permission |
-| Storage | AWS S3 (`league/flysystem-aws-s3-v3`) |
+| Storage | Disco default `FILESYSTEM_DISK` (`public` local o AWS S3 vía `league/flysystem-aws-s3-v3`) |
 | Rutas tipadas FE | Laravel Wayfinder |
 | Tests | Pest / PHPUnit Feature |
 | Calidad | Pint, Larastan/PHPStan |
@@ -74,8 +74,8 @@ Patrón: **página → contenedor → componentes**. Cada feature exporta API p�
 | Permiso | Spatie `permissions` | Acciones CRUD con `description` en español |
 | Repositorio | `Repositorio` / `repositorios` | Proyecto académico; ruta por `slug` |
 | Miembro | pivot `repositorio_user` | Usuario ↔ repositorio |
-| Archivo | `File` / `files` | Documento en S3; flag `is_public` |
-| Imágenes | JSON `repositorios.imagenes` | Galería de paths S3 (sin tabla) |
+| Archivo | `File` / `files` | Documento en disco media; flag `is_public` |
+| Imágenes | JSON `repositories.images` | Galería de paths en disco media (sin tabla) |
 
 ### Catálogo institucional (`App\Support\Catalog` / `shared/data/catalog.ts`)
 
@@ -113,7 +113,7 @@ Patrón: **página → contenedor → componentes**. Cada feature exporta API p�
 | `asesor_externo` | **Obligatorio si tipo = Estadía** |
 | `generacion` | Cohorte (ej. `2026`) |
 | `created_by` | Nombre del creador (string) |
-| `imagenes` | JSON de paths S3 |
+| `images` | JSON de paths en disco media |
 
 ---
 
@@ -227,7 +227,7 @@ Gate::before(fn ($user, $ability) => $user->hasRole('admin') ? true : null);
 | Path | `files/{carrera}/{año}/repositorio-{id}/archivos|imagenes/…` |
 | Visibilidad | Nuevos archivos nacen **privados**; miembro puede togglear `is_public` |
 | Download | Público → cualquiera; privado → admin o miembro |
-| Borrado | Elimina DB + objeto S3; imágenes por índice en JSON |
+| Borrado | Elimina DB + objeto en disco media; imágenes por índice en JSON |
 
 ---
 
@@ -359,13 +359,15 @@ Metadatos del proyecto + `slug` unique + `publico` bool + `imagenes` text/JSON +
 
 ### Archivos (operativo)
 
-Aunque `FILESYSTEM_DISK` default sea `local`, el código de archivos usa **`s3`**:
+Los uploads de la app (logos de carreras, documentos e imágenes de repositorios) usan el disco default de Laravel (`FILESYSTEM_DISK` → `App\Support\Media`):
 
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `AWS_DEFAULT_REGION`
-- `AWS_BUCKET`
-- `AWS_USE_PATH_STYLE_ENDPOINT` (y opcionalmente `AWS_URL` / `AWS_ENDPOINT`)
+- Local: `FILESYSTEM_DISK=public` y `php artisan storage:link` (archivos en `storage/app/public`, URL `/storage/...`).
+- Producción o prueba S3 en local: `FILESYSTEM_DISK=s3` más:
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_SECRET_ACCESS_KEY`
+  - `AWS_DEFAULT_REGION`
+  - `AWS_BUCKET`
+  - `AWS_USE_PATH_STYLE_ENDPOINT` (y opcionalmente `AWS_URL` / `AWS_ENDPOINT`)
 
 ### Comandos útiles
 
@@ -406,7 +408,8 @@ AuthorizeMember (admin OR miembro del pivot)
 | Users | `UserManagementTest` | Guest/403/CRUD admin, validación create |
 | Roles | `RoleManagementTest` | Guest/403/CRUD + sync permisos |
 | Repos | `RepositorioManagementTest` | Solo públicos en índice, 404 privado, create+membresía, manage, miembros, admin bypass |
-| Files | `FileManagementTest` | Upload S3 fake, toggle, delete, download público/privado, 403 no-miembro |
+| Files | `FileManagementTest` | Upload en disco default fake, toggle, delete, download público/privado, 403 no-miembro |
+| Careers | `CareerManagementTest` | CRUD, toggle, upload/remove logo |
 | Home | `HomePageTest` | Solo públicos en home; about renderiza |
 
 ### Huecos conocidos (implementado pero poco/no testeado)
@@ -426,7 +429,7 @@ AuthorizeMember (admin OR miembro del pivot)
 2. **Repos privados se ocultan** (404) en el show público.
 3. **Admin = superusuario** vía `Gate::before` + acceso implícito en `AuthorizeMember`.
 4. **Imágenes vs archivos:** imágenes en JSON del repo; documentos en tabla `files`.
-5. **S3 fijo** en controladores de archivos (independiente de `FILESYSTEM_DISK`).
+5. **Disco default configurable** (`FILESYSTEM_DISK=public|s3`) vía `App\Support\Media` (sin hardcodear el disco).
 6. **UI por superficies:** el sitio público tiene navegación propia; trabajo y
    gestión conviven en una sola área privada.
 7. Stack declarado en `AGENTS.md` (Zustand/Query/RHF/Zod) es **objetivo**; el runtime actual usa Inertia + props + `useState`.

@@ -1,3 +1,4 @@
+import { useRef, useState, type ChangeEvent } from "react";
 import { cn } from "cn";
 import { Input } from "@/shared/components/ui";
 import type { CareerFormErrors, CareerFormValues } from "../types";
@@ -17,6 +18,42 @@ export const CareerFormFields = ({
     defaults,
     isEdit = false,
 }: CareerFormFieldsProps) => {
+    const imageInputRef = useRef<HTMLInputElement>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [removeImage, setRemoveImage] = useState(false);
+    const currentImageUrl =
+        !removeImage && !previewUrl && defaults?.image_url
+            ? defaults.image_url
+            : null;
+    const displayUrl = previewUrl ?? currentImageUrl;
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0] ?? null;
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+        }
+
+        if (!file) {
+            setPreviewUrl(null);
+            return;
+        }
+
+        setRemoveImage(false);
+        setPreviewUrl(URL.createObjectURL(file));
+    };
+
+    const handleRemoveImage = () => {
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+        }
+        setPreviewUrl(null);
+        setRemoveImage(true);
+        if (imageInputRef.current) {
+            imageInputRef.current.value = "";
+        }
+    };
+
     return (
         <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1">
@@ -86,19 +123,45 @@ export const CareerFormFields = ({
                 ) : null}
             </div>
 
-            <div className="space-y-1 sm:col-span-2">
-                <label htmlFor="image_path" className="text-sm font-medium">
-                    Ruta de imagen
+            <div className="space-y-2 sm:col-span-2">
+                <label htmlFor="image" className="text-sm font-medium">
+                    Logo de la carrera
                 </label>
                 <Input
-                    id="image_path"
-                    name="image_path"
-                    defaultValue={defaults?.image_path}
-                    placeholder="/img/carrerasBG/TI.jpg"
-                    aria-invalid={Boolean(errors.image_path)}
+                    ref={imageInputRef}
+                    id="image"
+                    name="image"
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
+                    onChange={handleImageChange}
+                    aria-invalid={Boolean(errors.image)}
                 />
-                {errors.image_path ? (
-                    <p className="text-sm text-destructive">{errors.image_path}</p>
+                <p className="text-xs text-muted-foreground">
+                    PNG, JPG, SVG o WebP. Maximo 5 MB.
+                </p>
+                {displayUrl ? (
+                    <div className="flex items-start gap-3">
+                        <img
+                            src={displayUrl}
+                            alt="Vista previa del logo"
+                            className="h-20 w-32 rounded-md border border-border object-cover"
+                        />
+                        {isEdit && !previewUrl ? (
+                            <button
+                                type="button"
+                                className="text-sm text-destructive underline-offset-2 hover:underline"
+                                onClick={handleRemoveImage}
+                            >
+                                Quitar imagen
+                            </button>
+                        ) : null}
+                    </div>
+                ) : null}
+                {removeImage ? (
+                    <input type="hidden" name="remove_image" value="1" />
+                ) : null}
+                {errors.image ? (
+                    <p className="text-sm text-destructive">{errors.image}</p>
                 ) : null}
             </div>
 

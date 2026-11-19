@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\CareerController::index
- * @see app/Http/Controllers/CareerController.php:33
+ * @see app/Http/Controllers/CareerController.php:36
  * @route '/careers'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\CareerController::store
- * @see app/Http/Controllers/CareerController.php:45
+ * @see app/Http/Controllers/CareerController.php:48
  * @route '/careers'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -94,7 +94,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\CareerController::store
- * @see app/Http/Controllers/CareerController.php:45
+ * @see app/Http/Controllers/CareerController.php:48
  * @route '/careers'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\CareerController::store
- * @see app/Http/Controllers/CareerController.php:45
+ * @see app/Http/Controllers/CareerController.php:48
  * @route '/careers'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -113,7 +113,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\CareerController::store
- * @see app/Http/Controllers/CareerController.php:45
+ * @see app/Http/Controllers/CareerController.php:48
  * @route '/careers'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -123,7 +123,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\CareerController::store
- * @see app/Http/Controllers/CareerController.php:45
+ * @see app/Http/Controllers/CareerController.php:48
  * @route '/careers'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -134,7 +134,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
 export const update = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -149,7 +149,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
 update.url = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -182,7 +182,7 @@ update.url = (args: { career: number | { id: number } } | [career: number | { id
 
 /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
 update.put = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -191,7 +191,7 @@ update.put = (args: { career: number | { id: number } } | [career: number | { id
 })
 /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
 update.patch = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -201,7 +201,7 @@ update.patch = (args: { career: number | { id: number } } | [career: number | { 
 
     /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
     const updateForm = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -216,7 +216,7 @@ update.patch = (args: { career: number | { id: number } } | [career: number | { 
 
             /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
         updateForm.put = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -230,7 +230,7 @@ update.patch = (args: { career: number | { id: number } } | [career: number | { 
         })
             /**
 * @see \App\Http\Controllers\CareerController::update
- * @see app/Http/Controllers/CareerController.php:65
+ * @see app/Http/Controllers/CareerController.php:76
  * @route '/careers/{career}'
  */
         updateForm.patch = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -246,7 +246,7 @@ update.patch = (args: { career: number | { id: number } } | [career: number | { 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\CareerController::destroy
- * @see app/Http/Controllers/CareerController.php:97
+ * @see app/Http/Controllers/CareerController.php:121
  * @route '/careers/{career}'
  */
 export const destroy = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -261,7 +261,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\CareerController::destroy
- * @see app/Http/Controllers/CareerController.php:97
+ * @see app/Http/Controllers/CareerController.php:121
  * @route '/careers/{career}'
  */
 destroy.url = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -294,7 +294,7 @@ destroy.url = (args: { career: number | { id: number } } | [career: number | { i
 
 /**
 * @see \App\Http\Controllers\CareerController::destroy
- * @see app/Http/Controllers/CareerController.php:97
+ * @see app/Http/Controllers/CareerController.php:121
  * @route '/careers/{career}'
  */
 destroy.delete = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -304,7 +304,7 @@ destroy.delete = (args: { career: number | { id: number } } | [career: number | 
 
     /**
 * @see \App\Http\Controllers\CareerController::destroy
- * @see app/Http/Controllers/CareerController.php:97
+ * @see app/Http/Controllers/CareerController.php:121
  * @route '/careers/{career}'
  */
     const destroyForm = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -319,7 +319,7 @@ destroy.delete = (args: { career: number | { id: number } } | [career: number | 
 
             /**
 * @see \App\Http\Controllers\CareerController::destroy
- * @see app/Http/Controllers/CareerController.php:97
+ * @see app/Http/Controllers/CareerController.php:121
  * @route '/careers/{career}'
  */
         destroyForm.delete = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -335,7 +335,7 @@ destroy.delete = (args: { career: number | { id: number } } | [career: number | 
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\CareerController::toggleActive
- * @see app/Http/Controllers/CareerController.php:82
+ * @see app/Http/Controllers/CareerController.php:106
  * @route '/careers/{career}/active'
  */
 export const toggleActive = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -350,7 +350,7 @@ toggleActive.definition = {
 
 /**
 * @see \App\Http\Controllers\CareerController::toggleActive
- * @see app/Http/Controllers/CareerController.php:82
+ * @see app/Http/Controllers/CareerController.php:106
  * @route '/careers/{career}/active'
  */
 toggleActive.url = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -383,7 +383,7 @@ toggleActive.url = (args: { career: number | { id: number } } | [career: number 
 
 /**
 * @see \App\Http\Controllers\CareerController::toggleActive
- * @see app/Http/Controllers/CareerController.php:82
+ * @see app/Http/Controllers/CareerController.php:106
  * @route '/careers/{career}/active'
  */
 toggleActive.patch = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -393,7 +393,7 @@ toggleActive.patch = (args: { career: number | { id: number } } | [career: numbe
 
     /**
 * @see \App\Http\Controllers\CareerController::toggleActive
- * @see app/Http/Controllers/CareerController.php:82
+ * @see app/Http/Controllers/CareerController.php:106
  * @route '/careers/{career}/active'
  */
     const toggleActiveForm = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -408,7 +408,7 @@ toggleActive.patch = (args: { career: number | { id: number } } | [career: numbe
 
             /**
 * @see \App\Http\Controllers\CareerController::toggleActive
- * @see app/Http/Controllers/CareerController.php:82
+ * @see app/Http/Controllers/CareerController.php:106
  * @route '/careers/{career}/active'
  */
         toggleActiveForm.patch = (args: { career: number | { id: number } } | [career: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

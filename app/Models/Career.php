@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\Media;
+use Database\Factories\CareerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Career extends Model
 {
-    /** @use HasFactory<\Database\Factories\CareerFactory> */
+    /** @use HasFactory<CareerFactory> */
     use HasFactory;
 
     protected function casts(): array
@@ -113,7 +115,7 @@ class Career extends Model
             ->map(fn (self $career): array => [
                 'code' => $career->code,
                 'name' => $career->name,
-                'image' => (string) $career->image_path,
+                'image' => Media::url($career->image_path),
             ])
             ->values()
             ->all();

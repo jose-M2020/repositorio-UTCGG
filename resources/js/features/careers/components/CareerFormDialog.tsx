@@ -53,6 +53,8 @@ export const CareerFormDialog = (props: CareerFormDialogProps) => {
                 <Form
                     {...formProps}
                     className="space-y-6"
+                    encType="multipart/form-data"
+                    options={{ forceFormData: true }}
                     onSuccess={handleSuccess}
                 >
                     {({ errors, processing }) => (
@@ -65,7 +67,7 @@ export const CareerFormDialog = (props: CareerFormDialogProps) => {
                                               code: career.code,
                                               name: career.name,
                                               description: career.description,
-                                              image_path: career.image_path,
+                                              image_url: career.image_url,
                                               show_on_home: career.show_on_home,
                                               sort_order: career.sort_order,
                                           }

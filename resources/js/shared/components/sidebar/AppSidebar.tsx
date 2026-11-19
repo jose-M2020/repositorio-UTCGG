@@ -137,11 +137,6 @@ const useNavGroups = (): NavMainGroup[] => {
 
     const exploreItems: NavMainLink[] = [
         {
-            title: 'Catálogo público',
-            url: repositories.url(),
-            icon: Library,
-        },
-        {
             title: 'Sitio público',
             url: home.url(),
             icon: Globe,

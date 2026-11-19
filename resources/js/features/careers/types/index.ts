@@ -5,6 +5,7 @@ export type CareerItem = {
     slug: string;
     description: string;
     image_path: string;
+    image_url: string;
     show_on_home: boolean;
     sort_order: number;
     is_active: boolean;
@@ -15,7 +16,7 @@ export type CareerFormValues = {
     code: string;
     name: string;
     description: string;
-    image_path: string;
+    image_url: string;
     show_on_home: boolean;
     sort_order: number;
 };

@@ -8,6 +8,10 @@ use App\Models\User;
 use Database\Seeders\CareerSeeder;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class CareerManagementTest extends TestCase
@@ -22,6 +26,7 @@ class CareerManagementTest extends TestCase
             CareerSeeder::class,
             PermissionsSeeder::class,
         ]);
+        Storage::fake();
     }
 
     public function test_guest_is_redirected_from_careers_index(): void
@@ -60,6 +65,27 @@ class CareerManagementTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_create_career_with_logo_upload(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->post(route('careers.store'), [
+            'code' => 'LOG',
+            'name' => 'Carrera con logo',
+            'sort_order' => 5,
+            'show_on_home' => true,
+            'image' => UploadedFile::fake()->image('logo.png', 200, 100),
+        ]);
+
+        $response->assertRedirect(route('careers.index'));
+
+        $career = Career::query()->where('code', 'LOG')->first();
+        $this->assertNotNull($career);
+        $this->assertNotNull($career->image_path);
+        Storage::assertExists($career->image_path);
+    }
+
     public function test_admin_can_update_career_without_changing_code(): void
     {
         $admin = User::factory()->create();
@@ -71,7 +97,6 @@ class CareerManagementTest extends TestCase
         $response = $this->actingAs($admin)->put(route('careers.update', $career), [
             'name' => 'Carrera actualizada',
             'sort_order' => 5,
-            'image_path' => '/img/carrerasBG/NEW.jpg',
             'show_on_home' => true,
         ]);
 
@@ -79,6 +104,37 @@ class CareerManagementTest extends TestCase
         $career->refresh();
         $this->assertSame('Carrera actualizada', $career->name);
         $this->assertSame($originalCode, $career->code);
+    }
+
+    public function test_admin_can_replace_and_remove_career_logo(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $career = Career::query()->where('code', 'TIC')->firstOrFail();
+
+        $this->actingAs($admin)->put(route('careers.update', $career), [
+            'name' => $career->name,
+            'sort_order' => $career->sort_order,
+            'show_on_home' => true,
+            'image' => UploadedFile::fake()->image('replacement.jpg', 180, 90),
+        ])->assertRedirect(route('careers.index'));
+
+        $career->refresh();
+        $this->assertNotNull($career->image_path);
+        Storage::assertExists($career->image_path);
+        $storedPath = $career->image_path;
+
+        $this->actingAs($admin)->put(route('careers.update', $career), [
+            'name' => $career->name,
+            'sort_order' => $career->sort_order,
+            'show_on_home' => false,
+            'remove_image' => true,
+        ])->assertRedirect(route('careers.index'));
+
+        $career->refresh();
+        $this->assertNull($career->image_path);
+        Storage::assertMissing($storedPath);
     }
 
     public function test_admin_can_toggle_career_active_status(): void
@@ -173,7 +229,7 @@ class CareerManagementTest extends TestCase
 
     public function test_granular_permission_migration_backfills_from_careers_edit(): void
     {
-        $role = \Spatie\Permission\Models\Role::query()->create([
+        $role = Role::query()->create([
             'name' => 'legacy_career_editor',
             'guard_name' => 'web',
         ]);
@@ -184,7 +240,7 @@ class CareerManagementTest extends TestCase
         $migration->up();
 
         $role->refresh();
-        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $this->assertTrue($role->hasPermissionTo('careers.toggle-active'));
     }

@@ -20,7 +20,7 @@ class StoreCareerRequest extends FormRequest
             'code' => ['required', 'string', 'max:20', Rule::unique('careers', 'code')],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'image_path' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'mimes:png,jpg,jpeg,svg,webp', 'max:5120'],
             'show_on_home' => ['nullable', 'boolean'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];
