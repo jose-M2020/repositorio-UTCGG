@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ProjectPeriodStatus;
+use App\Http\Requests\Concerns\ValidatesRepositoryOrganization;
 use App\Models\ProjectPeriod;
 use App\Models\ProjectType;
 use App\Models\Repository;
@@ -13,6 +14,8 @@ use Illuminate\Validation\Validator;
 
 class UpdateRepositoryRequest extends FormRequest
 {
+    use ValidatesRepositoryOrganization;
+
     public function authorize(): bool
     {
         return $this->user()?->can(Permissions::REPOSITORIES_EDIT) ?? false;
@@ -23,11 +26,6 @@ class UpdateRepositoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $projectType = ProjectType::query()
-            ->where('code', $this->string('project_type')->toString())
-            ->first();
-        $requiresBusinessAdvisor = (bool) $projectType?->requires_business_advisor;
-
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
@@ -52,14 +50,15 @@ class UpdateRepositoryRequest extends FormRequest
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'project_period_id' => ['nullable', 'integer', 'exists:project_periods,id'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'external_advisor' => [$requiresBusinessAdvisor ? 'required' : 'nullable', 'string', 'max:255'],
             'generation' => ['required', 'string', 'max:255'],
+            ...$this->organizationRules($this->projectTypeRequiresBusinessAdvisor()),
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
+        $this->afterOrganizationValidation($validator);
+
         $validator->after(function (Validator $validator): void {
             /** @var Repository $repository */
             $repository = $this->route('repository');
@@ -83,7 +82,6 @@ class UpdateRepositoryRequest extends FormRequest
                 return;
             }
 
-            // Legacy repositories without a period stay editable without forcing one.
             if ($repository->project_period_id === null && blank($periodId)) {
                 return;
             }

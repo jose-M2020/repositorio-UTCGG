@@ -72,7 +72,22 @@ class RepositoryManagementTest extends TestCase
             'member_emails' => [$user->email],
             'career' => 'TIC',
             'project_period_id' => $period->id,
-            'company' => 'UTCGG',
+            'company' => [
+                'name' => 'UTCGG',
+                'address' => [
+                    'street_line' => 'Av. Universidad 100',
+                    'neighborhood' => 'Centro',
+                    'city' => 'Ciudad Guzman',
+                    'state' => 'Jalisco',
+                    'postal_code' => '49000',
+                    'country' => 'MX',
+                ],
+            ],
+            'business_advisor' => [
+                'first_name' => 'Ana',
+                'last_name' => 'Lopez',
+                'second_last_name' => 'Ruiz',
+            ],
             'generation' => '2026',
         ]);
 
@@ -81,6 +96,20 @@ class RepositoryManagementTest extends TestCase
         $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
         $this->assertSame($period->id, $repo->project_period_id);
+        $this->assertNotNull($repo->company_id);
+        $this->assertDatabaseHas('companies', ['name' => 'UTCGG']);
+        $this->assertDatabaseHas('addresses', [
+            'street_line' => 'Av. Universidad 100',
+            'city' => 'Ciudad Guzman',
+            'postal_code' => '49000',
+        ]);
+        $this->assertNotNull($repo->company?->address_id);
+        $this->assertDatabaseHas('repository_business_advisors', [
+            'repository_id' => $repo->id,
+            'first_name' => 'Ana',
+            'last_name' => 'Lopez',
+            'second_last_name' => 'Ruiz',
+        ]);
     }
 
     public function test_member_can_create_repository_without_extra_members(): void
@@ -106,8 +135,11 @@ class RepositoryManagementTest extends TestCase
         $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
         $this->assertSame(1, $repo->users()->count());
-        $this->assertNull($repo->company);
-        $this->assertNull($repo->external_advisor);
+        $this->assertNull($repo->company_id);
+        $this->assertDatabaseMissing('repository_business_advisors', [
+            'repository_id' => $repo->id,
+            'released_at' => null,
+        ]);
     }
 
     public function test_user_with_permission_can_view_create_repository_page(): void

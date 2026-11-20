@@ -14,6 +14,7 @@ use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
 use App\Services\Advisors\EligibleAdvisorsQuery;
+use App\Services\Repositories\RepositoryOrganizationService;
 use App\Support\Media;
 use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
@@ -137,8 +138,10 @@ class RepositoryController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function store(StoreRepositoryRequest $request): RedirectResponse
-    {
+    public function store(
+        StoreRepositoryRequest $request,
+        RepositoryOrganizationService $organizationService,
+    ): RedirectResponse {
         $user = $request->user();
         $validated = $request->safe()->except([
             'member_emails',
@@ -147,6 +150,8 @@ class RepositoryController extends Controller implements HasMiddleware
             'project_type',
             'academic_degree',
             'project_period_id',
+            'company',
+            'business_advisor',
         ]);
 
         $careerId = $this->careerIdByCode($request->string('career')->toString());
@@ -163,6 +168,13 @@ class RepositoryController extends Controller implements HasMiddleware
             'is_public' => $request->string('visibility')->toString() === 'public',
             'created_by' => $user->fullName(),
         ]);
+
+        $organizationService->sync(
+            $repository,
+            $request->input('company'),
+            $request->input('business_advisor'),
+            $user,
+        );
 
         $memberIds = User::query()
             ->whereIn('email', $request->input('member_emails', []))
@@ -272,14 +284,19 @@ class RepositoryController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function update(UpdateRepositoryRequest $request, Repository $repository): RedirectResponse
-    {
+    public function update(
+        UpdateRepositoryRequest $request,
+        Repository $repository,
+        RepositoryOrganizationService $organizationService,
+    ): RedirectResponse {
         $validated = $request->safe()->except([
             'visibility',
             'career',
             'project_type',
             'academic_degree',
             'project_period_id',
+            'company',
+            'business_advisor',
         ]);
 
         $careerId = $this->careerIdByCode($request->string('career')->toString());
@@ -295,6 +312,13 @@ class RepositoryController extends Controller implements HasMiddleware
             'slug' => $this->uniqueSlug($request->string('title')->toString(), $repository->id),
             'is_public' => $request->string('visibility')->toString() === 'public',
         ]);
+
+        $organizationService->sync(
+            $repository,
+            $request->input('company'),
+            $request->input('business_advisor'),
+            $request->user(),
+        );
 
         return redirect()
             ->route('repositories.account.show', $repository)
@@ -340,7 +364,10 @@ class RepositoryController extends Controller implements HasMiddleware
      */
     private function lookups(): array
     {
-        $projectTypes = ProjectType::query()->active()->ordered()->get(['id', 'code', 'name', 'requires_academic_advisor']);
+        $projectTypes = ProjectType::query()
+            ->active()
+            ->ordered()
+            ->get(['id', 'code', 'name', 'requires_academic_advisor', 'requires_business_advisor']);
 
         $openPeriods = ProjectPeriod::query()
             ->where('status', ProjectPeriodStatus::Open->value)
@@ -363,6 +390,7 @@ class RepositoryController extends Controller implements HasMiddleware
                 ->map(fn (ProjectType $type): array => [
                     'code' => $type->code,
                     'requires_academic_advisor' => $type->requires_academic_advisor,
+                    'requires_business_advisor' => $type->requires_business_advisor,
                 ])
                 ->values()
                 ->all(),
@@ -392,14 +420,18 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         $repository->loadMissing([
             'career:id,code',
-            'projectType:id,code,requires_academic_advisor',
+            'projectType:id,code,requires_academic_advisor,requires_business_advisor',
             'educationLevel:id,code',
             'period:id,name,status',
+            'company.address',
+            'activeBusinessAdvisor',
             'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
             'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
         ]);
 
         $imagePaths = json_decode($repository->images ?? '[]', true) ?: [];
+        $businessAdvisor = $repository->activeBusinessAdvisor;
+        $companyAddress = $repository->company?->address;
 
         return [
             'id' => $repository->id,
@@ -408,6 +440,7 @@ class RepositoryController extends Controller implements HasMiddleware
             'description' => $repository->description,
             'project_type' => $repository->projectType?->code ?? '—',
             'requires_academic_advisor' => (bool) $repository->projectType?->requires_academic_advisor,
+            'requires_business_advisor' => (bool) $repository->projectType?->requires_business_advisor,
             'academic_degree' => $repository->educationLevel?->code ?? '—',
             'keywords' => $repository->keywords,
             'is_public' => $repository->is_public,
@@ -434,8 +467,40 @@ class RepositoryController extends Controller implements HasMiddleware
                     'override_reason' => $assignment->override_reason,
                 ])->values()->all()
                 : [],
-            'external_advisor' => $repository->external_advisor,
-            'company' => $repository->company,
+            'company' => $repository->company ? [
+                'id' => $repository->company->id,
+                'name' => $repository->company->name,
+                'rfc' => $repository->company->rfc,
+                'sector' => $repository->company->sector,
+                'phone' => $repository->company->phone,
+                'email' => $repository->company->email,
+                'address' => $companyAddress ? [
+                    'id' => $companyAddress->id,
+                    'street_line' => $companyAddress->street_line,
+                    'street_line_2' => $companyAddress->street_line_2,
+                    'neighborhood' => $companyAddress->neighborhood,
+                    'city' => $companyAddress->city,
+                    'state' => $companyAddress->state,
+                    'postal_code' => $companyAddress->postal_code,
+                    'country' => $companyAddress->country,
+                    'references' => $companyAddress->references,
+                    'formatted' => $companyAddress->format(),
+                ] : null,
+                'notes' => $repository->company->notes,
+            ] : null,
+            'business_advisor' => $businessAdvisor ? [
+                'id' => $businessAdvisor->id,
+                'first_name' => $businessAdvisor->first_name,
+                'last_name' => $businessAdvisor->last_name,
+                'second_last_name' => $businessAdvisor->second_last_name,
+                'email' => $businessAdvisor->email,
+                'phone' => $businessAdvisor->phone,
+                'job_title' => $businessAdvisor->job_title,
+                'department' => $businessAdvisor->department,
+                'notes' => $businessAdvisor->notes,
+                'acceptance_status' => $businessAdvisor->acceptance_status->value,
+                'full_name' => $businessAdvisor->fullName(),
+            ] : null,
             'generation' => $repository->generation,
             'created_by' => $repository->created_by,
             'images' => $imagePaths,

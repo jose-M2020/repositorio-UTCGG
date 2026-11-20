@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ProjectPeriodStatus;
+use App\Http\Requests\Concerns\ValidatesRepositoryOrganization;
 use App\Models\ProjectPeriod;
 use App\Models\ProjectType;
 use App\Support\Permissions;
@@ -12,6 +13,8 @@ use Illuminate\Validation\Validator;
 
 class StoreRepositoryRequest extends FormRequest
 {
+    use ValidatesRepositoryOrganization;
+
     public function authorize(): bool
     {
         return $this->user()?->can(Permissions::REPOSITORIES_CREATE) ?? false;
@@ -48,14 +51,15 @@ class StoreRepositoryRequest extends FormRequest
                 Rule::exists('careers', 'code')->where(fn ($query) => $query->where('is_active', true)),
             ],
             'project_period_id' => ['nullable', 'integer', 'exists:project_periods,id'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'external_advisor' => ['nullable', 'string', 'max:255'],
             'generation' => ['required', 'string', 'max:255'],
+            ...$this->organizationRules($this->projectTypeRequiresBusinessAdvisor()),
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
+        $this->afterOrganizationValidation($validator);
+
         $validator->after(function (Validator $validator): void {
             $projectType = ProjectType::query()
                 ->where('code', $this->string('project_type')->toString())
@@ -87,15 +91,5 @@ class StoreRepositoryRequest extends FormRequest
                 );
             }
         });
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'company' => $this->filled('company') ? $this->string('company')->toString() : null,
-            'external_advisor' => $this->filled('external_advisor')
-                ? $this->string('external_advisor')->toString()
-                : null,
-        ]);
     }
 }

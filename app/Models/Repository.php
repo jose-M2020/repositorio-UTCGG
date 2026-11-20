@@ -23,8 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $project_type_id
  * @property int|null $education_level_id
  * @property int|null $project_period_id
- * @property string|null $external_advisor
- * @property string|null $company
+ * @property int|null $company_id
  * @property string $generation
  * @property string|null $images
  * @property string $created_by
@@ -39,8 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'project_type_id',
     'education_level_id',
     'project_period_id',
-    'external_advisor',
-    'company',
+    'company_id',
     'generation',
     'images',
     'created_by',
@@ -103,6 +101,24 @@ class Repository extends Model
     {
         return $this->hasOne(RepositoryAdvisor::class)
             ->where('role', AdvisorRole::Primary->value)
+            ->whereNull('released_at')
+            ->latestOfMany('assigned_at');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function businessAdvisors(): HasMany
+    {
+        return $this->hasMany(RepositoryBusinessAdvisor::class);
+    }
+
+    public function activeBusinessAdvisor(): HasOne
+    {
+        return $this->hasOne(RepositoryBusinessAdvisor::class)
+            ->where('is_primary', true)
             ->whereNull('released_at')
             ->latestOfMany('assigned_at');
     }

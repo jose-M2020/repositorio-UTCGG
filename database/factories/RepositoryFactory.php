@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Career;
+use App\Models\Company;
 use App\Models\EducationLevel;
 use App\Models\ProjectType;
 use App\Models\Repository;
@@ -39,11 +40,17 @@ class RepositoryFactory extends Factory
             'career_id' => $careerId,
             'project_type_id' => $projectTypeId,
             'education_level_id' => $educationLevelId,
-            'external_advisor' => fake()->optional()->name(),
-            'company' => fake()->company(),
+            'company_id' => null,
             'generation' => (string) fake()->numberBetween(2020, 2026),
             'created_by' => fake()->firstName(),
         ];
+    }
+
+    public function withCompany(): static
+    {
+        return $this->state(fn (): array => [
+            'company_id' => Company::factory(),
+        ]);
     }
 
     public function private(): static
