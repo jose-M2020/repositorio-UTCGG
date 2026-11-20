@@ -30,7 +30,17 @@ export const RepositoryPublicDetails = ({
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Empresa</dt>
-                    <dd className="font-medium">{repository.company}</dd>
+                    <dd className="font-medium">
+                        {repository.company?.name ?? '—'}
+                    </dd>
+                </div>
+                <div>
+                    <dt className="text-sm text-muted-foreground">
+                        Asesor empresarial
+                    </dt>
+                    <dd className="font-medium">
+                        {repository.business_advisor?.full_name ?? '—'}
+                    </dd>
                 </div>
                 <div>
                     <dt className="text-sm text-muted-foreground">Generación</dt>

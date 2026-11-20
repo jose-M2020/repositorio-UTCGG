@@ -1,15 +1,27 @@
-import { InputField } from "@/shared/components/form";
-import type { RepositoryFormErrors } from "../../../shared/types";
+import { RepositoryOrganizationFields } from "../../../shared/components/RepositoryOrganizationFields";
+import type {
+    RepositoryFormErrors,
+    RepositoryLookups,
+} from "../../../shared/types";
 
 type RepositoryCreateStepOrganizationProps = {
     errors: RepositoryFormErrors;
     isActive: boolean;
+    lookups: RepositoryLookups;
+    projectTypeCode?: string;
 };
 
 export const RepositoryCreateStepOrganization = ({
     errors,
     isActive,
+    lookups,
+    projectTypeCode = "",
 }: RepositoryCreateStepOrganizationProps) => {
+    const requiredAdvisor = Boolean(
+        lookups.project_types_meta?.find((meta) => meta.code === projectTypeCode)
+            ?.requires_business_advisor,
+    );
+
     return (
         <section
             className="animate-in fade-in slide-in-from-right-2 space-y-6 duration-300"
@@ -21,26 +33,18 @@ export const RepositoryCreateStepOrganization = ({
                     Organización
                 </h2>
                 <p className="text-[0.8rem] text-muted-foreground">
-                    Opcional — datos de la empresa o asesor externo. Puedes
-                    completarlos después si aún no los tienes.
+                    Datos de la empresa y del asesor empresarial. Puedes
+                    completarlos después si aún no los tienes
+                    {requiredAdvisor
+                        ? ", excepto el asesor (obligatorio para este tipo)."
+                        : "."}
                 </p>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
-                <InputField
-                    id="company"
-                    name="company"
-                    label="Nombre de la Empresa/Negocio/Establecimiento"
-                    error={errors.company}
-                />
-
-                <InputField
-                    id="external_advisor"
-                    name="external_advisor"
-                    label="Nombre del asesor empresarial/externo"
-                    error={errors.external_advisor}
-                />
-            </div>
+            <RepositoryOrganizationFields
+                errors={errors}
+                requiredAdvisor={requiredAdvisor && isActive}
+            />
         </section>
     );
 };

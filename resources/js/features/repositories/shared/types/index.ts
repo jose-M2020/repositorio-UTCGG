@@ -31,6 +31,49 @@ export type EligibleAdvisorOption = {
     label: string;
 };
 
+export type RepositoryAddress = {
+    id?: number;
+    street_line: string;
+    street_line_2?: string | null;
+    neighborhood?: string | null;
+    city?: string | null;
+    state?: string | null;
+    postal_code?: string | null;
+    country?: string | null;
+    references?: string | null;
+    formatted?: string;
+};
+
+export type RepositoryCompany = {
+    id?: number;
+    name: string;
+    rfc?: string | null;
+    sector?: string | null;
+    phone?: string | null;
+    email?: string | null;
+    address?: RepositoryAddress | null;
+    notes?: string | null;
+};
+
+export type RepositoryBusinessAdvisor = {
+    id?: number;
+    first_name: string;
+    last_name: string;
+    second_last_name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    job_title?: string | null;
+    department?: string | null;
+    notes?: string | null;
+    acceptance_status?: string;
+    full_name?: string;
+};
+
+export type RepositoryOrganizationDefaults = {
+    company?: RepositoryCompany | null;
+    business_advisor?: RepositoryBusinessAdvisor | null;
+};
+
 export type Repository = {
     id: number;
     title: string;
@@ -38,6 +81,7 @@ export type Repository = {
     description: string;
     project_type: string;
     requires_academic_advisor?: boolean;
+    requires_business_advisor?: boolean;
     academic_degree: string;
     keywords: string;
     is_public: boolean;
@@ -50,8 +94,8 @@ export type Repository = {
     } | null;
     active_advisor?: RepositoryAdvisorSummary | null;
     advisor_history?: RepositoryAdvisorSummary[];
-    external_advisor: string | null;
-    company: string | null;
+    company: RepositoryCompany | null;
+    business_advisor?: RepositoryBusinessAdvisor | null;
     generation: string;
     created_by: string;
     users: RepositoryMember[];
@@ -107,6 +151,7 @@ export type RepositoryLookups = {
     project_types_meta?: Array<{
         code: string;
         requires_academic_advisor: boolean;
+        requires_business_advisor?: boolean;
     }>;
     open_periods?: Array<{
         id: number;

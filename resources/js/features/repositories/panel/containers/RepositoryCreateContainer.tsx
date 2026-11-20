@@ -33,6 +33,7 @@ export const RepositoryCreateContainer = ({
     const stepIndex = getStepIndex(step);
     const isFirstStep = stepIndex === 0;
     const isLastStep = stepIndex === REPOSITORY_CREATE_STEPS.length - 1;
+    const [projectTypeCode, setProjectTypeCode] = useState("");
     const [collaborators, setCollaborators] = useState<SearchableUser[]>(
         currentUser
             ? [
@@ -98,10 +99,13 @@ export const RepositoryCreateContainer = ({
                                     defaultCareer={
                                         currentUser?.career ?? undefined
                                     }
+                                    onProjectTypeChange={setProjectTypeCode}
                                 />
                                 <RepositoryCreateStepOrganization
                                     errors={errors}
                                     isActive={step === 'organization'}
+                                    lookups={lookups}
+                                    projectTypeCode={projectTypeCode}
                                 />
                                 <RepositoryCreateStepMembers
                                     errors={errors}

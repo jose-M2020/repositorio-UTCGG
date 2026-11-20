@@ -11,6 +11,7 @@ type RepositoryCreateStepProjectProps = {
     isActive: boolean;
     lookups: RepositoryLookups;
     defaultCareer?: string;
+    onProjectTypeChange?: (code: string) => void;
 };
 
 const mapOptions = (options: Record<string, string>) =>
@@ -24,12 +25,19 @@ export const RepositoryCreateStepProject = ({
     isActive,
     lookups,
     defaultCareer,
+    onProjectTypeChange,
 }: RepositoryCreateStepProjectProps) => {
     const [projectType, setProjectType] = useState("");
     const resolvedDefaultCareer =
         defaultCareer && defaultCareer in lookups.careers
             ? defaultCareer
             : null;
+
+    const handleProjectTypeChange = (value: string | null) => {
+        const next = value ?? "";
+        setProjectType(next);
+        onProjectTypeChange?.(next);
+    };
 
     return (
         <section
@@ -54,7 +62,7 @@ export const RepositoryCreateStepProject = ({
                     required={isActive}
                     error={errors.project_type}
                     options={mapOptions(lookups.project_types)}
-                    onValueChange={(value) => setProjectType(value ?? "")}
+                    onValueChange={handleProjectTypeChange}
                 />
 
                 <SelectField

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { InputField, SelectField, TextareaField } from "@/shared/components/form";
 import { ProjectPeriodField } from "./ProjectPeriodField";
+import { RepositoryOrganizationFields } from "./RepositoryOrganizationFields";
 import type {
     Repository,
     RepositoryFormErrors,
@@ -101,23 +102,6 @@ export const RepositoryFormFields = ({
                 />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-                <InputField
-                    id="company"
-                    name="company"
-                    label="Empresa"
-                    defaultValue={defaults?.company ?? ""}
-                    error={errors.company}
-                />
-                <InputField
-                    id="external_advisor"
-                    name="external_advisor"
-                    label="Asesor externo"
-                    defaultValue={defaults?.external_advisor ?? ""}
-                    error={errors.external_advisor}
-                />
-            </div>
-
             <InputField
                 id="keywords"
                 name="keywords"
@@ -125,6 +109,19 @@ export const RepositoryFormFields = ({
                 required
                 defaultValue={defaults?.keywords}
                 error={errors.keywords}
+            />
+
+            <RepositoryOrganizationFields
+                errors={errors}
+                defaults={{
+                    company: defaults?.company ?? null,
+                    business_advisor: defaults?.business_advisor ?? null,
+                }}
+                requiredAdvisor={Boolean(
+                    lookups.project_types_meta?.find(
+                        (meta) => meta.code === projectType,
+                    )?.requires_business_advisor,
+                )}
             />
 
             <SelectField
