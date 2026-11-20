@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
+    CalendarRange,
     Compass,
     FolderKanban,
     FolderPlus,
@@ -21,6 +22,7 @@ import {
 } from '@/actions/App/Http/Controllers/RepositoryController';
 import { index as careers } from '@/actions/App/Http/Controllers/CareerController';
 import { index as educationLevels } from '@/actions/App/Http/Controllers/EducationLevelController';
+import { index as projectPeriods } from '@/actions/App/Http/Controllers/ProjectPeriodController';
 import { index as projectTypes } from '@/actions/App/Http/Controllers/ProjectTypeController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';
@@ -100,6 +102,15 @@ const useNavGroups = (): NavMainGroup[] => {
                       title: 'Roles y permisos',
                       url: roles.url(),
                       icon: ShieldCheck,
+                  },
+              ]
+            : []),
+        ...(auth.abilities[AUTH_ABILITIES.PROJECT_PERIODS_VIEW]
+            ? [
+                  {
+                      title: 'Periodos',
+                      url: projectPeriods.url(),
+                      icon: CalendarRange,
                   },
               ]
             : []),

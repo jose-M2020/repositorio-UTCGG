@@ -1,13 +1,19 @@
 import { usePage } from '@inertiajs/react';
-import type { Repository } from '../../shared/types';
+import type {
+    EligibleAdvisorOption,
+    Repository,
+} from '../../shared/types';
+import { RepositoryAdvisorSection } from '../components/detail/RepositoryAdvisorSection';
 import { RepositoryDetails } from '../components/detail/RepositoryDetails';
 
 type RepositoryManageContainerProps = {
     repository: Repository;
+    eligibleAdvisors?: EligibleAdvisorOption[];
 };
 
 export const RepositoryManageContainer = ({
     repository,
+    eligibleAdvisors = [],
 }: RepositoryManageContainerProps) => {
     const { flash } = usePage().props;
 
@@ -27,6 +33,11 @@ export const RepositoryManageContainer = ({
                     {flash.status}
                 </p>
             ) : null}
+
+            <RepositoryAdvisorSection
+                repository={repository}
+                eligibleAdvisors={eligibleAdvisors}
+            />
 
             <RepositoryDetails repository={repository} />
         </main>

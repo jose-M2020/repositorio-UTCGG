@@ -4,6 +4,10 @@ import RoleController from './RoleController'
 import CareerController from './CareerController'
 import ProjectTypeController from './ProjectTypeController'
 import EducationLevelController from './EducationLevelController'
+import ProjectPeriodController from './ProjectPeriodController'
+import ProjectPeriodParticipantController from './ProjectPeriodParticipantController'
+import AdvisorCapacityController from './AdvisorCapacityController'
+import RepositoryAdvisorController from './RepositoryAdvisorController'
 import RepositoryController from './RepositoryController'
 import FileController from './FileController'
 import AccountSettingsController from './AccountSettingsController'
@@ -16,6 +20,10 @@ RoleController: Object.assign(RoleController, RoleController),
 CareerController: Object.assign(CareerController, CareerController),
 ProjectTypeController: Object.assign(ProjectTypeController, ProjectTypeController),
 EducationLevelController: Object.assign(EducationLevelController, EducationLevelController),
+ProjectPeriodController: Object.assign(ProjectPeriodController, ProjectPeriodController),
+ProjectPeriodParticipantController: Object.assign(ProjectPeriodParticipantController, ProjectPeriodParticipantController),
+AdvisorCapacityController: Object.assign(AdvisorCapacityController, AdvisorCapacityController),
+RepositoryAdvisorController: Object.assign(RepositoryAdvisorController, RepositoryAdvisorController),
 RepositoryController: Object.assign(RepositoryController, RepositoryController),
 FileController: Object.assign(FileController, FileController),
 AccountSettingsController: Object.assign(AccountSettingsController, AccountSettingsController),

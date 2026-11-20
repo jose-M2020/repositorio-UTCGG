@@ -11,6 +11,7 @@ export {
     RepositoryManageContainer,
 } from './panel';
 export type {
+    EligibleAdvisorOption,
     PaginatedRepositories,
     Repository,
     RepositoryFilters,

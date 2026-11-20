@@ -48,6 +48,14 @@ export const AUTH_ABILITIES = {
     EDUCATION_LEVELS_TOGGLE_ACTIVE: 'education_levels.toggle-active',
     EDUCATION_LEVELS_DESTROY: 'education_levels.destroy',
     REPOSITORIES_CREATE: 'repositories.create',
+    PROJECT_PERIODS_VIEW: 'project_periods.view',
+    PROJECT_PERIODS_CREATE: 'project_periods.create',
+    PROJECT_PERIODS_EDIT: 'project_periods.edit',
+    PROJECT_PERIODS_DESTROY: 'project_periods.destroy',
+    ADVISORS_CAPACITY_MANAGE: 'advisors.capacity.manage',
+    ADVISORS_ASSIGN: 'advisors.assign',
+    ADVISORS_OVERRIDE_CAPACITY: 'advisors.override_capacity',
+    ADVISORS_DISTRIBUTE: 'advisors.distribute',
 } as const;
 
 export type AuthAbilityKey = (typeof AUTH_ABILITIES)[keyof typeof AUTH_ABILITIES];

@@ -14,16 +14,42 @@ export type RepositoryFileItem = {
     url?: string;
 };
 
+export type RepositoryAdvisorSummary = {
+    id: number;
+    user_id?: number;
+    name: string | null;
+    assigned_at: string | null;
+    released_at?: string | null;
+    override_reason?: string | null;
+};
+
+export type EligibleAdvisorOption = {
+    id: number;
+    name: string;
+    load: number;
+    capacity: number;
+    label: string;
+};
+
 export type Repository = {
     id: number;
     title: string;
     slug: string;
     description: string;
     project_type: string;
+    requires_academic_advisor?: boolean;
     academic_degree: string;
     keywords: string;
     is_public: boolean;
     career: string;
+    project_period_id?: number | null;
+    project_period?: {
+        id: number;
+        name: string;
+        status: string;
+    } | null;
+    active_advisor?: RepositoryAdvisorSummary | null;
+    advisor_history?: RepositoryAdvisorSummary[];
     external_advisor: string | null;
     company: string | null;
     generation: string;
@@ -78,4 +104,13 @@ export type RepositoryLookups = {
     careers: Record<string, string>;
     project_types: Record<string, string>;
     education_levels: Record<string, string>;
+    project_types_meta?: Array<{
+        code: string;
+        requires_academic_advisor: boolean;
+    }>;
+    open_periods?: Array<{
+        id: number;
+        name: string;
+        project_type_code: string;
+    }>;
 };

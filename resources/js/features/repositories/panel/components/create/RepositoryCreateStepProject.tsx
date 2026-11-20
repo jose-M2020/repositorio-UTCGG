@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { InputField, SelectField } from "@/shared/components/form";
+import { ProjectPeriodField } from "../../../shared/components/ProjectPeriodField";
 import type {
     RepositoryFormErrors,
     RepositoryLookups,
@@ -23,6 +25,7 @@ export const RepositoryCreateStepProject = ({
     lookups,
     defaultCareer,
 }: RepositoryCreateStepProjectProps) => {
+    const [projectType, setProjectType] = useState("");
     const resolvedDefaultCareer =
         defaultCareer && defaultCareer in lookups.careers
             ? defaultCareer
@@ -51,6 +54,7 @@ export const RepositoryCreateStepProject = ({
                     required={isActive}
                     error={errors.project_type}
                     options={mapOptions(lookups.project_types)}
+                    onValueChange={(value) => setProjectType(value ?? "")}
                 />
 
                 <SelectField
@@ -62,6 +66,13 @@ export const RepositoryCreateStepProject = ({
                     options={mapOptions(lookups.education_levels)}
                 />
             </div>
+
+            <ProjectPeriodField
+                lookups={lookups}
+                projectTypeCode={projectType}
+                error={errors.project_period_id}
+                required={isActive}
+            />
 
             <div className="grid gap-6 sm:grid-cols-2">
                 <SelectField

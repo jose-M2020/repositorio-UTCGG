@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
 export const show = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
 show.url = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ show.url = (args: { repository: string | { slug: string } } | [repository: strin
 
 /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
 show.get = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +58,7 @@ show.get = (args: { repository: string | { slug: string } } | [repository: strin
 })
 /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
 show.head = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +68,7 @@ show.head = (args: { repository: string | { slug: string } } | [repository: stri
 
     /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
     const showForm = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -78,7 +78,7 @@ show.head = (args: { repository: string | { slug: string } } | [repository: stri
 
             /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
         showForm.get = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -87,7 +87,7 @@ show.head = (args: { repository: string | { slug: string } } | [repository: stri
         })
             /**
 * @see \App\Http\Controllers\RepositoryController::show
- * @see app/Http/Controllers/RepositoryController.php:223
+ * @see app/Http/Controllers/RepositoryController.php:234
  * @route '/account/repositories/{repository}'
  */
         showForm.head = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

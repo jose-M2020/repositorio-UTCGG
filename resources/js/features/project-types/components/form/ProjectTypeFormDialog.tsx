@@ -79,6 +79,8 @@ export const ProjectTypeFormDialog = (props: ProjectTypeFormDialogProps) => {
                                                   projectType.requires_internship_flow,
                                               requires_business_advisor:
                                                   projectType.requires_business_advisor,
+                                              requires_academic_advisor:
+                                                  projectType.requires_academic_advisor,
                                               sort_order: projectType.sort_order,
                                           }
                                         : undefined

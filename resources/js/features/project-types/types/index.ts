@@ -7,6 +7,7 @@ export type ProjectTypeItem = {
     requires_term: boolean;
     requires_internship_flow: boolean;
     requires_business_advisor: boolean;
+    requires_academic_advisor: boolean;
     sort_order: number;
     is_active: boolean;
 };
@@ -20,6 +21,7 @@ export type ProjectTypeFormValues = {
     requires_term: boolean;
     requires_internship_flow: boolean;
     requires_business_advisor: boolean;
+    requires_academic_advisor: boolean;
     sort_order: number;
 };
 

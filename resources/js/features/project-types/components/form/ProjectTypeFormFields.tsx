@@ -121,6 +121,14 @@ export const ProjectTypeFormFields = ({
                     defaultChecked={defaults?.requires_business_advisor}
                     error={errors.requires_business_advisor}
                 />
+                <CheckboxField
+                    id="requires_academic_advisor"
+                    name="requires_academic_advisor"
+                    label="Asesor academico"
+                    description="El tipo se rige por periodos y exige un asesor academico."
+                    defaultChecked={defaults?.requires_academic_advisor}
+                    error={errors.requires_academic_advisor}
+                />
             </div>
         </div>
     );

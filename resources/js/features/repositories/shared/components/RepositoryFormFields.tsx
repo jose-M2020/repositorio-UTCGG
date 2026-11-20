@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { InputField, SelectField, TextareaField } from "@/shared/components/form";
+import { ProjectPeriodField } from "./ProjectPeriodField";
 import type {
     Repository,
     RepositoryFormErrors,
@@ -22,6 +24,8 @@ export const RepositoryFormFields = ({
     defaults,
     lookups,
 }: RepositoryFormFieldsProps) => {
+    const [projectType, setProjectType] = useState(defaults?.project_type ?? "");
+
     return (
         <div className="space-y-4">
             <InputField
@@ -53,6 +57,7 @@ export const RepositoryFormFields = ({
                     error={errors.project_type}
                     placeholder="Selecciona"
                     options={mapOptions(lookups.project_types)}
+                    onValueChange={(value) => setProjectType(value ?? "")}
                 />
 
                 <SelectField
@@ -66,6 +71,13 @@ export const RepositoryFormFields = ({
                     options={mapOptions(lookups.education_levels)}
                 />
             </div>
+
+            <ProjectPeriodField
+                lookups={lookups}
+                projectTypeCode={projectType}
+                defaultPeriodId={defaults?.project_period_id}
+                error={errors.project_period_id}
+            />
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <SelectField
