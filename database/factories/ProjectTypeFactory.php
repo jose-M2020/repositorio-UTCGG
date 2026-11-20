@@ -25,6 +25,7 @@ class ProjectTypeFactory extends Factory
             'requires_term' => false,
             'requires_internship_flow' => false,
             'requires_business_advisor' => false,
+            'requires_academic_advisor' => false,
             'sort_order' => fake()->numberBetween(1, 100),
             'is_active' => true,
         ];

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Repositories;
 
+use App\Enums\ProjectPeriodStatus;
+use App\Models\ProjectPeriod;
+use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
 use Database\Seeders\PermissionsSeeder;
@@ -18,6 +21,17 @@ class RepositoryManagementTest extends TestCase
 
         $this->seedDomainLookups();
         $this->seed(PermissionsSeeder::class);
+    }
+
+    private function openPeriodFor(string $projectTypeCode): ProjectPeriod
+    {
+        $projectType = ProjectType::query()->where('code', $projectTypeCode)->firstOrFail();
+
+        return ProjectPeriod::factory()->open()->create([
+            'project_type_id' => $projectType->id,
+            'status' => ProjectPeriodStatus::Open->value,
+            'name' => "Periodo {$projectTypeCode}",
+        ]);
     }
 
     public function test_public_index_lists_only_public_repositories(): void
@@ -46,6 +60,7 @@ class RepositoryManagementTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole('teacher');
+        $period = $this->openPeriodFor('integrative');
 
         $response = $this->actingAs($user)->post(route('repositories.store'), [
             'title' => 'Repo Test',
@@ -56,6 +71,7 @@ class RepositoryManagementTest extends TestCase
             'visibility' => 'private',
             'member_emails' => [$user->email],
             'career' => 'TIC',
+            'project_period_id' => $period->id,
             'company' => 'UTCGG',
             'generation' => '2026',
         ]);
@@ -64,12 +80,14 @@ class RepositoryManagementTest extends TestCase
         $this->assertNotNull($repo);
         $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
+        $this->assertSame($period->id, $repo->project_period_id);
     }
 
     public function test_member_can_create_repository_without_extra_members(): void
     {
         $user = User::factory()->create();
         $user->assignRole('teacher');
+        $period = $this->openPeriodFor('integrative');
 
         $response = $this->actingAs($user)->post(route('repositories.store'), [
             'title' => 'Repo Solo',
@@ -79,6 +97,7 @@ class RepositoryManagementTest extends TestCase
             'keywords' => 'laravel, inertia',
             'visibility' => 'private',
             'career' => 'TIC',
+            'project_period_id' => $period->id,
             'generation' => '2026',
         ]);
 

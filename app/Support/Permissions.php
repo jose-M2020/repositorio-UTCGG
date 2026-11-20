@@ -57,6 +57,15 @@ final class Permissions
     public const FILES_EDIT = 'files.edit';
     public const FILES_DESTROY = 'files.destroy';
 
+    public const PROJECT_PERIODS_INDEX = 'project_periods.index';
+    public const PROJECT_PERIODS_CREATE = 'project_periods.create';
+    public const PROJECT_PERIODS_EDIT = 'project_periods.edit';
+    public const PROJECT_PERIODS_DESTROY = 'project_periods.destroy';
+    public const ADVISORS_CAPACITY_MANAGE = 'advisors.capacity.manage';
+    public const ADVISORS_ASSIGN = 'advisors.assign';
+    public const ADVISORS_OVERRIDE_CAPACITY = 'advisors.override_capacity';
+    public const ADVISORS_DISTRIBUTE = 'advisors.distribute';
+
     public static function ability(string $permission): string
     {
         return 'can:'.$permission;
@@ -110,6 +119,15 @@ final class Permissions
             ['name' => self::FILES_CREATE, 'description' => 'Subir archivo', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => null],
             ['name' => self::FILES_EDIT, 'description' => 'Editar archivo', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => null],
             ['name' => self::FILES_DESTROY, 'description' => 'Borrar archivo', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => null],
+
+            ['name' => self::PROJECT_PERIODS_INDEX, 'description' => 'Ver periodos', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'project_periods.view'],
+            ['name' => self::PROJECT_PERIODS_CREATE, 'description' => 'Crear periodo', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'project_periods.create'],
+            ['name' => self::PROJECT_PERIODS_EDIT, 'description' => 'Editar periodo, inscribir alumnos, abrir/cerrar', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'project_periods.edit'],
+            ['name' => self::PROJECT_PERIODS_DESTROY, 'description' => 'Eliminar periodo', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'project_periods.destroy'],
+            ['name' => self::ADVISORS_CAPACITY_MANAGE, 'description' => 'Configurar capacidad y disponibilidad de asesores', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.capacity.manage'],
+            ['name' => self::ADVISORS_ASSIGN, 'description' => 'Asignar, reasignar y liberar asesores', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.assign'],
+            ['name' => self::ADVISORS_OVERRIDE_CAPACITY, 'description' => 'Asignar excediendo tope o elegibilidad (exige motivo)', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.override_capacity'],
+            ['name' => self::ADVISORS_DISTRIBUTE, 'description' => 'Generar y aplicar propuestas de reparto automatico', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.distribute'],
         ];
     }
 
@@ -187,6 +205,14 @@ final class Permissions
                 self::FILES_CREATE,
                 self::FILES_EDIT,
                 self::FILES_DESTROY,
+                self::PROJECT_PERIODS_INDEX,
+                self::PROJECT_PERIODS_CREATE,
+                self::PROJECT_PERIODS_EDIT,
+                self::PROJECT_PERIODS_DESTROY,
+                self::ADVISORS_CAPACITY_MANAGE,
+                self::ADVISORS_ASSIGN,
+                self::ADVISORS_OVERRIDE_CAPACITY,
+                self::ADVISORS_DISTRIBUTE,
             ],
             UserRoles::CAREER_DIRECTOR => [
                 self::USERS_INDEX,
@@ -206,6 +232,9 @@ final class Permissions
                 self::FILES_CREATE,
                 self::FILES_EDIT,
                 self::FILES_DESTROY,
+                self::PROJECT_PERIODS_INDEX,
+                self::ADVISORS_ASSIGN,
+                self::ADVISORS_DISTRIBUTE,
             ],
             UserRoles::TEACHER => [
                 self::USERS_SEARCH,

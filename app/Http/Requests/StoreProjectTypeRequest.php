@@ -24,6 +24,7 @@ class StoreProjectTypeRequest extends FormRequest
             'requires_term' => ['nullable', 'boolean'],
             'requires_internship_flow' => ['nullable', 'boolean'],
             'requires_business_advisor' => ['nullable', 'boolean'],
+            'requires_academic_advisor' => ['nullable', 'boolean'],
             'sort_order' => ['required', 'integer', 'min:0'],
         ];
     }

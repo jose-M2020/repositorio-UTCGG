@@ -116,6 +116,21 @@ class User extends Authenticatable
         return $this->hasMany(CareerAssignment::class);
     }
 
+    public function advisorAssignments(): HasMany
+    {
+        return $this->hasMany(RepositoryAdvisor::class);
+    }
+
+    public function advisorCapacities(): HasMany
+    {
+        return $this->hasMany(AdvisorPeriodCapacity::class);
+    }
+
+    public function periodParticipations(): HasMany
+    {
+        return $this->hasMany(ProjectPeriodParticipant::class);
+    }
+
     public function activeCareerAssignments(): HasMany
     {
         return $this->careerAssignments()->active();

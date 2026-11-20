@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProjectPeriodStatus;
 use App\Http\Middleware\AuthorizeMember;
 use App\Http\Requests\StoreRepositoryRequest;
 use App\Http\Requests\UpdateRepositoryRequest;
 use App\Models\Career;
 use App\Models\EducationLevel;
 use App\Models\File;
+use App\Models\ProjectPeriod;
 use App\Models\ProjectType;
 use App\Models\Repository;
 use App\Models\User;
+use App\Services\Advisors\EligibleAdvisorsQuery;
 use App\Support\Media;
 use App\Support\Permissions;
 use Illuminate\Http\RedirectResponse;
@@ -137,7 +140,14 @@ class RepositoryController extends Controller implements HasMiddleware
     public function store(StoreRepositoryRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $validated = $request->safe()->except(['member_emails', 'visibility', 'career', 'project_type', 'academic_degree']);
+        $validated = $request->safe()->except([
+            'member_emails',
+            'visibility',
+            'career',
+            'project_type',
+            'academic_degree',
+            'project_period_id',
+        ]);
 
         $careerId = $this->careerIdByCode($request->string('career')->toString());
         $projectTypeId = $this->projectTypeIdByCode($request->string('project_type')->toString());
@@ -148,6 +158,7 @@ class RepositoryController extends Controller implements HasMiddleware
             'career_id' => $careerId,
             'project_type_id' => $projectTypeId,
             'education_level_id' => $educationLevelId,
+            'project_period_id' => $request->input('project_period_id'),
             'slug' => $this->uniqueSlug($request->string('title')->toString()),
             'is_public' => $request->string('visibility')->toString() === 'public',
             'created_by' => $user->fullName(),
@@ -220,12 +231,33 @@ class RepositoryController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function showByUser(Repository $repository): Response
+    public function showByUser(Repository $repository, EligibleAdvisorsQuery $eligibleAdvisorsQuery): Response
     {
-        $repository->load(['users:id,first_name,last_name,second_last_name,email', 'files']);
+        $repository->load([
+            'users:id,first_name,last_name,second_last_name,email',
+            'files',
+            'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
+            'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
+            'period:id,name,status',
+            'projectType:id,code,requires_academic_advisor',
+        ]);
+
+        $eligibleAdvisors = $repository->project_period_id
+            ? $eligibleAdvisorsQuery->forRepository($repository, requireCapacity: false)
+                ->map(fn (array $row): array => [
+                    'id' => (int) $row['user']->id,
+                    'name' => $row['user']->fullName(),
+                    'load' => $row['load'],
+                    'capacity' => $row['capacity'],
+                    'label' => sprintf('%s (%d/%d)', $row['user']->fullName(), $row['load'], $row['capacity']),
+                ])
+                ->values()
+                ->all()
+            : [];
 
         return Inertia::render('panel/repositories/manage', [
             'repository' => $this->serializeRepository($repository),
+            'eligibleAdvisors' => $eligibleAdvisors,
         ]);
     }
 
@@ -242,7 +274,13 @@ class RepositoryController extends Controller implements HasMiddleware
 
     public function update(UpdateRepositoryRequest $request, Repository $repository): RedirectResponse
     {
-        $validated = $request->safe()->except(['visibility', 'career', 'project_type', 'academic_degree']);
+        $validated = $request->safe()->except([
+            'visibility',
+            'career',
+            'project_type',
+            'academic_degree',
+            'project_period_id',
+        ]);
 
         $careerId = $this->careerIdByCode($request->string('career')->toString());
         $projectTypeId = $this->projectTypeIdByCode($request->string('project_type')->toString());
@@ -253,6 +291,7 @@ class RepositoryController extends Controller implements HasMiddleware
             'career_id' => $careerId,
             'project_type_id' => $projectTypeId,
             'education_level_id' => $educationLevelId,
+            'project_period_id' => $request->input('project_period_id'),
             'slug' => $this->uniqueSlug($request->string('title')->toString(), $repository->id),
             'is_public' => $request->string('visibility')->toString() === 'public',
         ]);
@@ -293,16 +332,41 @@ class RepositoryController extends Controller implements HasMiddleware
     /**
      * @return array{
      *     careers: array<string, string>,
-     *     project_types: list<string>,
-     *     education_levels: array<string, string>
+     *     project_types: array<string, string>,
+     *     education_levels: array<string, string>,
+     *     project_types_meta: list<array{code: string, requires_academic_advisor: bool}>,
+     *     open_periods: list<array{id: int, name: string, project_type_code: string}>
      * }
      */
     private function lookups(): array
     {
+        $projectTypes = ProjectType::query()->active()->ordered()->get(['id', 'code', 'name', 'requires_academic_advisor']);
+
+        $openPeriods = ProjectPeriod::query()
+            ->where('status', ProjectPeriodStatus::Open->value)
+            ->with('projectType:id,code')
+            ->orderBy('starts_at')
+            ->get(['id', 'name', 'project_type_id'])
+            ->map(fn (ProjectPeriod $period): array => [
+                'id' => $period->id,
+                'name' => $period->name,
+                'project_type_code' => $period->projectType?->code ?? '',
+            ])
+            ->values()
+            ->all();
+
         return [
             'careers' => Career::optionsByCode(),
-            'project_types' => ProjectType::optionsByCode(),
+            'project_types' => $projectTypes->pluck('name', 'code')->all(),
             'education_levels' => EducationLevel::optionsByCode(),
+            'project_types_meta' => $projectTypes
+                ->map(fn (ProjectType $type): array => [
+                    'code' => $type->code,
+                    'requires_academic_advisor' => $type->requires_academic_advisor,
+                ])
+                ->values()
+                ->all(),
+            'open_periods' => $openPeriods,
         ];
     }
 
@@ -328,8 +392,11 @@ class RepositoryController extends Controller implements HasMiddleware
     {
         $repository->loadMissing([
             'career:id,code',
-            'projectType:id,code',
+            'projectType:id,code,requires_academic_advisor',
             'educationLevel:id,code',
+            'period:id,name,status',
+            'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
+            'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
         ]);
 
         $imagePaths = json_decode($repository->images ?? '[]', true) ?: [];
@@ -340,10 +407,33 @@ class RepositoryController extends Controller implements HasMiddleware
             'slug' => $repository->slug,
             'description' => $repository->description,
             'project_type' => $repository->projectType?->code ?? '—',
+            'requires_academic_advisor' => (bool) $repository->projectType?->requires_academic_advisor,
             'academic_degree' => $repository->educationLevel?->code ?? '—',
             'keywords' => $repository->keywords,
             'is_public' => $repository->is_public,
             'career' => $repository->career?->code ?? '—',
+            'project_period_id' => $repository->project_period_id,
+            'project_period' => $repository->period ? [
+                'id' => $repository->period->id,
+                'name' => $repository->period->name,
+                'status' => $repository->period->status->value,
+            ] : null,
+            'active_advisor' => $repository->activeAdvisor ? [
+                'id' => $repository->activeAdvisor->id,
+                'user_id' => $repository->activeAdvisor->user_id,
+                'name' => $repository->activeAdvisor->advisor?->fullName(),
+                'assigned_at' => $repository->activeAdvisor->assigned_at?->toIso8601String(),
+                'override_reason' => $repository->activeAdvisor->override_reason,
+            ] : null,
+            'advisor_history' => $repository->relationLoaded('advisors')
+                ? $repository->advisors->map(fn ($assignment): array => [
+                    'id' => $assignment->id,
+                    'name' => $assignment->advisor?->fullName(),
+                    'assigned_at' => $assignment->assigned_at?->toIso8601String(),
+                    'released_at' => $assignment->released_at?->toIso8601String(),
+                    'override_reason' => $assignment->override_reason,
+                ])->values()->all()
+                : [],
             'external_advisor' => $repository->external_advisor,
             'company' => $repository->company,
             'generation' => $repository->generation,

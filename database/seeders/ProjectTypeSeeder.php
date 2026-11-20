@@ -19,6 +19,7 @@ class ProjectTypeSeeder extends Seeder
                 'requires_term' => false,
                 'requires_internship_flow' => false,
                 'requires_business_advisor' => false,
+                'requires_academic_advisor' => true,
             ],
             [
                 'code' => 'internship',
@@ -29,6 +30,7 @@ class ProjectTypeSeeder extends Seeder
                 'requires_term' => false,
                 'requires_internship_flow' => true,
                 'requires_business_advisor' => true,
+                'requires_academic_advisor' => true,
             ],
             [
                 'code' => 'special_project',
@@ -39,6 +41,7 @@ class ProjectTypeSeeder extends Seeder
                 'requires_term' => false,
                 'requires_internship_flow' => false,
                 'requires_business_advisor' => false,
+                'requires_academic_advisor' => false,
             ],
         ];
 

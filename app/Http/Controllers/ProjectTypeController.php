@@ -98,6 +98,7 @@ class ProjectTypeController extends Controller implements HasMiddleware
             'requires_term' => (bool) ($validated['requires_term'] ?? false),
             'requires_internship_flow' => (bool) ($validated['requires_internship_flow'] ?? false),
             'requires_business_advisor' => (bool) ($validated['requires_business_advisor'] ?? false),
+            'requires_academic_advisor' => (bool) ($validated['requires_academic_advisor'] ?? false),
             'sort_order' => (int) $validated['sort_order'],
             'is_active' => true,
         ];
@@ -117,6 +118,7 @@ class ProjectTypeController extends Controller implements HasMiddleware
             'requires_term' => (bool) ($validated['requires_term'] ?? false),
             'requires_internship_flow' => (bool) ($validated['requires_internship_flow'] ?? false),
             'requires_business_advisor' => (bool) ($validated['requires_business_advisor'] ?? false),
+            'requires_academic_advisor' => (bool) ($validated['requires_academic_advisor'] ?? false),
             'sort_order' => (int) $validated['sort_order'],
         ];
     }
@@ -135,6 +137,7 @@ class ProjectTypeController extends Controller implements HasMiddleware
             'requires_term' => $projectType->requires_term,
             'requires_internship_flow' => $projectType->requires_internship_flow,
             'requires_business_advisor' => $projectType->requires_business_advisor,
+            'requires_academic_advisor' => $projectType->requires_academic_advisor,
             'sort_order' => $projectType->sort_order,
             'is_active' => $projectType->is_active,
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AdvisorRole;
 use Database\Factories\RepositoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -20,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $career_id
  * @property int|null $project_type_id
  * @property int|null $education_level_id
+ * @property int|null $project_period_id
  * @property string|null $external_advisor
  * @property string|null $company
  * @property string $generation
@@ -35,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'career_id',
     'project_type_id',
     'education_level_id',
+    'project_period_id',
     'external_advisor',
     'company',
     'generation',
@@ -83,5 +87,23 @@ class Repository extends Model
     public function educationLevel(): BelongsTo
     {
         return $this->belongsTo(EducationLevel::class);
+    }
+
+    public function period(): BelongsTo
+    {
+        return $this->belongsTo(ProjectPeriod::class, 'project_period_id');
+    }
+
+    public function advisors(): HasMany
+    {
+        return $this->hasMany(RepositoryAdvisor::class);
+    }
+
+    public function activeAdvisor(): HasOne
+    {
+        return $this->hasOne(RepositoryAdvisor::class)
+            ->where('role', AdvisorRole::Primary->value)
+            ->whereNull('released_at')
+            ->latestOfMany('assigned_at');
     }
 }
