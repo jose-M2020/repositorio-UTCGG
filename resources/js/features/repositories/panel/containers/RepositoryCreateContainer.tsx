@@ -9,7 +9,6 @@ import { Button } from '@/shared/components/ui';
 import type { RepositoryLookups } from '../../shared/types';
 import { RepositoryCreateStepMembers } from '../components/create/RepositoryCreateStepMembers';
 import { RepositoryCreateStepNav } from '../components/create/RepositoryCreateStepNav';
-import { RepositoryCreateStepOrganization } from '../components/create/RepositoryCreateStepOrganization';
 import { RepositoryCreateStepProject } from '../components/create/RepositoryCreateStepProject';
 import { RepositoryCreateStepRepository } from '../components/create/RepositoryCreateStepRepository';
 import { RepositoryCreateStepSettings } from '../components/create/RepositoryCreateStepSettings';
@@ -33,7 +32,6 @@ export const RepositoryCreateContainer = ({
     const stepIndex = getStepIndex(step);
     const isFirstStep = stepIndex === 0;
     const isLastStep = stepIndex === REPOSITORY_CREATE_STEPS.length - 1;
-    const [projectTypeCode, setProjectTypeCode] = useState("");
     const [collaborators, setCollaborators] = useState<SearchableUser[]>(
         currentUser
             ? [
@@ -71,7 +69,8 @@ export const RepositoryCreateContainer = ({
                     Crear nuevo repositorio
                 </h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Completa los pasos para registrar tu proyecto.
+                    Solo lo esencial para empezar. Los asesores se agregan
+                    despues desde la gestion del proyecto.
                 </p>
             </header>
 
@@ -99,17 +98,10 @@ export const RepositoryCreateContainer = ({
                                     defaultCareer={
                                         currentUser?.career ?? undefined
                                     }
-                                    onProjectTypeChange={setProjectTypeCode}
-                                />
-                                <RepositoryCreateStepOrganization
-                                    errors={errors}
-                                    isActive={step === 'organization'}
-                                    lookups={lookups}
-                                    projectTypeCode={projectTypeCode}
                                 />
                                 <RepositoryCreateStepMembers
                                     errors={errors}
-                                    isActive={step === 'members'}
+                                    isActive={step === 'collaborators'}
                                     collaborators={collaborators}
                                     onCollaboratorsChange={setCollaborators}
                                 />
@@ -144,7 +136,7 @@ export const RepositoryCreateContainer = ({
                                     <Button type="submit" disabled={processing}>
                                         {processing
                                             ? 'Guardando...'
-                                            : 'Crear'}
+                                            : 'Crear proyecto'}
                                     </Button>
                                 )}
                             </div>

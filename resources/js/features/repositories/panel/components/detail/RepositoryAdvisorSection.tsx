@@ -37,13 +37,14 @@ export const RepositoryAdvisorSection = ({
         : assign.form(repository.slug);
 
     return (
-        <section className="space-y-4 rounded-xl border p-4">
+        <section className="space-y-4 rounded-xl border border-border p-4">
             <div>
                 <h2 className="text-lg font-semibold">Asesor academico</h2>
                 <p className="text-sm text-muted-foreground">
+                    Docente elegible segun el periodo y la carga disponible.
                     {repository.project_period
-                        ? `Periodo: ${repository.project_period.name}`
-                        : "Repositorio sin periodo (legado)."}
+                        ? ` Periodo: ${repository.project_period.name}.`
+                        : " Repositorio sin periodo (legado)."}
                 </p>
             </div>
 

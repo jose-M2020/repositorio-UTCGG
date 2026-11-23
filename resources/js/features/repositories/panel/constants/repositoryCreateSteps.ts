@@ -1,8 +1,7 @@
 export const REPOSITORY_CREATE_STEPS = [
-    { id: 'repository', label: 'Información del repositorio' },
+    { id: 'repository', label: 'Informacion' },
     { id: 'project', label: 'Proyecto' },
-    { id: 'organization', label: 'Organización' },
-    { id: 'members', label: 'Miembros' },
+    { id: 'collaborators', label: 'Colaboradores' },
     { id: 'settings', label: 'Configuración' },
 ] as const;
 

@@ -60,6 +60,8 @@ class RepositoryManagementTest extends TestCase
     {
         $user = User::factory()->create();
         $user->assignRole('teacher');
+        $student = User::factory()->create();
+        $student->assignRole('student');
         $period = $this->openPeriodFor('integrative');
 
         $response = $this->actingAs($user)->post(route('repositories.store'), [
@@ -69,27 +71,9 @@ class RepositoryManagementTest extends TestCase
             'academic_degree' => 'TSU',
             'keywords' => 'laravel, inertia',
             'visibility' => 'private',
-            'member_emails' => [$user->email],
+            'member_emails' => [$student->email],
             'career' => 'TIC',
             'project_period_id' => $period->id,
-            'company' => [
-                'name' => 'UTCGG',
-                'address' => [
-                    'street_line' => 'Av. Universidad 100',
-                    'neighborhood' => 'Centro',
-                    'city' => 'Ciudad Guzman',
-                    'state' => 'Jalisco',
-                    'postal_code' => '49000',
-                    'country' => 'MX',
-                ],
-            ],
-            'business_advisor' => [
-                'first_name' => 'Ana',
-                'last_name' => 'Lopez',
-                'second_last_name' => 'Ruiz',
-                'email' => 'ana.lopez@example.com',
-                'phone' => '3312345678',
-            ],
             'generation' => '2026',
         ]);
 
@@ -97,32 +81,13 @@ class RepositoryManagementTest extends TestCase
         $this->assertNotNull($repo);
         $response->assertRedirect(route('repositories.account.show', $repo));
         $this->assertTrue($repo->users()->whereKey($user->id)->exists());
+        $this->assertTrue($repo->users()->whereKey($student->id)->exists());
         $this->assertSame($period->id, $repo->project_period_id);
-        $this->assertNotNull($repo->company_id);
-        $this->assertDatabaseHas('companies', ['name' => 'UTCGG']);
-        $this->assertDatabaseHas('addresses', [
-            'street_line' => 'Av. Universidad 100',
-            'city' => 'Ciudad Guzman',
-            'postal_code' => '49000',
-        ]);
-        $this->assertNotNull($repo->company?->address_id);
-        $this->assertDatabaseHas('business_advisors', [
-            'first_name' => 'Ana',
-            'last_name' => 'Lopez',
-            'second_last_name' => 'Ruiz',
-        ]);
-        $this->assertDatabaseHas('business_advisor_affiliations', [
-            'email' => 'ana.lopez@example.com',
-            'phone' => '3312345678',
-        ]);
-        $this->assertDatabaseHas('repository_business_advisors', [
+        $this->assertNull($repo->company_id);
+        $this->assertDatabaseMissing('repository_business_advisors', [
             'repository_id' => $repo->id,
-            'first_name' => 'Ana',
-            'last_name' => 'Lopez',
+            'released_at' => null,
         ]);
-        $assignment = $repo->activeBusinessAdvisor;
-        $this->assertNotNull($assignment?->business_advisor_id);
-        $this->assertNotNull($assignment?->snapshot);
     }
 
     public function test_member_can_create_repository_without_extra_members(): void
@@ -184,29 +149,39 @@ class RepositoryManagementTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_member_can_add_and_remove_members(): void
+    public function test_member_can_add_and_remove_student_collaborators(): void
     {
         $owner = User::factory()->create();
         $owner->assignRole('teacher');
 
-        $member = User::factory()->create();
+        $student = User::factory()->create();
+        $student->assignRole('student');
+
+        $teacher = User::factory()->create();
+        $teacher->assignRole('teacher');
 
         $repo = Repository::factory()->create();
         $repo->users()->attach($owner->id);
 
         $this->actingAs($owner)
             ->post(route('repositories.members.store', $repo), [
-                'user_ids' => [$member->id],
+                'user_ids' => [$teacher->id],
+            ])
+            ->assertSessionHasErrors('user_ids');
+
+        $this->actingAs($owner)
+            ->post(route('repositories.members.store', $repo), [
+                'user_ids' => [$student->id],
             ])
             ->assertRedirect(route('repositories.account.show', $repo));
 
-        $this->assertTrue($repo->users()->whereKey($member->id)->exists());
+        $this->assertTrue($repo->users()->whereKey($student->id)->exists());
 
         $this->actingAs($owner)
-            ->delete(route('repositories.members.destroy', [$repo, $member]))
+            ->delete(route('repositories.members.destroy', [$repo, $student]))
             ->assertRedirect(route('repositories.account.show', $repo));
 
-        $this->assertFalse($repo->users()->whereKey($member->id)->exists());
+        $this->assertFalse($repo->users()->whereKey($student->id)->exists());
     }
 
     public function test_admin_can_access_any_repository_manage_page(): void

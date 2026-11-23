@@ -56,6 +56,12 @@ export const AUTH_ABILITIES = {
     ADVISORS_ASSIGN: 'advisors.assign',
     ADVISORS_OVERRIDE_CAPACITY: 'advisors.override_capacity',
     ADVISORS_DISTRIBUTE: 'advisors.distribute',
+    BUSINESS_ADVISORS_SEARCH: 'business_advisors.search',
+    BUSINESS_ADVISORS_CREATE: 'business_advisors.create',
+    BUSINESS_ADVISORS_ATTACH: 'business_advisors.attach',
+    BUSINESS_ADVISORS_VIEW_CONTACT: 'business_advisors.view_contact',
+    BUSINESS_ADVISORS_VERIFY: 'business_advisors.verify',
+    COMPANIES_CREATE: 'companies.create',
 } as const;
 
 export type AuthAbilityKey = (typeof AUTH_ABILITIES)[keyof typeof AUTH_ABILITIES];

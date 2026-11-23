@@ -52,13 +52,14 @@ class StoreRepositoryRequest extends FormRequest
             ],
             'project_period_id' => ['nullable', 'integer', 'exists:project_periods,id'],
             'generation' => ['required', 'string', 'max:255'],
-            ...$this->organizationRules($this->projectTypeRequiresBusinessAdvisor()),
+            // Organization / business advisors are attached after create.
+            ...$this->organizationRules(requireBusinessAdvisor: false),
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $this->afterOrganizationValidation($validator);
+        $this->afterOrganizationValidation($validator, enforceRequiredAdvisor: false);
 
         $validator->after(function (Validator $validator): void {
             $projectType = ProjectType::query()

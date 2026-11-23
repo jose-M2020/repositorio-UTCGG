@@ -57,6 +57,8 @@ export type RepositoryCompany = {
 
 export type RepositoryBusinessAdvisor = {
     id?: number;
+    business_advisor_id?: number | null;
+    affiliation_id?: number | null;
     first_name: string;
     last_name: string;
     second_last_name?: string | null;
@@ -66,7 +68,9 @@ export type RepositoryBusinessAdvisor = {
     department?: string | null;
     notes?: string | null;
     acceptance_status?: string;
+    confirmed_via?: string | null;
     full_name?: string;
+    catalog_status?: string | null;
 };
 
 export type RepositoryOrganizationDefaults = {

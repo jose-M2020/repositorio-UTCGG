@@ -11,7 +11,6 @@ type RepositoryCreateStepProjectProps = {
     isActive: boolean;
     lookups: RepositoryLookups;
     defaultCareer?: string;
-    onProjectTypeChange?: (code: string) => void;
 };
 
 const mapOptions = (options: Record<string, string>) =>
@@ -25,18 +24,18 @@ export const RepositoryCreateStepProject = ({
     isActive,
     lookups,
     defaultCareer,
-    onProjectTypeChange,
 }: RepositoryCreateStepProjectProps) => {
     const [projectType, setProjectType] = useState("");
     const resolvedDefaultCareer =
         defaultCareer && defaultCareer in lookups.careers
             ? defaultCareer
             : null;
+    const projectMeta = lookups.project_types_meta?.find(
+        (meta) => meta.code === projectType,
+    );
 
     const handleProjectTypeChange = (value: string | null) => {
-        const next = value ?? "";
-        setProjectType(next);
-        onProjectTypeChange?.(next);
+        setProjectType(value ?? "");
     };
 
     return (
@@ -50,7 +49,7 @@ export const RepositoryCreateStepProject = ({
                     Proyecto
                 </h2>
                 <p className="text-[0.8rem] text-muted-foreground">
-                    Datos académicos del proyecto.
+                    Datos académicos básicos. Los asesores se configuran luego.
                 </p>
             </div>
 
@@ -81,6 +80,22 @@ export const RepositoryCreateStepProject = ({
                 error={errors.project_period_id}
                 required={isActive}
             />
+
+            {projectMeta?.requires_academic_advisor ||
+            projectMeta?.requires_business_advisor ? (
+                <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-[0.8rem] text-muted-foreground">
+                    {projectMeta.requires_academic_advisor
+                        ? 'Este tipo usa asesor academico (docente): se asigna despues segun el periodo y la disponibilidad.'
+                        : null}
+                    {projectMeta.requires_academic_advisor &&
+                    projectMeta.requires_business_advisor
+                        ? ' '
+                        : null}
+                    {projectMeta.requires_business_advisor
+                        ? 'Tambien pedira asesor empresarial: lo agregas desde la gestion del proyecto (buscar o registrar).'
+                        : null}
+                </div>
+            ) : null}
 
             <div className="grid gap-6 sm:grid-cols-2">
                 <SelectField

@@ -25,21 +25,23 @@ export const RepositoryCreateStepMembers = ({
         >
             <div>
                 <h2 className="text-lg font-semibold text-foreground">
-                    Miembros
+                    Colaboradores
                 </h2>
                 <p className="text-[0.8rem] text-muted-foreground">
-                    Opcional — puedes agregar miembros ahora o más tarde desde la
-                    configuración del repositorio.
+                    Opcional. Solo puedes agregar alumnos como colaboradores del
+                    proyecto. Tu cuenta se incluye automaticamente.
                 </p>
             </div>
 
             <div className="space-y-2">
                 <UserSearchPicker
                     mode="email"
+                    role="student"
                     selected={collaborators}
                     onChange={onCollaboratorsChange}
                     max={8}
-                    label="Colaboradores"
+                    label="Buscar alumnos"
+                    description="Escribe al menos 2 caracteres para buscar por nombre o correo."
                 />
 
                 {errors.member_emails ? (

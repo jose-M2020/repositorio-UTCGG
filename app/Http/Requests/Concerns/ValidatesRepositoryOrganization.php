@@ -57,14 +57,16 @@ trait ValidatesRepositoryOrganization
             ->value('requires_business_advisor');
     }
 
-    protected function afterOrganizationValidation(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator): void {
+    protected function afterOrganizationValidation(
+        Validator $validator,
+        bool $enforceRequiredAdvisor = true,
+    ): void {
+        $validator->after(function (Validator $validator) use ($enforceRequiredAdvisor): void {
             $firstName = trim((string) $this->input('business_advisor.first_name', ''));
             $lastName = trim((string) $this->input('business_advisor.last_name', ''));
             $hasAdvisorNames = $firstName !== '' && $lastName !== '';
 
-            if ($this->projectTypeRequiresBusinessAdvisor()) {
+            if ($enforceRequiredAdvisor && $this->projectTypeRequiresBusinessAdvisor()) {
                 if ($firstName === '') {
                     $validator->errors()->add(
                         'business_advisor.first_name',
@@ -78,10 +80,6 @@ trait ValidatesRepositoryOrganization
                         'El apellido del asesor empresarial es obligatorio para este tipo de proyecto.',
                     );
                 }
-            }
-
-            if (! $hasAdvisorNames && ! $this->projectTypeRequiresBusinessAdvisor()) {
-                return;
             }
 
             if (! $hasAdvisorNames) {

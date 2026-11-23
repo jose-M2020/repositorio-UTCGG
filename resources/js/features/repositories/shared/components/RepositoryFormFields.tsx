@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { InputField, SelectField, TextareaField } from "@/shared/components/form";
 import { ProjectPeriodField } from "./ProjectPeriodField";
-import { RepositoryOrganizationFields } from "./RepositoryOrganizationFields";
 import type {
     Repository,
     RepositoryFormErrors,
@@ -26,6 +25,12 @@ export const RepositoryFormFields = ({
     lookups,
 }: RepositoryFormFieldsProps) => {
     const [projectType, setProjectType] = useState(defaults?.project_type ?? "");
+    const projectMeta = lookups.project_types_meta?.find(
+        (item) => item.code === projectType,
+    );
+    const showsAdvisorNote =
+        Boolean(projectMeta?.requires_academic_advisor) ||
+        Boolean(projectMeta?.requires_business_advisor);
 
     return (
         <div className="space-y-4">
@@ -111,18 +116,13 @@ export const RepositoryFormFields = ({
                 error={errors.keywords}
             />
 
-            <RepositoryOrganizationFields
-                errors={errors}
-                defaults={{
-                    company: defaults?.company ?? null,
-                    business_advisor: defaults?.business_advisor ?? null,
-                }}
-                requiredAdvisor={Boolean(
-                    lookups.project_types_meta?.find(
-                        (meta) => meta.code === projectType,
-                    )?.requires_business_advisor,
-                )}
-            />
+            {showsAdvisorNote ? (
+                <p className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+                    Los asesores academicos y empresariales se gestionan desde
+                    el panel del repositorio (buscar, registrar o actualizar
+                    afiliacion).
+                </p>
+            ) : null}
 
             <SelectField
                 id="visibility"

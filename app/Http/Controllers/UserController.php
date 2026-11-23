@@ -230,6 +230,13 @@ class UserController extends Controller implements HasMiddleware
         $search = $request->string('query')->toString();
         $authUser = $request->user();
 
+        $roleFilter = $request->string('role')->toString();
+        $roles = match ($roleFilter) {
+            UserRoles::STUDENT => [UserRoles::STUDENT],
+            UserRoles::TEACHER => [UserRoles::TEACHER],
+            default => [UserRoles::STUDENT, UserRoles::TEACHER],
+        };
+
         $users = User::query()
             ->latest('id')
             ->when(
@@ -249,7 +256,7 @@ class UserController extends Controller implements HasMiddleware
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->role([UserRoles::STUDENT, UserRoles::TEACHER])
+            ->role($roles)
             ->with('roles:id,name')
             ->paginate(10, ['id', 'first_name', 'last_name', 'second_last_name', 'email'])
             ->withQueryString();

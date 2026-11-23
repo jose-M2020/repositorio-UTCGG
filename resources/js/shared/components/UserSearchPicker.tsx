@@ -18,6 +18,9 @@ type UserSearchPickerProps = {
     onChange: (users: SearchableUser[]) => void;
     max?: number;
     label?: string;
+    /** Spatie role filter forwarded to users.search (`student` | `teacher`). */
+    role?: 'student' | 'teacher';
+    description?: string;
 };
 
 type SearchResponse = {
@@ -32,6 +35,8 @@ export const UserSearchPicker = ({
     onChange,
     max = 8,
     label = 'Buscar colaboradores',
+    role,
+    description,
 }: UserSearchPickerProps) => {
     const listId = useId();
     const [query, setQuery] = useState('');
@@ -53,7 +58,13 @@ export const UserSearchPicker = ({
 
             try {
                 const response = await fetch(
-                    search.url(undefined, { query: { query, page } }),
+                    search.url(undefined, {
+                        query: {
+                            query,
+                            page,
+                            ...(role ? { role } : {}),
+                        },
+                    }),
                     {
                         headers: {
                             Accept: 'application/json',
@@ -84,7 +95,7 @@ export const UserSearchPicker = ({
         }, 300);
 
         return () => window.clearTimeout(timeout);
-    }, [query, page]);
+    }, [query, page, role]);
 
     const handleSelect = (user: SearchableUser) => {
         if (selected.some((item) => item.id === user.id)) {
@@ -115,6 +126,11 @@ export const UserSearchPicker = ({
                 >
                     {label}
                 </label>
+                {description ? (
+                    <p className="text-[0.8rem] text-muted-foreground">
+                        {description}
+                    </p>
+                ) : null}
                 <Input
                     id={listId}
                     value={query}

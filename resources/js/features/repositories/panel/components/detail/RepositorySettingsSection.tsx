@@ -94,149 +94,6 @@ export const RepositorySettingsSection = ({
                                     value={repository.project_period_id}
                                 />
                             ) : null}
-                            <input
-                                type="hidden"
-                                name="company[name]"
-                                value={repository.company?.name ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="company[rfc]"
-                                value={repository.company?.rfc ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="company[sector]"
-                                value={repository.company?.sector ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="company[phone]"
-                                value={repository.company?.phone ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="company[email]"
-                                value={repository.company?.email ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][street_line]"
-                                value={
-                                    repository.company?.address?.street_line ??
-                                    ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][street_line_2]"
-                                value={
-                                    repository.company?.address
-                                        ?.street_line_2 ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][neighborhood]"
-                                value={
-                                    repository.company?.address
-                                        ?.neighborhood ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][city]"
-                                value={
-                                    repository.company?.address?.city ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][state]"
-                                value={
-                                    repository.company?.address?.state ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][postal_code]"
-                                value={
-                                    repository.company?.address
-                                        ?.postal_code ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][country]"
-                                value={
-                                    repository.company?.address?.country ??
-                                    'MX'
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[address][references]"
-                                value={
-                                    repository.company?.address?.references ??
-                                    ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="company[notes]"
-                                value={repository.company?.notes ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[first_name]"
-                                value={
-                                    repository.business_advisor?.first_name ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[last_name]"
-                                value={
-                                    repository.business_advisor?.last_name ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[second_last_name]"
-                                value={
-                                    repository.business_advisor
-                                        ?.second_last_name ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[email]"
-                                value={repository.business_advisor?.email ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[phone]"
-                                value={repository.business_advisor?.phone ?? ''}
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[job_title]"
-                                value={
-                                    repository.business_advisor?.job_title ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[department]"
-                                value={
-                                    repository.business_advisor?.department ?? ''
-                                }
-                            />
-                            <input
-                                type="hidden"
-                                name="business_advisor[notes]"
-                                value={repository.business_advisor?.notes ?? ''}
-                            />
 
                             <SelectField
                                 id="visibility"
@@ -266,10 +123,11 @@ export const RepositorySettingsSection = ({
             <section className="space-y-4 rounded-xl border border-border bg-card p-6">
                 <div>
                     <h2 className="text-lg font-semibold text-secondary">
-                        Integrantes
+                        Colaboradores
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        Agrega o quita personas con acceso al repositorio.
+                        Solo alumnos. Los asesores se gestionan en la sección de
+                        asesores, no como miembros.
                     </p>
                 </div>
 
@@ -281,10 +139,12 @@ export const RepositorySettingsSection = ({
                         <>
                             <UserSearchPicker
                                 mode="id"
+                                role="student"
                                 selected={selected}
                                 onChange={setSelected}
                                 max={8}
-                                label="Buscar por nombre o correo"
+                                label="Buscar alumnos"
+                                description="Escribe al menos 2 caracteres para buscar por nombre o correo."
                             />
                             {errors.user_ids ? (
                                 <p className="text-sm text-destructive">

@@ -17,6 +17,7 @@ use App\Services\Advisors\EligibleAdvisorsQuery;
 use App\Services\Repositories\RepositoryOrganizationService;
 use App\Support\Media;
 use App\Support\Permissions;
+use App\Support\UserRoles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -140,7 +141,6 @@ class RepositoryController extends Controller implements HasMiddleware
 
     public function store(
         StoreRepositoryRequest $request,
-        RepositoryOrganizationService $organizationService,
     ): RedirectResponse {
         $user = $request->user();
         $validated = $request->safe()->except([
@@ -169,14 +169,10 @@ class RepositoryController extends Controller implements HasMiddleware
             'created_by' => $user->fullName(),
         ]);
 
-        $organizationService->sync(
-            $repository,
-            $request->input('company'),
-            $request->input('business_advisor'),
-            $user,
-        );
+        // Advisors / company are attached later from the manage panel.
 
         $memberIds = User::query()
+            ->role(UserRoles::STUDENT)
             ->whereIn('email', $request->input('member_emails', []))
             ->pluck('id')
             ->push($user->id)
@@ -313,12 +309,14 @@ class RepositoryController extends Controller implements HasMiddleware
             'is_public' => $request->string('visibility')->toString() === 'public',
         ]);
 
-        $organizationService->sync(
-            $repository,
-            $request->input('company'),
-            $request->input('business_advisor'),
-            $request->user(),
-        );
+        if ($request->has('company') || $request->has('business_advisor')) {
+            $organizationService->sync(
+                $repository,
+                $request->input('company'),
+                $request->input('business_advisor'),
+                $request->user(),
+            );
+        }
 
         return redirect()
             ->route('repositories.account.show', $repository)
