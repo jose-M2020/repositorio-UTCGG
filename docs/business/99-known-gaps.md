@@ -7,13 +7,13 @@ Lista de lo **implementado a medias** o pendiente. Actualizar al cerrar ítems e
 | Ítem | Estado |
 |------|--------|
 | Backend search / attach / verify / merge / confirm | Hecho |
-| UI autocompletado “buscar o crear” en form de repo | Pendiente (hoy campos libres) |
-| UI “¿Es alguien de estos?” con DuplicateDetector | Backend OK; FE incompleto |
-| Bandeja de verificación | Página mínima `panel/business-advisors/pending` |
-| Fase C: drop columnas legacy en `repository_business_advisors` | Tras `business-advisors:migrate-legacy` validado |
-| ARCO / privacy_requests HTTP | Tabla + permiso; sin flujo completo |
-| Export de contactos | Permiso; sin implementación de rol |
-| Aviso de privacidad publicado + enlaces | Pendiente producto/legal |
+| UI buscar / crear / cambio de afiliación en gestión de repo | Hecho (`RepositoryBusinessAdvisorSection`) |
+| UI “¿Es alguien de estos?” con DuplicateDetector | Hecho (persona + empresa al registrar) |
+| Bandeja de verificación + merge | Hecho (`panel/business-advisors/pending`) |
+| Fase C: drop columnas legacy persona/contacto en `repository_business_advisors` | Hecho (requiere `business-advisors:migrate-legacy` antes si hay filas sin FK) |
+| ARCO / privacy_requests HTTP | Hecho (panel `privacy-requests`: alta / resolver / rechazar) |
+| Export de contactos | Hecho (`business-advisors.export` CSV; director) |
+| Aviso de privacidad publicado + enlaces | Hecho (`/aviso-de-privacidad`; enlaces en confirmación y UI BA) |
 
 ## Asesores académicos
 

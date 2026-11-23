@@ -54,7 +54,7 @@ class BusinessAdvisorController extends Controller
 
     public function pending(Request $request): Response
     {
-        $this->authorize('search', BusinessAdvisor::class);
+        $this->authorize('viewPending', BusinessAdvisor::class);
 
         $advisors = BusinessAdvisor::query()
             ->where('status', 'pending_review')
@@ -62,8 +62,28 @@ class BusinessAdvisorController extends Controller
             ->latest()
             ->paginate(20);
 
+        $mergeCandidates = BusinessAdvisor::query()
+            ->whereIn('status', ['verified', 'pending_review'])
+            ->orderBy('first_name')
+            ->limit(100)
+            ->get(['id', 'first_name', 'last_name', 'second_last_name', 'status'])
+            ->map(fn (BusinessAdvisor $advisor): array => [
+                'id' => $advisor->id,
+                'label' => $advisor->fullName().' ('.$advisor->status->value.')',
+            ])
+            ->values()
+            ->all();
+
         return Inertia::render('panel/business-advisors/pending', [
             'advisors' => $advisors,
+            'merge_candidates' => $mergeCandidates,
+            'can_merge' => $request->user()?->can('merge', BusinessAdvisor::class) ?? false,
+            'export_url' => $request->user()?->can('export', BusinessAdvisor::class)
+                ? route('business-advisors.export')
+                : null,
+            'privacy_requests_url' => $request->user()?->can('privacyRequests', BusinessAdvisor::class)
+                ? route('business-advisors.privacy-requests.index')
+                : null,
         ]);
     }
 

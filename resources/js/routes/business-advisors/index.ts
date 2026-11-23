@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import privacyRequests from './privacy-requests'
 import affiliations from './affiliations'
 /**
 * @see \App\Http\Controllers\BusinessAdvisorConfirmationController::__invoke
@@ -314,8 +315,86 @@ pending.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     pending.form = pendingForm
 /**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+export const exportMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: exportMethod.url(options),
+    method: 'get',
+})
+
+exportMethod.definition = {
+    methods: ["get","head"],
+    url: '/business-advisors/export',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+exportMethod.url = (options?: RouteQueryOptions) => {
+    return exportMethod.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+exportMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: exportMethod.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+exportMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: exportMethod.url(options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+    const exportMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: exportMethod.url(options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+        exportMethodForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: exportMethod.url(options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\BusinessAdvisorExportController::__invoke
+ * @see app/Http/Controllers/BusinessAdvisorExportController.php:12
+ * @route '/business-advisors/export'
+ */
+        exportMethodForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: exportMethod.url({
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    exportMethod.form = exportMethodForm
+/**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 export const verify = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -330,7 +409,7 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 verify.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -363,7 +442,7 @@ verify.url = (args: { business_advisor: number | { id: number } } | [business_ad
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 verify.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -373,7 +452,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
     const verifyForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -383,7 +462,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
         verifyForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -394,7 +473,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
     verify.form = verifyForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 export const reject = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -409,7 +488,7 @@ reject.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 reject.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -442,7 +521,7 @@ reject.url = (args: { business_advisor: number | { id: number } } | [business_ad
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 reject.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -452,7 +531,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
     const rejectForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -462,7 +541,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
         rejectForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -473,7 +552,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
     reject.form = rejectForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 export const merge = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -488,7 +567,7 @@ merge.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 merge.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -521,7 +600,7 @@ merge.url = (args: { business_advisor: number | { id: number } } | [business_adv
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 merge.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -531,7 +610,7 @@ merge.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
     const mergeForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -541,7 +620,7 @@ merge.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
         mergeForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -555,6 +634,8 @@ const businessAdvisors = {
 search: Object.assign(search, search),
 duplicates: Object.assign(duplicates, duplicates),
 pending: Object.assign(pending, pending),
+export: Object.assign(exportMethod, exportMethod),
+privacyRequests: Object.assign(privacyRequests, privacyRequests),
 verify: Object.assign(verify, verify),
 reject: Object.assign(reject, reject),
 merge: Object.assign(merge, merge),

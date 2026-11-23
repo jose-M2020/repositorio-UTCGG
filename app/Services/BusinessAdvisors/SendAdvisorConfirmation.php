@@ -17,7 +17,7 @@ class SendAdvisorConfirmation
     public function send(RepositoryBusinessAdvisor $assignment): string
     {
         $email = NameNormalizer::normalizeEmail(
-            is_array($assignment->snapshot) ? ($assignment->snapshot['email'] ?? null) : $assignment->email,
+            is_array($assignment->snapshot) ? ($assignment->snapshot['email'] ?? null) : null,
         );
 
         if ($email === null) {

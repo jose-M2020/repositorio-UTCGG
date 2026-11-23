@@ -49,7 +49,12 @@ No cubre asesores académicos (docentes): ver [07-academic-advisors.md](07-acade
 | BA-R19 | Fusión reasigna vínculos; snapshots de proyectos no se reescriben. |
 | BA-R20 | Liberar marca `released_at`; si era primario, promueve otro activo o limpia empresa del proyecto. |
 | BA-R21 | `ChangeAffiliation` (“sus datos cambiaron”): nueva afiliación + snapshot del repo; al verificar misma empresa, cierra la anterior (`ends_at`). |
-| BA-R22 | Wizard crear/editar repo: attach con `send_confirmation = false`; el endpoint dedicado puede enviar correo. |
+| BA-R22 | Crear repo **no** adjunta BA; el attach ocurre en gestión (`repositories.business-advisors.*`) y puede enviar correo. Sync opcional en update del repo (si vienen claves `company`/`business_advisor`) usa `send_confirmation = false`. |
+| BA-R23 | Al registrar, el FE consulta `DuplicateDetector` y muestra “¿Es alguien de estos?” / empresas similares; no auto-fusiona ni bloquea el alta. |
+| BA-R24 | Bandeja `business-advisors.pending` exige `business_advisors.verify`; merge desde la misma UI con `business_advisors.merge`. |
+| BA-R25 | Export CSV de contactos (`business_advisors.export`) solo roles con ese permiso (director por defecto). |
+| BA-R26 | Solicitudes ARCO en `business_advisor_privacy_requests`: alta/resolver/rechazar con `business_advisors.privacy_requests`. |
+| BA-R27 | Aviso público en `/aviso-de-privacidad`; enlazado desde confirmación firmada y UI de attach. |
 
 ## Ciclo de vida
 
@@ -67,13 +72,17 @@ stateDiagram-v2
 
 ### Buscar o capturar asesor (camino del alumno/miembro)
 
-La UI de autocompletado “buscar o crear” aún está incompleta (ver [99-known-gaps](99-known-gaps.md)); el backend ya soporta estos caminos.
+UI en gestión del repositorio (`RepositoryBusinessAdvisorSection`): buscar, registrar, o “sus datos cambiaron”.
 
 ```mermaid
 flowchart TD
   A[Buscar asesor ≥3 caracteres] --> B{¿Aparece la persona?}
   B -->|no| C[Alta nueva: persona + empresa + afiliación]
-  C --> D[Todo entra pending_review]
+  C --> C2{¿DuplicateDetector sugiere?}
+  C2 -->|sí| C3[Mostrar ¿Es alguien de estos?]
+  C3 -->|elige existente| G
+  C3 -->|continúa alta| D
+  C2 -->|no| D[Todo entra pending_review]
   D --> E[Adjuntar al repo + snapshot]
   B -->|sí, empresa/puesto correctos| F[Elegir existing_affiliation_id]
   F --> E
@@ -123,12 +132,17 @@ sequenceDiagram
   Note over RepoA: Sigue con snapshot 2026 intacto
 ```
 
-### Backfill legacy
+### Backfill legacy y fase C
+
+Antes de dropear columnas persona/contacto en `repository_business_advisors`:
 
 ```bash
 php artisan business-advisors:migrate-legacy --dry-run
 php artisan business-advisors:migrate-legacy
+php artisan migrate
 ```
+
+La migración de fase C aborta si quedan filas sin `business_advisor_id`. Tras el drop, la lectura de persona/contacto del assignment es solo vía `snapshot`.
 
 ## Escenarios
 
@@ -144,7 +158,13 @@ php artisan business-advisors:migrate-legacy
 | BA-08 | Miembro | Repo ya tiene 3 BA activos (máximo default); intenta adjuntar un cuarto | Attach rechazado por tope `PROJECTS_MAX_BUSINESS_ADVISORS` | BA-R8 |
 | BA-09 | Miembro | Intenta adjuntar de nuevo a una persona que ya está activa (`released_at` null) en el mismo repo | Attach rechazado | BA-R9 |
 | BA-10 | Miembro | Adjunta BA vía endpoint dedicado con `send_confirmation = true` y email en afiliación | Se crea asignación + snapshot; se envía correo con enlaces firmados (expiran en 14 días); `acceptance_status = pending` | BA-R22 |
-| BA-11 | Miembro | Crea repo/estadía por wizard (organización sync) con asesor nuevo | Attach ocurre con `send_confirmation = false`; no se dispara el correo en ese camino | BA-R22 |
+| BA-11 | Miembro | Crea repo por wizard (sin sección de organización) | Repo creado **sin** BA ni empresa; asesores se agregan después en gestión | BA-R22 |
+| BA-26 | Miembro al registrar | DuplicateDetector sugiere coincidencias; elige una | Pasa a reutilizar persona (`existing_advisor_id` / cambio de afiliación); no crea duplicado | BA-R23 |
+| BA-27 | Miembro al registrar | Ve sugerencias y elige “continuar con alta nueva” | Se crea pending nuevo; no se bloquea ni fusiona automáticamente | BA-R23 |
+| BA-28 | Director | Abre bandeja pending y fusiona B → A | Status de B = `merged`; vínculos reasignados; snapshots intactos | BA-R24 |
+| BA-29 | Director | Descarga export de contactos | Recibe CSV con afiliaciones (correo/teléfono); usuario sin permiso → 403 | BA-R25 |
+| BA-30 | Director | Registra solicitud ARCO de acceso y luego la resuelve | Fila `open` → `resolved` con `handled_by`/`handled_at` | BA-R26 |
+| BA-31 | Visitante / asesor externo | Abre `/aviso-de-privacidad` o el enlace desde confirmación | Página pública del aviso; sin auth | BA-R27 |
 | BA-12 | Destinatario | Ya recibió 3 correos de confirmación el mismo día; se solicita otro envío | Rechazado por límite 3/destinatario/día | BA-R16 |
 | BA-13 | Asesor académico activo del repo | Marca confirmación en papel (sin enlace) | `acceptance_status = confirmed`, `confirmed_via = academic_advisor` | BA-R17 |
 | BA-14 | Gestor con merge | Fusiona persona duplicada B → canónica A | Vínculos de B pasan a A; status de B = `merged`; snapshots históricos de repos **no** se reescriben | BA-R19 |
@@ -162,7 +182,8 @@ php artisan business-advisors:migrate-legacy
 
 ## Referencias
 
-- Código: `app/Services/BusinessAdvisors/*`, `ValidatesRepositoryOrganization`, policies
-- Tablas: `business_advisors`, `companies`, `business_advisor_affiliations`, `repository_business_advisors`, `business_advisor_audit_logs`, `business_advisor_privacy_requests` ([database-schema](../technical/database-schema.md))
+- Código: `app/Services/BusinessAdvisors/*`, policies, `RepositoryBusinessAdvisorSection`, bandeja `panel/business-advisors/*`
+- Tablas: `business_advisors`, `companies`, `business_advisor_affiliations`, `repository_business_advisors` (snapshot + FKs), `business_advisor_audit_logs`, `business_advisor_privacy_requests` ([database-schema](../technical/database-schema.md))
+- Rutas: `business-advisors.*`, `companies.*`, `repositories.business-advisors.*`, `privacy-notice.show`
 - Permisos: `business_advisors.*`, `companies.*`
 - Relacionados: [05-repositories.md](05-repositories.md), [02-roles-and-permissions.md](02-roles-and-permissions.md), [99-known-gaps.md](99-known-gaps.md)

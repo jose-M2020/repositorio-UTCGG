@@ -2,8 +2,6 @@
 
 Estado actual del esquema (migraciones + modelos). Motor de tests: SQLite in-memory; desarrollo/producción según `.env`.
 
-La tabla legacy `catalogs` **ya no existe**: se reemplazó por `careers`, `project_types` y `education_levels`. Las columnas string `repositories.company` / `repositories.external_advisor` también se eliminaron a favor de `companies` + `repository_business_advisors`.
-
 ---
 
 ## Diagrama de dominio
@@ -403,12 +401,10 @@ Asignación al repositorio + `snapshot` histórico. Activo si `released_at IS NU
 |-------|------|-------|
 | `business_advisor_id` | FK → business_advisors | restrictOnDelete |
 | `business_advisor_affiliation_id` | FK → affiliations nullable | restrictOnDelete |
-| `snapshot` | json | congelado al adjuntar |
+| `snapshot` | json | congelado al adjuntar; **fuente** de nombre/contacto del assignment |
+| `company_id` | FK → companies nullable | conveniencia / primary |
 | `acceptance_status` | default `pending` | |
 | `confirmation_*` / `confirmed_via` | confirmación por correo | |
-| columnas legacy persona/empresa | temporales hasta fase C | |
-
-Backfill: `php artisan business-advisors:migrate-legacy [--dry-run]`.
 
 ---
 

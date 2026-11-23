@@ -19,13 +19,6 @@ use Illuminate\Support\Carbon;
  * @property int|null $business_advisor_affiliation_id
  * @property array<string, mixed>|null $snapshot
  * @property int|null $company_id
- * @property string|null $first_name
- * @property string|null $last_name
- * @property string|null $second_last_name
- * @property string|null $email
- * @property string|null $phone
- * @property string|null $job_title
- * @property string|null $department
  * @property bool $is_primary
  * @property BusinessAdvisorAcceptanceStatus $acceptance_status
  * @property string|null $document_path
@@ -45,13 +38,6 @@ use Illuminate\Support\Carbon;
     'business_advisor_affiliation_id',
     'snapshot',
     'company_id',
-    'first_name',
-    'last_name',
-    'second_last_name',
-    'email',
-    'phone',
-    'job_title',
-    'department',
     'is_primary',
     'acceptance_status',
     'document_path',
@@ -102,21 +88,7 @@ class RepositoryBusinessAdvisor extends Model
             return $this->snapshot;
         }
 
-        return [
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'second_last_name' => $this->second_last_name,
-            'company' => $this->company ? [
-                'id' => $this->company->id,
-                'name' => $this->company->name,
-                'rfc' => $this->company->rfc,
-            ] : null,
-            'job_title' => $this->job_title,
-            'department' => $this->department,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'captured_at' => $this->assigned_at?->toIso8601String(),
-        ];
+        return [];
     }
 
     public function fullName(): string

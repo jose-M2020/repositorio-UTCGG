@@ -1,4 +1,5 @@
 import HomeController from './HomeController'
+import PrivacyNoticeController from './PrivacyNoticeController'
 import UserController from './UserController'
 import RoleController from './RoleController'
 import CareerController from './CareerController'
@@ -11,6 +12,8 @@ import RepositoryAdvisorController from './RepositoryAdvisorController'
 import BusinessAdvisorConfirmationController from './BusinessAdvisorConfirmationController'
 import BusinessAdvisorController from './BusinessAdvisorController'
 import CompanyCatalogController from './CompanyCatalogController'
+import BusinessAdvisorExportController from './BusinessAdvisorExportController'
+import BusinessAdvisorPrivacyRequestController from './BusinessAdvisorPrivacyRequestController'
 import BusinessAdvisorAffiliationController from './BusinessAdvisorAffiliationController'
 import RepositoryBusinessAdvisorController from './RepositoryBusinessAdvisorController'
 import RepositoryController from './RepositoryController'
@@ -20,6 +23,7 @@ import RepositoryMemberController from './RepositoryMemberController'
 import Auth from './Auth'
 const Controllers = {
     HomeController: Object.assign(HomeController, HomeController),
+PrivacyNoticeController: Object.assign(PrivacyNoticeController, PrivacyNoticeController),
 UserController: Object.assign(UserController, UserController),
 RoleController: Object.assign(RoleController, RoleController),
 CareerController: Object.assign(CareerController, CareerController),
@@ -32,6 +36,8 @@ RepositoryAdvisorController: Object.assign(RepositoryAdvisorController, Reposito
 BusinessAdvisorConfirmationController: Object.assign(BusinessAdvisorConfirmationController, BusinessAdvisorConfirmationController),
 BusinessAdvisorController: Object.assign(BusinessAdvisorController, BusinessAdvisorController),
 CompanyCatalogController: Object.assign(CompanyCatalogController, CompanyCatalogController),
+BusinessAdvisorExportController: Object.assign(BusinessAdvisorExportController, BusinessAdvisorExportController),
+BusinessAdvisorPrivacyRequestController: Object.assign(BusinessAdvisorPrivacyRequestController, BusinessAdvisorPrivacyRequestController),
 BusinessAdvisorAffiliationController: Object.assign(BusinessAdvisorAffiliationController, BusinessAdvisorAffiliationController),
 RepositoryBusinessAdvisorController: Object.assign(RepositoryBusinessAdvisorController, RepositoryBusinessAdvisorController),
 RepositoryController: Object.assign(RepositoryController, RepositoryController),

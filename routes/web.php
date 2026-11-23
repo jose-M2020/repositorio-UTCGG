@@ -5,11 +5,14 @@ use App\Http\Controllers\AdvisorCapacityController;
 use App\Http\Controllers\BusinessAdvisorAffiliationController;
 use App\Http\Controllers\BusinessAdvisorConfirmationController;
 use App\Http\Controllers\BusinessAdvisorController;
+use App\Http\Controllers\BusinessAdvisorExportController;
+use App\Http\Controllers\BusinessAdvisorPrivacyRequestController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CompanyCatalogController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PrivacyNoticeController;
 use App\Http\Controllers\ProjectPeriodController;
 use App\Http\Controllers\ProjectPeriodParticipantController;
 use App\Http\Controllers\ProjectTypeController;
@@ -23,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/acerca', [HomeController::class, 'about'])->name('about');
+Route::get('/aviso-de-privacidad', PrivacyNoticeController::class)->name('privacy-notice.show');
 
 Route::resource('users', UserController::class)
     ->except(['create', 'edit']);
@@ -103,6 +107,16 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('business-advisors/pending', [BusinessAdvisorController::class, 'pending'])
         ->name('business-advisors.pending');
+    Route::get('business-advisors/export', BusinessAdvisorExportController::class)
+        ->name('business-advisors.export');
+    Route::get('business-advisors/privacy-requests', [BusinessAdvisorPrivacyRequestController::class, 'index'])
+        ->name('business-advisors.privacy-requests.index');
+    Route::post('business-advisors/privacy-requests', [BusinessAdvisorPrivacyRequestController::class, 'store'])
+        ->name('business-advisors.privacy-requests.store');
+    Route::post('business-advisors/privacy-requests/{privacy_request}/resolve', [BusinessAdvisorPrivacyRequestController::class, 'resolve'])
+        ->name('business-advisors.privacy-requests.resolve');
+    Route::post('business-advisors/privacy-requests/{privacy_request}/reject', [BusinessAdvisorPrivacyRequestController::class, 'reject'])
+        ->name('business-advisors.privacy-requests.reject');
     Route::post('business-advisors/{business_advisor}/verify', [BusinessAdvisorController::class, 'verify'])
         ->name('business-advisors.verify');
     Route::post('business-advisors/{business_advisor}/reject', [BusinessAdvisorController::class, 'reject'])

@@ -3,8 +3,11 @@
 namespace Tests\Feature\BusinessAdvisors;
 
 use App\Enums\CatalogReviewStatus;
+use App\Enums\PrivacyRequestStatus;
+use App\Enums\PrivacyRequestType;
 use App\Models\BusinessAdvisor;
 use App\Models\BusinessAdvisorAffiliation;
+use App\Models\BusinessAdvisorPrivacyRequest;
 use App\Models\Company;
 use App\Models\Repository;
 use App\Models\RepositoryBusinessAdvisor;
@@ -16,6 +19,7 @@ use App\Services\BusinessAdvisors\VerifyEntity;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class BusinessAdvisorCatalogTest extends TestCase
@@ -182,5 +186,102 @@ class BusinessAdvisorCatalogTest extends TestCase
 
         $this->assertNotNull($old->fresh()->ends_at);
         $this->assertSame(CatalogReviewStatus::Verified, $new->fresh()->status);
+    }
+
+    public function test_duplicates_endpoint_suggests_matching_person(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('teacher');
+        $company = Company::factory()->create();
+        $advisor = BusinessAdvisor::factory()->verified()->create([
+            'first_name' => 'Ana',
+            'last_name' => 'Ruiz',
+            'name_normalized' => NameNormalizer::normalizePersonName('Ana', 'Ruiz'),
+        ]);
+        BusinessAdvisorAffiliation::factory()->create([
+            'business_advisor_id' => $advisor->id,
+            'company_id' => $company->id,
+            'email' => 'ana.ruiz@example.com',
+        ]);
+
+        $this->actingAs($user)
+            ->postJson(route('business-advisors.duplicates'), [
+                'first_name' => 'Ana',
+                'last_name' => 'Ruiz',
+                'email' => 'ana.ruiz@example.com',
+            ])
+            ->assertOk()
+            ->assertJsonFragment(['id' => $advisor->id, 'reason' => 'same_email']);
+    }
+
+    public function test_director_can_export_contacts_and_manage_privacy_requests(): void
+    {
+        $director = User::factory()->create();
+        $director->assignRole('director');
+        $advisor = BusinessAdvisor::factory()->verified()->create();
+        BusinessAdvisorAffiliation::factory()->create([
+            'business_advisor_id' => $advisor->id,
+            'email' => 'contacto@empresa.test',
+        ]);
+
+        $this->actingAs($director)
+            ->get(route('business-advisors.export'))
+            ->assertOk()
+            ->assertHeader('content-disposition');
+
+        $this->actingAs($director)
+            ->post(route('business-advisors.privacy-requests.store'), [
+                'business_advisor_id' => $advisor->id,
+                'type' => PrivacyRequestType::Access->value,
+                'message' => 'Solicita copia de sus datos',
+            ])
+            ->assertRedirect(route('business-advisors.privacy-requests.index'));
+
+        $privacyRequest = BusinessAdvisorPrivacyRequest::query()->first();
+        $this->assertNotNull($privacyRequest);
+        $this->assertSame(PrivacyRequestStatus::Open, $privacyRequest->status);
+
+        $this->actingAs($director)
+            ->post(route('business-advisors.privacy-requests.resolve', $privacyRequest))
+            ->assertRedirect();
+
+        $this->assertSame(PrivacyRequestStatus::Resolved, $privacyRequest->fresh()->status);
+    }
+
+    public function test_phase_c_assignments_store_snapshot_without_legacy_person_columns(): void
+    {
+        $this->assertFalse(Schema::hasColumn('repository_business_advisors', 'first_name'));
+        $this->assertFalse(Schema::hasColumn('repository_business_advisors', 'email'));
+
+        $user = User::factory()->create();
+        $user->assignRole('teacher');
+        $repo = Repository::factory()->create();
+        $repo->users()->attach($user->id);
+
+        $assignment = app(AttachBusinessAdvisor::class)->handle($repo, $user, [
+            'advisor' => [
+                'first_name' => 'Lucia',
+                'last_name' => 'Mora',
+            ],
+            'company' => [
+                'name' => 'Empresa Fase C',
+            ],
+            'affiliation' => [
+                'email' => 'lucia@empresafasec.test',
+                'job_title' => 'Lider',
+            ],
+            'send_confirmation' => false,
+        ]);
+
+        $this->assertSame('Lucia', $assignment->snapshot['first_name']);
+        $this->assertSame('lucia@empresafasec.test', $assignment->snapshot['email']);
+        $this->assertSame('Lucia Mora', $assignment->fullName());
+    }
+
+    public function test_privacy_notice_page_is_public(): void
+    {
+        $this->get(route('privacy-notice.show'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('public/privacy-notice'));
     }
 }

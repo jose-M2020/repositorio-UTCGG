@@ -49,4 +49,19 @@ class BusinessAdvisorPolicy
     {
         return $user->can(Permissions::BUSINESS_ADVISORS_VIEW_AUDIT);
     }
+
+    public function export(User $user): bool
+    {
+        return $user->can(Permissions::BUSINESS_ADVISORS_EXPORT);
+    }
+
+    public function privacyRequests(User $user): bool
+    {
+        return $user->can(Permissions::BUSINESS_ADVISORS_PRIVACY_REQUESTS);
+    }
+
+    public function viewPending(User $user): bool
+    {
+        return $user->can(Permissions::BUSINESS_ADVISORS_VERIFY);
+    }
 }

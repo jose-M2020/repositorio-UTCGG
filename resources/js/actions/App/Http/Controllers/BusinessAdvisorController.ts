@@ -212,7 +212,7 @@ pending.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     pending.form = pendingForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 export const verify = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -227,7 +227,7 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 verify.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ verify.url = (args: { business_advisor: number | { id: number } } | [business_ad
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
 verify.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -270,7 +270,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
     const verifyForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -280,7 +280,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::verify
- * @see app/Http/Controllers/BusinessAdvisorController.php:70
+ * @see app/Http/Controllers/BusinessAdvisorController.php:90
  * @route '/business-advisors/{business_advisor}/verify'
  */
         verifyForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -291,7 +291,7 @@ verify.post = (args: { business_advisor: number | { id: number } } | [business_a
     verify.form = verifyForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 export const reject = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -306,7 +306,7 @@ reject.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 reject.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -339,7 +339,7 @@ reject.url = (args: { business_advisor: number | { id: number } } | [business_ad
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
 reject.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -349,7 +349,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
     const rejectForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -359,7 +359,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::reject
- * @see app/Http/Controllers/BusinessAdvisorController.php:78
+ * @see app/Http/Controllers/BusinessAdvisorController.php:98
  * @route '/business-advisors/{business_advisor}/reject'
  */
         rejectForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -370,7 +370,7 @@ reject.post = (args: { business_advisor: number | { id: number } } | [business_a
     reject.form = rejectForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 export const merge = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -385,7 +385,7 @@ merge.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 merge.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -418,7 +418,7 @@ merge.url = (args: { business_advisor: number | { id: number } } | [business_adv
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
 merge.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -428,7 +428,7 @@ merge.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
     const mergeForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -438,7 +438,7 @@ merge.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::merge
- * @see app/Http/Controllers/BusinessAdvisorController.php:91
+ * @see app/Http/Controllers/BusinessAdvisorController.php:111
  * @route '/business-advisors/{business_advisor}/merge'
  */
         mergeForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -449,7 +449,7 @@ merge.post = (args: { business_advisor: number | { id: number } } | [business_ad
     merge.form = mergeForm
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::storeAffiliation
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 export const storeAffiliation = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -464,7 +464,7 @@ storeAffiliation.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::storeAffiliation
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 storeAffiliation.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -497,7 +497,7 @@ storeAffiliation.url = (args: { business_advisor: number | { id: number } } | [b
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::storeAffiliation
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 storeAffiliation.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -507,7 +507,7 @@ storeAffiliation.post = (args: { business_advisor: number | { id: number } } | [
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::storeAffiliation
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
     const storeAffiliationForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -517,7 +517,7 @@ storeAffiliation.post = (args: { business_advisor: number | { id: number } } | [
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::storeAffiliation
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
         storeAffiliationForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

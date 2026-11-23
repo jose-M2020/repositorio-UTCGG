@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::store
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 export const store = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::store
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 store.url = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ store.url = (args: { business_advisor: number | { id: number } } | [business_adv
 
 /**
 * @see \App\Http\Controllers\BusinessAdvisorController::store
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
 store.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ store.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
     /**
 * @see \App\Http\Controllers\BusinessAdvisorController::store
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
     const storeForm = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ store.post = (args: { business_advisor: number | { id: number } } | [business_ad
 
             /**
 * @see \App\Http\Controllers\BusinessAdvisorController::store
- * @see app/Http/Controllers/BusinessAdvisorController.php:105
+ * @see app/Http/Controllers/BusinessAdvisorController.php:125
  * @route '/business-advisors/{business_advisor}/affiliations'
  */
         storeForm.post = (args: { business_advisor: number | { id: number } } | [business_advisor: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

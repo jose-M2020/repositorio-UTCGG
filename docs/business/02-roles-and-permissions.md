@@ -67,14 +67,12 @@ flowchart TD
 | business_advisors.search/create/attach/view_contact | ✓ | ✓ | ✓ | ✓ |
 | business_advisors.verify | ✓ | ✓ | ✓ | — |
 | business_advisors.merge | ✓ | ✓ | — | — |
-| business_advisors.manage / view_audit / privacy_requests | ✓ | — | — | — |
+| business_advisors.manage / view_audit / privacy_requests / export | ✓ | — | — | — |
 | companies.create | ✓ | ✓ | ✓ | ✓ |
 | companies.verify | ✓ | ✓ | ✓ | — |
 | companies.merge | ✓ | ✓ | — | — |
 
 \* Definidos en catálogo de permisos pero **no** en defaults de rol → en la práctica solo admin (Gate).
-
-`business_advisors.export` existe pero no está en defaults de ningún rol (solo admin vía Gate).
 
 ## Quién puede asignar qué rol
 

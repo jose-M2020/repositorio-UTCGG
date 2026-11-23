@@ -1,4 +1,4 @@
-import { Form, router, usePage } from '@inertiajs/react';
+import { Form, Link, router, usePage } from '@inertiajs/react';
 import { Building2Icon, SearchIcon, UserPlusIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
@@ -6,12 +6,19 @@ import {
     resend,
     store as storeAssignment,
 } from '@/actions/App/Http/Controllers/RepositoryBusinessAdvisorController';
-import { search as searchAdvisors } from '@/routes/business-advisors';
-import { search as searchCompanies } from '@/routes/companies';
+import {
+    duplicates as advisorDuplicates,
+    search as searchAdvisors,
+} from '@/routes/business-advisors';
+import {
+    duplicates as companyDuplicates,
+    search as searchCompanies,
+} from '@/routes/companies';
 import { AUTH_ABILITIES } from '@/features/auth';
 import { InputField } from '@/shared/components/form';
 import { Button, Input } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
+import { postJson } from '@/shared/lib/csrf';
 import type { Repository } from '../../../shared/types';
 
 type CatalogAdvisorHit = {
@@ -28,6 +35,30 @@ type CatalogCompanyHit = {
     name: string;
     rfc: string | null;
     sector: string | null;
+};
+
+type PersonDuplicateHit = {
+    id: number;
+    full_name: string;
+    strength: string;
+    reason: string;
+    company_name: string | null;
+};
+
+type CompanyDuplicateHit = {
+    id: number;
+    name: string;
+    strength: string;
+    reason: string;
+    rfc: string | null;
+};
+
+type DraftAdvisor = {
+    first_name: string;
+    last_name: string;
+    second_last_name: string;
+    email: string;
+    phone: string;
 };
 
 type PanelMode = 'idle' | 'search' | 'create' | 'change';
@@ -75,6 +106,22 @@ export const RepositoryBusinessAdvisorSection = ({
     const [selectedCompany, setSelectedCompany] =
         useState<CatalogCompanyHit | null>(null);
     const [searchError, setSearchError] = useState<string | null>(null);
+    const [draftAdvisor, setDraftAdvisor] = useState<DraftAdvisor>({
+        first_name: '',
+        last_name: '',
+        second_last_name: '',
+        email: '',
+        phone: '',
+    });
+    const [draftCompanyName, setDraftCompanyName] = useState('');
+    const [draftCompanyRfc, setDraftCompanyRfc] = useState('');
+    const [personDuplicates, setPersonDuplicates] = useState<
+        PersonDuplicateHit[]
+    >([]);
+    const [companyDuplicateHits, setCompanyDuplicateHits] = useState<
+        CompanyDuplicateHit[]
+    >([]);
+    const [dismissedDuplicates, setDismissedDuplicates] = useState(false);
 
     useEffect(() => {
         if (!canSearch || advisorQuery.trim().length < 3) {
@@ -125,6 +172,72 @@ export const RepositoryBusinessAdvisorSection = ({
 
         return () => window.clearTimeout(timeout);
     }, [companyQuery, canSearch]);
+
+    useEffect(() => {
+        if (mode !== 'create' || !canCreate) {
+            setPersonDuplicates([]);
+            return;
+        }
+
+        if (
+            draftAdvisor.first_name.trim().length < 2 ||
+            draftAdvisor.last_name.trim().length < 2
+        ) {
+            setPersonDuplicates([]);
+            return;
+        }
+
+        const timeout = window.setTimeout(async () => {
+            try {
+                const payload = await postJson<{ data: PersonDuplicateHit[] }>(
+                    advisorDuplicates.url(),
+                    {
+                        first_name: draftAdvisor.first_name,
+                        last_name: draftAdvisor.last_name,
+                        second_last_name:
+                            draftAdvisor.second_last_name || null,
+                        email: draftAdvisor.email || null,
+                        phone: draftAdvisor.phone || null,
+                        company_id: selectedCompany?.id ?? null,
+                    },
+                );
+                setPersonDuplicates(payload.data);
+                setDismissedDuplicates(false);
+            } catch {
+                setPersonDuplicates([]);
+            }
+        }, 400);
+
+        return () => window.clearTimeout(timeout);
+    }, [mode, canCreate, draftAdvisor, selectedCompany?.id]);
+
+    useEffect(() => {
+        if (
+            mode !== 'create' ||
+            selectedCompany ||
+            draftCompanyName.trim().length < 3
+        ) {
+            setCompanyDuplicateHits([]);
+            return;
+        }
+
+        const timeout = window.setTimeout(async () => {
+            try {
+                const payload = await postJson<{ data: CompanyDuplicateHit[] }>(
+                    companyDuplicates.url(),
+                    {
+                        name: draftCompanyName,
+                        rfc: draftCompanyRfc || null,
+                    },
+                );
+                setCompanyDuplicateHits(payload.data);
+            } catch {
+                setCompanyDuplicateHits([]);
+            }
+        }, 400);
+
+        return () => window.clearTimeout(timeout);
+    }, [mode, selectedCompany, draftCompanyName, draftCompanyRfc]);
 
     if (!required && !advisor && !canAttach) {
         return null;
@@ -223,7 +336,7 @@ export const RepositoryBusinessAdvisorSection = ({
                                     : ''}
                             </p>
                         </div>
-                        {canAttach ? (
+                        {canAttach && advisor.id != null ? (
                             <div className="flex flex-wrap gap-2">
                                 <Form
                                     {...resend.form([
@@ -426,37 +539,158 @@ export const RepositoryBusinessAdvisorSection = ({
                                     ) : null}
 
                                     {mode === 'create' ? (
-                                        <div className="grid gap-3 sm:grid-cols-3">
-                                            <InputField
-                                                id="advisor_first_name"
-                                                name="advisor[first_name]"
-                                                label="Nombre"
-                                                required
-                                                error={
-                                                    errors[
-                                                        'advisor.first_name'
-                                                    ]
-                                                }
-                                            />
-                                            <InputField
-                                                id="advisor_last_name"
-                                                name="advisor[last_name]"
-                                                label="Apellido paterno"
-                                                required
-                                                error={
-                                                    errors['advisor.last_name']
-                                                }
-                                            />
-                                            <InputField
-                                                id="advisor_second_last_name"
-                                                name="advisor[second_last_name]"
-                                                label="Apellido materno"
-                                                error={
-                                                    errors[
-                                                        'advisor.second_last_name'
-                                                    ]
-                                                }
-                                            />
+                                        <div className="space-y-3">
+                                            <div className="grid gap-3 sm:grid-cols-3">
+                                                <InputField
+                                                    id="advisor_first_name"
+                                                    name="advisor[first_name]"
+                                                    label="Nombre"
+                                                    required
+                                                    value={
+                                                        draftAdvisor.first_name
+                                                    }
+                                                    onChange={(event) =>
+                                                        setDraftAdvisor(
+                                                            (current) => ({
+                                                                ...current,
+                                                                first_name:
+                                                                    event.target
+                                                                        .value,
+                                                            }),
+                                                        )
+                                                    }
+                                                    error={
+                                                        errors[
+                                                            'advisor.first_name'
+                                                        ]
+                                                    }
+                                                />
+                                                <InputField
+                                                    id="advisor_last_name"
+                                                    name="advisor[last_name]"
+                                                    label="Apellido paterno"
+                                                    required
+                                                    value={
+                                                        draftAdvisor.last_name
+                                                    }
+                                                    onChange={(event) =>
+                                                        setDraftAdvisor(
+                                                            (current) => ({
+                                                                ...current,
+                                                                last_name:
+                                                                    event.target
+                                                                        .value,
+                                                            }),
+                                                        )
+                                                    }
+                                                    error={
+                                                        errors[
+                                                            'advisor.last_name'
+                                                        ]
+                                                    }
+                                                />
+                                                <InputField
+                                                    id="advisor_second_last_name"
+                                                    name="advisor[second_last_name]"
+                                                    label="Apellido materno"
+                                                    value={
+                                                        draftAdvisor.second_last_name
+                                                    }
+                                                    onChange={(event) =>
+                                                        setDraftAdvisor(
+                                                            (current) => ({
+                                                                ...current,
+                                                                second_last_name:
+                                                                    event.target
+                                                                        .value,
+                                                            }),
+                                                        )
+                                                    }
+                                                    error={
+                                                        errors[
+                                                            'advisor.second_last_name'
+                                                        ]
+                                                    }
+                                                />
+                                            </div>
+
+                                            {!dismissedDuplicates &&
+                                            personDuplicates.length > 0 ? (
+                                                <div className="space-y-2 rounded-md border border-amber-500/40 bg-amber-500/5 p-3">
+                                                    <p className="text-sm font-medium">
+                                                        ¿Es alguien de estos?
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        Coincidencias posibles.
+                                                        Puedes reutilizar o
+                                                        continuar con el alta
+                                                        nueva.
+                                                    </p>
+                                                    <ul className="space-y-1">
+                                                        {personDuplicates.map(
+                                                            (hit) => (
+                                                                <li key={hit.id}>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="w-full rounded-md border px-3 py-2 text-left text-sm hover:bg-muted"
+                                                                        onClick={() => {
+                                                                            setSelectedAdvisor(
+                                                                                {
+                                                                                    id: hit.id,
+                                                                                    full_name:
+                                                                                        hit.full_name,
+                                                                                    job_title:
+                                                                                        null,
+                                                                                    company_name:
+                                                                                        hit.company_name,
+                                                                                    email_masked:
+                                                                                        null,
+                                                                                    affiliation_id:
+                                                                                        null,
+                                                                                },
+                                                                            );
+                                                                            setMode(
+                                                                                'change',
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <span className="font-medium">
+                                                                            {
+                                                                                hit.full_name
+                                                                            }
+                                                                        </span>
+                                                                        <span className="block text-muted-foreground">
+                                                                            {[
+                                                                                hit.company_name,
+                                                                                hit.reason,
+                                                                                hit.strength,
+                                                                            ]
+                                                                                .filter(
+                                                                                    Boolean,
+                                                                                )
+                                                                                .join(
+                                                                                    ' · ',
+                                                                                )}
+                                                                        </span>
+                                                                    </button>
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                    <button
+                                                        type="button"
+                                                        className="text-xs underline text-muted-foreground"
+                                                        onClick={() =>
+                                                            setDismissedDuplicates(
+                                                                true,
+                                                            )
+                                                        }
+                                                    >
+                                                        No es ninguna; continuar
+                                                        con alta nueva
+                                                    </button>
+                                                </div>
+                                            ) : null}
                                         </div>
                                     ) : null}
 
@@ -534,6 +768,13 @@ export const RepositoryBusinessAdvisorSection = ({
                                                         id="company_name"
                                                         name="company[name]"
                                                         label="Nombre de empresa nueva"
+                                                        value={draftCompanyName}
+                                                        onChange={(event) =>
+                                                            setDraftCompanyName(
+                                                                event.target
+                                                                    .value,
+                                                            )
+                                                        }
                                                         error={
                                                             errors[
                                                                 'company.name'
@@ -544,6 +785,13 @@ export const RepositoryBusinessAdvisorSection = ({
                                                         id="company_rfc"
                                                         name="company[rfc]"
                                                         label="RFC (opcional)"
+                                                        value={draftCompanyRfc}
+                                                        onChange={(event) =>
+                                                            setDraftCompanyRfc(
+                                                                event.target
+                                                                    .value,
+                                                            )
+                                                        }
                                                         error={
                                                             errors[
                                                                 'company.rfc'
@@ -551,6 +799,44 @@ export const RepositoryBusinessAdvisorSection = ({
                                                         }
                                                     />
                                                 </div>
+                                                {companyDuplicateHits.length >
+                                                0 ? (
+                                                    <div className="space-y-1 rounded-md border p-2 text-sm">
+                                                        <p className="font-medium">
+                                                            Empresas similares
+                                                        </p>
+                                                        {companyDuplicateHits.map(
+                                                            (hit) => (
+                                                                <button
+                                                                    key={hit.id}
+                                                                    type="button"
+                                                                    className="block w-full rounded px-2 py-1 text-left hover:bg-muted"
+                                                                    onClick={() => {
+                                                                        setSelectedCompany(
+                                                                            {
+                                                                                id: hit.id,
+                                                                                name: hit.name,
+                                                                                rfc: hit.rfc,
+                                                                                sector: null,
+                                                                            },
+                                                                        );
+                                                                        setDraftCompanyName(
+                                                                            '',
+                                                                        );
+                                                                        setCompanyDuplicateHits(
+                                                                            [],
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    {hit.name}
+                                                                    {hit.rfc
+                                                                        ? ` · ${hit.rfc}`
+                                                                        : ''}
+                                                                </button>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                ) : null}
                                             </>
                                         )}
                                     </div>
@@ -561,6 +847,13 @@ export const RepositoryBusinessAdvisorSection = ({
                                             name="affiliation[email]"
                                             label="Correo de contacto"
                                             type="email"
+                                            value={draftAdvisor.email}
+                                            onChange={(event) =>
+                                                setDraftAdvisor((current) => ({
+                                                    ...current,
+                                                    email: event.target.value,
+                                                }))
+                                            }
                                             error={
                                                 errors['affiliation.email']
                                             }
@@ -569,6 +862,13 @@ export const RepositoryBusinessAdvisorSection = ({
                                             id="affiliation_phone"
                                             name="affiliation[phone]"
                                             label="Telefono"
+                                            value={draftAdvisor.phone}
+                                            onChange={(event) =>
+                                                setDraftAdvisor((current) => ({
+                                                    ...current,
+                                                    phone: event.target.value,
+                                                }))
+                                            }
                                             error={
                                                 errors['affiliation.phone']
                                             }
@@ -629,6 +929,14 @@ export const RepositoryBusinessAdvisorSection = ({
                     ) : null}
                 </div>
             ) : null}
+
+            <p className="text-xs text-muted-foreground">
+                Al registrar datos de contacto aplica el{' '}
+                <Link href="/aviso-de-privacidad" className="underline">
+                    aviso de privacidad
+                </Link>
+                .
+            </p>
         </section>
     );
 };

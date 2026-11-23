@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 type PageProps = {
     status: 'confirmed' | 'rejected';
@@ -22,6 +22,13 @@ const BusinessAdvisorConfirmationPage = ({
                     {status === 'confirmed'
                         ? `Gracias. Tu participacion como asesor empresarial${project_title ? ` en "${project_title}"` : ''} quedo confirmada.`
                         : `Registramos tu rechazo${project_title ? ` para "${project_title}"` : ''}. Si fue un error, contacta a la institucion.`}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                    Consulta el{' '}
+                    <Link href="/aviso-de-privacidad" className="underline">
+                        aviso de privacidad
+                    </Link>
+                    .
                 </p>
             </main>
         </>

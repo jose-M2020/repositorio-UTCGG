@@ -61,6 +61,9 @@ export const AUTH_ABILITIES = {
     BUSINESS_ADVISORS_ATTACH: 'business_advisors.attach',
     BUSINESS_ADVISORS_VIEW_CONTACT: 'business_advisors.view_contact',
     BUSINESS_ADVISORS_VERIFY: 'business_advisors.verify',
+    BUSINESS_ADVISORS_MERGE: 'business_advisors.merge',
+    BUSINESS_ADVISORS_EXPORT: 'business_advisors.export',
+    BUSINESS_ADVISORS_PRIVACY_REQUESTS: 'business_advisors.privacy_requests',
     COMPANIES_CREATE: 'companies.create',
 } as const;
 
