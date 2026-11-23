@@ -2,36 +2,71 @@
 
 namespace App\Models;
 
+use App\Enums\CatalogReviewStatus;
+use App\Enums\CatalogSource;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string|null $name_normalized
  * @property string|null $rfc
  * @property string|null $sector
  * @property string|null $phone
  * @property string|null $email
  * @property int|null $address_id
  * @property string|null $notes
+ * @property CatalogReviewStatus $status
+ * @property CatalogSource $source
+ * @property int|null $merged_into_id
+ * @property int|null $created_by
+ * @property int|null $verified_by
+ * @property Carbon|null $verified_at
  */
 #[Fillable([
     'name',
+    'name_normalized',
     'rfc',
     'sector',
     'phone',
     'email',
     'address_id',
     'notes',
+    'status',
+    'source',
+    'merged_into_id',
+    'created_by',
+    'verified_by',
+    'verified_at',
 ])]
 class Company extends Model
 {
     /** @use HasFactory<CompanyFactory> */
     use HasFactory;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'status' => CatalogReviewStatus::PendingReview->value,
+        'source' => CatalogSource::User->value,
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => CatalogReviewStatus::class,
+            'source' => CatalogSource::class,
+            'verified_at' => 'datetime',
+        ];
+    }
 
     public function address(): BelongsTo
     {
@@ -43,8 +78,42 @@ class Company extends Model
         return $this->hasMany(Repository::class);
     }
 
-    public function businessAdvisors(): HasMany
+    public function affiliations(): HasMany
     {
-        return $this->hasMany(RepositoryBusinessAdvisor::class);
+        return $this->hasMany(BusinessAdvisorAffiliation::class);
+    }
+
+    public function mergedInto(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'merged_into_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function verifiedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    public function scopeSearchable(Builder $query, ?User $viewer = null): Builder
+    {
+        return $query->where(function (Builder $builder) use ($viewer): void {
+            $builder->where('status', CatalogReviewStatus::Verified->value);
+
+            if ($viewer !== null) {
+                $builder->orWhere(function (Builder $ownPending) use ($viewer): void {
+                    $ownPending
+                        ->where('status', CatalogReviewStatus::PendingReview->value)
+                        ->where('created_by', $viewer->id);
+                });
+            }
+        })->whereNotIn('status', [
+            CatalogReviewStatus::Merged->value,
+            CatalogReviewStatus::Rejected->value,
+            CatalogReviewStatus::Inactive->value,
+        ]);
     }
 }

@@ -225,7 +225,7 @@ class RepositoryController extends Controller implements HasMiddleware
             ->all();
 
         return Inertia::render('public/repositories/show', [
-            'repository' => $this->serializeRepository($repository),
+            'repository' => $this->serializeRepository($repository, includeBusinessAdvisor: false),
             'related' => $related,
         ]);
     }
@@ -416,7 +416,7 @@ class RepositoryController extends Controller implements HasMiddleware
     /**
      * @return array<string, mixed>
      */
-    private function serializeRepository(Repository $repository): array
+    private function serializeRepository(Repository $repository, bool $includeBusinessAdvisor = true): array
     {
         $repository->loadMissing([
             'career:id,code',
@@ -424,14 +424,15 @@ class RepositoryController extends Controller implements HasMiddleware
             'educationLevel:id,code',
             'period:id,name,status',
             'company.address',
-            'activeBusinessAdvisor',
+            'activeBusinessAdvisor.businessAdvisor',
             'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
             'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
         ]);
 
         $imagePaths = json_decode($repository->images ?? '[]', true) ?: [];
-        $businessAdvisor = $repository->activeBusinessAdvisor;
+        $businessAdvisor = $includeBusinessAdvisor ? $repository->activeBusinessAdvisor : null;
         $companyAddress = $repository->company?->address;
+        $snapshot = $businessAdvisor?->displaySnapshot() ?? [];
 
         return [
             'id' => $repository->id,
@@ -490,16 +491,20 @@ class RepositoryController extends Controller implements HasMiddleware
             ] : null,
             'business_advisor' => $businessAdvisor ? [
                 'id' => $businessAdvisor->id,
-                'first_name' => $businessAdvisor->first_name,
-                'last_name' => $businessAdvisor->last_name,
-                'second_last_name' => $businessAdvisor->second_last_name,
-                'email' => $businessAdvisor->email,
-                'phone' => $businessAdvisor->phone,
-                'job_title' => $businessAdvisor->job_title,
-                'department' => $businessAdvisor->department,
+                'business_advisor_id' => $businessAdvisor->business_advisor_id,
+                'affiliation_id' => $businessAdvisor->business_advisor_affiliation_id,
+                'first_name' => $snapshot['first_name'] ?? $businessAdvisor->first_name,
+                'last_name' => $snapshot['last_name'] ?? $businessAdvisor->last_name,
+                'second_last_name' => $snapshot['second_last_name'] ?? $businessAdvisor->second_last_name,
+                'email' => $snapshot['email'] ?? $businessAdvisor->email,
+                'phone' => $snapshot['phone'] ?? $businessAdvisor->phone,
+                'job_title' => $snapshot['job_title'] ?? $businessAdvisor->job_title,
+                'department' => $snapshot['department'] ?? $businessAdvisor->department,
                 'notes' => $businessAdvisor->notes,
                 'acceptance_status' => $businessAdvisor->acceptance_status->value,
+                'confirmed_via' => $businessAdvisor->confirmed_via?->value,
                 'full_name' => $businessAdvisor->fullName(),
+                'catalog_status' => $businessAdvisor->businessAdvisor?->status?->value,
             ] : null,
             'generation' => $repository->generation,
             'created_by' => $repository->created_by,

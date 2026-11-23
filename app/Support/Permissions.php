@@ -66,6 +66,20 @@ final class Permissions
     public const ADVISORS_OVERRIDE_CAPACITY = 'advisors.override_capacity';
     public const ADVISORS_DISTRIBUTE = 'advisors.distribute';
 
+    public const BUSINESS_ADVISORS_SEARCH = 'business_advisors.search';
+    public const BUSINESS_ADVISORS_CREATE = 'business_advisors.create';
+    public const BUSINESS_ADVISORS_ATTACH = 'business_advisors.attach';
+    public const BUSINESS_ADVISORS_VIEW_CONTACT = 'business_advisors.view_contact';
+    public const BUSINESS_ADVISORS_VERIFY = 'business_advisors.verify';
+    public const BUSINESS_ADVISORS_MERGE = 'business_advisors.merge';
+    public const BUSINESS_ADVISORS_MANAGE = 'business_advisors.manage';
+    public const BUSINESS_ADVISORS_VIEW_AUDIT = 'business_advisors.view_audit';
+    public const BUSINESS_ADVISORS_EXPORT = 'business_advisors.export';
+    public const BUSINESS_ADVISORS_PRIVACY_REQUESTS = 'business_advisors.privacy_requests';
+    public const COMPANIES_CREATE = 'companies.create';
+    public const COMPANIES_VERIFY = 'companies.verify';
+    public const COMPANIES_MERGE = 'companies.merge';
+
     public static function ability(string $permission): string
     {
         return 'can:'.$permission;
@@ -128,6 +142,20 @@ final class Permissions
             ['name' => self::ADVISORS_ASSIGN, 'description' => 'Asignar, reasignar y liberar asesores', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.assign'],
             ['name' => self::ADVISORS_OVERRIDE_CAPACITY, 'description' => 'Asignar excediendo tope o elegibilidad (exige motivo)', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.override_capacity'],
             ['name' => self::ADVISORS_DISTRIBUTE, 'description' => 'Generar y aplicar propuestas de reparto automatico', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.distribute'],
+
+            ['name' => self::BUSINESS_ADVISORS_SEARCH, 'description' => 'Buscar en el catalogo de asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.search'],
+            ['name' => self::BUSINESS_ADVISORS_CREATE, 'description' => 'Crear asesor/empresa (pendiente de revision)', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.create'],
+            ['name' => self::BUSINESS_ADVISORS_ATTACH, 'description' => 'Adjuntar o liberar asesor empresarial en un repositorio', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.attach'],
+            ['name' => self::BUSINESS_ADVISORS_VIEW_CONTACT, 'description' => 'Ver contacto completo de asesor empresarial', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.view_contact'],
+            ['name' => self::BUSINESS_ADVISORS_VERIFY, 'description' => 'Verificar o rechazar asesores, afiliaciones y empresas', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.verify'],
+            ['name' => self::BUSINESS_ADVISORS_MERGE, 'description' => 'Fusionar asesores empresariales duplicados', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.merge'],
+            ['name' => self::BUSINESS_ADVISORS_MANAGE, 'description' => 'Editar, inactivar o reabrir asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.manage'],
+            ['name' => self::BUSINESS_ADVISORS_VIEW_AUDIT, 'description' => 'Ver bitacora de accesos de asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.view_audit'],
+            ['name' => self::BUSINESS_ADVISORS_EXPORT, 'description' => 'Exportar datos de contacto de asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => null],
+            ['name' => self::BUSINESS_ADVISORS_PRIVACY_REQUESTS, 'description' => 'Atender solicitudes ARCO de asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.privacy_requests'],
+            ['name' => self::COMPANIES_CREATE, 'description' => 'Crear empresa (pendiente de revision)', 'section' => self::SECTION_ACTION, 'shared_as' => 'companies.create'],
+            ['name' => self::COMPANIES_VERIFY, 'description' => 'Verificar o rechazar empresa', 'section' => self::SECTION_ACTION, 'shared_as' => 'companies.verify'],
+            ['name' => self::COMPANIES_MERGE, 'description' => 'Fusionar empresas duplicadas', 'section' => self::SECTION_ACTION, 'shared_as' => 'companies.merge'],
         ];
     }
 
@@ -213,6 +241,18 @@ final class Permissions
                 self::ADVISORS_ASSIGN,
                 self::ADVISORS_OVERRIDE_CAPACITY,
                 self::ADVISORS_DISTRIBUTE,
+                self::BUSINESS_ADVISORS_SEARCH,
+                self::BUSINESS_ADVISORS_CREATE,
+                self::BUSINESS_ADVISORS_ATTACH,
+                self::BUSINESS_ADVISORS_VIEW_CONTACT,
+                self::BUSINESS_ADVISORS_VERIFY,
+                self::BUSINESS_ADVISORS_MERGE,
+                self::BUSINESS_ADVISORS_MANAGE,
+                self::BUSINESS_ADVISORS_VIEW_AUDIT,
+                self::BUSINESS_ADVISORS_PRIVACY_REQUESTS,
+                self::COMPANIES_CREATE,
+                self::COMPANIES_VERIFY,
+                self::COMPANIES_MERGE,
             ],
             UserRoles::CAREER_DIRECTOR => [
                 self::USERS_INDEX,
@@ -235,6 +275,15 @@ final class Permissions
                 self::PROJECT_PERIODS_INDEX,
                 self::ADVISORS_ASSIGN,
                 self::ADVISORS_DISTRIBUTE,
+                self::BUSINESS_ADVISORS_SEARCH,
+                self::BUSINESS_ADVISORS_CREATE,
+                self::BUSINESS_ADVISORS_ATTACH,
+                self::BUSINESS_ADVISORS_VIEW_CONTACT,
+                self::BUSINESS_ADVISORS_VERIFY,
+                self::BUSINESS_ADVISORS_MERGE,
+                self::COMPANIES_CREATE,
+                self::COMPANIES_VERIFY,
+                self::COMPANIES_MERGE,
             ],
             UserRoles::TEACHER => [
                 self::USERS_SEARCH,
@@ -246,6 +295,13 @@ final class Permissions
                 self::FILES_CREATE,
                 self::FILES_EDIT,
                 self::FILES_DESTROY,
+                self::BUSINESS_ADVISORS_SEARCH,
+                self::BUSINESS_ADVISORS_CREATE,
+                self::BUSINESS_ADVISORS_ATTACH,
+                self::BUSINESS_ADVISORS_VIEW_CONTACT,
+                self::BUSINESS_ADVISORS_VERIFY,
+                self::COMPANIES_CREATE,
+                self::COMPANIES_VERIFY,
             ],
             UserRoles::STUDENT => [
                 self::USERS_SEARCH,
@@ -256,6 +312,11 @@ final class Permissions
                 self::FILES_CREATE,
                 self::FILES_EDIT,
                 self::FILES_DESTROY,
+                self::BUSINESS_ADVISORS_SEARCH,
+                self::BUSINESS_ADVISORS_CREATE,
+                self::BUSINESS_ADVISORS_ATTACH,
+                self::BUSINESS_ADVISORS_VIEW_CONTACT,
+                self::COMPANIES_CREATE,
             ],
             default => [],
         };

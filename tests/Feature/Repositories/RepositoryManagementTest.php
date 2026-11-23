@@ -87,6 +87,8 @@ class RepositoryManagementTest extends TestCase
                 'first_name' => 'Ana',
                 'last_name' => 'Lopez',
                 'second_last_name' => 'Ruiz',
+                'email' => 'ana.lopez@example.com',
+                'phone' => '3312345678',
             ],
             'generation' => '2026',
         ]);
@@ -104,12 +106,23 @@ class RepositoryManagementTest extends TestCase
             'postal_code' => '49000',
         ]);
         $this->assertNotNull($repo->company?->address_id);
-        $this->assertDatabaseHas('repository_business_advisors', [
-            'repository_id' => $repo->id,
+        $this->assertDatabaseHas('business_advisors', [
             'first_name' => 'Ana',
             'last_name' => 'Lopez',
             'second_last_name' => 'Ruiz',
         ]);
+        $this->assertDatabaseHas('business_advisor_affiliations', [
+            'email' => 'ana.lopez@example.com',
+            'phone' => '3312345678',
+        ]);
+        $this->assertDatabaseHas('repository_business_advisors', [
+            'repository_id' => $repo->id,
+            'first_name' => 'Ana',
+            'last_name' => 'Lopez',
+        ]);
+        $assignment = $repo->activeBusinessAdvisor;
+        $this->assertNotNull($assignment?->business_advisor_id);
+        $this->assertNotNull($assignment?->snapshot);
     }
 
     public function test_member_can_create_repository_without_extra_members(): void

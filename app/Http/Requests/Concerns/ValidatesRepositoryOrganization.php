@@ -60,24 +60,49 @@ trait ValidatesRepositoryOrganization
     protected function afterOrganizationValidation(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if (! $this->projectTypeRequiresBusinessAdvisor()) {
+            $firstName = trim((string) $this->input('business_advisor.first_name', ''));
+            $lastName = trim((string) $this->input('business_advisor.last_name', ''));
+            $hasAdvisorNames = $firstName !== '' && $lastName !== '';
+
+            if ($this->projectTypeRequiresBusinessAdvisor()) {
+                if ($firstName === '') {
+                    $validator->errors()->add(
+                        'business_advisor.first_name',
+                        'El nombre del asesor empresarial es obligatorio para este tipo de proyecto.',
+                    );
+                }
+
+                if ($lastName === '') {
+                    $validator->errors()->add(
+                        'business_advisor.last_name',
+                        'El apellido del asesor empresarial es obligatorio para este tipo de proyecto.',
+                    );
+                }
+            }
+
+            if (! $hasAdvisorNames && ! $this->projectTypeRequiresBusinessAdvisor()) {
                 return;
             }
 
-            $firstName = trim((string) $this->input('business_advisor.first_name', ''));
-            $lastName = trim((string) $this->input('business_advisor.last_name', ''));
+            if (! $hasAdvisorNames) {
+                return;
+            }
 
-            if ($firstName === '') {
+            $email = trim((string) $this->input('business_advisor.email', ''));
+            $phone = trim((string) $this->input('business_advisor.phone', ''));
+            $companyName = trim((string) $this->input('company.name', ''));
+
+            if ($email === '' && $phone === '') {
                 $validator->errors()->add(
-                    'business_advisor.first_name',
-                    'El nombre del asesor empresarial es obligatorio para este tipo de proyecto.',
+                    'business_advisor.email',
+                    'Se requiere correo o telefono de contacto del asesor empresarial.',
                 );
             }
 
-            if ($lastName === '') {
+            if ($companyName === '' && ! $this->filled('company.existing_company_id')) {
                 $validator->errors()->add(
-                    'business_advisor.last_name',
-                    'El apellido del asesor empresarial es obligatorio para este tipo de proyecto.',
+                    'company.name',
+                    'La empresa es obligatoria al registrar un asesor empresarial.',
                 );
             }
         });
