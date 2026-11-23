@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\BusinessAdvisorAcceptanceStatus;
+use App\Models\BusinessAdvisor;
+use App\Models\BusinessAdvisorAffiliation;
 use App\Models\Company;
 use App\Models\Repository;
 use App\Models\RepositoryBusinessAdvisor;
@@ -20,18 +22,44 @@ class RepositoryBusinessAdvisorFactory extends Factory
      */
     public function definition(): array
     {
+        $advisor = BusinessAdvisor::factory()->create();
+        $company = Company::factory()->create();
+        $affiliation = BusinessAdvisorAffiliation::factory()->create([
+            'business_advisor_id' => $advisor->id,
+            'company_id' => $company->id,
+        ]);
+
+        $snapshot = [
+            'first_name' => $advisor->first_name,
+            'last_name' => $advisor->last_name,
+            'second_last_name' => $advisor->second_last_name,
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name,
+                'rfc' => $company->rfc,
+            ],
+            'job_title' => $affiliation->job_title,
+            'department' => $affiliation->department,
+            'email' => $affiliation->email,
+            'phone' => $affiliation->phone,
+            'captured_at' => now()->toIso8601String(),
+        ];
+
         return [
             'repository_id' => Repository::factory(),
-            'company_id' => Company::factory(),
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'second_last_name' => fake()->optional()->lastName(),
-            'email' => fake()->optional()->safeEmail(),
-            'phone' => fake()->optional()->numerify('##########'),
-            'job_title' => fake()->optional()->jobTitle(),
-            'department' => fake()->optional()->word(),
+            'business_advisor_id' => $advisor->id,
+            'business_advisor_affiliation_id' => $affiliation->id,
+            'snapshot' => $snapshot,
+            'company_id' => $company->id,
+            'first_name' => $advisor->first_name,
+            'last_name' => $advisor->last_name,
+            'second_last_name' => $advisor->second_last_name,
+            'email' => $affiliation->email,
+            'phone' => $affiliation->phone,
+            'job_title' => $affiliation->job_title,
+            'department' => $affiliation->department,
             'is_primary' => true,
-            'acceptance_status' => BusinessAdvisorAcceptanceStatus::Confirmed->value,
+            'acceptance_status' => BusinessAdvisorAcceptanceStatus::Pending->value,
             'document_path' => null,
             'notes' => null,
             'created_by' => null,
