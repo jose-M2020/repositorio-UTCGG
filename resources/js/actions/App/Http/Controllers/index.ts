@@ -8,6 +8,11 @@ import ProjectPeriodController from './ProjectPeriodController'
 import ProjectPeriodParticipantController from './ProjectPeriodParticipantController'
 import AdvisorCapacityController from './AdvisorCapacityController'
 import RepositoryAdvisorController from './RepositoryAdvisorController'
+import BusinessAdvisorConfirmationController from './BusinessAdvisorConfirmationController'
+import BusinessAdvisorController from './BusinessAdvisorController'
+import CompanyCatalogController from './CompanyCatalogController'
+import BusinessAdvisorAffiliationController from './BusinessAdvisorAffiliationController'
+import RepositoryBusinessAdvisorController from './RepositoryBusinessAdvisorController'
 import RepositoryController from './RepositoryController'
 import FileController from './FileController'
 import AccountSettingsController from './AccountSettingsController'
@@ -24,6 +29,11 @@ ProjectPeriodController: Object.assign(ProjectPeriodController, ProjectPeriodCon
 ProjectPeriodParticipantController: Object.assign(ProjectPeriodParticipantController, ProjectPeriodParticipantController),
 AdvisorCapacityController: Object.assign(AdvisorCapacityController, AdvisorCapacityController),
 RepositoryAdvisorController: Object.assign(RepositoryAdvisorController, RepositoryAdvisorController),
+BusinessAdvisorConfirmationController: Object.assign(BusinessAdvisorConfirmationController, BusinessAdvisorConfirmationController),
+BusinessAdvisorController: Object.assign(BusinessAdvisorController, BusinessAdvisorController),
+CompanyCatalogController: Object.assign(CompanyCatalogController, CompanyCatalogController),
+BusinessAdvisorAffiliationController: Object.assign(BusinessAdvisorAffiliationController, BusinessAdvisorAffiliationController),
+RepositoryBusinessAdvisorController: Object.assign(RepositoryBusinessAdvisorController, RepositoryBusinessAdvisorController),
 RepositoryController: Object.assign(RepositoryController, RepositoryController),
 FileController: Object.assign(FileController, FileController),
 AccountSettingsController: Object.assign(AccountSettingsController, AccountSettingsController),

@@ -1,5 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import advisors from './advisors'
+import businessAdvisors from './business-advisors'
 import account from './account'
 import members from './members'
 /**
@@ -698,6 +699,7 @@ show.head = (args: { repository: string | { slug: string } } | [repository: stri
     show.form = showForm
 const repositories = {
     advisors: Object.assign(advisors, advisors),
+businessAdvisors: Object.assign(businessAdvisors, businessAdvisors),
 index: Object.assign(index, index),
 create: Object.assign(create, create),
 store: Object.assign(store, store),
