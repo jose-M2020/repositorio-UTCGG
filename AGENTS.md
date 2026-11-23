@@ -2,7 +2,24 @@
 
 ## Project Overview
 
-Repositorio
+Repositorio Institucional de Proyectos Académicos: Laravel 13 + Inertia/React.
+
+## Documentation (required)
+
+When you **add, change, or remove** code that affects behavior — modules, business rules, permissions, flows, schemas, validations, statuses, limits, or user-facing features — you **must** update `docs/` in the **same change**.
+
+| Change type | Update |
+|-------------|--------|
+| New module / entity with its own rules or lifecycle | Create `docs/business/NN-*.md` from `docs/_templates/module.md`; index in `docs/README.md` |
+| Changed rule, validation, permission, status, or limit | Edit the matching module: rules + scenarios (stable IDs; never renumber) |
+| Removed behavior | Remove or leave ID gaps per `docs/AGENTS.md`; move “not done yet” items to `docs/business/99-known-gaps.md` |
+| Cross-module end-to-end journey | `docs/flows/` (not inside a business module) |
+| Tables, FKs, enums | `docs/technical/database-schema.md` |
+| Structure / style of docs themselves | Follow `docs/AGENTS.md` |
+
+**Rules:** code is the source of truth; do not invent undocumented behavior; do not leave `docs/` stale after a behavioral change.
+
+Index: [`docs/README.md`](docs/README.md) · Conventions: [`docs/AGENTS.md`](docs/AGENTS.md)
 
 ## Tech Stack
 
