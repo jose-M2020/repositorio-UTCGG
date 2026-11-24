@@ -6,4 +6,7 @@ return [
 
     // Maximo de asesores empresariales activos por repositorio.
     'max_business_advisors' => (int) env('PROJECTS_MAX_BUSINESS_ADVISORS', 3),
+
+    // Maximo de co-asesores academicos activos por repositorio.
+    'max_co_advisors' => (int) env('PROJECTS_MAX_CO_ADVISORS', 2),
 ];

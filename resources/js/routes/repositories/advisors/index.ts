@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::assign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:29
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:30
  * @route '/repositories/{repository}/advisors'
  */
 export const assign = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ assign.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::assign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:29
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:30
  * @route '/repositories/{repository}/advisors'
  */
 assign.url = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ assign.url = (args: { repository: string | { slug: string } } | [repository: str
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::assign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:29
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:30
  * @route '/repositories/{repository}/advisors'
  */
 assign.post = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -59,7 +59,7 @@ assign.post = (args: { repository: string | { slug: string } } | [repository: st
 
     /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::assign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:29
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:30
  * @route '/repositories/{repository}/advisors'
  */
     const assignForm = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -69,7 +69,7 @@ assign.post = (args: { repository: string | { slug: string } } | [repository: st
 
             /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::assign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:29
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:30
  * @route '/repositories/{repository}/advisors'
  */
         assignForm.post = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -80,7 +80,7 @@ assign.post = (args: { repository: string | { slug: string } } | [repository: st
     assign.form = assignForm
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::reassign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:46
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:53
  * @route '/repositories/{repository}/advisors/reassign'
  */
 export const reassign = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -95,7 +95,7 @@ reassign.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::reassign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:46
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:53
  * @route '/repositories/{repository}/advisors/reassign'
  */
 reassign.url = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -128,7 +128,7 @@ reassign.url = (args: { repository: string | { slug: string } } | [repository: s
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::reassign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:46
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:53
  * @route '/repositories/{repository}/advisors/reassign'
  */
 reassign.post = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -138,7 +138,7 @@ reassign.post = (args: { repository: string | { slug: string } } | [repository: 
 
     /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::reassign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:46
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:53
  * @route '/repositories/{repository}/advisors/reassign'
  */
     const reassignForm = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -148,7 +148,7 @@ reassign.post = (args: { repository: string | { slug: string } } | [repository: 
 
             /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::reassign
- * @see app/Http/Controllers/RepositoryAdvisorController.php:46
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:53
  * @route '/repositories/{repository}/advisors/reassign'
  */
         reassignForm.post = (args: { repository: string | { slug: string } } | [repository: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -159,7 +159,7 @@ reassign.post = (args: { repository: string | { slug: string } } | [repository: 
     reassign.form = reassignForm
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::release
- * @see app/Http/Controllers/RepositoryAdvisorController.php:63
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:70
  * @route '/repositories/{repository}/advisors/{repository_advisor}'
  */
 export const release = (args: { repository: string | { slug: string }, repository_advisor: number | { id: number } } | [repository: string | { slug: string }, repository_advisor: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -174,7 +174,7 @@ release.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::release
- * @see app/Http/Controllers/RepositoryAdvisorController.php:63
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:70
  * @route '/repositories/{repository}/advisors/{repository_advisor}'
  */
 release.url = (args: { repository: string | { slug: string }, repository_advisor: number | { id: number } } | [repository: string | { slug: string }, repository_advisor: number | { id: number } ], options?: RouteQueryOptions) => {
@@ -204,7 +204,7 @@ release.url = (args: { repository: string | { slug: string }, repository_advisor
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::release
- * @see app/Http/Controllers/RepositoryAdvisorController.php:63
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:70
  * @route '/repositories/{repository}/advisors/{repository_advisor}'
  */
 release.delete = (args: { repository: string | { slug: string }, repository_advisor: number | { id: number } } | [repository: string | { slug: string }, repository_advisor: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -214,7 +214,7 @@ release.delete = (args: { repository: string | { slug: string }, repository_advi
 
     /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::release
- * @see app/Http/Controllers/RepositoryAdvisorController.php:63
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:70
  * @route '/repositories/{repository}/advisors/{repository_advisor}'
  */
     const releaseForm = (args: { repository: string | { slug: string }, repository_advisor: number | { id: number } } | [repository: string | { slug: string }, repository_advisor: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -229,7 +229,7 @@ release.delete = (args: { repository: string | { slug: string }, repository_advi
 
             /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::release
- * @see app/Http/Controllers/RepositoryAdvisorController.php:63
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:70
  * @route '/repositories/{repository}/advisors/{repository_advisor}'
  */
         releaseForm.delete = (args: { repository: string | { slug: string }, repository_advisor: number | { id: number } } | [repository: string | { slug: string }, repository_advisor: number | { id: number } ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

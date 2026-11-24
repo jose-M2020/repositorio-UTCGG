@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AdvisorRole;
 use App\Http\Requests\ApplyAdvisorDistributionRequest;
 use App\Http\Requests\AssignRepositoryAdvisorRequest;
 use App\Models\ProjectPeriod;
@@ -32,15 +33,21 @@ class RepositoryAdvisorController extends Controller implements HasMiddleware
         AdvisorAssignmentService $assignmentService,
     ): RedirectResponse {
         $advisor = User::query()->findOrFail((int) $request->validated('advisor_id'));
+        $role = $request->enum('role', AdvisorRole::class) ?? AdvisorRole::Primary;
 
         $assignmentService->assign(
             $repository,
             $advisor,
             $request->user(),
             $request->validated('override_reason'),
+            $role,
         );
 
-        return back()->with('status', 'Asesor academico asignado.');
+        $status = $role === AdvisorRole::CoAdvisor
+            ? 'Co-asesor academico asignado.'
+            : 'Asesor academico asignado.';
+
+        return back()->with('status', $status);
     }
 
     public function reassign(

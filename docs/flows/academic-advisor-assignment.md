@@ -11,6 +11,7 @@ flowchart LR
   E --> C[¿Quién tiene cupo?]
   C --> A[Asignar o repartir]
   A --> L[Asesor primary activo en el repo]
+  L --> C2[Opcional: agregar co-asesores]
 ```
 
 ```mermaid

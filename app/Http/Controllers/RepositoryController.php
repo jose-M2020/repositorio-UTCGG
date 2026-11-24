@@ -245,13 +245,20 @@ class RepositoryController extends Controller implements HasMiddleware
             'users:id,first_name,last_name,second_last_name,email',
             'files',
             'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
+            'activeCoAdvisors.advisor:id,first_name,last_name,second_last_name,email',
             'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
             'period:id,name,status',
             'projectType:id,code,requires_academic_advisor',
         ]);
 
+        $activeAdvisorIds = collect([
+            $repository->activeAdvisor?->user_id,
+            ...$repository->activeCoAdvisors->pluck('user_id'),
+        ])->filter()->map(fn ($id): int => (int) $id)->all();
+
         $eligibleAdvisors = $repository->project_period_id
             ? $eligibleAdvisorsQuery->forRepository($repository, requireCapacity: false)
+                ->reject(fn (array $row): bool => in_array((int) $row['user']->id, $activeAdvisorIds, true))
                 ->map(fn (array $row): array => [
                     'id' => (int) $row['user']->id,
                     'name' => $row['user']->fullName(),
@@ -424,6 +431,7 @@ class RepositoryController extends Controller implements HasMiddleware
             'company.address',
             'activeBusinessAdvisor.businessAdvisor',
             'activeAdvisor.advisor:id,first_name,last_name,second_last_name,email',
+            'activeCoAdvisors.advisor:id,first_name,last_name,second_last_name,email',
             'advisors' => fn ($query) => $query->latest('assigned_at')->with('advisor:id,first_name,last_name,second_last_name,email'),
         ]);
 
@@ -454,13 +462,26 @@ class RepositoryController extends Controller implements HasMiddleware
                 'id' => $repository->activeAdvisor->id,
                 'user_id' => $repository->activeAdvisor->user_id,
                 'name' => $repository->activeAdvisor->advisor?->fullName(),
+                'role' => $repository->activeAdvisor->role->value,
+                'role_label' => $repository->activeAdvisor->role->label(),
                 'assigned_at' => $repository->activeAdvisor->assigned_at?->toIso8601String(),
                 'override_reason' => $repository->activeAdvisor->override_reason,
             ] : null,
+            'active_co_advisors' => $repository->activeCoAdvisors->map(fn ($assignment): array => [
+                'id' => $assignment->id,
+                'user_id' => $assignment->user_id,
+                'name' => $assignment->advisor?->fullName(),
+                'role' => $assignment->role->value,
+                'role_label' => $assignment->role->label(),
+                'assigned_at' => $assignment->assigned_at?->toIso8601String(),
+                'override_reason' => $assignment->override_reason,
+            ])->values()->all(),
             'advisor_history' => $repository->relationLoaded('advisors')
                 ? $repository->advisors->map(fn ($assignment): array => [
                     'id' => $assignment->id,
                     'name' => $assignment->advisor?->fullName(),
+                    'role' => $assignment->role->value,
+                    'role_label' => $assignment->role->label(),
                     'assigned_at' => $assignment->assigned_at?->toIso8601String(),
                     'released_at' => $assignment->released_at?->toIso8601String(),
                     'override_reason' => $assignment->override_reason,

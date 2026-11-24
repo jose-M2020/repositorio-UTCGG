@@ -18,6 +18,8 @@ export type RepositoryAdvisorSummary = {
   id: number;
   user_id?: number;
   name: string | null;
+  role?: 'primary' | 'co_advisor';
+  role_label?: string;
   assigned_at: string | null;
   released_at?: string | null;
   override_reason?: string | null;
@@ -92,6 +94,7 @@ export type Repository = {
     status: string;
   } | null;
   active_advisor?: RepositoryAdvisorSummary | null;
+  active_co_advisors?: RepositoryAdvisorSummary[];
   advisor_history?: RepositoryAdvisorSummary[];
   company: RepositoryCompany | null;
   business_advisor?: RepositoryBusinessAdvisor | null;

@@ -12,6 +12,7 @@ use App\Models\Repository;
 use App\Models\RepositoryAdvisor;
 use App\Models\User;
 use App\Services\Advisors\AdvisorAssignmentService;
+use App\Services\Advisors\AdvisorCapacityResolver;
 use Database\Seeders\PermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
@@ -127,6 +128,126 @@ class AdvisorAssignmentTest extends TestCase
 
         $this->expectException(ValidationException::class);
         app(AdvisorAssignmentService::class)->assign($repository, $advisor, $actor);
+    }
+
+    public function test_co_advisor_requires_active_primary(): void
+    {
+        [, $repository, $advisor, $actor] = $this->setupAssignmentContext(capacity: 5);
+
+        $this->expectException(ValidationException::class);
+        app(AdvisorAssignmentService::class)->assign(
+            $repository,
+            $advisor,
+            $actor,
+            null,
+            AdvisorRole::CoAdvisor,
+        );
+    }
+
+    public function test_assign_co_advisor_when_primary_exists(): void
+    {
+        [, $repository, $advisor, $actor] = $this->setupAssignmentContext(capacity: 5);
+        $coAdvisor = User::factory()->teacher()->create();
+        $this->seedTeacherCareer($coAdvisor, 'TIC');
+
+        app(AdvisorAssignmentService::class)->assign($repository, $advisor, $actor);
+
+        $assignment = app(AdvisorAssignmentService::class)->assign(
+            $repository,
+            $coAdvisor,
+            $actor,
+            null,
+            AdvisorRole::CoAdvisor,
+        );
+
+        $this->assertSame(AdvisorRole::CoAdvisor, $assignment->role);
+        $this->assertNull($assignment->released_at);
+        $this->assertSame($coAdvisor->id, $assignment->user_id);
+        $this->assertSame($advisor->id, $repository->fresh()->activeAdvisor?->user_id);
+    }
+
+    public function test_rejects_duplicate_active_advisor_on_same_repository(): void
+    {
+        [, $repository, $advisor, $actor] = $this->setupAssignmentContext(capacity: 5);
+
+        app(AdvisorAssignmentService::class)->assign($repository, $advisor, $actor);
+
+        $this->expectException(ValidationException::class);
+        app(AdvisorAssignmentService::class)->assign(
+            $repository,
+            $advisor,
+            $actor,
+            null,
+            AdvisorRole::CoAdvisor,
+        );
+    }
+
+    public function test_rejects_co_advisor_above_configured_maximum(): void
+    {
+        config(['projects.max_co_advisors' => 2]);
+
+        [, $repository, $primary, $actor] = $this->setupAssignmentContext(capacity: 5);
+        app(AdvisorAssignmentService::class)->assign($repository, $primary, $actor);
+
+        $first = User::factory()->teacher()->create();
+        $second = User::factory()->teacher()->create();
+        $third = User::factory()->teacher()->create();
+        $this->seedTeacherCareer($first, 'TIC');
+        $this->seedTeacherCareer($second, 'TIC');
+        $this->seedTeacherCareer($third, 'TIC');
+
+        app(AdvisorAssignmentService::class)->assign($repository, $first, $actor, null, AdvisorRole::CoAdvisor);
+        app(AdvisorAssignmentService::class)->assign($repository, $second, $actor, null, AdvisorRole::CoAdvisor);
+
+        $this->expectException(ValidationException::class);
+        app(AdvisorAssignmentService::class)->assign($repository, $third, $actor, null, AdvisorRole::CoAdvisor);
+    }
+
+    public function test_co_advisor_counts_toward_period_load(): void
+    {
+        [$period, $repository, $advisor, $actor] = $this->setupAssignmentContext(capacity: 5);
+        $primary = User::factory()->teacher()->create();
+        $this->seedTeacherCareer($primary, 'TIC');
+
+        app(AdvisorAssignmentService::class)->assign($repository, $primary, $actor);
+        app(AdvisorAssignmentService::class)->assign(
+            $repository,
+            $advisor,
+            $actor,
+            null,
+            AdvisorRole::CoAdvisor,
+        );
+
+        $otherRepo = $this->makeRepository($period, 'TIC');
+        app(AdvisorAssignmentService::class)->assign($otherRepo, $advisor, $actor);
+
+        $this->assertSame(
+            2,
+            app(AdvisorCapacityResolver::class)->currentLoad($advisor->id, $period->id),
+        );
+    }
+
+    public function test_reassign_primary_does_not_release_co_advisors(): void
+    {
+        [, $repository, $primary, $actor] = $this->setupAssignmentContext(capacity: 5);
+        $coAdvisor = User::factory()->teacher()->create();
+        $replacement = User::factory()->teacher()->create();
+        $this->seedTeacherCareer($coAdvisor, 'TIC');
+        $this->seedTeacherCareer($replacement, 'TIC');
+
+        app(AdvisorAssignmentService::class)->assign($repository, $primary, $actor);
+        $coAssignment = app(AdvisorAssignmentService::class)->assign(
+            $repository,
+            $coAdvisor,
+            $actor,
+            null,
+            AdvisorRole::CoAdvisor,
+        );
+
+        app(AdvisorAssignmentService::class)->reassign($repository, $replacement, $actor);
+
+        $this->assertNull($coAssignment->fresh()->released_at);
+        $this->assertSame($replacement->id, $repository->fresh()->activeAdvisor?->user_id);
     }
 
     /**

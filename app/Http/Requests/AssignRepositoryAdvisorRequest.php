@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AdvisorRole;
 use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AssignRepositoryAdvisorRequest extends FormRequest
 {
@@ -17,6 +19,7 @@ class AssignRepositoryAdvisorRequest extends FormRequest
     {
         return [
             'advisor_id' => ['required', 'integer', 'exists:users,id'],
+            'role' => ['nullable', Rule::enum(AdvisorRole::class)],
             'override_reason' => ['nullable', 'string', 'max:500'],
         ];
     }

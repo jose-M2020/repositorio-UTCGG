@@ -19,7 +19,7 @@ Lista de lo **implementado a medias** o pendiente. Actualizar al cerrar ítems e
 
 | Ítem | Estado |
 |------|--------|
-| `co_advisor` | Enum existe; asignación solo `primary` |
+| `co_advisor` | Hecho (assign/release + UI en gestión de repo; max vía `PROJECTS_MAX_CO_ADVISORS`) |
 | `requires_term` / `requires_internship_flow` | Flags en catálogo; poco enforcement runtime |
 
 ## Frontend / stack declarado

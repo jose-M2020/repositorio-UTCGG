@@ -23,6 +23,7 @@ export const RepositoryManageContainer = ({
     repository.requires_academic_advisor ||
     repository.requires_business_advisor ||
     Boolean(repository.active_advisor) ||
+    (repository.active_co_advisors?.length ?? 0) > 0 ||
     Boolean(repository.business_advisor);
 
   return (

@@ -80,7 +80,7 @@ propose.post = (args: { project_period: number | { id: number } } | [project_per
     propose.form = proposeForm
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::apply
- * @see app/Http/Controllers/RepositoryAdvisorController.php:75
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:82
  * @route '/project-periods/{project_period}/distribute/apply'
  */
 export const apply = (args: { project_period: number | { id: number } } | [project_period: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -95,7 +95,7 @@ apply.definition = {
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::apply
- * @see app/Http/Controllers/RepositoryAdvisorController.php:75
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:82
  * @route '/project-periods/{project_period}/distribute/apply'
  */
 apply.url = (args: { project_period: number | { id: number } } | [project_period: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -128,7 +128,7 @@ apply.url = (args: { project_period: number | { id: number } } | [project_period
 
 /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::apply
- * @see app/Http/Controllers/RepositoryAdvisorController.php:75
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:82
  * @route '/project-periods/{project_period}/distribute/apply'
  */
 apply.post = (args: { project_period: number | { id: number } } | [project_period: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -138,7 +138,7 @@ apply.post = (args: { project_period: number | { id: number } } | [project_perio
 
     /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::apply
- * @see app/Http/Controllers/RepositoryAdvisorController.php:75
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:82
  * @route '/project-periods/{project_period}/distribute/apply'
  */
     const applyForm = (args: { project_period: number | { id: number } } | [project_period: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -148,7 +148,7 @@ apply.post = (args: { project_period: number | { id: number } } | [project_perio
 
             /**
 * @see \App\Http\Controllers\RepositoryAdvisorController::apply
- * @see app/Http/Controllers/RepositoryAdvisorController.php:75
+ * @see app/Http/Controllers/RepositoryAdvisorController.php:82
  * @route '/project-periods/{project_period}/distribute/apply'
  */
         applyForm.post = (args: { project_period: number | { id: number } } | [project_period: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

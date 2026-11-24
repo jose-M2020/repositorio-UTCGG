@@ -24,10 +24,11 @@ class AdvisorAssignmentService
         User $advisor,
         User $actor,
         ?string $overrideReason = null,
+        AdvisorRole $role = AdvisorRole::Primary,
     ): RepositoryAdvisor {
         $this->assertActorCanAssign($actor, $repository);
 
-        return DB::transaction(function () use ($repository, $advisor, $actor, $overrideReason): RepositoryAdvisor {
+        return DB::transaction(function () use ($repository, $advisor, $actor, $overrideReason, $role): RepositoryAdvisor {
             $repository = Repository::query()->lockForUpdate()->findOrFail($repository->id);
             $period = $repository->period;
 
@@ -43,6 +44,8 @@ class AdvisorAssignmentService
                 ]);
             }
 
+            $this->assertRoleConstraints($repository, $advisor, $role);
+
             $capacity = AdvisorPeriodCapacity::query()->firstOrCreate(
                 [
                     'project_period_id' => $period->id,
@@ -55,19 +58,6 @@ class AdvisorAssignmentService
             );
 
             $capacity = AdvisorPeriodCapacity::query()->lockForUpdate()->findOrFail($capacity->id);
-
-            $activePrimary = RepositoryAdvisor::query()
-                ->where('repository_id', $repository->id)
-                ->where('role', AdvisorRole::Primary->value)
-                ->whereNull('released_at')
-                ->lockForUpdate()
-                ->first();
-
-            if ($activePrimary !== null) {
-                throw ValidationException::withMessages([
-                    'advisor' => 'El repositorio ya tiene un asesor principal activo. Usa reasignar.',
-                ]);
-            }
 
             $eligible = $this->eligibleAdvisorsQuery
                 ->forRepository($repository, requireCapacity: false)
@@ -85,7 +75,7 @@ class AdvisorAssignmentService
                 'repository_id' => $repository->id,
                 'user_id' => $advisor->id,
                 'project_period_id' => $period->id,
-                'role' => AdvisorRole::Primary->value,
+                'role' => $role->value,
                 'assigned_by' => $actor->id,
                 'assigned_at' => now(),
                 'released_at' => null,
@@ -128,8 +118,68 @@ class AdvisorAssignmentService
                 $this->release($active, $actor);
             }
 
-            return $this->assign($repository, $advisor, $actor, $overrideReason);
+            return $this->assign($repository, $advisor, $actor, $overrideReason, AdvisorRole::Primary);
         });
+    }
+
+    private function assertRoleConstraints(Repository $repository, User $advisor, AdvisorRole $role): void
+    {
+        $alreadyActive = RepositoryAdvisor::query()
+            ->where('repository_id', $repository->id)
+            ->where('user_id', $advisor->id)
+            ->whereNull('released_at')
+            ->lockForUpdate()
+            ->exists();
+
+        if ($alreadyActive) {
+            throw ValidationException::withMessages([
+                'advisor' => 'Este docente ya esta asignado de forma activa a este repositorio.',
+            ]);
+        }
+
+        if ($role === AdvisorRole::Primary) {
+            $activePrimary = RepositoryAdvisor::query()
+                ->where('repository_id', $repository->id)
+                ->where('role', AdvisorRole::Primary->value)
+                ->whereNull('released_at')
+                ->lockForUpdate()
+                ->first();
+
+            if ($activePrimary !== null) {
+                throw ValidationException::withMessages([
+                    'advisor' => 'El repositorio ya tiene un asesor principal activo. Usa reasignar.',
+                ]);
+            }
+
+            return;
+        }
+
+        $activePrimary = RepositoryAdvisor::query()
+            ->where('repository_id', $repository->id)
+            ->where('role', AdvisorRole::Primary->value)
+            ->whereNull('released_at')
+            ->lockForUpdate()
+            ->first();
+
+        if ($activePrimary === null) {
+            throw ValidationException::withMessages([
+                'advisor' => 'Debes asignar un asesor principal antes de agregar co-asesores.',
+            ]);
+        }
+
+        $maxCoAdvisors = (int) config('projects.max_co_advisors', 2);
+        $activeCoCount = RepositoryAdvisor::query()
+            ->where('repository_id', $repository->id)
+            ->where('role', AdvisorRole::CoAdvisor->value)
+            ->whereNull('released_at')
+            ->lockForUpdate()
+            ->count();
+
+        if ($activeCoCount >= $maxCoAdvisors) {
+            throw ValidationException::withMessages([
+                'advisor' => "El repositorio ya tiene el maximo de {$maxCoAdvisors} co-asesores activos.",
+            ]);
+        }
     }
 
     private function assertActorCanAssign(User $actor, Repository $repository): void

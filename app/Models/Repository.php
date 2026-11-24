@@ -99,10 +99,21 @@ class Repository extends Model
 
     public function activeAdvisor(): HasOne
     {
-        return $this->hasOne(RepositoryAdvisor::class)
-            ->where('role', AdvisorRole::Primary->value)
+        return $this->hasOne(RepositoryAdvisor::class)->ofMany(
+            ['assigned_at' => 'MAX'],
+            function ($query): void {
+                $query->where('role', AdvisorRole::Primary->value)
+                    ->whereNull('released_at');
+            },
+        );
+    }
+
+    public function activeCoAdvisors(): HasMany
+    {
+        return $this->hasMany(RepositoryAdvisor::class)
+            ->where('role', AdvisorRole::CoAdvisor->value)
             ->whereNull('released_at')
-            ->latestOfMany('assigned_at');
+            ->latest('assigned_at');
     }
 
     public function company(): BelongsTo

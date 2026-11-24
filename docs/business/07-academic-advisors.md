@@ -23,10 +23,11 @@ Asesor empresarial (persona externa): ver [08-business-advisors-and-companies.md
 ## Conceptos clave
 
 
-| Término        | Significado                                                       |
-| -------------- | ----------------------------------------------------------------- |
-| Saturación     | Ratio carga/cupo; candidatos se ordenan por menor saturación      |
-| Primary activo | Única asignación `role = primary` con `released_at` null por repo |
+| Término           | Significado                                                                 |
+| ----------------- | --------------------------------------------------------------------------- |
+| Saturación        | Ratio carga/cupo; candidatos se ordenan por menor saturación                |
+| Primary activo    | Única asignación `role = primary` con `released_at` null por repo           |
+| Co-asesor activo  | Asignación `role = co_advisor` con `released_at` null; hasta `PROJECTS_MAX_CO_ADVISORS` (default **2**) |
 
 
 
@@ -44,11 +45,13 @@ Asesor empresarial (persona externa): ver [08-business-advisors-and-companies.md
 | ADV-R6  | Elegible solo si alguna carrera del docente cubre la del repo y solapa fechas del periodo.                                                               |
 | ADV-R7  | Director de carrera sin “cualquier carrera” solo opera sobre sus carreras.                                                                               |
 | ADV-R8  | Un solo asesor `primary` activo por proyecto.                                                                                                            |
-| ADV-R9  | Reasignar = liberar actual (`released_at`) y asignar otro.                                                                                               |
-| ADV-R10 | El enum `co_advisor` existe; el flujo actual solo crea `primary` (ver [99-known-gaps](99-known-gaps.md)).                                                |
+| ADV-R9  | Reasignar = liberar el `primary` actual (`released_at`) y asignar otro `primary`; no toca co-asesores.                                                   |
+| ADV-R10 | Co-asesor (`role = co_advisor`): requiere `primary` activo; máximo `PROJECTS_MAX_CO_ADVISORS` (default **2**); misma validación de elegibilidad/cupo.   |
 | ADV-R11 | Liberar no borra el registro: pone `released_at` (historia).                                                                                             |
 | ADV-R12 | Distribución automática: repos del periodo sin primary; propone por menor carga proyectada; al aplicar no inventa overrides.                             |
 | ADV-R13 | Cobertura: demanda = # repos si `is_team_project`, si no # inscritos; sugiere cupo ≈ ceil(demanda / docentes elegibles distintos).                       |
+| ADV-R14 | Un docente no puede tener dos asignaciones activas en el mismo repo (ni primary+co ni dos co).                                                           |
+| ADV-R15 | Carga del periodo cuenta **todas** las asignaciones activas del docente (`primary` y `co_advisor`).                                                      |
 
 
 
@@ -57,7 +60,7 @@ Asesor empresarial (persona externa): ver [08-business-advisors-and-companies.md
 
 
 
-### Asignación manual
+### Asignación manual (primary)
 
 ```mermaid
 flowchart TD
@@ -70,6 +73,23 @@ flowchart TD
   D -->|no| F{¿Override + motivo?}
   F -->|sí| E
   F -->|no| X
+```
+
+### Asignación de co-asesor
+
+```mermaid
+flowchart TD
+  A[Asignar co-asesor] --> B{¿Hay primary activo?}
+  B -->|no| X[Error]
+  B -->|sí| C{¿Docente ya activo en el repo?}
+  C -->|sí| X
+  C -->|no| D{¿Menos de max co-asesores?}
+  D -->|no| X
+  D -->|sí| E{¿Elegible y con cupo?}
+  E -->|sí| F[Queda como co_advisor]
+  E -->|no| G{¿Override + motivo?}
+  G -->|sí| F
+  G -->|no| X
 ```
 
 
@@ -99,6 +119,11 @@ flowchart TD
 | ADV-08 | Director | Usa reasignar: primary Ana activa → Bob | Fila de Ana queda con `released_at` set; Bob queda como primary activo | ADV-R9 |
 | ADV-09 | Director | Lanza distribución automática sobre 3 repos sin primary; uno no tiene elegibles con cupo | Se asignan los que se puedan; el sin cupo/elegibles queda como fallo **sin** crear override automático | ADV-R12 |
 | ADV-10 | Director de carrera (solo TIC) | Intenta asignar asesor a un repo de carrera ER | Operación rechazada por alcance de carrera | ADV-R7 |
+| ADV-11 | Director | Repo con primary Ana; asigna a Bob con `role = co_advisor` | Se crea fila activa `co_advisor` de Bob; Ana sigue como primary | ADV-R10 |
+| ADV-12 | Director | Repo sin primary; intenta asignar `co_advisor` | Asignación rechazada; no se crea fila | ADV-R10 |
+| ADV-13 | Director | Repo con primary y ya 2 co-asesores activos (max default); intenta un tercero | Asignación rechazada | ADV-R10 |
+| ADV-14 | Director | Primary Ana activa; intenta asignar a Ana como `co_advisor` | Asignación rechazada (docente ya activo en el repo) | ADV-R14 |
+| ADV-15 | Sistema (carga) | Docente con 1 primary y 1 co_advisor activos en el periodo | `currentLoad` = 2 | ADV-R15 |
 
 
 
