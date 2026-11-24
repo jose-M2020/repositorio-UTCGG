@@ -1,25 +1,22 @@
 import { Head } from '@inertiajs/react';
 import {
-    RepositoryShowContainer,
-    type Repository,
-    type RepositoryListItem,
+  RepositoryShowContainer,
+  type Repository,
+  type RepositoryListItem,
 } from '@/features/repositories';
 
 type PageProps = {
-    repository: Repository;
-    related: RepositoryListItem[];
+  repository: Repository;
+  related: RepositoryListItem[];
 };
 
 const RepositoriesShowPage = ({ repository, related }: PageProps) => {
-    return (
-        <>
-            <Head title={repository.title} />
-            <RepositoryShowContainer
-                repository={repository}
-                related={related}
-            />
-        </>
-    );
+  return (
+    <>
+      <Head title={repository.title} />
+      <RepositoryShowContainer repository={repository} related={related} />
+    </>
+  );
 };
 
 export default RepositoriesShowPage;

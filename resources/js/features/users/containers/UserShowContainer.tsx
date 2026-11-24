@@ -1,12 +1,12 @@
-import { Link } from "@inertiajs/react";
-import { show as showRepository } from "@/actions/App/Http/Controllers/RepositoryController";
-import { index } from "@/actions/App/Http/Controllers/UserController";
-import { Button } from "@/shared/components/ui";
-import { UserDetails } from "../components/UserDetails";
+import { Link } from '@inertiajs/react';
+import { show as showRepository } from '@/actions/App/Http/Controllers/RepositoryController';
+import { index } from '@/actions/App/Http/Controllers/UserController';
+import { Button } from '@/shared/components/ui';
+import { UserDetails } from '../components/UserDetails';
 import type {
   UserDetails as UserDetailsType,
   UserRepositorySummary,
-} from "../types";
+} from '../types';
 
 type UserShowContainerProps = {
   user: UserDetailsType;
@@ -51,7 +51,7 @@ export const UserShowContainer = ({
   publicRepositories,
   privateRepositories,
 }: UserShowContainerProps) => {
-  const isAdmin = user.roles.includes("admin");
+  const isAdmin = user.roles.includes('admin');
 
   return (
     <main className="page-container space-y-6 py-8">

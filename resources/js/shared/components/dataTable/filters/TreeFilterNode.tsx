@@ -1,8 +1,12 @@
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { Checkbox } from "@/shared/components/ui/checkbox";
-import { cn } from "@/shared/lib";
-import type { ColumnFilterItem } from "../types";
-import { isGroupNode, TREE_FILTER_CHECK_STATE, type TreeFilterCheckState } from "./treeFilterUtils";
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { Checkbox } from '@/shared/components/ui/checkbox';
+import { cn } from '@/shared/lib';
+import type { ColumnFilterItem } from '../types';
+import {
+  isGroupNode,
+  TREE_FILTER_CHECK_STATE,
+  type TreeFilterCheckState,
+} from './treeFilterUtils';
 
 type TreeFilterNodeProps = {
   node: ColumnFilterItem;
@@ -41,9 +45,11 @@ export const TreeFilterNode = ({
         {hasChildren ? (
           <button
             type="button"
-            className="inline-flex size-5 shrink-0 items-center justify-center rounded-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="inline-flex size-5 shrink-0 items-center justify-center rounded-sm text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-primary/30 focus:outline-none"
             onClick={() => onToggleExpand(node.value)}
-            aria-label={expanded ? `Contraer ${node.text}` : `Expandir ${node.text}`}
+            aria-label={
+              expanded ? `Contraer ${node.text}` : `Expandir ${node.text}`
+            }
             aria-expanded={expanded}
           >
             {expanded ? (
@@ -83,7 +89,9 @@ export const TreeFilterNode = ({
 
         <label
           htmlFor={inputId}
-          className={cn("min-w-0 flex-1 cursor-pointer truncate text-sm text-gray-700")}
+          className={cn(
+            'min-w-0 flex-1 cursor-pointer truncate text-sm text-gray-700',
+          )}
         >
           {node.text}
         </label>

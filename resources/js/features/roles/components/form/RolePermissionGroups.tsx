@@ -1,18 +1,18 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
-import { cn } from "cn";
-import { Checkbox } from "@/shared/components/ui/checkbox";
-import { Input } from "@/shared/components/ui";
-import { usePermissionModuleScrollSpy } from "../../hooks/usePermissionModuleScrollSpy";
-import { usePermissionSelection } from "../../hooks/usePermissionSelection";
-import type { PermissionGroups, RoleFormErrors } from "../../types";
-import { filterPermissionGroups } from "../../utils/filterPermissionGroups";
-import { moduleSectionId } from "../../utils/moduleSectionId";
+import { useState } from 'react';
+import { Search } from 'lucide-react';
+import { cn } from 'cn';
+import { Checkbox } from '@/shared/components/ui/checkbox';
+import { Input } from '@/shared/components/ui';
+import { usePermissionModuleScrollSpy } from '../../hooks/usePermissionModuleScrollSpy';
+import { usePermissionSelection } from '../../hooks/usePermissionSelection';
+import type { PermissionGroups, RoleFormErrors } from '../../types';
+import { filterPermissionGroups } from '../../utils/filterPermissionGroups';
+import { moduleSectionId } from '../../utils/moduleSectionId';
 import {
   moduleLabel,
   partitionPermissions,
-} from "../../utils/permissionDisplay";
-import { PermissionSection } from "./PermissionSection";
+} from '../../utils/permissionDisplay';
+import { PermissionSection } from './PermissionSection';
 
 type RolePermissionGroupsProps = {
   permissionGroups: PermissionGroups;
@@ -27,7 +27,7 @@ export const RolePermissionGroups = ({
 }: RolePermissionGroupsProps) => {
   const groups = Object.entries(permissionGroups);
   const moduleNames = Object.keys(permissionGroups);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const normalizedQuery = searchQuery.trim();
 
   const {
@@ -42,7 +42,7 @@ export const RolePermissionGroups = ({
   const { activeModule, scrollContainerRef, navigateToModule } =
     usePermissionModuleScrollSpy({
       moduleNames,
-      initialModule: moduleNames[0] ?? "",
+      initialModule: moduleNames[0] ?? '',
       observeKey: normalizedQuery,
     });
 
@@ -62,7 +62,8 @@ export const RolePermissionGroups = ({
   const visiblePermissions = visibleGroups.flatMap(
     ([, permissions]) => permissions,
   );
-  const selectablePermissions = normalizedQuery === "" ? allPermissions : visiblePermissions;
+  const selectablePermissions =
+    normalizedQuery === '' ? allPermissions : visiblePermissions;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
@@ -77,26 +78,21 @@ export const RolePermissionGroups = ({
               disabled={selectablePermissions.length === 0}
             />
             <span>
-              {normalizedQuery === ""
-                ? "Seleccionar todos"
-                : "Seleccionar resultados"}
+              {normalizedQuery === ''
+                ? 'Seleccionar todos'
+                : 'Seleccionar resultados'}
             </span>
           </label>
         </div>
         <p className="text-xs text-muted-foreground" aria-live="polite">
           {selectedCount === 1
-            ? "1 permiso seleccionado"
+            ? '1 permiso seleccionado'
             : `${selectedCount} permisos seleccionados`}
         </p>
       </div>
 
       {[...checkedState].map((name) => (
-        <input
-          key={name}
-          type="hidden"
-          name="permissions[]"
-          value={name}
-        />
+        <input key={name} type="hidden" name="permissions[]" value={name} />
       ))}
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border">
@@ -111,7 +107,7 @@ export const RolePermissionGroups = ({
               ).length;
               const isActive = moduleName === activeModule;
               const isHiddenBySearch =
-                normalizedQuery !== "" &&
+                normalizedQuery !== '' &&
                 !visibleGroups.some(([name]) => name === moduleName);
 
               return (
@@ -121,21 +117,21 @@ export const RolePermissionGroups = ({
                   onClick={() => navigateToModule(moduleName)}
                   disabled={isHiddenBySearch}
                   className={cn(
-                    "flex shrink-0 items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors",
+                    'flex shrink-0 items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left text-sm transition-colors',
                     isActive
-                      ? "bg-background font-medium text-primary shadow-sm ring-1 ring-border"
-                      : "text-muted-foreground hover:bg-background/80 hover:text-foreground",
-                    isHiddenBySearch && "pointer-events-none opacity-40",
+                      ? 'bg-background font-medium text-primary shadow-sm ring-1 ring-border'
+                      : 'text-muted-foreground hover:bg-background/80 hover:text-foreground',
+                    isHiddenBySearch && 'pointer-events-none opacity-40',
                   )}
-                  aria-current={isActive ? "true" : undefined}
+                  aria-current={isActive ? 'true' : undefined}
                 >
                   <span className="truncate">{moduleLabel(moduleName)}</span>
                   <span
                     className={cn(
-                      "rounded-full px-1.5 py-0.5 text-[10px] tabular-nums",
+                      'rounded-full px-1.5 py-0.5 text-[10px] tabular-nums',
                       selectedInModule > 0
-                        ? "bg-primary/10 text-primary"
-                        : "bg-muted text-muted-foreground",
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-muted text-muted-foreground',
                     )}
                   >
                     {selectedInModule}/{permissions.length}
@@ -165,7 +161,7 @@ export const RolePermissionGroups = ({
 
             <div
               ref={scrollContainerRef}
-              className="min-h-0 flex-1 space-y-6 overflow-y-auto p-3 scroll-smooth"
+              className="min-h-0 flex-1 space-y-6 overflow-y-auto scroll-smooth p-3"
             >
               {visibleGroups.length === 0 ? (
                 <p className="py-8 text-center text-sm text-muted-foreground">

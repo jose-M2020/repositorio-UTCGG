@@ -5,28 +5,25 @@ import type { Repository, RepositoryListItem } from '../../shared/types';
 import { RepositoryPublicView } from '../components/show/RepositoryPublicView';
 
 type RepositoryShowContainerProps = {
-    repository: Repository;
-    related: RepositoryListItem[];
+  repository: Repository;
+  related: RepositoryListItem[];
 };
 
 export const RepositoryShowContainer = ({
-    repository,
-    related,
+  repository,
+  related,
 }: RepositoryShowContainerProps) => {
-    return (
-        <main className="page-container space-y-8 py-8">
-            <div className="flex justify-between gap-3">
-                <Link href={index.url()}>
-                    <Button type="button" variant="outline">
-                        Volver al catálogo
-                    </Button>
-                </Link>
-            </div>
+  return (
+    <main className="page-container space-y-8 py-8">
+      <div className="flex justify-between gap-3">
+        <Link href={index.url()}>
+          <Button type="button" variant="outline">
+            Volver al catálogo
+          </Button>
+        </Link>
+      </div>
 
-            <RepositoryPublicView
-                repository={repository}
-                related={related}
-            />
-        </main>
-    );
+      <RepositoryPublicView repository={repository} related={related} />
+    </main>
+  );
 };

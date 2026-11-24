@@ -5,14 +5,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui";
-import type { UserType } from "@/shared/types";
-import type { UserTypeOption } from "../../types";
-import { UserTypePicker } from "./UserTypePicker";
+} from '@/shared/components/ui';
+import type { UserType } from '@/shared/types';
+import type { UserTypeOption } from '../../types';
+import { UserTypePicker } from './UserTypePicker';
 
 type UserCreateTypeStepProps = {
   userTypes: UserTypeOption[];
-  selectedValue?: UserType | "";
+  selectedValue?: UserType | '';
   onSelect: (value: UserType) => void;
 };
 

@@ -1,5 +1,5 @@
-import { router } from "@inertiajs/react";
-import { index } from "@/actions/App/Http/Controllers/UserController";
+import { router } from '@inertiajs/react';
+import { index } from '@/actions/App/Http/Controllers/UserController';
 
 export type VisitUsersIndexParams = {
   name: string;

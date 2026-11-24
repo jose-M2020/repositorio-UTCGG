@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
-import { moduleSectionId } from "../utils/moduleSectionId";
+import { useEffect, useRef, useState, type RefObject } from 'react';
+import { moduleSectionId } from '../utils/moduleSectionId';
 
 type UsePermissionModuleScrollSpyOptions = {
   moduleNames: string[];
@@ -16,20 +16,20 @@ type UsePermissionModuleScrollSpyResult = {
 
 export const usePermissionModuleScrollSpy = ({
   moduleNames,
-  initialModule = "",
-  observeKey = "",
+  initialModule = '',
+  observeKey = '',
 }: UsePermissionModuleScrollSpyOptions): UsePermissionModuleScrollSpyResult => {
   const [activeModule, setActiveModule] = useState(
-    () => initialModule || moduleNames[0] || "",
+    () => initialModule || moduleNames[0] || '',
   );
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isScrollingToModuleRef = useRef(false);
 
-  const moduleNamesKey = moduleNames.join("|");
+  const moduleNamesKey = moduleNames.join('|');
 
   useEffect(() => {
     const container = scrollContainerRef.current;
-    const names = moduleNamesKey === "" ? [] : moduleNamesKey.split("|");
+    const names = moduleNamesKey === '' ? [] : moduleNamesKey.split('|');
     if (!container || names.length === 0) {
       return;
     }
@@ -52,18 +52,16 @@ export const usePermissionModuleScrollSpy = ({
 
         const visible = entries
           .filter((entry) => entry.isIntersecting)
-          .sort(
-            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
-          );
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
-        const topVisible = visible[0]?.target.getAttribute("data-module");
+        const topVisible = visible[0]?.target.getAttribute('data-module');
         if (topVisible) {
           setActiveModule(topVisible);
         }
       },
       {
         root: container,
-        rootMargin: "-10% 0px -60% 0px",
+        rootMargin: '-10% 0px -60% 0px',
         threshold: [0, 0.25, 0.5],
       },
     );
@@ -85,7 +83,7 @@ export const usePermissionModuleScrollSpy = ({
     }
 
     isScrollingToModuleRef.current = true;
-    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     window.setTimeout(() => {
       isScrollingToModuleRef.current = false;

@@ -7,5 +7,5 @@ type NameParts = {
 export const formatUserName = (user: NameParts): string =>
   [user.first_name, user.last_name, user.second_last_name]
     .filter((part): part is string => Boolean(part?.trim()))
-    .join(" ")
+    .join(' ')
     .trim();

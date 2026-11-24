@@ -1,14 +1,14 @@
-import { Form, Link } from "@inertiajs/react";
+import { Form, Link } from '@inertiajs/react';
 import {
   create,
   destroy,
   destroyImage,
   download,
   update,
-} from "@/actions/App/Http/Controllers/FileController";
-import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
-import { Button } from "@/shared/components/ui";
-import type { RepositoryFileItem } from "../../../shared/types";
+} from '@/actions/App/Http/Controllers/FileController';
+import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
+import { Button } from '@/shared/components/ui';
+import type { RepositoryFileItem } from '../../../shared/types';
 
 type RepositoryFilesPanelProps = {
   slug: string;
@@ -23,7 +23,7 @@ export const RepositoryFilesPanel = ({
   images,
   imageUrls = [],
 }: RepositoryFilesPanelProps) => {
-  const pdfFiles = files.filter((file) => file.file_type === "pdf" && file.url);
+  const pdfFiles = files.filter((file) => file.file_type === 'pdf' && file.url);
 
   return (
     <section className="space-y-6 rounded-xl border border-border bg-card p-6">
@@ -67,7 +67,7 @@ export const RepositoryFilesPanel = ({
               <div>
                 <p className="font-medium">{file.original_name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {file.file_type} · {file.is_public ? "Público" : "Privado"}
+                  {file.file_type} · {file.is_public ? 'Público' : 'Privado'}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -83,7 +83,7 @@ export const RepositoryFilesPanel = ({
                     value={file.is_public ? 0 : 1}
                   />
                   <Button type="submit" variant="ghost">
-                    {file.is_public ? "Hacer privado" : "Hacer público"}
+                    {file.is_public ? 'Hacer privado' : 'Hacer público'}
                   </Button>
                 </Form>
                 <ConfirmDeleteButton
@@ -108,7 +108,7 @@ export const RepositoryFilesPanel = ({
                 className="overflow-hidden rounded-lg border border-border"
               >
                 <img
-                  src={imageUrls[index] || "/img/no-image.jpg"}
+                  src={imageUrls[index] || '/img/no-image.jpg'}
                   alt=""
                   className="h-48 w-full object-cover"
                 />

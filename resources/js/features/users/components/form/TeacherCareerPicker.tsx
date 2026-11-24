@@ -1,5 +1,5 @@
-import { useId, useState } from "react";
-import { FormField } from "@/shared/components/form";
+import { useId, useState } from 'react';
+import { FormField } from '@/shared/components/form';
 import {
   Combobox,
   ComboboxChip,
@@ -11,8 +11,8 @@ import {
   ComboboxList,
   ComboboxValue,
   useComboboxAnchor,
-} from "@/shared/components/ui/combobox";
-import type { CareerOption } from "../../types";
+} from '@/shared/components/ui/combobox';
+import type { CareerOption } from '../../types';
 
 type TeacherCareerPickerProps = {
   careers: CareerOption[];
@@ -20,8 +20,7 @@ type TeacherCareerPickerProps = {
   error?: string;
 };
 
-const careerLabel = (career: CareerOption) =>
-  `${career.code} — ${career.name}`;
+const careerLabel = (career: CareerOption) => `${career.code} — ${career.name}`;
 
 export const TeacherCareerPicker = ({
   careers,
@@ -38,7 +37,7 @@ export const TeacherCareerPicker = ({
     setSelected(next);
   };
 
-  const primaryCode = selected[0]?.code ?? "";
+  const primaryCode = selected[0]?.code ?? '';
 
   return (
     <FormField
@@ -80,7 +79,7 @@ export const TeacherCareerPicker = ({
           className="w-full"
           aria-invalid={Boolean(error) || undefined}
           aria-label={
-            selected.length > 0 ? "Carreras seleccionadas" : undefined
+            selected.length > 0 ? 'Carreras seleccionadas' : undefined
           }
         >
           <ComboboxValue>
@@ -96,9 +95,7 @@ export const TeacherCareerPicker = ({
                 ))}
                 <ComboboxChipsInput
                   id={inputId}
-                  placeholder={
-                    value.length > 0 ? "" : "Buscar carrera..."
-                  }
+                  placeholder={value.length > 0 ? '' : 'Buscar carrera...'}
                   aria-invalid={Boolean(error) || undefined}
                 />
               </>

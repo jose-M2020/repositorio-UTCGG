@@ -1,4 +1,4 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage } from '@inertiajs/react';
 import {
   Eye,
   KeyRound,
@@ -9,11 +9,11 @@ import {
   PowerOff,
   Shield,
   Trash2,
-} from "lucide-react";
-import { useState } from "react";
-import { destroy, show } from "@/actions/App/Http/Controllers/UserController";
-import { AUTH_ABILITIES } from "@/features/auth";
-import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
+} from 'lucide-react';
+import { useState } from 'react';
+import { destroy, show } from '@/actions/App/Http/Controllers/UserController';
+import { AUTH_ABILITIES } from '@/features/auth';
+import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
 import {
   Button,
   DropdownMenu,
@@ -21,11 +21,11 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/shared/components/ui";
-import { UserChangeRoleDialog } from "../actions/UserChangeRoleDialog";
-import { UserFormDialog } from "../form/UserFormDialog";
-import { UserSendPasswordLinkDialog } from "../actions/UserSendPasswordLinkDialog";
-import { UserToggleActiveDialog } from "../actions/UserToggleActiveDialog";
+} from '@/shared/components/ui';
+import { UserChangeRoleDialog } from '../actions/UserChangeRoleDialog';
+import { UserFormDialog } from '../form/UserFormDialog';
+import { UserSendPasswordLinkDialog } from '../actions/UserSendPasswordLinkDialog';
+import { UserToggleActiveDialog } from '../actions/UserToggleActiveDialog';
 import type {
   CareerFormPolicy,
   CareerOption,
@@ -33,8 +33,8 @@ import type {
   RolePermissionPreview,
   UserListItem,
   UserTypeOption,
-} from "../../types";
-import { formatUserName } from "../../utils/formatUserName";
+} from '../../types';
+import { formatUserName } from '../../utils/formatUserName';
 
 type UserRowActionsProps = {
   user: UserListItem;
@@ -61,20 +61,22 @@ export const UserRowActions = ({
   const [deleteOpen, setDeleteOpen] = useState(false);
   const userName = formatUserName(user);
   const isSelf = auth.user?.id === user.id;
-  const isPending = user.status === "pending_activation";
-  const willActivate = user.status === "inactive";
+  const isPending = user.status === 'pending_activation';
+  const willActivate = user.status === 'inactive';
   const canEdit = auth.abilities[AUTH_ABILITIES.USERS_EDIT];
   const canUpdateRole = auth.abilities[AUTH_ABILITIES.USERS_UPDATE_ROLE];
-  const canToggleActiveAbility = auth.abilities[AUTH_ABILITIES.USERS_TOGGLE_ACTIVE];
+  const canToggleActiveAbility =
+    auth.abilities[AUTH_ABILITIES.USERS_TOGGLE_ACTIVE];
   const canPasswordLink = auth.abilities[AUTH_ABILITIES.USERS_PASSWORD_LINK];
   const canDestroy = auth.abilities[AUTH_ABILITIES.USERS_DESTROY];
-  const canToggleActiveStatus = user.status === "active" || user.status === "inactive";
+  const canToggleActiveStatus =
+    user.status === 'active' || user.status === 'inactive';
   const canToggleActive = canToggleActiveAbility && canToggleActiveStatus;
   const ToggleIcon = willActivate ? Power : PowerOff;
   const PasswordIcon = isPending ? Mail : KeyRound;
   const passwordActionLabel = isPending
-    ? "Reenviar activación"
-    : "Restablecer contraseña";
+    ? 'Reenviar activación'
+    : 'Restablecer contraseña';
   const showDestructiveSeparator =
     (canEdit || canUpdateRole || canToggleActive || canPasswordLink) &&
     canDestroy;
@@ -120,7 +122,7 @@ export const UserRowActions = ({
               }}
             >
               <ToggleIcon aria-hidden="true" />
-              {willActivate ? "Activar" : "Desactivar"}
+              {willActivate ? 'Activar' : 'Desactivar'}
             </DropdownMenuItem>
           ) : null}
           {canPasswordLink ? (

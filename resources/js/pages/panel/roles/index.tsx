@@ -1,26 +1,20 @@
-import { Head } from "@inertiajs/react";
+import { Head } from '@inertiajs/react';
 import {
   RolesIndexContainer,
   type PaginatedRoles,
   type PermissionGroups,
-} from "@/features/roles";
+} from '@/features/roles';
 
 type RolesIndexPageProps = {
   roles: PaginatedRoles;
   permissionGroups: PermissionGroups;
 };
 
-const RolesIndexPage = ({
-  roles,
-  permissionGroups,
-}: RolesIndexPageProps) => {
+const RolesIndexPage = ({ roles, permissionGroups }: RolesIndexPageProps) => {
   return (
     <>
       <Head title="Roles" />
-      <RolesIndexContainer
-        roles={roles}
-        permissionGroups={permissionGroups}
-      />
+      <RolesIndexContainer roles={roles} permissionGroups={permissionGroups} />
     </>
   );
 };

@@ -1,12 +1,7 @@
-import {
-  useEffect,
-  useState,
-  type ReactElement,
-  type ReactNode,
-} from "react";
-import { Form } from "@inertiajs/react";
-import { updateRole } from "@/actions/App/Http/Controllers/UserController";
-import { SelectField } from "@/shared/components/form";
+import { useEffect, useState, type ReactElement, type ReactNode } from 'react';
+import { Form } from '@inertiajs/react';
+import { updateRole } from '@/actions/App/Http/Controllers/UserController';
+import { SelectField } from '@/shared/components/form';
 import {
   Button,
   Dialog,
@@ -17,13 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/shared/components/ui";
+} from '@/shared/components/ui';
 import type {
   RoleOption,
   RolePermissionPreview,
   UserListItem,
-} from "../../types";
-import { formatUserName } from "../../utils/formatUserName";
+} from '../../types';
+import { formatUserName } from '../../utils/formatUserName';
 
 type UserChangeRoleDialogProps = {
   user: UserListItem;
@@ -50,7 +45,7 @@ export const UserChangeRoleDialog = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
-  const currentRole = user.roles[0]?.name ?? "";
+  const currentRole = user.roles[0]?.name ?? '';
   const [selectedRole, setSelectedRole] = useState(currentRole);
 
   const userName = formatUserName(user);
@@ -70,7 +65,7 @@ export const UserChangeRoleDialog = ({
   };
 
   const handleRoleChange = (nextValue: string | null) => {
-    setSelectedRole(nextValue ?? "");
+    setSelectedRole(nextValue ?? '');
   };
 
   const handleSuccess = () => {
@@ -119,7 +114,7 @@ export const UserChangeRoleDialog = ({
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Permisos de este rol
                   </p>
-                  {selectedRole === "" ? (
+                  {selectedRole === '' ? (
                     <p className="text-sm text-muted-foreground">
                       Selecciona un rol para ver sus permisos.
                     </p>
@@ -143,11 +138,16 @@ export const UserChangeRoleDialog = ({
               </div>
 
               <DialogFooter>
-                <DialogClose render={<Button type="button" variant="outline" />}>
+                <DialogClose
+                  render={<Button type="button" variant="outline" />}
+                >
                   Cancelar
                 </DialogClose>
-                <Button type="submit" disabled={processing || selectedRole === ""}>
-                  {processing ? "Guardando..." : "Confirmar rol"}
+                <Button
+                  type="submit"
+                  disabled={processing || selectedRole === ''}
+                >
+                  {processing ? 'Guardando...' : 'Confirmar rol'}
                 </Button>
               </DialogFooter>
             </>

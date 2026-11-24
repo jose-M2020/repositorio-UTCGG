@@ -1,6 +1,6 @@
-﻿import { useState, type ComponentProps } from "react";
-import { Form } from "@inertiajs/react";
-import { Trash2 } from "lucide-react";
+﻿import { useState, type ComponentProps } from 'react';
+import { Form } from '@inertiajs/react';
+import { Trash2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,22 +12,22 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/shared/components/ui/alert-dialog";
-import { Button } from "@/shared/components/ui/button";
+} from '@/shared/components/ui/alert-dialog';
+import { Button } from '@/shared/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip";
+} from '@/shared/components/ui/tooltip';
 
 type ConfirmDeleteButtonProps = {
-  form: Omit<ComponentProps<typeof Form>, "children">;
+  form: Omit<ComponentProps<typeof Form>, 'children'>;
   itemLabel: string;
   disabledReason?: string;
   /** When set, renders a labeled button instead of an icon-only trigger. */
   triggerLabel?: string;
-  triggerVariant?: ComponentProps<typeof Button>["variant"];
-  triggerSize?: ComponentProps<typeof Button>["size"];
+  triggerVariant?: ComponentProps<typeof Button>['variant'];
+  triggerSize?: ComponentProps<typeof Button>['size'];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   /** When true, caller owns the trigger (e.g. overflow menu item). */
@@ -39,8 +39,8 @@ export const ConfirmDeleteButton = ({
   itemLabel,
   disabledReason,
   triggerLabel,
-  triggerVariant = triggerLabel ? "destructive" : "ghost",
-  triggerSize = triggerLabel ? "default" : "icon-sm",
+  triggerVariant = triggerLabel ? 'destructive' : 'ghost',
+  triggerSize = triggerLabel ? 'default' : 'icon-sm',
   open: openProp,
   onOpenChange,
   hideTrigger = false,
@@ -59,7 +59,7 @@ export const ConfirmDeleteButton = ({
 
   const { onSuccess: formOnSuccess, ...formRest } = form;
 
-  const handleSuccess: NonNullable<ComponentProps<typeof Form>["onSuccess"]> = (
+  const handleSuccess: NonNullable<ComponentProps<typeof Form>['onSuccess']> = (
     page,
   ) => {
     handleOpenChange(false);
@@ -112,7 +112,7 @@ export const ConfirmDeleteButton = ({
                 type="button"
                 variant={triggerVariant}
                 size={triggerSize}
-                className={triggerLabel ? undefined : "text-destructive"}
+                className={triggerLabel ? undefined : 'text-destructive'}
                 disabled
                 aria-label={`No se puede eliminar ${itemLabel}. ${disabledReason}`}
               >
@@ -137,7 +137,7 @@ export const ConfirmDeleteButton = ({
             className={
               triggerLabel
                 ? undefined
-                : "text-destructive hover:bg-destructive/10 hover:text-destructive"
+                : 'text-destructive hover:bg-destructive/10 hover:text-destructive'
             }
             aria-label={ariaLabel}
           />

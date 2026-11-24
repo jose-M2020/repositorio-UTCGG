@@ -1,22 +1,22 @@
 import { Head } from '@inertiajs/react';
 import {
-    EducationLevelsIndexContainer,
-    type PaginatedEducationLevels,
+  EducationLevelsIndexContainer,
+  type PaginatedEducationLevels,
 } from '@/features/education-levels';
 
 type EducationLevelsIndexPageProps = {
-    educationLevels: PaginatedEducationLevels;
+  educationLevels: PaginatedEducationLevels;
 };
 
 const EducationLevelsIndexPage = ({
-    educationLevels,
+  educationLevels,
 }: EducationLevelsIndexPageProps) => {
-    return (
-        <>
-            <Head title="Niveles educativos" />
-            <EducationLevelsIndexContainer educationLevels={educationLevels} />
-        </>
-    );
+  return (
+    <>
+      <Head title="Niveles educativos" />
+      <EducationLevelsIndexContainer educationLevels={educationLevels} />
+    </>
+  );
 };
 
 export default EducationLevelsIndexPage;

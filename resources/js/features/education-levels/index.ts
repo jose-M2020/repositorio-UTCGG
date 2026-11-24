@@ -1,6 +1,6 @@
-export { EducationLevelsIndexContainer } from "./containers/EducationLevelsIndexContainer";
+export { EducationLevelsIndexContainer } from './containers/EducationLevelsIndexContainer';
 export type {
-    EducationLevelFormValues,
-    EducationLevelItem,
-    PaginatedEducationLevels,
-} from "./types";
+  EducationLevelFormValues,
+  EducationLevelItem,
+  PaginatedEducationLevels,
+} from './types';

@@ -1,7 +1,7 @@
-import { USER_ROLE, USER_TYPE, type UserType } from "@/shared/types";
-import type { RoleOption } from "../types";
+import { USER_ROLE, USER_TYPE, type UserType } from '@/shared/types';
+import type { RoleOption } from '../types';
 
-export const defaultRoleForType = (userType: UserType | ""): string => {
+export const defaultRoleForType = (userType: UserType | ''): string => {
   if (userType === USER_TYPE.ACADEMIC) {
     return USER_ROLE.STUDENT;
   }
@@ -10,12 +10,12 @@ export const defaultRoleForType = (userType: UserType | ""): string => {
     return USER_ROLE.TEACHER;
   }
 
-  return "";
+  return '';
 };
 
 export const rolesForUserType = (
   roles: RoleOption[],
-  userType: UserType | "",
+  userType: UserType | '',
 ): RoleOption[] => {
   if (!userType) {
     return roles;

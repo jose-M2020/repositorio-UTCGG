@@ -1,6 +1,6 @@
-import { useState, type ReactElement, type ReactNode } from "react";
-import { Form } from "@inertiajs/react";
-import { store, update } from "@/actions/App/Http/Controllers/RoleController";
+import { useState, type ReactElement, type ReactNode } from 'react';
+import { Form } from '@inertiajs/react';
+import { store, update } from '@/actions/App/Http/Controllers/RoleController';
 import {
   Button,
   Dialog,
@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/shared/components/ui";
-import { RoleFormFields } from "./RoleFormFields";
-import type { PermissionGroups, RoleListItem } from "../../types";
+} from '@/shared/components/ui';
+import { RoleFormFields } from './RoleFormFields';
+import type { PermissionGroups, RoleListItem } from '../../types';
 
 type RoleFormDialogBaseProps = {
   permissionGroups: PermissionGroups;
@@ -22,12 +22,12 @@ type RoleFormDialogBaseProps = {
 };
 
 type RoleFormDialogProps = RoleFormDialogBaseProps &
-  ({ mode: "create" } | { mode: "edit"; role: RoleListItem });
+  ({ mode: 'create' } | { mode: 'edit'; role: RoleListItem });
 
 export const RoleFormDialog = (props: RoleFormDialogProps) => {
   const { permissionGroups, trigger, triggerContent, mode } = props;
   const [open, setOpen] = useState(false);
-  const isEdit = mode === "edit";
+  const isEdit = mode === 'edit';
   const role = isEdit ? props.role : null;
   const formProps = isEdit && role ? update.form(role.id) : store.form();
   const defaults = role
@@ -47,11 +47,11 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
 
       <DialogContent className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
         <DialogHeader className="shrink-0 gap-1.5 border-b border-border px-6 py-5 pr-14">
-          <DialogTitle>{isEdit ? "Editar rol" : "Nuevo rol"}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Editar rol' : 'Nuevo rol'}</DialogTitle>
           <DialogDescription>
             {isEdit
               ? `Actualiza ${role?.name} y elige permisos por módulo.`
-              : "Define el nombre del rol y elige permisos por módulo."}
+              : 'Define el nombre del rol y elige permisos por módulo.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -65,11 +65,7 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
               <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-6 py-5">
                 <RoleFormFields
                   key={
-                    open
-                      ? isEdit
-                        ? `edit-${role?.id}`
-                        : "create"
-                      : "closed"
+                    open ? (isEdit ? `edit-${role?.id}` : 'create') : 'closed'
                   }
                   errors={errors}
                   permissionGroups={permissionGroups}
@@ -78,15 +74,17 @@ export const RoleFormDialog = (props: RoleFormDialogProps) => {
                 />
               </div>
               <DialogFooter className="m-0 shrink-0 rounded-none border-t border-border px-6 py-4">
-                <DialogClose render={<Button type="button" variant="outline" />}>
+                <DialogClose
+                  render={<Button type="button" variant="outline" />}
+                >
                   Cancelar
                 </DialogClose>
                 <Button type="submit" disabled={processing}>
                   {processing
-                    ? "Guardando..."
+                    ? 'Guardando...'
                     : isEdit
-                      ? "Actualizar"
-                      : "Guardar"}
+                      ? 'Actualizar'
+                      : 'Guardar'}
                 </Button>
               </DialogFooter>
             </>

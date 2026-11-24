@@ -5,31 +5,31 @@ import { StatsStrip } from '../components/landing/StatsStrip';
 import type { HomeCareer, HomeRepository } from '../types';
 
 type HomeContainerProps = {
-    latest: HomeRepository[];
-    featured: HomeRepository[];
-    homeCareers: HomeCareer[];
+  latest: HomeRepository[];
+  featured: HomeRepository[];
+  homeCareers: HomeCareer[];
 };
 
 export const HomeContainer = ({
-    latest,
-    featured,
-    homeCareers,
+  latest,
+  featured,
+  homeCareers,
 }: HomeContainerProps) => {
-    return (
-        <>
-            <HomeHero />
-            <StatsStrip />
-            <CareersSection careers={homeCareers} />
-            <RepositoryHighlights
-                title="Recursos destacados"
-                description="Una selección aleatoria de proyectos públicos del repositorio."
-                items={featured}
-            />
-            <RepositoryHighlights
-                title="Añadido recientemente"
-                description="Los últimos repositorios publicados para consulta abierta."
-                items={latest}
-            />
-        </>
-    );
+  return (
+    <>
+      <HomeHero />
+      <StatsStrip />
+      <CareersSection careers={homeCareers} />
+      <RepositoryHighlights
+        title="Recursos destacados"
+        description="Una selección aleatoria de proyectos públicos del repositorio."
+        items={featured}
+      />
+      <RepositoryHighlights
+        title="Añadido recientemente"
+        description="Los últimos repositorios publicados para consulta abierta."
+        items={latest}
+      />
+    </>
+  );
 };

@@ -1,8 +1,8 @@
-import { usePage } from "@inertiajs/react";
-import { AUTH_ABILITIES } from "@/features/auth";
-import { Button } from "@/shared/components/ui";
-import { UserFormDialog } from "../components/form/UserFormDialog";
-import { UsersTable } from "../components/list/UsersTable";
+import { usePage } from '@inertiajs/react';
+import { AUTH_ABILITIES } from '@/features/auth';
+import { Button } from '@/shared/components/ui';
+import { UserFormDialog } from '../components/form/UserFormDialog';
+import { UsersTable } from '../components/list/UsersTable';
 import type {
   CareerFormPolicy,
   CareerOption,
@@ -11,7 +11,7 @@ import type {
   RolePermissionPreview,
   UsersFilters,
   UserTypeOption,
-} from "../types";
+} from '../types';
 
 type UsersIndexContainerProps = {
   users: PaginatedUsers;
@@ -70,7 +70,7 @@ export const UsersIndexContainer = ({
       {!careerPolicy.can_select_career && careerPolicy.locked_career_label ? (
         <div className="mb-4 flex flex-wrap items-center justify-end gap-3">
           <p className="text-sm text-muted-foreground">
-            Carrera:{" "}
+            Carrera:{' '}
             <span className="font-medium text-foreground">
               {careerPolicy.locked_career_label}
             </span>

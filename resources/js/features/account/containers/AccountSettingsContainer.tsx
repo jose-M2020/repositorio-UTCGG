@@ -4,35 +4,35 @@ import { AccountSecuritySection } from '../components/AccountSecuritySection';
 import type { AccountSettings } from '../types';
 
 type AccountSettingsContainerProps = {
-    account: AccountSettings;
+  account: AccountSettings;
 };
 
 export const AccountSettingsContainer = ({
-    account,
+  account,
 }: AccountSettingsContainerProps) => {
-    const { flash } = usePage().props;
+  const { flash } = usePage().props;
 
-    return (
-        <main className="page-container space-y-6 py-8">
-            <header className="space-y-1">
-                <h1 className="text-2xl font-semibold text-foreground">
-                    Configuración
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                    Administra los datos de tu cuenta y la seguridad de acceso.
-                </p>
-            </header>
+  return (
+    <main className="page-container space-y-6 py-8">
+      <header className="space-y-1">
+        <h1 className="text-2xl font-semibold text-foreground">
+          Configuración
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Administra los datos de tu cuenta y la seguridad de acceso.
+        </p>
+      </header>
 
-            {flash.status ? (
-                <p className="rounded-lg border border-primary/20 bg-accent px-3 py-2 text-sm text-accent-foreground">
-                    {flash.status}
-                </p>
-            ) : null}
+      {flash.status ? (
+        <p className="rounded-lg border border-primary/20 bg-accent px-3 py-2 text-sm text-accent-foreground">
+          {flash.status}
+        </p>
+      ) : null}
 
-            <div className="space-y-6">
-                <AccountProfileSection account={account} />
-                <AccountSecuritySection />
-            </div>
-        </main>
-    );
+      <div className="space-y-6">
+        <AccountProfileSection account={account} />
+        <AccountSecuritySection />
+      </div>
+    </main>
+  );
 };

@@ -1,22 +1,22 @@
-import { format, startOfDay } from "date-fns";
-import type { DateRange, Matcher } from "react-day-picker";
+import { format, startOfDay } from 'date-fns';
+import type { DateRange, Matcher } from 'react-day-picker';
 import type {
   DateColumnFilterDisabledDates,
   DateColumnFilterMode,
   DateColumnFilterValue,
-} from "../types";
+} from '../types';
 
 export const EMPTY_DATE_COLUMN_FILTER_VALUE: DateColumnFilterValue = {
-  preset: "",
-  from: "",
-  to: "",
+  preset: '',
+  from: '',
+  to: '',
 };
 
-export const formatDateFilterValue = (date: Date) => format(date, "yyyy-MM-dd");
+export const formatDateFilterValue = (date: Date) => format(date, 'yyyy-MM-dd');
 
 export const parseDateFilterValue = (value: string): Date | undefined => {
   if (!value.trim()) return undefined;
-  const [year, month, day] = value.split("-").map(Number);
+  const [year, month, day] = value.split('-').map(Number);
   if (!year || !month || !day) return undefined;
   return new Date(year, month - 1, day);
 };
@@ -80,7 +80,7 @@ export const isDateColumnFilterActive = (
   value: DateColumnFilterValue | null | undefined,
 ) => {
   if (!value) return false;
-  const hasPreset = value.preset.trim() !== "";
+  const hasPreset = value.preset.trim() !== '';
   const hasRange = Boolean(value.from.trim()) && Boolean(value.to.trim());
   return hasPreset || hasRange;
 };
@@ -88,15 +88,15 @@ export const isDateColumnFilterActive = (
 export const parseDateColumnFilterValue = (
   value: unknown,
 ): DateColumnFilterValue => {
-  if (typeof value !== "object" || value === null) {
+  if (typeof value !== 'object' || value === null) {
     return { ...EMPTY_DATE_COLUMN_FILTER_VALUE };
   }
 
   const record = value as Record<string, unknown>;
   return {
-    preset: typeof record.preset === "string" ? record.preset : "",
-    from: typeof record.from === "string" ? record.from : "",
-    to: typeof record.to === "string" ? record.to : "",
+    preset: typeof record.preset === 'string' ? record.preset : '',
+    from: typeof record.from === 'string' ? record.from : '',
+    to: typeof record.to === 'string' ? record.to : '',
   };
 };
 
@@ -105,12 +105,17 @@ export const resolveDatePickerMode = (
   modes: readonly DateColumnFilterMode[],
   defaultMode: DateColumnFilterMode,
 ): DateColumnFilterMode => {
-  if (value.from && value.to && value.from !== value.to && modes.includes("range")) {
-    return "range";
+  if (
+    value.from &&
+    value.to &&
+    value.from !== value.to &&
+    modes.includes('range')
+  ) {
+    return 'range';
   }
 
   if (modes.includes(defaultMode)) return defaultMode;
-  return modes[0] ?? "single";
+  return modes[0] ?? 'single';
 };
 
 export const toSingleDateSelection = (

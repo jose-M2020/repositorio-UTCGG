@@ -1,5 +1,5 @@
-﻿import { router } from "@inertiajs/react";
-import { index } from "@/actions/App/Http/Controllers/RoleController";
+﻿import { router } from '@inertiajs/react';
+import { index } from '@/actions/App/Http/Controllers/RoleController';
 
 export type VisitRolesIndexParams = {
   page: number;

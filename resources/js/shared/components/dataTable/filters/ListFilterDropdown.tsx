@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Button, Checkbox, Separator } from "@/shared/components/ui";
-import type { ColumnFilterItem } from "../types";
+import { useState } from 'react';
+import { Button, Checkbox, Separator } from '@/shared/components/ui';
+import type { ColumnFilterItem } from '../types';
 
 type ListFilterDropdownBaseProps = {
   items: ColumnFilterItem[];
@@ -9,7 +9,7 @@ type ListFilterDropdownBaseProps = {
 };
 
 type BatchListFilterDropdownProps = ListFilterDropdownBaseProps & {
-  mode?: "batch";
+  mode?: 'batch';
   appliedValues: readonly string[];
   onApply: (values: string[]) => void;
   values?: never;
@@ -17,20 +17,22 @@ type BatchListFilterDropdownProps = ListFilterDropdownBaseProps & {
 };
 
 type DraftListFilterDropdownProps = ListFilterDropdownBaseProps & {
-  mode: "draft";
+  mode: 'draft';
   values: readonly string[];
   onValuesChange: (values: string[]) => void;
   appliedValues?: never;
   onApply?: never;
 };
 
-type ListFilterDropdownProps = BatchListFilterDropdownProps | DraftListFilterDropdownProps;
+type ListFilterDropdownProps =
+  | BatchListFilterDropdownProps
+  | DraftListFilterDropdownProps;
 
 const toValueSet = (values: readonly string[]) => new Set(values);
 
 export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
   const { items, filterMultiple = false, columnTitle } = props;
-  const isDraftMode = props.mode === "draft";
+  const isDraftMode = props.mode === 'draft';
 
   // Batch mode keeps a local draft so Apply/Restablecer can defer the request.
   const [pendingValues, setPendingValues] = useState(() =>
@@ -38,9 +40,13 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
   );
 
   const selectedValues = isDraftMode ? toValueSet(props.values) : pendingValues;
-  const selectedCount = items.filter((item) => selectedValues.has(item.value)).length;
-  const isSelectAllChecked = selectedCount > 0 && selectedCount === items.length;
-  const isSelectAllIndeterminate = selectedCount > 0 && selectedCount < items.length;
+  const selectedCount = items.filter((item) =>
+    selectedValues.has(item.value),
+  ).length;
+  const isSelectAllChecked =
+    selectedCount > 0 && selectedCount === items.length;
+  const isSelectAllIndeterminate =
+    selectedCount > 0 && selectedCount < items.length;
   const radioGroupName = `list-filter-${columnTitle}`;
 
   const commitValues = (next: Set<string>) => {
@@ -67,7 +73,9 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
   };
 
   const handleSelectAllChange = (checked: boolean) => {
-    commitValues(checked ? new Set(items.map((item) => item.value)) : new Set<string>());
+    commitValues(
+      checked ? new Set(items.map((item) => item.value)) : new Set<string>(),
+    );
   };
 
   const handleReset = () => {
@@ -87,7 +95,7 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
 
   return (
     <div
-      className={isDraftMode ? "flex w-full flex-col" : "flex w-72 flex-col"}
+      className={isDraftMode ? 'flex w-full flex-col' : 'flex w-72 flex-col'}
       onPointerDown={(event) => event.stopPropagation()}
     >
       {filterMultiple ? (
@@ -96,7 +104,9 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
             id={`list-filter-select-all-${columnTitle}`}
             checked={isSelectAllChecked}
             indeterminate={isSelectAllIndeterminate}
-            onCheckedChange={(checked) => handleSelectAllChange(Boolean(checked))}
+            onCheckedChange={(checked) =>
+              handleSelectAllChange(Boolean(checked))
+            }
             aria-label="Seleccionar todo"
           />
           <label
@@ -122,7 +132,9 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
                 <Checkbox
                   id={inputId}
                   checked={isChecked}
-                  onCheckedChange={(checked) => handleToggle(item.value, Boolean(checked))}
+                  onCheckedChange={(checked) =>
+                    handleToggle(item.value, Boolean(checked))
+                  }
                   aria-label={item.text}
                 />
               ) : (
@@ -151,7 +163,12 @@ export const ListFilterDropdown = (props: ListFilterDropdownProps) => {
         <>
           <Separator />
           <div className="flex items-center justify-end gap-2 p-2">
-            <Button type="button" variant="outline" size="sm" onClick={handleReset}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+            >
               Restablecer
             </Button>
             <Button

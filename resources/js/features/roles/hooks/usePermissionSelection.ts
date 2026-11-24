@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { RolePermission } from "../types";
+import { useState } from 'react';
+import type { RolePermission } from '../types';
 
 type UsePermissionSelectionResult = {
   checkedState: Set<string>;

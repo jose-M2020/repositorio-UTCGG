@@ -1,5 +1,12 @@
-import type { ColumnDef, ReactTable, Row, RowData, TableFeatures, TableOptions } from "@tanstack/react-table";
-import type { ReactNode } from "react";
+import type {
+  ColumnDef,
+  ReactTable,
+  Row,
+  RowData,
+  TableFeatures,
+  TableOptions,
+} from '@tanstack/react-table';
+import type { ReactNode } from 'react';
 
 export interface ColumnFilterItem<TValue extends string = string> {
   text: string;
@@ -7,7 +14,7 @@ export interface ColumnFilterItem<TValue extends string = string> {
   children?: ColumnFilterItem<TValue>[];
 }
 
-export type ColumnFilterMode = "default" | "tree" | "date";
+export type ColumnFilterMode = 'default' | 'tree' | 'date';
 
 export interface ColumnFilterSearchConfig {
   placeholder: string;
@@ -20,7 +27,7 @@ export interface CompoundColumnFilterValue {
   values: string[];
 }
 
-export type DateColumnFilterMode = "single" | "range";
+export type DateColumnFilterMode = 'single' | 'range';
 
 export type DateColumnFilterPreset = {
   value: string;
@@ -66,7 +73,7 @@ export type ColumnFilterDateConfig = {
   modes?: readonly DateColumnFilterMode[];
   defaultMode?: DateColumnFilterMode;
   numberOfMonths?: number;
-  captionLayout?: "label" | "dropdown" | "dropdown-months" | "dropdown-years";
+  captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years';
   /** Disable calendar days (future, past, specific dates, weekdays, etc.). */
   disabledDates?: DateColumnFilterDisabledDates;
   labels?: {
@@ -117,10 +124,16 @@ export interface DataTablePaginationOptions {
   hideOnSinglePage?: boolean;
 }
 
-export type DataTableProps<TFeatures extends TableFeatures, TData extends RowData> = {
+export type DataTableProps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = {
   columns: ColumnDef<TFeatures, TData, any>[];
   data: TData[];
-  tableOptions?: Omit<TableOptions<TFeatures, TData>, "columns" | "data" | "features">;
+  tableOptions?: Omit<
+    TableOptions<TFeatures, TData>,
+    'columns' | 'data' | 'features'
+  >;
   emptyText?: string;
   loading?: boolean;
   pagination?: false | DataTablePaginationOptions;

@@ -30,9 +30,7 @@
   "resources/css/app.css": {
     "file": "assets/app-BuRQolWS.css",
     "name": "app",
-    "names": [
-      "app.css"
-    ],
+    "names": ["app.css"],
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -41,17 +39,13 @@
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
-    "dynamicImports": [
-      "resources/js/pages/welcome.tsx"
-    ]
+    "dynamicImports": ["resources/js/pages/welcome.tsx"]
   },
   "resources/js/pages/welcome.tsx": {
     "file": "assets/welcome-CA0dAEf7.js",
     "name": "welcome",
     "src": "resources/js/pages/welcome.tsx",
     "isDynamicEntry": true,
-    "imports": [
-      "resources/js/app.tsx"
-    ]
+    "imports": ["resources/js/app.tsx"]
   }
 }

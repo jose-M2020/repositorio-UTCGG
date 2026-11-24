@@ -1,20 +1,20 @@
 import { Head } from '@inertiajs/react';
 import {
-    CareersIndexContainer,
-    type PaginatedCareers,
+  CareersIndexContainer,
+  type PaginatedCareers,
 } from '@/features/careers';
 
 type CareersIndexPageProps = {
-    careers: PaginatedCareers;
+  careers: PaginatedCareers;
 };
 
 const CareersIndexPage = ({ careers }: CareersIndexPageProps) => {
-    return (
-        <>
-            <Head title="Carreras" />
-            <CareersIndexContainer careers={careers} />
-        </>
-    );
+  return (
+    <>
+      <Head title="Carreras" />
+      <CareersIndexContainer careers={careers} />
+    </>
+  );
 };
 
 export default CareersIndexPage;

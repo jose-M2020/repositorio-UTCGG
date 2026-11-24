@@ -1,7 +1,12 @@
-import { Briefcase, GraduationCap, School, type LucideIcon } from "lucide-react";
-import { USER_TYPE, type UserType } from "@/shared/types";
-import { cn } from "@/shared/lib";
-import type { UserTypeOption } from "../../types";
+import {
+  Briefcase,
+  GraduationCap,
+  School,
+  type LucideIcon,
+} from 'lucide-react';
+import { USER_TYPE, type UserType } from '@/shared/types';
+import { cn } from '@/shared/lib';
+import type { UserTypeOption } from '../../types';
 
 type UserTypePickerProps = {
   userTypes: UserTypeOption[];
@@ -18,15 +23,15 @@ type UserTypeMeta = {
 const USER_TYPE_META: Record<UserType, UserTypeMeta> = {
   [USER_TYPE.ACADEMIC]: {
     icon: GraduationCap,
-    description: "Perfil académico con matrícula y carrera.",
+    description: 'Perfil académico con matrícula y carrera.',
   },
   [USER_TYPE.WORKFORCE]: {
     icon: School,
-    description: "Personal laboral (docentes, directores de carrera, …).",
+    description: 'Personal laboral (docentes, directores de carrera, …).',
   },
   [USER_TYPE.STAFF]: {
     icon: Briefcase,
-    description: "Personal administrativo u operativo.",
+    description: 'Personal administrativo u operativo.',
   },
 };
 
@@ -56,20 +61,20 @@ export const UserTypePicker = ({
               aria-checked={isSelected}
               onClick={() => onSelect(type.value)}
               className={cn(
-                "flex flex-col items-start gap-3 rounded-xl border bg-card p-4 text-left transition-colors",
-                "hover:border-primary/40 hover:bg-accent/40",
-                "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+                'flex flex-col items-start gap-3 rounded-xl border bg-card p-4 text-left transition-colors',
+                'hover:border-primary/40 hover:bg-accent/40',
+                'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none',
                 isSelected
-                  ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/30"
-                  : "border-border",
+                  ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/30'
+                  : 'border-border',
               )}
             >
               <span
                 className={cn(
-                  "flex size-10 items-center justify-center rounded-lg",
+                  'flex size-10 items-center justify-center rounded-lg',
                   isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground",
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground',
                 )}
               >
                 <Icon className="size-5" aria-hidden="true" />
@@ -79,7 +84,7 @@ export const UserTypePicker = ({
                   {type.label}
                 </span>
                 <span className="block text-xs leading-relaxed text-muted-foreground">
-                  {meta?.description ?? "Selecciona este tipo de usuario."}
+                  {meta?.description ?? 'Selecciona este tipo de usuario.'}
                 </span>
               </span>
             </button>

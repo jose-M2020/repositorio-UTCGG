@@ -1,31 +1,33 @@
-import { ArrowDown, ArrowUp } from "lucide-react";
-import { flexRender } from "@tanstack/react-table";
-import type { Column, ReactTable, RowData } from "@tanstack/react-table";
-import { TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
-import { cn } from "@/shared/lib";
-import type { DataTableFeatures } from "./features";
-import { DataTableHeaderFilters } from "./DataTableHeaderFilters";
+import { ArrowDown, ArrowUp } from 'lucide-react';
+import { flexRender } from '@tanstack/react-table';
+import type { Column, ReactTable, RowData } from '@tanstack/react-table';
+import { TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
+import { cn } from '@/shared/lib';
+import type { DataTableFeatures } from './features';
+import { DataTableHeaderFilters } from './DataTableHeaderFilters';
 
 type DataTableHeaderProps<TData extends RowData> = {
   table: ReactTable<DataTableFeatures, TData>;
 };
 
 const getPinnedColumnStyle = <TData extends RowData>(
-  pinned: "start" | "end" | false,
+  pinned: 'start' | 'end' | false,
   column: Column<DataTableFeatures, TData, unknown>,
 ) => {
-  if (pinned === "start") {
-    return { insetInlineStart: column.getStart("start") };
+  if (pinned === 'start') {
+    return { insetInlineStart: column.getStart('start') };
   }
 
-  if (pinned === "end") {
-    return { insetInlineEnd: column.getAfter("end") };
+  if (pinned === 'end') {
+    return { insetInlineEnd: column.getAfter('end') };
   }
 
   return undefined;
 };
 
-export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeaderProps<TData>) => (
+export const DataTableHeader = <TData extends RowData>({
+  table,
+}: DataTableHeaderProps<TData>) => (
   <TableHeader className="bg-gray-100">
     {table.getHeaderGroups().map((headerGroup) => (
       <TableRow key={headerGroup.id}>
@@ -39,14 +41,14 @@ export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeade
             <TableHead
               key={header.id}
               className={cn(
-                "px-2 py-3",
+                'px-2 py-3',
                 meta?.headerClassName,
                 pinned
                   ? cn(
-                      "sticky z-20 bg-gray-100",
-                      pinned === "end"
-                        ? "border-s border-gray-200 shadow-[-8px_0_12px_-12px_rgba(0,0,0,0.25)]"
-                        : "border-e border-gray-200 shadow-[8px_0_12px_-12px_rgba(0,0,0,0.25)]",
+                      'sticky z-20 bg-gray-100',
+                      pinned === 'end'
+                        ? 'border-s border-gray-200 shadow-[-8px_0_12px_-12px_rgba(0,0,0,0.25)]'
+                        : 'border-e border-gray-200 shadow-[8px_0_12px_-12px_rgba(0,0,0,0.25)]',
                     )
                   : null,
               )}
@@ -67,18 +69,21 @@ export const DataTableHeader = <TData extends RowData>({ table }: DataTableHeade
                     <button
                       type="button"
                       className={cn(
-                        "inline-flex h-7 w-7 items-center justify-center rounded-md border border-transparent hover:bg-gray-200/60 focus:outline-none focus:ring-2 focus:ring-primary/40",
-                        sorted ? "text-primary" : "text-gray-500",
+                        'inline-flex h-7 w-7 items-center justify-center rounded-md border border-transparent hover:bg-gray-200/60 focus:ring-2 focus:ring-primary/40 focus:outline-none',
+                        sorted ? 'text-primary' : 'text-gray-500',
                       )}
                       aria-label="Ordenar"
                       onClick={column.getToggleSortingHandler()}
                     >
-                      {sorted === "asc" ? (
+                      {sorted === 'asc' ? (
                         <ArrowUp className="h-4 w-4" aria-hidden="true" />
-                      ) : sorted === "desc" ? (
+                      ) : sorted === 'desc' ? (
                         <ArrowDown className="h-4 w-4" aria-hidden="true" />
                       ) : (
-                        <ArrowUp className="h-4 w-4 opacity-60" aria-hidden="true" />
+                        <ArrowUp
+                          className="h-4 w-4 opacity-60"
+                          aria-hidden="true"
+                        />
                       )}
                     </button>
                   ) : null}

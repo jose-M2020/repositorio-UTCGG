@@ -1,1 +1,1 @@
-export { formatUserName } from "@/shared/lib/formatUserName";
+export { formatUserName } from '@/shared/lib/formatUserName';

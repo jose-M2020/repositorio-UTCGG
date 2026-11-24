@@ -1,31 +1,31 @@
 import { Head } from '@inertiajs/react';
 import {
-    UserShowContainer,
-    type UserDetails,
-    type UserRepositorySummary,
+  UserShowContainer,
+  type UserDetails,
+  type UserRepositorySummary,
 } from '@/features/users';
 
 type UsersShowPageProps = {
-    user: UserDetails;
-    publicRepositories: UserRepositorySummary[];
-    privateRepositories: UserRepositorySummary[];
+  user: UserDetails;
+  publicRepositories: UserRepositorySummary[];
+  privateRepositories: UserRepositorySummary[];
 };
 
 const UsersShowPage = ({
-    user,
-    publicRepositories,
-    privateRepositories,
+  user,
+  publicRepositories,
+  privateRepositories,
 }: UsersShowPageProps) => {
-    return (
-        <>
-            <Head title="Detalle de usuario" />
-            <UserShowContainer
-                user={user}
-                publicRepositories={publicRepositories}
-                privateRepositories={privateRepositories}
-            />
-        </>
-    );
+  return (
+    <>
+      <Head title="Detalle de usuario" />
+      <UserShowContainer
+        user={user}
+        publicRepositories={publicRepositories}
+        privateRepositories={privateRepositories}
+      />
+    </>
+  );
 };
 
 export default UsersShowPage;

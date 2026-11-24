@@ -1,4 +1,4 @@
-﻿import type { RolePermission } from "../types";
+﻿import type { RolePermission } from '../types';
 
 export type PartitionedPermissions = {
   management: RolePermission[];
@@ -8,46 +8,46 @@ export type PartitionedPermissions = {
 };
 
 const MODULE_LABELS: Record<string, string> = {
-  users: "Usuarios",
-  roles: "Roles",
-  careers: "Carreras",
-  project_types: "Tipos de proyecto",
-  education_levels: "Niveles educativos",
-  repositories: "Repositorios",
-  files: "Archivos",
+  users: 'Usuarios',
+  roles: 'Roles',
+  careers: 'Carreras',
+  project_types: 'Tipos de proyecto',
+  education_levels: 'Niveles educativos',
+  repositories: 'Repositorios',
+  files: 'Archivos',
 };
 
 const ACTION_LABELS: Record<string, string> = {
-  index: "Ver",
-  create: "Crear",
-  edit: "Editar",
-  destroy: "Eliminar",
-  search: "Buscar",
-  "toggle-active": "Activar/desactivar",
-  "update-role": "Cambiar rol",
-  "password-link": "Enviar enlace de contraseña",
+  index: 'Ver',
+  create: 'Crear',
+  edit: 'Editar',
+  destroy: 'Eliminar',
+  search: 'Buscar',
+  'toggle-active': 'Activar/desactivar',
+  'update-role': 'Cambiar rol',
+  'password-link': 'Enviar enlace de contraseña',
 };
 
 const toWords = (value: string): string =>
   value
-    .replaceAll("_", " ")
-    .split(" ")
+    .replaceAll('_', ' ')
+    .split(' ')
     .map((word) =>
       word.length > 0
         ? word[0].toUpperCase() + word.slice(1).toLowerCase()
         : word,
     )
-    .join(" ")
+    .join(' ')
     .trim();
 
 const moduleFromPermission = (permissionName: string): string =>
-  permissionName.split(".")[0] ?? permissionName;
+  permissionName.split('.')[0] ?? permissionName;
 
 const actionFromPermission = (permissionName: string): string =>
-  permissionName.split(".")[1] ?? permissionName;
+  permissionName.split('.')[1] ?? permissionName;
 
 const assignRoleFromPermission = (permissionName: string): string => {
-  const roleName = permissionName.split(".assign.")[1];
+  const roleName = permissionName.split('.assign.')[1];
 
   return roleName ? toWords(roleName) : permissionName;
 };
@@ -55,22 +55,22 @@ const assignRoleFromPermission = (permissionName: string): string => {
 const resolveSection = (
   permission: RolePermission,
 ): keyof PartitionedPermissions => {
-  if (permission.section === "assign" || permission.name.includes(".assign.")) {
-    return "assign";
+  if (permission.section === 'assign' || permission.name.includes('.assign.')) {
+    return 'assign';
   }
 
   if (
-    permission.section === "career" ||
-    permission.name.endsWith(".career.any")
+    permission.section === 'career' ||
+    permission.name.endsWith('.career.any')
   ) {
-    return "career";
+    return 'career';
   }
 
-  if (permission.section === "action") {
-    return "actions";
+  if (permission.section === 'action') {
+    return 'actions';
   }
 
-  return "management";
+  return 'management';
 };
 
 export const moduleLabel = (moduleName: string): string =>
@@ -99,12 +99,12 @@ export const permissionLabel = (permission: RolePermission): string => {
     return permission.description;
   }
 
-  if (permission.name.includes(".assign.")) {
+  if (permission.name.includes('.assign.')) {
     return `Asignar rol ${assignRoleFromPermission(permission.name)}`;
   }
 
-  if (permission.name.endsWith(".career.any")) {
-    return "Puede elegir cualquier carrera";
+  if (permission.name.endsWith('.career.any')) {
+    return 'Puede elegir cualquier carrera';
   }
 
   const action = actionFromPermission(permission.name);

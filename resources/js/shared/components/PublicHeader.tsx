@@ -3,12 +3,12 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { create as login } from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import {
-    about,
-    index as home,
+  about,
+  index as home,
 } from '@/actions/App/Http/Controllers/HomeController';
 import {
-    index as repositories,
-    mine,
+  index as repositories,
+  mine,
 } from '@/actions/App/Http/Controllers/RepositoryController';
 import { show as privacyNotice } from '@/routes/privacy-notice';
 import { buttonVariants } from '@/shared/components/ui';
@@ -17,110 +17,102 @@ import { AppBrand } from './AppBrand';
 import { SurfaceNavLink } from './SurfaceNavLink';
 
 export const PublicHeader = () => {
-    const { auth } = usePage().props;
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { auth } = usePage().props;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const handleToggleMenu = () => {
-        setIsMenuOpen((isOpen) => !isOpen);
-    };
+  const handleToggleMenu = () => {
+    setIsMenuOpen((isOpen) => !isOpen);
+  };
 
-    const handleCloseMenu = () => {
-        setIsMenuOpen(false);
-    };
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
 
-    return (
-        <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
-            <div className="page-container flex h-16 items-center justify-between gap-4">
-                <AppBrand href={home.url()} />
+  return (
+    <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur">
+      <div className="page-container flex h-16 items-center justify-between gap-4">
+        <AppBrand href={home.url()} />
 
-                <nav
-                    className="hidden items-center gap-2 md:flex"
-                    aria-label="Principal"
-                >
-                    <SurfaceNavLink href={home.url()}>Inicio</SurfaceNavLink>
-                    <SurfaceNavLink href={repositories.url()}>
-                        Repositorios
-                    </SurfaceNavLink>
-                    <SurfaceNavLink href={about.url()}>Acerca</SurfaceNavLink>
-                    <SurfaceNavLink href={privacyNotice.url()}>
-                        Privacidad
-                    </SurfaceNavLink>
+        <nav
+          className="hidden items-center gap-2 md:flex"
+          aria-label="Principal"
+        >
+          <SurfaceNavLink href={home.url()}>Inicio</SurfaceNavLink>
+          <SurfaceNavLink href={repositories.url()}>
+            Repositorios
+          </SurfaceNavLink>
+          <SurfaceNavLink href={about.url()}>Acerca</SurfaceNavLink>
+          <SurfaceNavLink href={privacyNotice.url()}>Privacidad</SurfaceNavLink>
 
-                    {auth.user ? (
-                        <Link href={mine.url()} className={buttonVariants()}>
-                            Ir a mi panel
-                        </Link>
-                    ) : (
-                        <Link href={login.url()} className={buttonVariants()}>
-                            Acceder
-                        </Link>
-                    )}
-                </nav>
+          {auth.user ? (
+            <Link href={mine.url()} className={buttonVariants()}>
+              Ir a mi panel
+            </Link>
+          ) : (
+            <Link href={login.url()} className={buttonVariants()}>
+              Acceder
+            </Link>
+          )}
+        </nav>
 
-                <button
-                    type="button"
-                    onClick={handleToggleMenu}
-                    className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:hidden"
-                    aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-                    aria-expanded={isMenuOpen}
-                >
-                    {isMenuOpen ? (
-                        <X className="size-5" aria-hidden="true" />
-                    ) : (
-                        <Menu className="size-5" aria-hidden="true" />
-                    )}
-                </button>
-            </div>
+        <button
+          type="button"
+          onClick={handleToggleMenu}
+          className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:hidden"
+          aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? (
+            <X className="size-5" aria-hidden="true" />
+          ) : (
+            <Menu className="size-5" aria-hidden="true" />
+          )}
+        </button>
+      </div>
 
-            <nav
-                className={cn(
-                    'page-container space-y-1 border-t border-border py-3 md:hidden',
-                    !isMenuOpen && 'hidden',
-                )}
-                aria-label="Principal móvil"
+      <nav
+        className={cn(
+          'page-container space-y-1 border-t border-border py-3 md:hidden',
+          !isMenuOpen && 'hidden',
+        )}
+        aria-label="Principal móvil"
+      >
+        <SurfaceNavLink href={home.url()} onNavigate={handleCloseMenu}>
+          Inicio
+        </SurfaceNavLink>
+        <SurfaceNavLink href={repositories.url()} onNavigate={handleCloseMenu}>
+          Repositorios
+        </SurfaceNavLink>
+        <SurfaceNavLink href={about.url()} onNavigate={handleCloseMenu}>
+          Acerca
+        </SurfaceNavLink>
+        <SurfaceNavLink href={privacyNotice.url()} onNavigate={handleCloseMenu}>
+          Privacidad
+        </SurfaceNavLink>
+        <div className="pt-2">
+          {auth.user ? (
+            <Link
+              href={mine.url()}
+              className={buttonVariants({
+                className: 'w-full',
+              })}
+              onClick={handleCloseMenu}
             >
-                <SurfaceNavLink href={home.url()} onNavigate={handleCloseMenu}>
-                    Inicio
-                </SurfaceNavLink>
-                <SurfaceNavLink
-                    href={repositories.url()}
-                    onNavigate={handleCloseMenu}
-                >
-                    Repositorios
-                </SurfaceNavLink>
-                <SurfaceNavLink href={about.url()} onNavigate={handleCloseMenu}>
-                    Acerca
-                </SurfaceNavLink>
-                <SurfaceNavLink
-                    href={privacyNotice.url()}
-                    onNavigate={handleCloseMenu}
-                >
-                    Privacidad
-                </SurfaceNavLink>
-                <div className="pt-2">
-                    {auth.user ? (
-                        <Link
-                            href={mine.url()}
-                            className={buttonVariants({
-                                className: 'w-full',
-                            })}
-                            onClick={handleCloseMenu}
-                        >
-                            Ir a mi panel
-                        </Link>
-                    ) : (
-                        <Link
-                            href={login.url()}
-                            className={buttonVariants({
-                                className: 'w-full',
-                            })}
-                            onClick={handleCloseMenu}
-                        >
-                            Acceder
-                        </Link>
-                    )}
-                </div>
-            </nav>
-        </header>
-    );
+              Ir a mi panel
+            </Link>
+          ) : (
+            <Link
+              href={login.url()}
+              className={buttonVariants({
+                className: 'w-full',
+              })}
+              onClick={handleCloseMenu}
+            >
+              Acceder
+            </Link>
+          )}
+        </div>
+      </nav>
+    </header>
+  );
 };

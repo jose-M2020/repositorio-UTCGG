@@ -1,8 +1,8 @@
-import { Search, X } from "lucide-react";
-import type { ReactTable, RowData } from "@tanstack/react-table";
-import { Input } from "@/shared/components/ui/input";
-import { cn } from "@/shared/lib";
-import type { DataTableFeatures } from "./features";
+import { Search, X } from 'lucide-react';
+import type { ReactTable, RowData } from '@tanstack/react-table';
+import { Input } from '@/shared/components/ui/input';
+import { cn } from '@/shared/lib';
+import type { DataTableFeatures } from './features';
 
 type DataTableGlobalSearchProps<TData extends RowData> = {
   table: ReactTable<DataTableFeatures, TData>;
@@ -13,18 +13,33 @@ type DataTableGlobalSearchProps<TData extends RowData> = {
 
 export const DataTableGlobalSearch = <TData extends RowData>({
   table,
-  placeholder = "Buscar...",
-  ariaLabel = "Buscar en la tabla",
+  placeholder = 'Buscar...',
+  ariaLabel = 'Buscar en la tabla',
   className,
 }: DataTableGlobalSearchProps<TData>) => {
-  const value = String(table.state.globalFilter ?? "");
+  const value = String(table.state.globalFilter ?? '');
 
   return (
-    <div className={cn("relative", className)}>
-      <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" aria-hidden="true" />
-      <Input type="search" placeholder={placeholder} value={value} onChange={(event) => table.setGlobalFilter(event.target.value)} className="h-9 pl-9 pr-9" aria-label={ariaLabel} />
+    <div className={cn('relative', className)}>
+      <Search
+        className="absolute top-2.5 left-3 h-4 w-4 text-gray-400"
+        aria-hidden="true"
+      />
+      <Input
+        type="search"
+        placeholder={placeholder}
+        value={value}
+        onChange={(event) => table.setGlobalFilter(event.target.value)}
+        className="h-9 pr-9 pl-9"
+        aria-label={ariaLabel}
+      />
       {value ? (
-        <button type="button" className="absolute right-2 top-1.5 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/40" onClick={() => table.resetGlobalFilter()} aria-label="Limpiar búsqueda global">
+        <button
+          type="button"
+          className="absolute top-1.5 right-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-primary/40 focus:outline-none"
+          onClick={() => table.resetGlobalFilter()}
+          aria-label="Limpiar búsqueda global"
+        >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
       ) : null}

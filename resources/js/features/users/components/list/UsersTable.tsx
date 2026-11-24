@@ -1,9 +1,13 @@
-import type { ColumnFiltersState, PaginationState, Updater } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
-import { DataTable } from "@/shared/components/dataTable";
-import { resolveUpdater } from "@/shared/lib";
-import { visitUsersIndex } from "../../api/visitUsersIndex";
-import { createUsersColumns } from "../../columns";
+import type {
+  ColumnFiltersState,
+  PaginationState,
+  Updater,
+} from '@tanstack/react-table';
+import { useEffect, useState } from 'react';
+import { DataTable } from '@/shared/components/dataTable';
+import { resolveUpdater } from '@/shared/lib';
+import { visitUsersIndex } from '../../api/visitUsersIndex';
+import { createUsersColumns } from '../../columns';
 import type {
   CareerFormPolicy,
   CareerOption,
@@ -12,11 +16,11 @@ import type {
   RolePermissionPreview,
   UsersFilters,
   UserTypeOption,
-} from "../../types";
+} from '../../types';
 import {
   buildColumnFilters,
   readFiltersFromColumnState,
-} from "../../utils/usersTableFilters";
+} from '../../utils/usersTableFilters';
 
 type UsersTableProps = {
   users: PaginatedUsers;

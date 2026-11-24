@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { Search, X } from "lucide-react";
+import { useState } from 'react';
+import { Search, X } from 'lucide-react';
 import {
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/shared/components/ui/dropdown-menu";
-import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
-import { Separator } from "@/shared/components/ui/separator";
+} from '@/shared/components/ui/dropdown-menu';
+import { Input } from '@/shared/components/ui/input';
+import { Button } from '@/shared/components/ui/button';
+import { Separator } from '@/shared/components/ui/separator';
 import type {
   ColumnFilterItem,
   ColumnFilterSearchConfig,
   CompoundColumnFilterValue,
-} from "../types";
-import { ListFilterDropdown } from "./ListFilterDropdown";
+} from '../types';
+import { ListFilterDropdown } from './ListFilterDropdown';
 
 type CompoundFilterDropdownProps = {
   search: ColumnFilterSearchConfig;
@@ -35,12 +35,13 @@ export const CompoundFilterDropdown = ({
   // Draft stays local so Apply/Restablecer can defer the request.
   const [pendingSearch, setPendingSearch] = useState(value.search);
   const [pendingValues, setPendingValues] = useState(value.values);
-  const hasPendingFilter = Boolean(pendingSearch.trim()) || pendingValues.length > 0;
+  const hasPendingFilter =
+    Boolean(pendingSearch.trim()) || pendingValues.length > 0;
 
   const handleReset = () => {
-    setPendingSearch("");
+    setPendingSearch('');
     setPendingValues([]);
-    onApply({ search: "", values: [] });
+    onApply({ search: '', values: [] });
   };
 
   const handleApply = () => {
@@ -51,10 +52,16 @@ export const CompoundFilterDropdown = ({
   };
 
   return (
-    <div className="flex w-72 flex-col" onPointerDown={(event) => event.stopPropagation()}>
+    <div
+      className="flex w-72 flex-col"
+      onPointerDown={(event) => event.stopPropagation()}
+    >
       <div className="p-2">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" aria-hidden="true" />
+          <Search
+            className="absolute top-2.5 left-3 h-4 w-4 text-gray-400"
+            aria-hidden="true"
+          />
           <Input
             type="text"
             placeholder={search.placeholder}
@@ -62,7 +69,7 @@ export const CompoundFilterDropdown = ({
             onChange={(event) => setPendingSearch(event.target.value)}
             onKeyDown={(event) => {
               event.stopPropagation();
-              if (event.key === "Enter") handleApply();
+              if (event.key === 'Enter') handleApply();
             }}
             className="h-9 pr-9 pl-9"
             aria-label={search.ariaLabel}
@@ -71,9 +78,10 @@ export const CompoundFilterDropdown = ({
             <button
               type="button"
               className="absolute top-1.5 right-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 focus:ring-2 focus:ring-primary/40 focus:outline-none"
-              onClick={() => setPendingSearch("")}
+              onClick={() => setPendingSearch('')}
               aria-label={
-                search.clearAriaLabel ?? `Limpiar ${search.ariaLabel.toLowerCase()}`
+                search.clearAriaLabel ??
+                `Limpiar ${search.ariaLabel.toLowerCase()}`
               }
             >
               <X className="h-4 w-4" aria-hidden="true" />

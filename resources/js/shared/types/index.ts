@@ -5,4 +5,4 @@ export {
   isUserRole,
   type UserType,
   type UserRole,
-} from "./enums";
+} from './enums';

@@ -9,14 +9,14 @@ export type PageLayout = ComponentType<{ children: ReactNode }>;
  * to its shell layout.
  */
 const SURFACE_LAYOUTS: Record<string, PageLayout> = {
-    public: PublicLayout,
-    auth: PublicLayout,
-    errors: PanelLayout,
-    panel: PanelLayout,
+  public: PublicLayout,
+  auth: PublicLayout,
+  errors: PanelLayout,
+  panel: PanelLayout,
 };
 
 export const resolveLayout = (name: string): PageLayout | null => {
-    const surface = name.split('/')[0] ?? '';
+  const surface = name.split('/')[0] ?? '';
 
-    return SURFACE_LAYOUTS[surface] ?? null;
+  return SURFACE_LAYOUTS[surface] ?? null;
 };

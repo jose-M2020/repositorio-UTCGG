@@ -1,6 +1,6 @@
-export { ProjectTypesIndexContainer } from "./containers/ProjectTypesIndexContainer";
+export { ProjectTypesIndexContainer } from './containers/ProjectTypesIndexContainer';
 export type {
-    PaginatedProjectTypes,
-    ProjectTypeFormValues,
-    ProjectTypeItem,
-} from "./types";
+  PaginatedProjectTypes,
+  ProjectTypeFormValues,
+  ProjectTypeItem,
+} from './types';

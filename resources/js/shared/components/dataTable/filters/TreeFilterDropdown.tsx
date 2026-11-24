@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { Button, Checkbox, Separator } from "@/shared/components/ui";
-import type { ColumnFilterItem } from "../types";
-import { TreeFilterNode } from "./TreeFilterNode";
+import { useState } from 'react';
+import { Button, Checkbox, Separator } from '@/shared/components/ui';
+import type { ColumnFilterItem } from '../types';
+import { TreeFilterNode } from './TreeFilterNode';
 import {
   collectLeafValues,
   expandAppliedValues,
   getNodeCheckState,
-} from "./treeFilterUtils";
+} from './treeFilterUtils';
 
 type TreeFilterDropdownProps = {
   filters: readonly ColumnFilterItem[];
@@ -36,13 +36,18 @@ export const TreeFilterDropdown = ({
   const [expandedKeys, setExpandedKeys] = useState(
     () => new Set(defaultExpanded ? groupKeys : []),
   );
-  const selectedCount = allLeaves.filter((leaf) => pendingLeaves.has(leaf)).length;
-  const isSelectAllChecked = selectedCount > 0 && selectedCount === allLeaves.length;
-  const isSelectAllIndeterminate = selectedCount > 0 && selectedCount < allLeaves.length;
+  const selectedCount = allLeaves.filter((leaf) =>
+    pendingLeaves.has(leaf),
+  ).length;
+  const isSelectAllChecked =
+    selectedCount > 0 && selectedCount === allLeaves.length;
+  const isSelectAllIndeterminate =
+    selectedCount > 0 && selectedCount < allLeaves.length;
 
   const toggleLeaf = (value: string, checked: boolean) => {
     setPendingLeaves((previous) => {
-      if (!filterMultiple) return checked ? new Set([value]) : new Set<string>();
+      if (!filterMultiple)
+        return checked ? new Set([value]) : new Set<string>();
       const next = new Set(previous);
       if (checked) next.add(value);
       else next.delete(value);
@@ -68,7 +73,10 @@ export const TreeFilterDropdown = ({
   };
 
   return (
-    <div className="flex w-72 flex-col" onPointerDown={(event) => event.stopPropagation()}>
+    <div
+      className="flex w-72 flex-col"
+      onPointerDown={(event) => event.stopPropagation()}
+    >
       {filterMultiple ? (
         <div className="flex items-center gap-2 px-3 py-1.5">
           <Checkbox
@@ -76,7 +84,9 @@ export const TreeFilterDropdown = ({
             checked={isSelectAllChecked}
             indeterminate={isSelectAllIndeterminate}
             onCheckedChange={(checked) => {
-              setPendingLeaves(checked ? new Set(allLeaves) : new Set<string>());
+              setPendingLeaves(
+                checked ? new Set(allLeaves) : new Set<string>(),
+              );
             }}
             aria-label="Seleccionar todo"
           />
@@ -96,7 +106,9 @@ export const TreeFilterDropdown = ({
             node={node}
             filterMultiple={filterMultiple}
             isExpanded={(key) => expandedKeys.has(key)}
-            getCheckState={(filterNode) => getNodeCheckState(filterNode, pendingLeaves)}
+            getCheckState={(filterNode) =>
+              getNodeCheckState(filterNode, pendingLeaves)
+            }
             onToggleExpand={(key) =>
               setExpandedKeys((previous) => {
                 const next = new Set(previous);
@@ -116,7 +128,11 @@ export const TreeFilterDropdown = ({
         <Button type="button" variant="outline" size="sm" onClick={handleReset}>
           Restablecer
         </Button>
-        <Button type="button" size="sm" onClick={() => onApply(Array.from(pendingLeaves))}>
+        <Button
+          type="button"
+          size="sm"
+          onClick={() => onApply(Array.from(pendingLeaves))}
+        >
           Aplicar
         </Button>
       </div>

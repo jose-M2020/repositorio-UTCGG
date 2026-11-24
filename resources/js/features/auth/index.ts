@@ -5,9 +5,9 @@ export { SetPasswordContainer } from './containers/SetPasswordContainer';
 export { passwordMeetsRequirements } from './utils/passwordRequirements';
 export { AUTH_ABILITIES } from './types';
 export type {
-    Auth,
-    AuthAbilities,
-    AuthAbilityKey,
-    AuthFormErrors,
-    AuthUser,
+  Auth,
+  AuthAbilities,
+  AuthAbilityKey,
+  AuthFormErrors,
+  AuthUser,
 } from './types';

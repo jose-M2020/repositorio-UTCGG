@@ -1,6 +1,6 @@
-import { Checkbox } from "@/shared/components/ui/checkbox";
-import type { RolePermission } from "../../types";
-import { permissionLabel } from "../../utils/permissionDisplay";
+import { Checkbox } from '@/shared/components/ui/checkbox';
+import type { RolePermission } from '../../types';
+import { permissionLabel } from '../../utils/permissionDisplay';
 
 type PermissionSectionProps = {
   eyebrow: string;

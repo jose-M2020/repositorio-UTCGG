@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Form } from "@inertiajs/react";
-import { KeyRound, Mail } from "lucide-react";
-import { sendPasswordLink } from "@/actions/App/Http/Controllers/UserController";
+import { useState } from 'react';
+import { Form } from '@inertiajs/react';
+import { KeyRound, Mail } from 'lucide-react';
+import { sendPasswordLink } from '@/actions/App/Http/Controllers/UserController';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,9 +12,9 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from "@/shared/components/ui";
-import type { UserListItem } from "../../types";
-import { formatUserName } from "../../utils/formatUserName";
+} from '@/shared/components/ui';
+import type { UserListItem } from '../../types';
+import { formatUserName } from '../../utils/formatUserName';
 
 type UserSendPasswordLinkDialogProps = {
   user: UserListItem;
@@ -31,10 +31,10 @@ export const UserSendPasswordLinkDialog = ({
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
   const userName = formatUserName(user);
-  const isActivation = user.status === "pending_activation";
+  const isActivation = user.status === 'pending_activation';
   const actionLabel = isActivation
-    ? "Reenviar activación"
-    : "Restablecer contraseña";
+    ? 'Reenviar activación'
+    : 'Restablecer contraseña';
   const Icon = isActivation ? Mail : KeyRound;
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -56,13 +56,13 @@ export const UserSendPasswordLinkDialog = ({
             <Icon aria-hidden="true" />
           </AlertDialogMedia>
           <AlertDialogTitle className="font-normal">
-            ¿{actionLabel} para{" "}
+            ¿{actionLabel} para{' '}
             <span className="font-semibold text-foreground">{userName}</span>?
           </AlertDialogTitle>
           <AlertDialogDescription>
             {isActivation
-              ? "Se enviará un enlace al correo del usuario para que active su cuenta y elija su contraseña."
-              : "Se enviará un enlace al correo del usuario para que elija una nueva contraseña. Tú no verás ni definirás la contraseña."}
+              ? 'Se enviará un enlace al correo del usuario para que active su cuenta y elija su contraseña.'
+              : 'Se enviará un enlace al correo del usuario para que elija una nueva contraseña. Tú no verás ni definirás la contraseña.'}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -70,7 +70,7 @@ export const UserSendPasswordLinkDialog = ({
           <Form {...sendPasswordLink.form(user.id)} onSuccess={handleSuccess}>
             {({ processing }) => (
               <AlertDialogAction type="submit" disabled={processing}>
-                {processing ? "Enviando..." : "Enviar enlace"}
+                {processing ? 'Enviando...' : 'Enviar enlace'}
               </AlertDialogAction>
             )}
           </Form>

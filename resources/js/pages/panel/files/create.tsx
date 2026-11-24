@@ -1,20 +1,20 @@
 import { Head } from '@inertiajs/react';
 import {
-    FileUploadContainer,
-    type RepositoryUploadTarget,
+  FileUploadContainer,
+  type RepositoryUploadTarget,
 } from '@/features/files';
 
 type PageProps = {
-    repository: RepositoryUploadTarget;
+  repository: RepositoryUploadTarget;
 };
 
 const FilesCreatePage = ({ repository }: PageProps) => {
-    return (
-        <>
-            <Head title="Subir archivos" />
-            <FileUploadContainer repository={repository} />
-        </>
-    );
+  return (
+    <>
+      <Head title="Subir archivos" />
+      <FileUploadContainer repository={repository} />
+    </>
+  );
 };
 
 export default FilesCreatePage;

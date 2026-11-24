@@ -1,8 +1,8 @@
-import { usePage } from "@inertiajs/react";
-import { Button } from "@/shared/components/ui";
-import { RoleFormDialog } from "../components/form/RoleFormDialog";
-import { RolesTable } from "../components/list/RolesTable";
-import type { PaginatedRoles, PermissionGroups } from "../types";
+import { usePage } from '@inertiajs/react';
+import { Button } from '@/shared/components/ui';
+import { RoleFormDialog } from '../components/form/RoleFormDialog';
+import { RolesTable } from '../components/list/RolesTable';
+import type { PaginatedRoles, PermissionGroups } from '../types';
 
 type RolesIndexContainerProps = {
   roles: PaginatedRoles;

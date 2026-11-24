@@ -1,31 +1,31 @@
-import { Head } from "@inertiajs/react";
+import { Head } from '@inertiajs/react';
 import {
-    ProjectPeriodsIndexContainer,
-    type PaginatedProjectPeriods,
-    type ProjectTypeOption,
-} from "@/features/project-periods";
+  ProjectPeriodsIndexContainer,
+  type PaginatedProjectPeriods,
+  type ProjectTypeOption,
+} from '@/features/project-periods';
 
 type PageProps = {
-    periods: PaginatedProjectPeriods;
-    projectTypes: ProjectTypeOption[];
-    defaultAdvisorCapacity: number;
+  periods: PaginatedProjectPeriods;
+  projectTypes: ProjectTypeOption[];
+  defaultAdvisorCapacity: number;
 };
 
 const ProjectPeriodsIndexPage = ({
-    periods,
-    projectTypes,
-    defaultAdvisorCapacity,
+  periods,
+  projectTypes,
+  defaultAdvisorCapacity,
 }: PageProps) => {
-    return (
-        <>
-            <Head title="Periodos de proyecto" />
-            <ProjectPeriodsIndexContainer
-                periods={periods}
-                projectTypes={projectTypes}
-                defaultAdvisorCapacity={defaultAdvisorCapacity}
-            />
-        </>
-    );
+  return (
+    <>
+      <Head title="Periodos de proyecto" />
+      <ProjectPeriodsIndexContainer
+        periods={periods}
+        projectTypes={projectTypes}
+        defaultAdvisorCapacity={defaultAdvisorCapacity}
+      />
+    </>
+  );
 };
 
 export default ProjectPeriodsIndexPage;

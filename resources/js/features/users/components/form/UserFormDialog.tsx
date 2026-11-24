@@ -1,21 +1,17 @@
-import { useState, type ReactElement, type ReactNode } from "react";
-import type { UserType } from "@/shared/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/shared/components/ui";
+import { useState, type ReactElement, type ReactNode } from 'react';
+import type { UserType } from '@/shared/types';
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/components/ui';
 import type {
   CareerFormPolicy,
   CareerOption,
   RoleOption,
   UserListItem,
   UserTypeOption,
-} from "../../types";
-import { UserCreateTypeStep } from "./UserCreateTypeStep";
-import { UserFormStep } from "./UserFormStep";
+} from '../../types';
+import { UserCreateTypeStep } from './UserCreateTypeStep';
+import { UserFormStep } from './UserFormStep';
 
-type CreateStep = "type" | "form";
+type CreateStep = 'type' | 'form';
 
 type UserFormDialogBaseProps = {
   roles: RoleOption[];
@@ -31,7 +27,7 @@ type UserFormDialogBaseProps = {
 };
 
 type UserFormDialogProps = UserFormDialogBaseProps &
-  ({ mode: "create" } | { mode: "edit"; user: UserListItem });
+  ({ mode: 'create' } | { mode: 'edit'; user: UserListItem });
 
 export const UserFormDialog = (props: UserFormDialogProps) => {
   const {
@@ -47,17 +43,17 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
     hideTrigger = false,
   } = props;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
-  const [createStep, setCreateStep] = useState<CreateStep>("type");
-  const [selectedUserType, setSelectedUserType] = useState<UserType | "">("");
+  const [createStep, setCreateStep] = useState<CreateStep>('type');
+  const [selectedUserType, setSelectedUserType] = useState<UserType | ''>('');
   const isControlled = openProp !== undefined;
   const open = isControlled ? openProp : uncontrolledOpen;
-  const isEdit = mode === "edit";
+  const isEdit = mode === 'edit';
   const user = isEdit ? props.user : null;
-  const showTypeStep = !isEdit && createStep === "type" && userTypes.length > 0;
+  const showTypeStep = !isEdit && createStep === 'type' && userTypes.length > 0;
 
   const resetCreateFlow = () => {
-    setCreateStep("type");
-    setSelectedUserType("");
+    setCreateStep('type');
+    setSelectedUserType('');
   };
 
   const handleOpenChange = (nextOpen: boolean) => {
@@ -77,11 +73,11 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
 
   const handleSelectUserType = (value: UserType) => {
     setSelectedUserType(value);
-    setCreateStep("form");
+    setCreateStep('form');
   };
 
   const handleBackToTypeStep = () => {
-    setCreateStep("type");
+    setCreateStep('type');
   };
 
   return (
@@ -99,7 +95,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
           />
         ) : (
           <UserFormStep
-            mode={isEdit ? "edit" : "create"}
+            mode={isEdit ? 'edit' : 'create'}
             user={user}
             roles={roles}
             careers={careers}
@@ -107,9 +103,7 @@ export const UserFormDialog = (props: UserFormDialogProps) => {
             userTypes={userTypes}
             selectedUserType={selectedUserType}
             onBackToTypeStep={
-              !isEdit && userTypes.length > 0
-                ? handleBackToTypeStep
-                : undefined
+              !isEdit && userTypes.length > 0 ? handleBackToTypeStep : undefined
             }
             onSuccess={handleSuccess}
           />

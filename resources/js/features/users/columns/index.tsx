@@ -1,8 +1,8 @@
-import { Link } from "@inertiajs/react";
-import { show } from "@/actions/App/Http/Controllers/UserController";
-import { createDataTableColumnHelper } from "@/shared/components/dataTable";
-import { UserRowActions } from "../components/list/UserRowActions";
-import { UserStatusBadge } from "../components/list/UserStatusBadge";
+import { Link } from '@inertiajs/react';
+import { show } from '@/actions/App/Http/Controllers/UserController';
+import { createDataTableColumnHelper } from '@/shared/components/dataTable';
+import { UserRowActions } from '../components/list/UserRowActions';
+import { UserStatusBadge } from '../components/list/UserStatusBadge';
 import type {
   CareerFormPolicy,
   CareerOption,
@@ -10,14 +10,14 @@ import type {
   RolePermissionPreview,
   UserListItem,
   UserTypeOption,
-} from "../types";
-import { formatUserName } from "../utils/formatUserName";
+} from '../types';
+import { formatUserName } from '../utils/formatUserName';
 
 const USERS_DATE_FILTER_PRESETS = [
-  { value: "today", label: "Hoy" },
-  { value: "week", label: "Esta Semana" },
-  { value: "month", label: "Este mes" },
-  { value: "year", label: "Este año" },
+  { value: 'today', label: 'Hoy' },
+  { value: 'week', label: 'Esta Semana' },
+  { value: 'month', label: 'Este mes' },
+  { value: 'year', label: 'Este año' },
 ] as const;
 
 type CreateUsersColumnsOptions = {
@@ -44,8 +44,8 @@ export const createUsersColumns = ({
   userTypes = [],
 }: CreateUsersColumnsOptions) => [
   columnHelper.accessor((row) => formatUserName(row), {
-    id: "name",
-    header: "Nombre",
+    id: 'name',
+    header: 'Nombre',
     size: 220,
     minSize: 160,
     enableColumnFilter: true,
@@ -63,33 +63,33 @@ export const createUsersColumns = ({
     meta: {
       filter: {
         search: {
-          placeholder: "Buscar nombre...",
-          ariaLabel: "Buscar por nombre",
-          clearAriaLabel: "Limpiar búsqueda de nombre",
+          placeholder: 'Buscar nombre...',
+          ariaLabel: 'Buscar por nombre',
+          clearAriaLabel: 'Limpiar búsqueda de nombre',
         },
       },
     },
   }),
-  columnHelper.accessor("email", {
-    header: "Correo",
+  columnHelper.accessor('email', {
+    header: 'Correo',
     size: 240,
     minSize: 180,
     enableColumnFilter: true,
     meta: {
       filter: {
         search: {
-          placeholder: "Buscar correo...",
-          ariaLabel: "Buscar por correo",
-          clearAriaLabel: "Limpiar búsqueda de correo",
+          placeholder: 'Buscar correo...',
+          ariaLabel: 'Buscar por correo',
+          clearAriaLabel: 'Limpiar búsqueda de correo',
         },
       },
     },
   }),
-  columnHelper.accessor("career", {
-    header: "Carrera",
+  columnHelper.accessor('career', {
+    header: 'Carrera',
     size: 200,
     minSize: 140,
-    cell: ({ getValue }) => getValue() ?? "—",
+    cell: ({ getValue }) => getValue() ?? '—',
     enableColumnFilter: canFilterCareer,
     meta: canFilterCareer
       ? {
@@ -103,25 +103,28 @@ export const createUsersColumns = ({
         }
       : undefined,
   }),
-  columnHelper.accessor((row) => row.roles.map((role) => role.name).join(", "), {
-    id: "role",
-    header: "Rol",
-    size: 120,
-    minSize: 96,
-    cell: ({ getValue }) => getValue() || "—",
-    enableColumnFilter: true,
-    meta: {
-      filter: {
-        multiple: true,
-        items: roles.map((role) => ({
-          text: role.label,
-          value: role.value,
-        })),
+  columnHelper.accessor(
+    (row) => row.roles.map((role) => role.name).join(', '),
+    {
+      id: 'role',
+      header: 'Rol',
+      size: 120,
+      minSize: 96,
+      cell: ({ getValue }) => getValue() || '—',
+      enableColumnFilter: true,
+      meta: {
+        filter: {
+          multiple: true,
+          items: roles.map((role) => ({
+            text: role.label,
+            value: role.value,
+          })),
+        },
       },
     },
-  }),
-  columnHelper.accessor("status", {
-    header: "Estado",
+  ),
+  columnHelper.accessor('status', {
+    header: 'Estado',
     size: 120,
     minSize: 104,
     cell: ({ getValue }) => <UserStatusBadge status={getValue()} />,
@@ -130,31 +133,31 @@ export const createUsersColumns = ({
       filter: {
         multiple: true,
         items: [
-          { text: "Activo", value: "active" },
-          { text: "Pendiente", value: "pending_activation" },
-          { text: "Inactivo", value: "inactive" },
+          { text: 'Activo', value: 'active' },
+          { text: 'Pendiente', value: 'pending_activation' },
+          { text: 'Inactivo', value: 'inactive' },
         ],
       },
     },
   }),
-  columnHelper.accessor("created_at", {
-    header: "Fecha",
+  columnHelper.accessor('created_at', {
+    header: 'Fecha',
     size: 120,
     minSize: 104,
     cell: ({ getValue }) => {
       const value = getValue();
-      if (!value) return "—";
+      if (!value) return '—';
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return value;
-      return date.toLocaleDateString("es-MX");
+      return date.toLocaleDateString('es-MX');
     },
     enableColumnFilter: true,
     meta: {
       filter: {
-        mode: "date",
+        mode: 'date',
         date: {
           presets: USERS_DATE_FILTER_PRESETS,
-          modes: ["range"],
+          modes: ['range'],
           disabledDates: {
             future: true,
           },
@@ -163,14 +166,14 @@ export const createUsersColumns = ({
     },
   }),
   columnHelper.display({
-    id: "actions",
-    header: "",
+    id: 'actions',
+    header: '',
     size: 56,
     minSize: 56,
     maxSize: 56,
     meta: {
-      headerClassName: "text-right",
-      cellClassName: "max-w-none overflow-visible text-right",
+      headerClassName: 'text-right',
+      cellClassName: 'max-w-none overflow-visible text-right',
     },
     cell: ({ row }) => (
       <UserRowActions

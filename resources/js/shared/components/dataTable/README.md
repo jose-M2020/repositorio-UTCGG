@@ -11,7 +11,10 @@ locally.
 ## Basic usage
 
 ```tsx
-import { DataTable, createDataTableColumnHelper } from "@/shared/components/dataTable";
+import {
+  DataTable,
+  createDataTableColumnHelper,
+} from '@/shared/components/dataTable';
 
 type User = {
   id: string;
@@ -22,12 +25,12 @@ type User = {
 const columnHelper = createDataTableColumnHelper<User>();
 
 const columns = columnHelper.columns([
-  columnHelper.accessor("name", {
-    header: "Name",
+  columnHelper.accessor('name', {
+    header: 'Name',
     enableSorting: true,
   }),
-  columnHelper.accessor("region", {
-    header: "Region",
+  columnHelper.accessor('region', {
+    header: 'Region',
   }),
 ]);
 
@@ -49,16 +52,16 @@ export const UsersTable = ({ users, loading = false }: UsersTableProps) => (
 
 ## Props
 
-| Prop | Description |
-| --- | --- |
-| `columns` | TanStack Table column definitions. |
-| `data` | Records processed by the table. |
-| `loading` | Displays skeleton rows while data is loading. |
-| `emptyText` | Message displayed when there are no rows. |
-| `pagination` | Configures page sizes and visibility, or accepts `false` to hide it. |
-| `toolbar` | Render prop that receives the table instance. |
-| `renderSubComponent` | Optional content rendered below an expanded row. |
-| `tableOptions` | Additional TanStack Table v9 options, except `columns`, `data`, and `features`. |
+| Prop                 | Description                                                                     |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `columns`            | TanStack Table column definitions.                                              |
+| `data`               | Records processed by the table.                                                 |
+| `loading`            | Displays skeleton rows while data is loading.                                   |
+| `emptyText`          | Message displayed when there are no rows.                                       |
+| `pagination`         | Configures page sizes and visibility, or accepts `false` to hide it.            |
+| `toolbar`            | Render prop that receives the table instance.                                   |
+| `renderSubComponent` | Optional content rendered below an expanded row.                                |
+| `tableOptions`       | Additional TanStack Table v9 options, except `columns`, `data`, and `features`. |
 
 Pagination uses page sizes of `10`, `20`, and `50` by default and is hidden
 when there is only one page.
@@ -72,17 +75,17 @@ import {
   DataTable,
   createDataTableColumnHelper,
   createExpandColumn,
-} from "@/shared/components/dataTable";
+} from '@/shared/components/dataTable';
 
 const columnHelper = createDataTableColumnHelper<User>();
 
 const columns = columnHelper.columns([
   createExpandColumn<User>(),
-  columnHelper.accessor("name", {
-    header: "Name",
+  columnHelper.accessor('name', {
+    header: 'Name',
   }),
-  columnHelper.accessor("region", {
-    header: "Region",
+  columnHelper.accessor('region', {
+    header: 'Region',
   }),
 ]);
 
@@ -116,17 +119,17 @@ stable because it identifies the value in `columnFilters`.
 ### List
 
 ```tsx
-const regionColumn = columnHelper.accessor("region", {
-  id: "region",
-  header: "Region",
+const regionColumn = columnHelper.accessor('region', {
+  id: 'region',
+  header: 'Region',
   enableColumnFilter: true,
   filterFn: (row, _columnId, values: string[]) =>
     values.includes(row.original.region),
   meta: {
     filter: {
       items: [
-        { text: "North", value: "north" },
-        { text: "South", value: "south" },
+        { text: 'North', value: 'north' },
+        { text: 'South', value: 'south' },
       ],
       multiple: true,
     },
@@ -255,16 +258,13 @@ controlled through `tableOptions.state.globalFilter`.
 import {
   DataTable,
   DataTableGlobalSearch,
-} from "@/shared/components/dataTable";
+} from '@/shared/components/dataTable';
 
 <DataTable
   columns={columns}
   data={users}
   toolbar={(table) => (
-    <DataTableGlobalSearch
-      table={table}
-      placeholder="Search users..."
-    />
+    <DataTableGlobalSearch table={table} placeholder="Search users..." />
   )}
 />;
 ```

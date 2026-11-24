@@ -1,9 +1,9 @@
-import { Pencil } from "lucide-react";
-import { destroy } from "@/actions/App/Http/Controllers/RoleController";
-import { ConfirmDeleteButton } from "@/shared/components/ConfirmDeleteButton";
-import { Button } from "@/shared/components/ui";
-import { RoleFormDialog } from "../form/RoleFormDialog";
-import type { PermissionGroups, RoleListItem } from "../../types";
+import { Pencil } from 'lucide-react';
+import { destroy } from '@/actions/App/Http/Controllers/RoleController';
+import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
+import { Button } from '@/shared/components/ui';
+import { RoleFormDialog } from '../form/RoleFormDialog';
+import type { PermissionGroups, RoleListItem } from '../../types';
 
 type RoleRowActionsProps = {
   role: RoleListItem;
@@ -19,7 +19,7 @@ export const RoleRowActions = ({
     ? undefined
     : role.users_count > 0
       ? `Asignado a ${role.users_count} usuario(s). Reasigna antes de eliminar.`
-      : "Rol del sistema: no se puede eliminar.";
+      : 'Rol del sistema: no se puede eliminar.';
 
   return (
     <div className="flex justify-end gap-1">

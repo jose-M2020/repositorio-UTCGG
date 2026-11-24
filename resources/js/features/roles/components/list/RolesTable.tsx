@@ -1,10 +1,10 @@
-import type { PaginationState, Updater } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
-import { DataTable } from "@/shared/components/dataTable";
-import { resolveUpdater } from "@/shared/lib";
-import { visitRolesIndex } from "../../api/visitRolesIndex";
-import { createRolesColumns } from "../../columns";
-import type { PaginatedRoles, PermissionGroups } from "../../types";
+import type { PaginationState, Updater } from '@tanstack/react-table';
+import { useEffect, useState } from 'react';
+import { DataTable } from '@/shared/components/dataTable';
+import { resolveUpdater } from '@/shared/lib';
+import { visitRolesIndex } from '../../api/visitRolesIndex';
+import { createRolesColumns } from '../../columns';
+import type { PaginatedRoles, PermissionGroups } from '../../types';
 
 type RolesTableProps = {
   roles: PaginatedRoles;

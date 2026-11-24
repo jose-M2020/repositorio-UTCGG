@@ -1,20 +1,20 @@
 import { Head } from '@inertiajs/react';
 import {
-    RepositoriesMineContainer,
-    type PaginatedRepositories,
+  RepositoriesMineContainer,
+  type PaginatedRepositories,
 } from '@/features/repositories';
 
 type PageProps = {
-    repositories: PaginatedRepositories;
+  repositories: PaginatedRepositories;
 };
 
 const RepositoriesMinePage = ({ repositories }: PageProps) => {
-    return (
-        <>
-            <Head title="Mis repositorios" />
-            <RepositoriesMineContainer repositories={repositories} />
-        </>
-    );
+  return (
+    <>
+      <Head title="Mis repositorios" />
+      <RepositoriesMineContainer repositories={repositories} />
+    </>
+  );
 };
 
 export default RepositoriesMinePage;

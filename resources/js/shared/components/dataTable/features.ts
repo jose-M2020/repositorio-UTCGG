@@ -19,8 +19,8 @@ import {
   sortFn_text,
   tableFeatures,
   type RowData,
-} from "@tanstack/react-table";
-import type { DataTableColumnMeta } from "./types";
+} from '@tanstack/react-table';
+import type { DataTableColumnMeta } from './types';
 
 export const features = tableFeatures({
   columnFilteringFeature,

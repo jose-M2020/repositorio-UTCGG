@@ -1,7 +1,7 @@
-import { Form } from "@inertiajs/react";
-import { ArrowLeft } from "lucide-react";
-import { store, update } from "@/actions/App/Http/Controllers/UserController";
-import type { UserType } from "@/shared/types";
+import { Form } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
+import { store, update } from '@/actions/App/Http/Controllers/UserController';
+import type { UserType } from '@/shared/types';
 import {
   Button,
   DialogClose,
@@ -9,29 +9,29 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/components/ui";
+} from '@/shared/components/ui';
 import type {
   CareerFormPolicy,
   CareerOption,
   RoleOption,
   UserListItem,
   UserTypeOption,
-} from "../../types";
-import { formatUserName } from "../../utils/formatUserName";
+} from '../../types';
+import { formatUserName } from '../../utils/formatUserName';
 import {
   defaultRoleForType,
   rolesForUserType,
-} from "../../utils/userTypeDefaults";
-import { UserFormFields } from "./UserFormFields";
+} from '../../utils/userTypeDefaults';
+import { UserFormFields } from './UserFormFields';
 
 type UserFormStepProps = {
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   user?: UserListItem | null;
   roles: RoleOption[];
   careers: CareerOption[];
   careerPolicy: CareerFormPolicy;
   userTypes: UserTypeOption[];
-  selectedUserType?: UserType | "";
+  selectedUserType?: UserType | '';
   onBackToTypeStep?: () => void;
   onSuccess: () => void;
 };
@@ -43,12 +43,12 @@ export const UserFormStep = ({
   careers,
   careerPolicy,
   userTypes,
-  selectedUserType = "",
+  selectedUserType = '',
   onBackToTypeStep,
   onSuccess,
 }: UserFormStepProps) => {
-  const isEdit = mode === "edit";
-  const userName = user ? formatUserName(user) : "";
+  const isEdit = mode === 'edit';
+  const userName = user ? formatUserName(user) : '';
   const selectedTypeLabel =
     userTypes.find((type) => type.value === selectedUserType)?.label ??
     selectedUserType;
@@ -58,9 +58,9 @@ export const UserFormStep = ({
         id: user.id,
         first_name: user.first_name,
         last_name: user.last_name,
-        second_last_name: user.second_last_name ?? "",
+        second_last_name: user.second_last_name ?? '',
         email: user.email,
-        career: user.career?.split(",")[0]?.trim() ?? "",
+        career: user.career?.split(',')[0]?.trim() ?? '',
         career_ids: user.career_ids ?? [],
         role: user.roles[0]?.name ?? null,
         user_type: user.user_type ?? null,
@@ -72,20 +72,16 @@ export const UserFormStep = ({
       };
 
   const formProps = isEdit && user ? update.form(user.id) : store.form();
-  const formRoles = isEdit
-    ? roles
-    : rolesForUserType(roles, selectedUserType);
+  const formRoles = isEdit ? roles : rolesForUserType(roles, selectedUserType);
 
   return (
     <>
       <DialogHeader className="shrink-0 gap-1.5 border-b border-border px-6 py-5 pr-14">
-        <DialogTitle>
-          {isEdit ? "Editar usuario" : "Nuevo usuario"}
-        </DialogTitle>
+        <DialogTitle>{isEdit ? 'Editar usuario' : 'Nuevo usuario'}</DialogTitle>
         <DialogDescription>
           {isEdit
             ? `Actualiza los datos de ${userName}. El rol se cambia en una acción aparte.`
-            : "Registra nombre, correo y rol. El usuario recibirá un enlace para activar la cuenta y elegir su contraseña."}
+            : 'Registra nombre, correo y rol. El usuario recibirá un enlace para activar la cuenta y elegir su contraseña.'}
         </DialogDescription>
       </DialogHeader>
 
@@ -101,7 +97,7 @@ export const UserFormStep = ({
               {!isEdit && selectedUserType && onBackToTypeStep ? (
                 <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
                   <p className="text-sm text-muted-foreground">
-                    Tipo:{" "}
+                    Tipo:{' '}
                     <span className="font-medium text-foreground">
                       {selectedTypeLabel}
                     </span>
@@ -137,10 +133,10 @@ export const UserFormStep = ({
               </DialogClose>
               <Button type="submit" disabled={processing}>
                 {processing
-                  ? "Guardando..."
+                  ? 'Guardando...'
                   : isEdit
-                    ? "Actualizar"
-                    : "Registrar"}
+                    ? 'Actualizar'
+                    : 'Registrar'}
               </Button>
             </DialogFooter>
           </>

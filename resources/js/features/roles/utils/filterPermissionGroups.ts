@@ -1,11 +1,11 @@
-import type { PermissionGroups, RolePermission } from "../types";
-import { permissionLabel } from "./permissionDisplay";
+import type { PermissionGroups, RolePermission } from '../types';
+import { permissionLabel } from './permissionDisplay';
 
 export const matchesPermissionSearch = (
   permission: RolePermission,
   query: string,
 ): boolean => {
-  if (query === "") {
+  if (query === '') {
     return true;
   }
 
