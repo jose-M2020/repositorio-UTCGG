@@ -7,6 +7,7 @@ use App\Actions\Users\CreateUser;
 use App\Actions\Users\EnsureCanManageUser;
 use App\Actions\Users\SendUserPasswordLink;
 use App\Actions\Users\ToggleUserActive;
+use App\Actions\Users\ToggleUserCanBeAdvisor;
 use App\Actions\Users\UpdateUserProfile;
 use App\Enums\CareerPosition;
 use App\Enums\UserAccountStatus;
@@ -36,7 +37,7 @@ class UserController extends Controller implements HasMiddleware
             'auth',
             new Middleware(Permissions::ability(Permissions::USERS_INDEX), only: ['index']),
             new Middleware(Permissions::ability(Permissions::USERS_CREATE), only: ['store']),
-            new Middleware(Permissions::ability(Permissions::USERS_EDIT), only: ['update']),
+            new Middleware(Permissions::ability(Permissions::USERS_EDIT), only: ['update', 'toggleCanBeAdvisor']),
             new Middleware(Permissions::ability(Permissions::USERS_UPDATE_ROLE), only: ['updateRole']),
             new Middleware(Permissions::ability(Permissions::USERS_TOGGLE_ACTIVE), only: ['toggleActive']),
             new Middleware(Permissions::ability(Permissions::USERS_PASSWORD_LINK), only: ['sendPasswordLink']),
@@ -78,6 +79,7 @@ class UserController extends Controller implements HasMiddleware
             ->with('roles:id,name')
             ->with([
                 'studentProfile.career:id,code',
+                'teacherProfile:id,user_id,can_be_advisor',
                 'activeCareerAssignments.career:id,code',
             ])
             ->latest('id')
@@ -136,6 +138,7 @@ class UserController extends Controller implements HasMiddleware
                 'user_type' => $user->user_type?->value,
                 'career' => $this->careerCodesForDisplay($user),
                 'career_ids' => $this->careerIdsForForm($user),
+                'can_be_advisor' => $user->teacherProfile?->can_be_advisor,
                 'status' => $user->status->value,
                 'created_at' => (string) $user->created_at,
                 'roles' => $user->roles->map(fn (Role $role) => [
@@ -308,6 +311,17 @@ class UserController extends Controller implements HasMiddleware
         ToggleUserActive $toggleUserActive,
     ): RedirectResponse {
         $result = $toggleUserActive->handle(request()->user(), $user);
+
+        return redirect()
+            ->route('users.index')
+            ->with('status', $result['message']);
+    }
+
+    public function toggleCanBeAdvisor(
+        User $user,
+        ToggleUserCanBeAdvisor $toggleUserCanBeAdvisor,
+    ): RedirectResponse {
+        $result = $toggleUserCanBeAdvisor->handle(request()->user(), $user);
 
         return redirect()
             ->route('users.index')

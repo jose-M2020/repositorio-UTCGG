@@ -22,6 +22,7 @@ export type UserListItem = {
   user_type?: UserType | null;
   career: string | null;
   career_ids?: number[];
+  can_be_advisor?: boolean | null;
   status: UserAccountStatus;
   created_at: string;
   roles: Array<{ id: number; name: string }>;

@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
   Eye,
+  GraduationCap,
   KeyRound,
   Mail,
   MoreHorizontal,
@@ -13,6 +14,7 @@ import {
 import { useState } from 'react';
 import { destroy, show } from '@/actions/App/Http/Controllers/UserController';
 import { AUTH_ABILITIES } from '@/features/auth';
+import { USER_TYPE } from '@/shared/types';
 import { ConfirmDeleteButton } from '@/shared/components/ConfirmDeleteButton';
 import {
   Button,
@@ -26,6 +28,7 @@ import { UserChangeRoleDialog } from '../actions/UserChangeRoleDialog';
 import { UserFormDialog } from '../form/UserFormDialog';
 import { UserSendPasswordLinkDialog } from '../actions/UserSendPasswordLinkDialog';
 import { UserToggleActiveDialog } from '../actions/UserToggleActiveDialog';
+import { UserToggleCanBeAdvisorDialog } from '../actions/UserToggleCanBeAdvisorDialog';
 import type {
   CareerFormPolicy,
   CareerOption,
@@ -57,6 +60,7 @@ export const UserRowActions = ({
   const [editOpen, setEditOpen] = useState(false);
   const [roleOpen, setRoleOpen] = useState(false);
   const [toggleActiveOpen, setToggleActiveOpen] = useState(false);
+  const [toggleCanBeAdvisorOpen, setToggleCanBeAdvisorOpen] = useState(false);
   const [passwordLinkOpen, setPasswordLinkOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const userName = formatUserName(user);
@@ -72,13 +76,19 @@ export const UserRowActions = ({
   const canToggleActiveStatus =
     user.status === 'active' || user.status === 'inactive';
   const canToggleActive = canToggleActiveAbility && canToggleActiveStatus;
+  const canToggleCanBeAdvisor = canEdit && user.user_type === USER_TYPE.WORKFORCE;
+  const willEnableAdvisor = user.can_be_advisor !== true;
   const ToggleIcon = willActivate ? Power : PowerOff;
   const PasswordIcon = isPending ? Mail : KeyRound;
   const passwordActionLabel = isPending
     ? 'Reenviar activación'
     : 'Restablecer contraseña';
   const showDestructiveSeparator =
-    (canEdit || canUpdateRole || canToggleActive || canPasswordLink) &&
+    (canEdit ||
+      canUpdateRole ||
+      canToggleActive ||
+      canToggleCanBeAdvisor ||
+      canPasswordLink) &&
     canDestroy;
 
   return (
@@ -123,6 +133,14 @@ export const UserRowActions = ({
             >
               <ToggleIcon aria-hidden="true" />
               {willActivate ? 'Activar' : 'Desactivar'}
+            </DropdownMenuItem>
+          ) : null}
+          {canToggleCanBeAdvisor ? (
+            <DropdownMenuItem onClick={() => setToggleCanBeAdvisorOpen(true)}>
+              <GraduationCap aria-hidden="true" />
+              {willEnableAdvisor
+                ? 'Permitir como asesor'
+                : 'Dejar de ser asesor'}
             </DropdownMenuItem>
           ) : null}
           {canPasswordLink ? (
@@ -178,6 +196,13 @@ export const UserRowActions = ({
           user={user}
           open={toggleActiveOpen}
           onOpenChange={setToggleActiveOpen}
+        />
+      ) : null}
+      {canToggleCanBeAdvisor ? (
+        <UserToggleCanBeAdvisorDialog
+          user={user}
+          open={toggleCanBeAdvisorOpen}
+          onOpenChange={setToggleCanBeAdvisorOpen}
         />
       ) : null}
       {canPasswordLink ? (

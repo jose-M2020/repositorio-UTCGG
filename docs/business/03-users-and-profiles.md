@@ -80,6 +80,7 @@ sequenceDiagram
 | USR-06 | Gestor | Intenta pasar un usuario de `pending_activation` a `inactive` con el toggle de estado | Operación rechazada; solo se permite alternar `active` ↔ `inactive` | USR-R5 |
 | USR-07 | Director | Actualiza docente omitiendo una de sus dos carreras activas (TIC y ER → solo TIC) | La assignment de ER se cierra con `ends_at`; TIC permanece activa | USR-R10 |
 | USR-08 | Gestor | Cambia `user_type` de un alumno de `academic` a `workforce` | Perfil estudiante queda con `academic_status = graduated`; se crea perfil workforce según el alta | USR-R11 |
+| USR-09 | Director | Alta de docente con `can_be_advisor = false`, o acción “Dejar de ser asesor” sobre un docente activo | `teacher_profiles.can_be_advisor` queda en `false`; no se le pueden asignar proyectos nuevos como asesor | USR-R12 |
 
 ## Referencias
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { USER_TYPE, isUserType, type UserType } from '@/shared/types';
 import {
+  CheckboxField,
   FormField,
   InputField,
   SelectField,
@@ -36,10 +37,12 @@ type UserFormFieldsProps = {
     student_number?: string | null;
     employee_number?: string | null;
     job_title?: string | null;
+    can_be_advisor?: boolean | null;
   };
   includeRole?: boolean;
   userTypeReadOnly?: boolean;
   showUserTypeField?: boolean;
+  showCanBeAdvisor?: boolean;
 };
 
 export const UserFormFields = ({
@@ -52,6 +55,7 @@ export const UserFormFields = ({
   includeRole = true,
   userTypeReadOnly = false,
   showUserTypeField = true,
+  showCanBeAdvisor = false,
 }: UserFormFieldsProps) => {
   const [selectedUserType, setSelectedUserType] = useState<UserType | ''>(
     defaults?.user_type ?? '',
@@ -195,13 +199,25 @@ export const UserFormFields = ({
       ) : null}
 
       {resolvedUserType === USER_TYPE.WORKFORCE ? (
-        <InputField
-          id="employee_number"
-          name="employee_number"
-          label="Número de empleado"
-          defaultValue={defaults?.employee_number ?? ''}
-          error={errors.employee_number}
-        />
+        <>
+          <InputField
+            id="employee_number"
+            name="employee_number"
+            label="Número de empleado"
+            defaultValue={defaults?.employee_number ?? ''}
+            error={errors.employee_number}
+          />
+          {showCanBeAdvisor ? (
+            <CheckboxField
+              id="can_be_advisor"
+              name="can_be_advisor"
+              label="Puede ser asesor academico"
+              description="Si se desactiva, no podra asignarsele proyectos como asesor academico ni confirmar asesores empresariales."
+              defaultChecked={defaults?.can_be_advisor ?? true}
+              error={errors.can_be_advisor}
+            />
+          ) : null}
+        </>
       ) : null}
 
       {resolvedUserType === USER_TYPE.STAFF ? (

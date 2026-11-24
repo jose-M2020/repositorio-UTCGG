@@ -170,6 +170,10 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'max:20',
             ],
+            'can_be_advisor' => [
+                'nullable',
+                'boolean',
+            ],
             'job_title' => [
                 Rule::requiredIf($userType === UserType::Staff->value),
                 'nullable',

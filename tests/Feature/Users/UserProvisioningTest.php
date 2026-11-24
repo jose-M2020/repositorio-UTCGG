@@ -298,4 +298,61 @@ class UserProvisioningTest extends TestCase
 
         $this->assertNotNull($endedEr?->ends_at);
     }
+
+    public function test_creating_teacher_can_disable_advisor_eligibility(): void
+    {
+        $admin = User::factory()->staff()->create(['user_type' => UserType::Staff]);
+        $admin->assignRole(UserRoles::ADMIN);
+        $ticId = (int) Career::query()->where('code', 'TIC')->value('id');
+
+        $this->actingAs($admin)->post(route('users.store'), [
+            'first_name' => 'No',
+            'last_name' => 'Asesor',
+            'email' => 'no.asesor@example.com',
+            'user_type' => UserType::Workforce->value,
+            'role' => UserRoles::TEACHER,
+            'career' => 'TIC',
+            'can_be_advisor' => false,
+        ])->assertRedirect(route('users.index'));
+
+        $teacher = User::query()->where('email', 'no.asesor@example.com')->firstOrFail();
+
+        $this->assertDatabaseHas('teacher_profiles', [
+            'user_id' => $teacher->id,
+            'can_be_advisor' => false,
+            'primary_career_id' => $ticId,
+        ]);
+    }
+
+    public function test_toggling_teacher_can_be_advisor_via_dedicated_action(): void
+    {
+        $admin = User::factory()->staff()->create(['user_type' => UserType::Staff]);
+        $admin->assignRole(UserRoles::ADMIN);
+
+        $teacher = User::factory()->teacher()->create([
+            'user_type' => UserType::Workforce,
+            'email' => 'toggle.asesor@example.com',
+        ]);
+        $teacher->assignRole(UserRoles::TEACHER);
+        $this->seedTeacherCareer($teacher, 'TIC');
+        $teacher->teacherProfile()->update(['can_be_advisor' => true]);
+
+        $this->actingAs($admin)
+            ->patch(route('users.toggle-can-be-advisor', $teacher))
+            ->assertRedirect(route('users.index'));
+
+        $this->assertDatabaseHas('teacher_profiles', [
+            'user_id' => $teacher->id,
+            'can_be_advisor' => false,
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('users.toggle-can-be-advisor', $teacher))
+            ->assertRedirect(route('users.index'));
+
+        $this->assertDatabaseHas('teacher_profiles', [
+            'user_id' => $teacher->id,
+            'can_be_advisor' => true,
+        ]);
+    }
 }

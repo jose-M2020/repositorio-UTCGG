@@ -292,7 +292,9 @@ final class UserProvisioningService
                 'public_bio' => $data['public_bio'] ?? null,
                 'research_lines' => $data['research_lines'] ?? null,
                 'orcid' => $data['orcid'] ?? null,
-                'can_be_advisor' => (bool) ($data['can_be_advisor'] ?? true),
+                'can_be_advisor' => array_key_exists('can_be_advisor', $data)
+                    ? (bool) $data['can_be_advisor']
+                    : (bool) ($user->teacherProfile?->can_be_advisor ?? true),
             ],
         );
 

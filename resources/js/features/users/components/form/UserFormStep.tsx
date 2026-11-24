@@ -69,6 +69,7 @@ export const UserFormStep = ({
         user_type: selectedUserType || null,
         role: defaultRoleForType(selectedUserType) || null,
         career_ids: [] as number[],
+        can_be_advisor: true,
       };
 
   const formProps = isEdit && user ? update.form(user.id) : store.form();
@@ -124,6 +125,7 @@ export const UserFormStep = ({
                 includeRole={!isEdit}
                 userTypeReadOnly={isEdit}
                 showUserTypeField={isEdit}
+                showCanBeAdvisor={!isEdit}
               />
             </div>
 
