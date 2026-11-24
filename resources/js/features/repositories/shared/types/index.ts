@@ -73,11 +73,6 @@ export type RepositoryBusinessAdvisor = {
     catalog_status?: string | null;
 };
 
-export type RepositoryOrganizationDefaults = {
-    company?: RepositoryCompany | null;
-    business_advisor?: RepositoryBusinessAdvisor | null;
-};
-
 export type Repository = {
     id: number;
     title: string;

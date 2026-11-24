@@ -13,5 +13,4 @@ export type {
     RepositoryLookups,
     RepositoryMember,
     RepositoryFileItem,
-    RepositoryOrganizationDefaults,
 } from './types';
