@@ -18,6 +18,7 @@ import { AUTH_ABILITIES } from '@/features/auth';
 import { InputField } from '@/shared/components/form';
 import { Button, Input } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
+import { show as privacyNotice } from '@/routes/privacy-notice';
 import { postJson } from '@/shared/lib/csrf';
 import type { Repository } from '../../../shared/types';
 
@@ -932,7 +933,7 @@ export const RepositoryBusinessAdvisorSection = ({
 
             <p className="text-xs text-muted-foreground">
                 Al registrar datos de contacto aplica el{' '}
-                <Link href="/aviso-de-privacidad" className="underline">
+                <Link href={privacyNotice.url()} className="underline">
                     aviso de privacidad
                 </Link>
                 .

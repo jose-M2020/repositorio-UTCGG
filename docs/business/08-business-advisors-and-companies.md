@@ -185,5 +185,6 @@ La migración de fase C aborta si quedan filas sin `business_advisor_id`. Tras e
 - Código: `app/Services/BusinessAdvisors/*`, policies, `RepositoryBusinessAdvisorSection`, bandeja `panel/business-advisors/*`
 - Tablas: `business_advisors`, `companies`, `business_advisor_affiliations`, `repository_business_advisors` (snapshot + FKs), `business_advisor_audit_logs`, `business_advisor_privacy_requests` ([database-schema](../technical/database-schema.md))
 - Rutas: `business-advisors.*`, `companies.*`, `repositories.business-advisors.*`, `privacy-notice.show`
+- Nav panel: grupo “Asesores empresariales” (`pending` con `verify`, `privacy-requests` con permiso ARCO); “Aviso de privacidad” en Explorar y header público
 - Permisos: `business_advisors.*`, `companies.*`
 - Relacionados: [05-repositories.md](05-repositories.md), [02-roles-and-permissions.md](02-roles-and-permissions.md), [99-known-gaps.md](99-known-gaps.md)

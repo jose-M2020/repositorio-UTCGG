@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { show as privacyNotice } from '@/routes/privacy-notice';
 
 type PageProps = {
     status: 'confirmed' | 'rejected';
@@ -25,7 +26,7 @@ const BusinessAdvisorConfirmationPage = ({
                 </p>
                 <p className="text-sm text-muted-foreground">
                     Consulta el{' '}
-                    <Link href="/aviso-de-privacidad" className="underline">
+                    <Link href={privacyNotice.url()} className="underline">
                         aviso de privacidad
                     </Link>
                     .

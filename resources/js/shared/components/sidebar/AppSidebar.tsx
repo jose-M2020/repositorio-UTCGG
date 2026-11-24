@@ -1,14 +1,17 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
+    BriefcaseBusiness,
     CalendarRange,
+    ClipboardList,
     Compass,
+    FileText,
     FolderKanban,
     FolderPlus,
     Globe,
     GraduationCap,
     Layers,
-    Library,
+    Scale,
     Settings2,
     ShieldCheck,
     Users,
@@ -17,7 +20,6 @@ import type { ComponentProps } from 'react';
 import { index as home } from '@/actions/App/Http/Controllers/HomeController';
 import {
     create as createRepository,
-    index as repositories,
     mine,
 } from '@/actions/App/Http/Controllers/RepositoryController';
 import { index as careers } from '@/actions/App/Http/Controllers/CareerController';
@@ -26,6 +28,9 @@ import { index as projectPeriods } from '@/actions/App/Http/Controllers/ProjectP
 import { index as projectTypes } from '@/actions/App/Http/Controllers/ProjectTypeController';
 import { index as roles } from '@/actions/App/Http/Controllers/RoleController';
 import { index as users } from '@/actions/App/Http/Controllers/UserController';
+import { pending as businessAdvisorsPending } from '@/routes/business-advisors';
+import { index as privacyRequests } from '@/routes/business-advisors/privacy-requests';
+import { show as privacyNotice } from '@/routes/privacy-notice';
 import { AUTH_ABILITIES } from '@/features/auth';
 import {
     NavMain,
@@ -146,11 +151,37 @@ const useNavGroups = (): NavMainGroup[] => {
             : []),
     ];
 
+    const businessAdvisorItems: NavMainLink[] = [
+        ...(auth.abilities[AUTH_ABILITIES.BUSINESS_ADVISORS_VERIFY]
+            ? [
+                  {
+                      title: 'Asesores pendientes',
+                      url: businessAdvisorsPending.url(),
+                      icon: ClipboardList,
+                  },
+              ]
+            : []),
+        ...(auth.abilities[AUTH_ABILITIES.BUSINESS_ADVISORS_PRIVACY_REQUESTS]
+            ? [
+                  {
+                      title: 'Solicitudes ARCO',
+                      url: privacyRequests.url(),
+                      icon: Scale,
+                  },
+              ]
+            : []),
+    ];
+
     const exploreItems: NavMainLink[] = [
         {
             title: 'Sitio público',
             url: home.url(),
             icon: Globe,
+        },
+        {
+            title: 'Aviso de privacidad',
+            url: privacyNotice.url(),
+            icon: FileText,
         },
     ];
 
@@ -175,6 +206,15 @@ const useNavGroups = (): NavMainGroup[] => {
                       title: 'Catálogos',
                       icon: Layers,
                       items: catalogItems,
+                  },
+              ]
+            : []),
+        ...(businessAdvisorItems.length > 0
+            ? [
+                  {
+                      title: 'Asesores empresariales',
+                      icon: BriefcaseBusiness,
+                      items: businessAdvisorItems,
                   },
               ]
             : []),

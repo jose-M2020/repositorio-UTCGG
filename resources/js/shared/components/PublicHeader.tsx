@@ -10,6 +10,7 @@ import {
     index as repositories,
     mine,
 } from '@/actions/App/Http/Controllers/RepositoryController';
+import { show as privacyNotice } from '@/routes/privacy-notice';
 import { buttonVariants } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/cn';
 import { AppBrand } from './AppBrand';
@@ -41,6 +42,9 @@ export const PublicHeader = () => {
                         Repositorios
                     </SurfaceNavLink>
                     <SurfaceNavLink href={about.url()}>Acerca</SurfaceNavLink>
+                    <SurfaceNavLink href={privacyNotice.url()}>
+                        Privacidad
+                    </SurfaceNavLink>
 
                     {auth.user ? (
                         <Link href={mine.url()} className={buttonVariants()}>
@@ -86,6 +90,12 @@ export const PublicHeader = () => {
                 </SurfaceNavLink>
                 <SurfaceNavLink href={about.url()} onNavigate={handleCloseMenu}>
                     Acerca
+                </SurfaceNavLink>
+                <SurfaceNavLink
+                    href={privacyNotice.url()}
+                    onNavigate={handleCloseMenu}
+                >
+                    Privacidad
                 </SurfaceNavLink>
                 <div className="pt-2">
                     {auth.user ? (
