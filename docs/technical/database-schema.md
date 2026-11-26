@@ -8,7 +8,9 @@ Estado actual del esquema (migraciones + modelos). Motor de tests: SQLite in-mem
 
 ```text
 addresses 1──N companies 1──N business_advisor_affiliations ── N:1 business_advisors
-                │                         │
+                │                         │                    │
+                │                         │                    ├── 1──N business_advisor_privacy_requests
+                │                         │                    └── 1──N business_advisor_audit_logs
                 │                         └── 1──N repository_business_advisors (snapshot)
                 └── 1──N repositories ── 1──N repository_business_advisors
                                    ├── N──N users (repository_user)
@@ -46,9 +48,12 @@ users 1──1 student_profiles | teacher_profiles | staff_profiles
 | `project_period_participants.status` | `enrolled`, `withdrawn`, `completed` |
 | `repository_advisors.role` | `primary`, `co_advisor` |
 | `repository_business_advisors.acceptance_status` | `pending`, `confirmed`, `rejected` |
+| `repository_business_advisors.confirmed_via` | `email_link`, `academic_advisor` |
 | `companies/business_advisors/affiliations.status` | `pending_review`, `verified`, `rejected`, `merged`, `inactive` |
 | `*.source` (catálogo) | `user`, `legacy_import` |
-| `repository_business_advisors.confirmed_via` | `email_link`, `academic_advisor` |
+| `business_advisor_privacy_requests.type` | `access`, `rectification`, `cancellation`, `opposition` |
+| `business_advisor_privacy_requests.status` | `open`, `resolved`, `rejected` |
+| `business_advisor_audit_logs.action` | `attached`, `released`, `viewed_contact`, `verified`, `rejected`, `merged`, `exported`, `change_affiliation`, `privacy_request` |
 
 Perfiles por `user_type`:
 
@@ -375,36 +380,138 @@ Catálogo reutilizable de empresas.
 |-------|------|-------|
 | `id` | bigint PK | |
 | `name` | string | |
-| `name_normalized` | string nullable indexed | |
+| `name_normalized` | string nullable | indexed |
 | `rfc` | string(13) nullable unique | |
-| `sector` / `phone` / `email` | nullable | |
+| `sector` | string nullable | |
+| `phone` | string(20) nullable | |
+| `email` | string nullable | |
 | `address_id` | FK → addresses nullable | nullOnDelete |
 | `notes` | text nullable | |
-| `status` | string(32) default `pending_review` | |
+| `status` | string(32) default `pending_review` | ver enum catálogo |
 | `source` | string(16) default `user` | |
-| `merged_into_id` / `created_by` / `verified_by` | FKs nullable | |
+| `merged_into_id` | FK → companies nullable | nullOnDelete |
+| `created_by` / `verified_by` | FK → users nullable | nullOnDelete |
 | `verified_at` | timestamp nullable | |
+| `created_at` / `updated_at` | timestamps | |
+
+Índices: `name_normalized`, `status`.
+
+Relaciones: `belongsTo` address / mergedInto / createdBy / verifiedBy; `hasMany` repositories, affiliations.
+
+---
 
 ### `business_advisors`
 
 Persona del catálogo (**sin** contacto). Contacto vive en afiliaciones.
 
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `id` | bigint PK | |
+| `first_name` / `last_name` | string | |
+| `second_last_name` | string nullable | |
+| `name_normalized` | string | indexed; búsqueda |
+| `status` | string(32) default `pending_review` | ver enum catálogo |
+| `source` | string(16) default `user` | |
+| `merged_into_id` | FK → business_advisors nullable | nullOnDelete |
+| `created_by` / `verified_by` | FK → users nullable | nullOnDelete |
+| `verified_at` | timestamp nullable | |
+| `created_at` / `updated_at` | timestamps | |
+
+Índices: `name_normalized`, `status`.
+
+Relaciones: `hasMany` affiliations, repositoryAssignments; `belongsTo` mergedInto / createdBy / verifiedBy. Tablas hijas sin relación Eloquent declarada: `business_advisor_privacy_requests`, `business_advisor_audit_logs`.
+
+---
+
 ### `business_advisor_affiliations`
 
-Persona ↔ empresa en el tiempo (`email`/`phone`/`job_title`; `ends_at` null = vigente).
-
-### `repository_business_advisors`
-
-Asignación al repositorio + `snapshot` histórico. Activo si `released_at IS NULL`.
+Persona ↔ empresa en el tiempo. Vigente si `ends_at IS NULL`. Contacto (`email`/`phone`/`job_title`) vive aquí, no en `business_advisors`.
 
 | Campo | Tipo | Notas |
 |-------|------|-------|
+| `id` | bigint PK | |
+| `business_advisor_id` | FK → business_advisors | restrictOnDelete |
+| `company_id` | FK → companies | restrictOnDelete |
+| `job_title` / `department` | string nullable | |
+| `email` | string nullable | indexed |
+| `phone` | string(20) nullable | |
+| `starts_at` / `ends_at` | date nullable | `ends_at` null = vigente |
+| `status` | string(32) default `pending_review` | ver enum catálogo |
+| `source` | string(16) default `user` | |
+| `created_by` / `verified_by` | FK → users nullable | nullOnDelete |
+| `verified_at` | timestamp nullable | |
+| `created_at` / `updated_at` | timestamps | |
+
+Índices: `email`, `status`, `(business_advisor_id, ends_at)`, `(company_id, ends_at)`.
+
+---
+
+### `repository_business_advisors`
+
+Asignación al repositorio + `snapshot` histórico. Activo si `released_at IS NULL`. Columnas de persona/contacto legacy eliminadas; el nombre/contacto del assignment sale del `snapshot`.
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `id` | bigint PK | |
+| `repository_id` | FK → repositories | cascadeOnDelete |
 | `business_advisor_id` | FK → business_advisors | restrictOnDelete |
 | `business_advisor_affiliation_id` | FK → affiliations nullable | restrictOnDelete |
-| `snapshot` | json | congelado al adjuntar; **fuente** de nombre/contacto del assignment |
-| `company_id` | FK → companies nullable | conveniencia / primary |
-| `acceptance_status` | default `pending` | |
-| `confirmation_*` / `confirmed_via` | confirmación por correo | |
+| `snapshot` | json | congelado al adjuntar; **fuente** de nombre/contacto |
+| `company_id` | FK → companies nullable | nullOnDelete; conveniencia / primary |
+| `is_primary` | bool default true | |
+| `acceptance_status` | string(32) default `pending` | |
+| `document_path` | string nullable | |
+| `confirmation_token_hash` | string(64) nullable | |
+| `confirmation_sent_at` / `confirmation_expires_at` | timestamp nullable | |
+| `confirmed_at` | timestamp nullable | |
+| `confirmed_via` | string(32) nullable | `email_link` / `academic_advisor` |
+| `notes` | text nullable | |
+| `created_by` | FK → users nullable | nullOnDelete |
+| `assigned_at` | timestamp | |
+| `released_at` | timestamp nullable | null = activo |
+| `created_at` / `updated_at` | timestamps | |
+
+Índices: `(repository_id, is_primary, released_at)`, `company_id`, `business_advisor_id`.
+
+`snapshot` típico: `first_name`, `last_name`, `second_last_name`, `company` `{id,name,rfc}`, `job_title`, `department`, `email`, `phone`, `captured_at`.
+
+---
+
+### `business_advisor_privacy_requests`
+
+Solicitudes ARCO sobre un asesor del catálogo.
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `id` | bigint PK | |
+| `business_advisor_id` | FK → business_advisors | restrictOnDelete |
+| `type` | string(16) | `access` / `rectification` / `cancellation` / `opposition` |
+| `message` | text nullable | |
+| `status` | string(16) default `open` | `open` / `resolved` / `rejected` |
+| `handled_by` | FK → users nullable | nullOnDelete |
+| `handled_at` | timestamp nullable | |
+| `created_at` / `updated_at` | timestamps | |
+
+Índice: `(business_advisor_id, status)`.
+
+---
+
+### `business_advisor_audit_logs`
+
+Auditoría de acciones sobre asesores empresariales (sin `updated_at`).
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `id` | bigint PK | |
+| `user_id` | FK → users nullable | nullOnDelete |
+| `business_advisor_id` | FK → business_advisors nullable | nullOnDelete |
+| `repository_id` | FK → repositories nullable | nullOnDelete |
+| `action` | string(32) | ver enum audit |
+| `metadata` | json nullable | |
+| `ip` | string(45) nullable | |
+| `created_at` | timestamp | useCurrent; sin `updated_at` |
+
+Índices: `(business_advisor_id, created_at)`, `(repository_id, created_at)`, `action`.
 
 ---
 
@@ -420,7 +527,7 @@ Asignación al repositorio + `snapshot` histórico. Activo si `released_at IS NU
 
 Roles de sistema: `admin`, `director`, `career_director`, `teacher`, `student`.
 
-Permisos de periodos/asesores (entre otros): `project_periods.*`, `advisors.*`, `business_advisors.*`, `companies.create|verify|merge`.
+Permisos de periodos/asesores (entre otros): `project_periods.*`, `advisors.*`, `business_advisors.manage|view_audit|privacy_requests|export`, `companies.create|verify|merge`.
 
 ---
 
@@ -439,7 +546,9 @@ Permisos de periodos/asesores (entre otros): `project_periods.*`, `advisors.*`, 
 
 - Catalog FKs (`career_id`, `project_type_id`, `education_level_id`) usan **restrictOnDelete**.
 - Pivots y archivos usan **cascadeOnDelete** con su repositorio/usuario.
-- `companies.address_id` y `repositories.company_id` usan **nullOnDelete**.
+- `companies.address_id`, `repositories.company_id` y `repository_business_advisors.company_id` usan **nullOnDelete**.
+- Catálogo empresarial: `business_advisor_id` / `business_advisor_affiliation_id` en assignments usan **restrictOnDelete**; merge targets y `created_by`/`verified_by`/`handled_by` usan **nullOnDelete**.
 - Asesor académico (`repository_advisors`) ≠ asesor empresarial (`repository_business_advisors`).
 - `repositories.project_period_id` nullable: repositorios previos a periodos quedan sin temporada.
 - Soft deletes solo en `users`.
+- `business_advisor_audit_logs` no tiene `updated_at`.
