@@ -55,6 +55,11 @@ class Career extends Model
         return $this->hasMany(CareerAssignment::class);
     }
 
+    public function curricula(): HasMany
+    {
+        return $this->hasMany(Curriculum::class);
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);

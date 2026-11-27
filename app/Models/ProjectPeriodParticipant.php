@@ -15,12 +15,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property int $career_id
  * @property ParticipantStatus $status
+ * @property int|null $term_number
+ * @property int|null $curriculum_requirement_id
+ * @property string|null $override_reason
  */
 #[Fillable([
     'project_period_id',
     'user_id',
     'career_id',
     'status',
+    'term_number',
+    'curriculum_requirement_id',
+    'override_reason',
 ])]
 class ProjectPeriodParticipant extends Model
 {
@@ -54,5 +60,10 @@ class ProjectPeriodParticipant extends Model
     public function career(): BelongsTo
     {
         return $this->belongsTo(Career::class);
+    }
+
+    public function curriculumRequirement(): BelongsTo
+    {
+        return $this->belongsTo(CurriculumRequirement::class);
     }
 }

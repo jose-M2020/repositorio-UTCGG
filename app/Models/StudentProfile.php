@@ -5,15 +5,21 @@ namespace App\Models;
 use App\Enums\AcademicStatus;
 use App\Enums\Shift;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property int $user_id
  * @property string|null $student_number
  * @property int $career_id
+ * @property int|null $curriculum_id
+ * @property int|null $entry_academic_period_id
+ * @property int|null $term_academic_period_id
+ * @property int|null $status_since_academic_period_id
  * @property int|null $education_level_id
  * @property int|null $admission_year
  * @property string|null $generation
@@ -29,6 +35,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'user_id',
     'student_number',
     'career_id',
+    'curriculum_id',
+    'entry_academic_period_id',
+    'term_academic_period_id',
+    'status_since_academic_period_id',
     'education_level_id',
     'admission_year',
     'generation',
@@ -75,8 +85,43 @@ class StudentProfile extends Model
         return $this->belongsTo(Career::class);
     }
 
+    public function curriculum(): BelongsTo
+    {
+        return $this->belongsTo(Curriculum::class);
+    }
+
     public function educationLevel(): BelongsTo
     {
         return $this->belongsTo(EducationLevel::class);
+    }
+
+    public function entryAcademicPeriod(): BelongsTo
+    {
+        return $this->belongsTo(AcademicPeriod::class, 'entry_academic_period_id');
+    }
+
+    public function termAcademicPeriod(): BelongsTo
+    {
+        return $this->belongsTo(AcademicPeriod::class, 'term_academic_period_id');
+    }
+
+    public function statusSinceAcademicPeriod(): BelongsTo
+    {
+        return $this->belongsTo(AcademicPeriod::class, 'status_since_academic_period_id');
+    }
+
+    public function stageRecords(): HasMany
+    {
+        return $this->hasMany(StudentStageRecord::class);
+    }
+
+    public function termChanges(): HasMany
+    {
+        return $this->hasMany(StudentTermChange::class)->orderByDesc('created_at');
+    }
+
+    public function scopeRegisteredInPlan(Builder $query): Builder
+    {
+        return $query->whereNotNull('curriculum_id');
     }
 }

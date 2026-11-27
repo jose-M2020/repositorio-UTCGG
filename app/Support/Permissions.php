@@ -66,6 +66,15 @@ final class Permissions
     public const ADVISORS_OVERRIDE_CAPACITY = 'advisors.override_capacity';
     public const ADVISORS_DISTRIBUTE = 'advisors.distribute';
 
+    public const ACADEMIC_PERIODS_MANAGE = 'academic_periods.manage';
+    public const CURRICULA_MANAGE = 'curricula.manage';
+    public const TERMS_ADVANCE = 'terms.advance';
+    public const TERMS_ADVANCE_ANY = 'terms.advance.any';
+    public const TERMS_IMPORT = 'terms.import';
+    public const STUDENTS_LIFECYCLE = 'students.lifecycle';
+    public const STUDENTS_LIFECYCLE_ANY = 'students.lifecycle.any';
+    public const ACADEMIC_CALENDAR_VIEW = 'academic_calendar.view';
+
     public const BUSINESS_ADVISORS_SEARCH = 'business_advisors.search';
     public const BUSINESS_ADVISORS_CREATE = 'business_advisors.create';
     public const BUSINESS_ADVISORS_ATTACH = 'business_advisors.attach';
@@ -142,6 +151,15 @@ final class Permissions
             ['name' => self::ADVISORS_ASSIGN, 'description' => 'Asignar, reasignar y liberar asesores', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.assign'],
             ['name' => self::ADVISORS_OVERRIDE_CAPACITY, 'description' => 'Asignar excediendo tope o elegibilidad (exige motivo)', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.override_capacity'],
             ['name' => self::ADVISORS_DISTRIBUTE, 'description' => 'Generar y aplicar propuestas de reparto automatico', 'section' => self::SECTION_ACTION, 'shared_as' => 'advisors.distribute'],
+
+            ['name' => self::ACADEMIC_PERIODS_MANAGE, 'description' => 'Gestionar periodos escolares y marcar el actual', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'academic_periods.manage'],
+            ['name' => self::CURRICULA_MANAGE, 'description' => 'Gestionar planes de estudio, etapas y requisitos', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'curricula.manage'],
+            ['name' => self::TERMS_ADVANCE, 'description' => 'Avanzar o confirmar cuatrimestre en sus carreras', 'section' => self::SECTION_ACTION, 'shared_as' => 'terms.advance'],
+            ['name' => self::TERMS_ADVANCE_ANY, 'description' => 'Avanzar o confirmar cuatrimestre en cualquier carrera', 'section' => self::SECTION_ACTION, 'shared_as' => 'terms.advance.any'],
+            ['name' => self::TERMS_IMPORT, 'description' => 'Importar cuatrimestres desde CSV', 'section' => self::SECTION_ACTION, 'shared_as' => 'terms.import'],
+            ['name' => self::STUDENTS_LIFECYCLE, 'description' => 'Acciones de ciclo de vida sobre alumnos de sus carreras', 'section' => self::SECTION_ACTION, 'shared_as' => 'students.lifecycle'],
+            ['name' => self::STUDENTS_LIFECYCLE_ANY, 'description' => 'Acciones de ciclo de vida sobre cualquier alumno', 'section' => self::SECTION_ACTION, 'shared_as' => 'students.lifecycle.any'],
+            ['name' => self::ACADEMIC_CALENDAR_VIEW, 'description' => 'Ver el calendario academico institucional', 'section' => self::SECTION_MANAGEMENT, 'shared_as' => 'academic_calendar.view'],
 
             ['name' => self::BUSINESS_ADVISORS_SEARCH, 'description' => 'Buscar en el catalogo de asesores empresariales', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.search'],
             ['name' => self::BUSINESS_ADVISORS_CREATE, 'description' => 'Crear asesor/empresa (pendiente de revision)', 'section' => self::SECTION_ACTION, 'shared_as' => 'business_advisors.create'],
@@ -241,6 +259,12 @@ final class Permissions
                 self::ADVISORS_ASSIGN,
                 self::ADVISORS_OVERRIDE_CAPACITY,
                 self::ADVISORS_DISTRIBUTE,
+                self::ACADEMIC_PERIODS_MANAGE,
+                self::CURRICULA_MANAGE,
+                self::TERMS_ADVANCE_ANY,
+                self::TERMS_IMPORT,
+                self::STUDENTS_LIFECYCLE_ANY,
+                self::ACADEMIC_CALENDAR_VIEW,
                 self::BUSINESS_ADVISORS_SEARCH,
                 self::BUSINESS_ADVISORS_CREATE,
                 self::BUSINESS_ADVISORS_ATTACH,
@@ -276,6 +300,9 @@ final class Permissions
                 self::PROJECT_PERIODS_INDEX,
                 self::ADVISORS_ASSIGN,
                 self::ADVISORS_DISTRIBUTE,
+                self::TERMS_ADVANCE,
+                self::STUDENTS_LIFECYCLE,
+                self::ACADEMIC_CALENDAR_VIEW,
                 self::BUSINESS_ADVISORS_SEARCH,
                 self::BUSINESS_ADVISORS_CREATE,
                 self::BUSINESS_ADVISORS_ATTACH,
@@ -296,6 +323,7 @@ final class Permissions
                 self::FILES_CREATE,
                 self::FILES_EDIT,
                 self::FILES_DESTROY,
+                self::ACADEMIC_CALENDAR_VIEW,
                 self::BUSINESS_ADVISORS_SEARCH,
                 self::BUSINESS_ADVISORS_CREATE,
                 self::BUSINESS_ADVISORS_ATTACH,

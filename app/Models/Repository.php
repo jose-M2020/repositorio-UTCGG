@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Enums\AdvisorRole;
+use App\Observers\RepositoryObserver;
 use Database\Factories\RepositoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,7 +29,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $generation
  * @property string|null $images
  * @property string $created_by
+ * @property int|null $academic_period_id
+ * @property int|null $curriculum_requirement_id
+ * @property int|null $term_number
  */
+#[ObservedBy([RepositoryObserver::class])]
 #[Fillable([
     'title',
     'slug',
@@ -38,6 +44,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'project_type_id',
     'education_level_id',
     'project_period_id',
+    'academic_period_id',
+    'curriculum_requirement_id',
+    'term_number',
     'company_id',
     'generation',
     'images',
@@ -90,6 +99,27 @@ class Repository extends Model
     public function period(): BelongsTo
     {
         return $this->belongsTo(ProjectPeriod::class, 'project_period_id');
+    }
+
+    public function academicPeriod(): BelongsTo
+    {
+        return $this->belongsTo(AcademicPeriod::class);
+    }
+
+    public function curriculumRequirement(): BelongsTo
+    {
+        return $this->belongsTo(CurriculumRequirement::class);
+    }
+
+    public function repositoryCareers(): HasMany
+    {
+        return $this->hasMany(RepositoryCareer::class);
+    }
+
+    public function additionalCareers(): BelongsToMany
+    {
+        return $this->belongsToMany(Career::class, 'repository_careers')
+            ->withTimestamps();
     }
 
     public function advisors(): HasMany
